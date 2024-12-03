@@ -5,7 +5,7 @@ import { IoIosArrowForward } from "react-icons/io";
 import { useNavigate, useLocation } from "react-router-dom";
 import { sidebarLinks } from "../../data/sidebarData";
 
-const Sidebar = ({ status }) => {
+const Sidebar = ({ status, updateStatus }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -19,9 +19,9 @@ const Sidebar = ({ status }) => {
   const menuItemHandler = (index, link) => {
     if (activeMenu !== index) {
       if (link.sublinks && link.sublinks.length > 0) {
-        navigationHandler(link.sublinks[0].path); 
+        navigationHandler(link.sublinks[0].path);
       } else if (link.path) {
-        navigationHandler(link.path); 
+        navigationHandler(link.path);
       }
     }
     setActiveMenu((prevIndex) => (prevIndex === index ? null : index));
@@ -33,7 +33,7 @@ const Sidebar = ({ status }) => {
 
     sidebarLinks.forEach((link, index) => {
       if (link.path === location.pathname) {
-        matchedMenu = index; 
+        matchedMenu = index;
       } else if (link.sublinks) {
         const sublinkIndex = link.sublinks.findIndex(
           (sublink) => sublink.path === location.pathname
@@ -48,6 +48,20 @@ const Sidebar = ({ status }) => {
     setActiveMenu(matchedMenu);
     setActiveSubmenu(matchedSubmenu);
   }, [location.pathname]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 768) {
+        updateStatus(false);
+      } else {
+        updateStatus(true);
+      }
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [updateStatus]);
 
   return (
     <div

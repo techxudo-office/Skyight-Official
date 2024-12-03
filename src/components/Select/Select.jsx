@@ -13,8 +13,8 @@ const Select = ({
   optionIcons,
 }) => {
   const selectRef = useRef(null);
-  const [selectStatus, setSelectStatus] = useState(false); 
-  const [searchValue, setSearchValue] = useState(""); 
+  const [selectStatus, setSelectStatus] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
 
   const selectHandler = () => {
     setSelectStatus((prev) => !prev);
@@ -58,7 +58,7 @@ const Select = ({
           className="flex flex-1 items-center justify-between p-3 cursor-pointer bg-transparent text-text"
           onClick={selectHandler}
         >
-          <span>{value?.label || placeholder}</span>
+          <span>{(value && value) || placeholder}</span>
           <FaChevronDown
             className={`text-gray-500 transform transition-transform ${
               selectStatus ? "rotate-180" : ""

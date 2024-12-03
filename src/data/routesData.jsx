@@ -22,8 +22,8 @@ import {
   Setting,
   Notifications,
   UpdateSetting,
-
-  FlightResults
+  FlightResults,
+  FlightDetails,
 } from "../pages/pages";
 
 export const routesData = [
@@ -53,6 +53,7 @@ export const routesData = [
       { path: "notifications", element: <Notifications /> },
       { path: "update-setting", element: <UpdateSetting /> },
       { path: "flight-results", element: <FlightResults /> },
+      { path: "flight-details", element: <FlightDetails /> },
     ],
   },
   { path: "*", element: <NotFound /> },

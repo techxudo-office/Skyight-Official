@@ -67,4 +67,59 @@ export const updateSetting = async (payload) => {
     };
 };
 
+export const searchFlight = async (payload) => {
+
+    const apiUrlWithPayload = `${baseUrl}/api/search?trip_type=${payload.tripType}&departure_date_time=${payload.departureDate}&origin_location_code=${payload.originCode}&destination_location_code=${payload.destinationCode}&adult_quantity=${payload.adult}&child_quantity=${[payload.child]}&infant_quantity=${payload.infant}`;
+
+    try {
+        let response = await axios({
+            method: 'GET',
+            url: apiUrlWithPayload,
+            data: payload,
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: token
+            }
+        });
+        console.log(response);
+        if (response.status === 200) {
+            if (!response.data.data.PricedItineraries || response.data.data.PricedItineraries.PricedItinerary.length === 0) {
+                return {
+                    status: false,
+                    message: ['No Flight Found!']
+                };
+            }
+            else {
+                return {
+                    status: true,
+                    message: 'Flighs Data Found',
+                    data: response.data.data
+                }
+            }
+        };
+    } catch (error) {
+        console.log('Failed while searching flight: ', error);
+        if (error.response) {
+            if (error.response.data.data.errors) {
+                const errors = Object.keys(error.response.data.data.errors);
+                const errorMessages = [];
+
+                for (let i = 0; i < errors.length; i++) {
+                    errorMessages.push(error.response.data.data.errors[errors[i]]);
+                }
+                return {
+                    status: false,
+                    message: errorMessages
+                };
+            }
+        }
+        else {
+            return {
+                status: false,
+                message: 'Server Connection Error'
+            };
+        };
+    };
+};
+
 
