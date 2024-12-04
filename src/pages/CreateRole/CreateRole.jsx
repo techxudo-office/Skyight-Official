@@ -10,16 +10,8 @@ const CreateRole = () => {
 
     const navigate = useNavigate();
 
-    const [selectedImage, setSelectedImage] = useState(null);
     const [isActive, setIsActive] = useState(true);
     const [loading, setLoading] = useState(false);
-
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setSelectedImage(URL.createObjectURL(file));
-        }
-    };
 
     const validationSchema = Yup.object({
         role: Yup.string().required('Please enter new role'),
@@ -147,28 +139,6 @@ const CreateRole = () => {
                             />
                         </div>
                     </div>
-                    {/* <div className="flex flex-col items-start gap-4 mt-2">
-                        {selectedImage && (
-                            <img
-                                src={selectedImage}
-                                alt="Uploaded Preview"
-                                className="h-20 object-cover rounded-3xl border-2 border-gray-300"
-                            />
-                        )}
-                        <label
-                            htmlFor="image-upload"
-                            className="cursor-pointer bg-blue-100 hover:bg-secondary text-primary hover:text-white py-2 font-semibold px-4 rounded-full transition duration-300"
-                        >
-                            Upload Image
-                        </label>
-                        <input
-                            type="file"
-                            id="image-upload"
-                            accept="image/*"
-                            className="hidden"
-                            onChange={handleImageChange}
-                        />
-                    </div> */}
                 </CardLayoutBody>
                 <CardLayoutFooter>
                     <div>

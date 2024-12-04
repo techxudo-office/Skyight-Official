@@ -1,8 +1,9 @@
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const baseUrl = import.meta.env.VITE_API_URL
 
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjEsImNvbXBhbnlfaWQiOjIxLCJyb2xlIjoic3VwZXJfYWRtaW4iLCJpYXQiOjE3MzI3NTI2MzIsImV4cCI6MTczMjgzOTAzMn0.NsnXguMuW7IXEsoQTHrCZ5HQqIsQTfPR6a0eEmo4aDU";
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjEsImNvbXBhbnlfaWQiOjIxLCJyb2xlIjoic3VwZXJfYWRtaW4iLCJpYXQiOjE3MzMyNzAxNDAsImV4cCI6MTczMzM1NjU0MH0.VXraf7wcffRmlwA6IX68lYIoHai8CNLuzsu1o6CyBMM";
 
 export const getSetting = async () => {
     try {
@@ -75,7 +76,6 @@ export const searchFlight = async (payload) => {
         let response = await axios({
             method: 'GET',
             url: apiUrlWithPayload,
-            data: payload,
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: token
@@ -122,4 +122,55 @@ export const searchFlight = async (payload) => {
     };
 };
 
+//! Transactions...
+export const createTransaction = async (payload) => {
+    try {
+        let response = await axios({
+            method: 'POST',
+            url: `${baseUrl}/api/company/create-transaction`,
+            data: payload,
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: token
+            }
+        });
+        console.log(response);
+        if (response.status === 200) {
+            // if (!response.data.data.PricedItineraries || response.data.data.PricedItineraries.PricedItinerary.length === 0) {
+            //     return {
+            //         status: false,
+            //         message: ['No Flight Found!']
+            //     };
+            // }
+            // else {
+            //     return {
+            //         status: true,
+            //         message: 'Flighs Data Found',
+            //         data: response.data.data
+            //     }
+            // }
+        };
+    } catch (error) {
+        console.log('Failed while creating transaction: ', error);
+        if (error.response) {
+            if (error.response.data.data.errors) {
+                const errors = Object.keys(error.response.data.data.errors);
+                const errorMessages = [];
 
+                for (let i = 0; i < errors.length; i++) {
+                    errorMessages.push(error.response.data.data.errors[errors[i]]);
+                }
+                return {
+                    status: false,
+                    message: errorMessages
+                };
+            }
+        }
+        else {
+            return {
+                status: false,
+                message: 'Server Connection Error'
+            };
+        };
+    };
+};

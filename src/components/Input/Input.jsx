@@ -50,6 +50,10 @@ const Input = ({
             <span className="cursor-pointer">
               <MdDateRange />
             </span>
+          ) : type === "datetime-local" ? (
+            <span className="cursor-pointer">
+              <MdDateRange />
+            </span>
           ) : (
             ""
           )}
