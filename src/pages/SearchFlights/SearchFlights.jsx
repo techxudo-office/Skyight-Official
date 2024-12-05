@@ -86,9 +86,13 @@ const SearchFlights = () => {
           });
         }
       } else {
-        response.message.map((error) => {
-          return toast.error(error.toUpperCase());
-        });
+        if (Array.isArray(response.message)) {
+          response.message.map((error) => {
+            return toast.error(error.toUpperCase());
+          });
+        } else {
+          toast.error(response.message);
+        }
       }
     }
   };

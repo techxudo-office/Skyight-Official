@@ -73,8 +73,8 @@ export const sidebarLinks = [
         icon: <GoDotFill />,
       },
       {
-        title: "Make Payment",
-        path: "/dashboard/make-payment",
+        title: "Create Transaction",
+        path: "/dashboard/create-transaction",
         icon: <GoDotFill />,
       },
     ],

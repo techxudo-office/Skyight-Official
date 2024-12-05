@@ -16,7 +16,7 @@ export { default as CreditTopup } from "./CreditTopup/CreditTopup";
 export { default as AddCredits } from "./AddCredits/AddCredits";
 
 export { default as Invoices } from "./Invoices/Invoices";
-export { default as MakePayment } from "./MakePayment/MakePayment";
+export { default as CreateTransaction } from "./CreateTransaction/CreateTransaction";
 
 export { default as SearchHistory } from "./SearchHistory/SearchHistory";
 export { default as TransactionHistory } from "./TransactionHistory/TransactionHistory";

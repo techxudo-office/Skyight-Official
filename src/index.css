@@ -2,24 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
 
 * {
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 :root {
-  --primary-color: #3B82F7;
+  --primary-color: #3b82f7;
   /* Custom primary color */
-  --secondary-color: #1D4ED8;
+  --secondary-color: #1d4ed8;
   /* Custom secondary color */
   --text-color: #333333;
   /* Custom text color */
-  --background-color: #F9FAFB;
+  --background-color: #f9fafb;
   /* Custom background color */
-  --lightgray: #D3D3D3;
+  --lightgray: #d3d3d3;
   /* Custom light gray color */
-  --gray: #6B7280;
+  --gray: #6b7280;
   /* Custom light gray color */
 }
 
@@ -71,4 +71,22 @@ input::-webkit-calendar-picker-indicator {
 
 .custom-table-th:last-child {
   border-top-right-radius: 15px;
+}
+
+.upload-icon {
+  animation: updateScale 2s linear infinite;
+}
+
+@keyframes updateScale {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.5);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }

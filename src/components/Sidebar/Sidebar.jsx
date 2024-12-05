@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { GiCommercialAirplane } from "react-icons/gi";
 import { IoIosArrowForward } from "react-icons/io";
 
@@ -8,9 +8,11 @@ import { sidebarLinks } from "../../data/sidebarData";
 const Sidebar = ({ status, updateStatus }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const sidebarRef = useRef();
 
   const [activeMenu, setActiveMenu] = useState(null);
   const [activeSubmenu, setActiveSubmenu] = useState(null);
+  const [mobileView, setMobileView] = useState(false);
 
   const navigationHandler = (path) => {
     navigate(path);
@@ -47,14 +49,19 @@ const Sidebar = ({ status, updateStatus }) => {
 
     setActiveMenu(matchedMenu);
     setActiveSubmenu(matchedSubmenu);
+    if (mobileView) {
+      updateStatus(false);
+    }
   }, [location.pathname]);
 
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth <= 768) {
         updateStatus(false);
+        setMobileView(true);
       } else {
         updateStatus(true);
+        setMobileView(false);
       }
     };
 
@@ -63,11 +70,27 @@ const Sidebar = ({ status, updateStatus }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, [updateStatus]);
 
+  useEffect(() => {
+    if (mobileView) {
+      const handleClickOutside = (e) => {
+        if (sidebarRef.current && !sidebarRef.current.contains(e.target)) {
+          updateStatus(false);
+        }
+      };
+
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }
+  }, [sidebarRef, mobileView]);
+
   return (
     <div
-      className={`transition-all bg-white ${
+      ref={sidebarRef}
+      className={`transition-all z-10 bg-white  ${
         status ? "w-64 shadow-md" : "w-0 overflow-hidden"
-      } flex flex-col justify-between`}
+      } flex flex-col justify-between ${mobileView && "absolute h-screen shadow-2xl"}`}
     >
       <div>
         <div className="p-5 flex items-center">

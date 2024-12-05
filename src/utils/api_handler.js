@@ -130,25 +130,16 @@ export const createTransaction = async (payload) => {
             url: `${baseUrl}/api/company/create-transaction`,
             data: payload,
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'multipart/form-data',
                 Authorization: token
             }
         });
         console.log(response);
         if (response.status === 200) {
-            // if (!response.data.data.PricedItineraries || response.data.data.PricedItineraries.PricedItinerary.length === 0) {
-            //     return {
-            //         status: false,
-            //         message: ['No Flight Found!']
-            //     };
-            // }
-            // else {
-            //     return {
-            //         status: true,
-            //         message: 'Flighs Data Found',
-            //         data: response.data.data
-            //     }
-            // }
+            return {
+                status: true,
+                message: 'Transaction Created Successfully',
+            }
         };
     } catch (error) {
         console.log('Failed while creating transaction: ', error);
@@ -164,6 +155,12 @@ export const createTransaction = async (payload) => {
                     status: false,
                     message: errorMessages
                 };
+            }
+            else {
+                return {
+                    status: false,
+                    message: 'Failed while creating transaction'
+                }
             }
         }
         else {
