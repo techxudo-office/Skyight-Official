@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 const baseUrl = import.meta.env.VITE_API_URL
 
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjEsImNvbXBhbnlfaWQiOjIxLCJyb2xlIjoic3VwZXJfYWRtaW4iLCJpYXQiOjE3MzMyNzAxNDAsImV4cCI6MTczMzM1NjU0MH0.VXraf7wcffRmlwA6IX68lYIoHai8CNLuzsu1o6CyBMM";
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjEsImNvbXBhbnlfaWQiOjIxLCJyb2xlIjoic3VwZXJfYWRtaW4iLCJpYXQiOjE3MzM1MTE1NDQsImV4cCI6MTczMzU5Nzk0NH0.WNQ7REGXLLwjq6k30g5_wPRvXNRZ1qevqEeLFvSfPBE";
 
 export const getSetting = async () => {
     try {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Slider from "react-slick";
 import { DashboardCards } from "../../components/components";
 
@@ -14,7 +14,6 @@ const DashboardHome = () => {
     autoplaySpeed: 1000,
     arrows: false,
   };
-
   return (
     <>
       <div className="w-[80vw]">

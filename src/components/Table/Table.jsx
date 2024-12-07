@@ -114,25 +114,58 @@ const Table = ({ columns, data, viewColumns, actions, activeIndex }) => {
                         activeIndex === dataIndex ? "visible" : "hidden"
                       }`}
                     >
-                      {viewColumns
-                        ? viewColumns.map((column, columnIndex) => {
-                            return column.type === "text" ? (
-                              <td
-                                key={columnIndex}
-                                className="px-4 py-3 text-sm text-slate-500"
-                                // colSpan={columns.length - viewColumns.length}
-                                colSpan={columns.length}
-                              >
-                                <p className="text-text font-semibold">
-                                  {[column.columnName]}
-                                </p>
-                                <span>{item[column.fieldName]}</span>
-                              </td>
-                            ) : (
-                              ""
-                            );
-                          })
-                        : ""}
+                      <td colSpan={columns && columns.length - 3}>
+                        {viewColumns
+                          ? viewColumns.map((column, columnIndex) => {
+                              return column.type === "id" ? (
+                                <div
+                                  key={columnIndex}
+                                  className="px-4 py-3 text-sm text-slate-500"
+                                >
+                                  <p className="text-text font-semibold">
+                                    {[column.columnName]}
+                                  </p>
+                                  <span>{item[column.fieldName]}</span>
+                                </div>
+                              ) : column.type === "text" ? (
+                                <div
+                                  key={columnIndex}
+                                  className="px-4 py-3 text-sm text-slate-500"
+                                >
+                                  <p className="text-text font-semibold">
+                                    {[column.columnName]}
+                                  </p>
+                                  <span>{item[column.fieldName]}</span>
+                                </div>
+                              ) : (
+                                ""
+                              );
+                            })
+                          : ""}
+                      </td>
+                      <td colSpan={3}>
+                        {viewColumns
+                          ? viewColumns.map((column, columnIndex) => {
+                              return column.type === "img" ? (
+                                <div
+                                  key={columnIndex}
+                                  className="px-4 py-3 text-sm text-slate-500"
+                                >
+                                  {/* <p className="text-text font-semibold">
+                                    {[column.columnName]}
+                                  </p> */}
+                                  <img
+                                    loading="lazy"
+                                    src={item[column.fieldName]}
+                                    className="h-96 "
+                                  />
+                                </div>
+                              ) : (
+                                ""
+                              );
+                            })
+                          : ""}
+                      </td>
                     </tr>
                   }
                 </React.Fragment>
