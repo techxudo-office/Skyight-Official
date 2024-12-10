@@ -15,4 +15,5 @@ export { default as Dropdown } from "./Dropdown/Dropdown";
 export { default as FlightCard } from "./FlightCard/FlightCard";
 
 export { default as DashboardCards } from "./DashboardCards/DashboardCards";
+export { default as ConfirmModal } from "./ConfirmModal/ConfirmModal";
 

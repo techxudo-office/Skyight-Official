@@ -8,7 +8,6 @@ export { default as DashboardHome } from "./DashboardHome/DashboardHome";
 export { default as SearchFlights } from "./SearchFlights/SearchFlights";
 export { default as SearchHotels } from "./SearchHotels/SearchHotels";
 
-
 export { default as FlightBookings } from "./FlightBookings/FlightBookings";
 export { default as HotelBookings } from "./HotelBookings/HotelBookings";
 
@@ -25,6 +24,9 @@ export { default as Roles } from "./Roles/Roles";
 export { default as CreateRole } from "./CreateRole/CreateRole";
 export { default as Users } from "./Users/Users";
 export { default as CreateUser } from "./CreateUser/CreateUser";
+
+export { default as CreateTicket } from "./CreateTicket/CreateTicket";
+export { default as ViewTickets } from "./ViewTickets/ViewTickets";
 
 export { default as Support } from "./Support/Support";
 

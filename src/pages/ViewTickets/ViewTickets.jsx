@@ -4,8 +4,7 @@ import {
   SecondaryButton,
   ConfirmModal,
 } from "../../components/components";
-import { getUsers, deleteUser } from "../../utils/api_handler";
-import { MdEditSquare } from "react-icons/md";
+import { getTickets, deleteTicket } from "../../utils/api_handler";
 import { MdAutoDelete } from "react-icons/md";
 
 import { useNavigate } from "react-router-dom";
@@ -17,38 +16,26 @@ import {
 } from "../../components/CardLayout/CardLayout";
 import toast from "react-hot-toast";
 
-const Users = () => {
+const ViewTickets = () => {
   const navigate = useNavigate();
 
   const navigationHandler = () => {
-    navigate("/dashboard/create-user");
+    navigate("/dashboard/create-ticket");
   };
 
-  const [usersData, setUsersData] = useState([]);
+  const [ticketsData, setTicketsData] = useState([]);
   const [modalStatus, setModalStatus] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
 
   const columnsData = [
     { columnName: "No.", fieldName: "no.", type: "no." },
-    // { columnName: "User", fieldName: "image", type: 'img' },
-    { columnName: "First Name", fieldName: "first_name", type: "text" },
-    { columnName: "Last Name", fieldName: "last_name", type: "text" },
-    { columnName: "Email", fieldName: "email", type: "text" },
-    { columnName: "Mobile Number", fieldName: "mobile_number", type: "text" },
-    { columnName: "Id", fieldName: "id", type: "id" },
-    { columnName: "Role", fieldName: "role", type: "text" },
+    { columnName: "Title", fieldName: "title", type: "text" },
+    { columnName: "Description", fieldName: "description", type: "text" },
     { columnName: "Status", fieldName: "status", type: "status" },
     { columnName: "Actions", fieldName: "actions", type: "actions" },
   ];
 
   const actionsData = [
-    {
-      name: "Edit",
-      icon: <MdEditSquare title="Edit" className="text-blue-500" />,
-      handler: (index, item) => {
-        navigate("/dashboard/update-reason", { state: item });
-      },
-    },
     {
       name: "Delete",
       icon: <MdAutoDelete title="Delete" className="text-red-500" />,
@@ -59,21 +46,21 @@ const Users = () => {
     },
   ];
 
-  const gettingUsers = async () => {
-    const response = await getUsers();
+  const gettingTickets = async () => {
+    const response = await getTickets();
     if (response.status) {
-      setUsersData(response.data);
+      setTicketsData(response.data);
     }
   };
 
-  const deleteUserHandler = async () => {
+  const deleteTicketHandler = async () => {
     if (!deleteId) {
-      toast.error("Failed to delete this user");
+      toast.error("Failed to delete this ticket");
       setModalStatus(false);
     } else {
-      const response = await deleteUser(deleteId);
+      const response = await deleteTicket(deleteId);
       if (response.status) {
-        setUsersData(usersData.filter(({ id }) => id !== deleteId));
+        setTicketsData(ticketsData.filter(({ id }) => id !== deleteId));
         setModalStatus(false);
         setDeleteId(null);
         toast.success(response.message);
@@ -89,7 +76,7 @@ const Users = () => {
   };
 
   useEffect(() => {
-    gettingUsers();
+    gettingTickets();
   }, []);
 
   return (
@@ -97,17 +84,17 @@ const Users = () => {
       <ConfirmModal
         status={modalStatus}
         abortDelete={abortDeleteHandler}
-        deleteHandler={deleteUserHandler}
+        deleteHandler={deleteTicketHandler}
       />
       <CardLayoutContainer removeBg={true}>
         <CardLayoutHeader
           removeBorder={true}
-          heading={"Users"}
+          heading={"Tickets"}
           className="flex justify-between items-center"
         >
           <div className="relative">
             <SecondaryButton
-              text={"Create New User"}
+              text={"Create New Ticket"}
               onClick={navigationHandler}
             />
           </div>
@@ -115,7 +102,7 @@ const Users = () => {
         <CardLayoutBody removeBorder={true}>
           <Table
             columns={columnsData}
-            data={usersData}
+            data={ticketsData}
             actions={actionsData}
           />
         </CardLayoutBody>
@@ -125,4 +112,4 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default ViewTickets;

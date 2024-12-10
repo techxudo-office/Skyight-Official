@@ -7,6 +7,7 @@ import { FaCreditCard } from "react-icons/fa";
 import { FaMoneyBill1Wave } from "react-icons/fa6";
 import { IoIosStopwatch } from "react-icons/io";
 import { MdAdminPanelSettings } from "react-icons/md";
+import { IoTicket } from "react-icons/io5";
 import { FaHandsHelping } from "react-icons/fa";
 
 export const sidebarLinks = [
@@ -117,6 +118,22 @@ export const sidebarLinks = [
       {
         title: "Create User",
         path: "/dashboard/create-user",
+        icon: <GoDotFill />,
+      },
+    ],
+  },
+  {
+    title: "Tickets",
+    icon: <IoTicket />,
+    sublinks: [
+      {
+        title: "View Tickets",
+        path: "/dashboard/view-tickets",
+        icon: <GoDotFill />,
+      },
+      {
+        title: "Create Ticket",
+        path: "/dashboard/create-ticket",
         icon: <GoDotFill />,
       },
     ],

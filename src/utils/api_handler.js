@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 const baseUrl = import.meta.env.VITE_API_URL
 
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjEsImNvbXBhbnlfaWQiOjIxLCJyb2xlIjoic3VwZXJfYWRtaW4iLCJpYXQiOjE3MzM1MTE1NDQsImV4cCI6MTczMzU5Nzk0NH0.WNQ7REGXLLwjq6k30g5_wPRvXNRZ1qevqEeLFvSfPBE";
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjEsImNvbXBhbnlfaWQiOjIxLCJyb2xlIjoic3VwZXJfYWRtaW4iLCJpYXQiOjE3MzM3NjU4MTAsImV4cCI6MTczMzg1MjIxMH0.A6IrHTBxSns55iyO7bkfOc18U4q4971LafsM_0_Wk3U";
 
 export const getSetting = async () => {
     try {
@@ -171,3 +171,203 @@ export const createTransaction = async (payload) => {
         };
     };
 };
+
+//! Users
+export const createUser = async (payload) => {
+    try {
+        let response = await axios({
+            method: "POST",
+            url: `${baseUrl}/api/user`,
+            data: payload,
+            headers: {
+                Authorization: token,
+            },
+        });
+        console.log(response);
+        if (response.status === 200) {
+            return {
+                status: true,
+                message: "New User Created",
+            };
+        }
+    } catch (error) {
+        console.log("Failed while creating user: ", error);
+        if (error.response) {
+            if (error.response.data.data.errors) {
+                const errors = Object.keys(error.response.data.data.errors);
+                const errorMessages = [];
+
+                for (let i = 0; i < errors.length; i++) {
+                    errorMessages.push(error.response.data.data.errors[errors[i]]);
+                }
+                return {
+                    status: false,
+                    message: errorMessages,
+                };
+            }
+        } else {
+            return {
+                status: false,
+                message: "Server Connection Error",
+            };
+        }
+    }
+};
+
+export const getUsers = async () => {
+    try {
+        let response = await axios({
+            method: "GET",
+            url: `${baseUrl}/api/user`,
+            headers: {
+                Authorization: token,
+            },
+        });
+        console.log(response);
+        if (response.status === 200) {
+            if (response.data.data.length > 0) {
+                const extractedData = response.data.data.map(
+                    ({ id, first_name, last_name, email, mobile_number, role }) => ({
+                        id, first_name, last_name, email, mobile_number, role, status: "active"
+                    })
+                );
+                return { status: true, data: extractedData };
+            }
+        }
+    } catch (error) {
+        console.log("Failed while getting users: ", error);
+    }
+};
+
+export const deleteUser = async (id) => {
+    try {
+        let response = await axios({
+            method: "DELETE",
+            url: `${baseUrl}/api/user/${id}`,
+            headers: {
+                Authorization: token,
+            },
+        });
+        console.log(response);
+        if (response.status === 200) {
+            return { status: true, message: "User has been deleted" };
+        }
+    } catch (error) {
+        console.log("Failed while deleting user: ", error);
+        return { status: false, message: "Failed while deleting this user" };
+    }
+};
+
+//! Tickets
+export const createTicket = async (payload) => {
+    try {
+        let response = await axios({
+            method: "POST",
+            url: `${baseUrl}/api/ticket`,
+            data: payload,
+            headers: {
+                Authorization: token,
+            },
+        });
+        console.log(response);
+        if (response.status === 200) {
+            return {
+                status: true,
+                message: "New Ticket Created",
+            };
+        }
+    } catch (error) {
+        console.log("Failed while creating ticket: ", error);
+        if (error.response) {
+            if (error.response.data.data.errors) {
+                const errors = Object.keys(error.response.data.data.errors);
+                const errorMessages = [];
+
+                for (let i = 0; i < errors.length; i++) {
+                    errorMessages.push(error.response.data.data.errors[errors[i]]);
+                }
+                return {
+                    status: false,
+                    message: errorMessages,
+                };
+            }
+        } else {
+            return {
+                status: false,
+                message: "Server Connection Error",
+            };
+        }
+    }
+};
+
+export const getTickets = async () => {
+    try {
+        let response = await axios({
+            method: "GET",
+            url: `${baseUrl}/api/ticket`,
+            headers: {
+                Authorization: token,
+            },
+        });
+        console.log(response);
+        if (response.status === 200) {
+            if (response.data.data.length > 0) {
+                const extractedData = response.data.data.map(
+                    ({ id, title, description, status }) => ({
+                        id, title, description, status
+                    })
+                );
+                return { status: true, data: extractedData };
+            }
+        }
+    } catch (error) {
+        console.log("Failed while getting tickets: ", error);
+    }
+};
+
+export const deleteTicket = async (id) => {
+    try {
+        let response = await axios({
+            method: "DELETE",
+            url: `${baseUrl}/api/ticket/${id}`,
+            headers: {
+                Authorization: token,
+            },
+        });
+        console.log(response);
+        if (response.status === 200) {
+            return { status: true, message: "Ticket has been deleted" };
+        }
+    } catch (error) {
+        console.log("Failed while deleting ticket: ", error);
+        return { status: false, message: "Failed while deleting this ticket" };
+    }
+};
+
+//! Bookings
+export const getFlightBookings = async () => {
+    try {
+        let response = await axios({
+            method: "GET",
+            url: `${baseUrl}/api/booking`,
+            headers: {
+                Authorization: token,
+            },
+        });
+        console.log(response);
+        if (response.status === 200) {
+            if (response.data.data.length > 0) {
+                const extractedData = response.data.data.map(
+                    ({ origin, destination, booking_reference_id, total_fare, currency, booking_status, created_at, actions, updated_at, transaction_identifier, ticketing_time_limit, id, rate, persantage, canceled_at }) => ({
+                        origin, destination, booking_reference_id, total_fare, currency, booking_status, created_at, actions, updated_at, transaction_identifier, ticketing_time_limit, id, rate, persantage, canceled_at
+                    })
+                );
+                return { status: true, data: extractedData };
+            }
+        }
+    } catch (error) {
+        console.log("Failed while getting bookings: ", error);
+    }
+};
+
+export const cancelFlightBooking = () => { };
