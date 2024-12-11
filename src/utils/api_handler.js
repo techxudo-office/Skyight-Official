@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 const baseUrl = import.meta.env.VITE_API_URL
 
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjEsImNvbXBhbnlfaWQiOjIxLCJyb2xlIjoic3VwZXJfYWRtaW4iLCJpYXQiOjE3MzM3NjU4MTAsImV4cCI6MTczMzg1MjIxMH0.A6IrHTBxSns55iyO7bkfOc18U4q4971LafsM_0_Wk3U";
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTMsImNvbXBhbnlfaWQiOjQ2LCJyb2xlIjoic3VwZXJfYWRtaW4iLCJpYXQiOjE3MzM4NjI5NDUsImV4cCI6MTczMzk0OTM0NX0.12I0NAs4HCXJcmKoaZsqnH1Ok9Yqha5Qtn-2RTtpy9U";
 
 export const getSetting = async () => {
     try {
@@ -304,7 +304,7 @@ export const getTickets = async () => {
     try {
         let response = await axios({
             method: "GET",
-            url: `${baseUrl}/api/ticket`,
+            url: `${baseUrl}/api/ticket/company`,
             headers: {
                 Authorization: token,
             },

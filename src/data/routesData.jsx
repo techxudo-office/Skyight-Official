@@ -26,10 +26,12 @@ import {
   UpdateSetting,
   FlightResults,
   FlightDetails,
+  Login,
 } from "../pages/pages";
 
 export const routesData = [
   { path: "/", element: <Home /> },
+  { path: "/login", element: <Login /> },
   {
     path: "/dashboard",
     element: <Dashboard />,

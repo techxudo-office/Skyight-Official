@@ -21,10 +21,10 @@ export const CardLayoutHeader = ({
   );
 };
 
-export const CardLayoutBody = ({ children, removeBorder, className }) => {
+export const CardLayoutBody = ({ children, removeBorder, className,padding }) => {
   return (
     <div
-      className={`p-5 ${
+      className={`${padding ? padding : "p-5"} ${
         removeBorder ? "" : "border-b"
       } border-slate-200 ${className}`}
     >
@@ -50,11 +50,11 @@ export const CardLayoutContainer = ({
   return (
     <motion.div
       initial={{ opacity: 0 }}
-    //   animate={{ opacity: isVisible ? 1 : 0 }}
+      //   animate={{ opacity: isVisible ? 1 : 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
       style={{
-        width:'100%',
+        width: "100%",
       }}
     >
       <div

@@ -7,7 +7,10 @@ import { IoIosSettings } from "react-icons/io";
 import { FaBell } from "react-icons/fa6";
 import { FiLogOut } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
-import { Dropdown } from "../components";
+import { Dropdown, SecondaryButton } from "../components";
+import { HiOutlineRefresh } from "react-icons/hi";
+import { PiCoinsFill } from "react-icons/pi";
+import { PiHandCoinsFill } from "react-icons/pi";
 
 const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
   const navigate = useNavigate();
@@ -67,6 +70,25 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
     setSidebarStatusHandler(!sidebarStatus);
   };
 
+  const [isActive, setIsActive] = useState(false);
+
+  const options = [
+    {
+      name: "View Credits",
+      icon: <PiCoinsFill />,
+      handler: () => {
+        setIsActive(!isActive);
+      },
+    },
+    {
+      name: "More Credits",
+      icon: <PiHandCoinsFill />,
+      handler: () => {
+        setIsActive(!isActive);
+      },
+    },
+  ];
+
   return (
     <>
       <Toaster />
@@ -77,16 +99,36 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
           }`}
           onClick={sidebarHandler}
         />
-        <div className="px-3">
-          <FaCircleUser
-            onClick={dropdownHandler}
-            className="text-slate-300 hover:text-slate-400 transition-all text-4xl cursor-pointer"
-          />
-          <Dropdown
-            status={dropdownStatus}
-            changeStatus={setDropDownStatus}
-            options={dropdownOptions}
-          />
+        <div className="flex items-center justify-center ">
+          <div className="relative">
+            <div
+              className={`w-full flex items-center justify-center gap-3 cursor-pointer py-[7px] px-6 bg-blue-100 hover:text-black text-primary font-semibold rounded-full transition duration-300 ease-in-out transform focus:outline-none`}
+              onClick={() => {
+                setIsActive(!isActive);
+              }}
+            >
+              <HiOutlineRefresh />
+              <span>PKR 34,670</span>
+            </div>
+
+            <Dropdown
+              className={"top-16 right-10"}
+              status={isActive}
+              changeStatus={setIsActive}
+              options={options}
+            />
+          </div>
+          <div className="px-3">
+            <FaCircleUser
+              onClick={dropdownHandler}
+              className="text-slate-300 hover:text-slate-400 transition-all text-4xl cursor-pointer"
+            />
+            <Dropdown
+              status={dropdownStatus}
+              changeStatus={setDropDownStatus}
+              options={dropdownOptions}
+            />
+          </div>
         </div>
       </div>
     </>
