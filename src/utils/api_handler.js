@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 const baseUrl = import.meta.env.VITE_API_URL
 
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTMsImNvbXBhbnlfaWQiOjQ2LCJyb2xlIjoic3VwZXJfYWRtaW4iLCJpYXQiOjE3MzM4NjI5NDUsImV4cCI6MTczMzk0OTM0NX0.12I0NAs4HCXJcmKoaZsqnH1Ok9Yqha5Qtn-2RTtpy9U";
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTMsImNvbXBhbnlfaWQiOjQ2LCJyb2xlIjoic3VwZXJfYWRtaW4iLCJpYXQiOjE3MzQ0NTc5NDIsImV4cCI6MTczNDU0NDM0Mn0.EGVpszakzVjucTzr9Yz8vX-8xb7o2r_7iAdEe8jIVLQ";
 
 export const getSetting = async () => {
     try {
@@ -16,8 +16,8 @@ export const getSetting = async () => {
         });
         console.log(response);
         if (response.status === 200) {
-            const { id, commission, rate, from, status = 'active' } = response.data.data
-            return { status: true, data: { id, commission, rate, from, status } };
+            const { AED, EUR, IQD, IRR, PKR, SAR, TRY, USD, commission, status = 'active' } = response.data.data
+            return { status: true, data: { AED, EUR, IQD, IRR, PKR, SAR, TRY, USD, commission, status } };
         }
     } catch (error) {
         console.log('Failed while calling setting api: ', error);
@@ -68,6 +68,7 @@ export const updateSetting = async (payload) => {
     };
 };
 
+//! Flight...
 export const searchFlight = async (payload) => {
 
     const apiUrlWithPayload = `${baseUrl}/api/search?trip_type=${payload.tripType}&departure_date_time=${payload.departureDate}&origin_location_code=${payload.originCode}&destination_location_code=${payload.destinationCode}&adult_quantity=${payload.adult}&child_quantity=${[payload.child]}&infant_quantity=${payload.infant}`;
@@ -370,4 +371,30 @@ export const getFlightBookings = async () => {
     }
 };
 
-export const cancelFlightBooking = () => { };
+export const cancelFlightBooking = async (payload) => {
+    try {
+        let response = await axios({
+            method: "POST",
+            url: `${baseUrl}/api/cancel-booking`,
+            data: payload,
+            headers: {
+                Authorization: token,
+            },
+        });
+        console.log(response);
+    } catch (error) {
+        console.log("Failed while calling cancel booking api: ", error);
+        if (error.response) {
+            return {
+                status: false,
+                message: 'Failed while cancelling booking'
+            }
+        }
+        else {
+            return {
+                status: false,
+                message: 'Server Connection Error!'
+            }
+        }
+    }
+};

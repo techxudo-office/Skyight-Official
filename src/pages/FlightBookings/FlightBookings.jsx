@@ -82,6 +82,7 @@ const FlightBookings = () => {
       icon: <MdCancel title="Cancel" className="text-red-500" />,
       handler: (_, item) => {
         toast.error("Cancel Api Calling");
+        cancelFlightBookingHandler(item);
       },
     },
   ];
@@ -93,21 +94,15 @@ const FlightBookings = () => {
     }
   };
 
-  const cancelFlightBookingHandler = async () => {
-    if (!deleteId) {
-      toast.error("Failed to cancelling this booking");
-      setModalStatus(false);
-    } else {
-      const response = await cancelFlightBooking(deleteId);
-      if (response.status) {
-        setBookingsData(bookingsData.filter(({ id }) => id !== deleteId));
-        setModalStatus(false);
-        setDeleteId(null);
-        toast.success(response.message);
-      } else {
-        toast.error(response.message);
-      }
-    }
+  const cancelFlightBookingHandler = async (flight) => {
+    console.log(flight);
+
+    // let response = await cancelFlightBooking();
+    // if (response.status) {
+    //   toast.success(response.message);
+    // } else {
+    //   toast.error(response.message);
+    // }
   };
 
   const abortDeleteHandler = () => {

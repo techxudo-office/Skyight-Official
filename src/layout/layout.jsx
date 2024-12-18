@@ -17,9 +17,8 @@ const Layout = () => {
           sidebarStatus={sidebarStatus}
           setSidebarStatusHandler={setSidebarStatusHandler}
         />
-        {/* <div className="flex flex-col justify-between items-center h-[88%] bg-slate-100 overflow-scroll" */}
         <div
-          className="flex flex-col justify-between items-center h-[88%] bg-slate-200 overflow-scroll"
+          className="flex flex-col justify-between items-center h-[88%] bg-slate-100 overflow-scroll"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           <div className="w-full flex justify-center items-center p-5">

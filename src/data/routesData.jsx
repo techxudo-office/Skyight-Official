@@ -26,6 +26,8 @@ import {
   UpdateSetting,
   FlightResults,
   FlightDetails,
+  TravelersDetails,
+  ConfirmBooking,
   Login,
 } from "../pages/pages";
 
@@ -60,6 +62,8 @@ export const routesData = [
       { path: "update-setting", element: <UpdateSetting /> },
       { path: "flight-results", element: <FlightResults /> },
       { path: "flight-details", element: <FlightDetails /> },
+      { path: "travelers-details", element: <TravelersDetails /> },
+      { path: "confirm-booking", element: <ConfirmBooking /> },
     ],
   },
   { path: "*", element: <NotFound /> },

@@ -69,6 +69,7 @@ const FlightDetails = () => {
   const navigate = useNavigate();
 
   const [flightData, setFlightData] = useState(null);
+  const [travelersData, setTravelersData] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const initialValues = {
@@ -96,9 +97,14 @@ const FlightDetails = () => {
     flightData &&
     flightData.AirItinerary.OriginDestinationOptions[0].FlightSegment[0];
 
+  const confirmBookingHandler = () => {
+    alert("Booking Confirmed !");
+  };
+
   useEffect(() => {
     if (location.state) {
       setFlightData(location.state.data);
+      setTravelersData(location.state.travelers);
     }
   }, [location.state]);
 
@@ -230,48 +236,81 @@ const FlightDetails = () => {
           </CardLayoutBody>
         </CardLayoutContainer>
 
-        <div className="flex gap-5 mb-5">
-          <CardLayoutContainer className={"flex  flex-col flex-[2]"}>
-            <CardLayoutHeader heading={"Pricing Details"} />
-            <CardLayoutBody removeBorder={true}>
-              <div className="w-full flex flex-col">
-                {renderPassengerDetails()}
+        <CardLayoutContainer className={"mb-5"}>
+          <CardLayoutHeader
+            heading={"Travelers Details"}
+            className={"flex items-center flex-wrap gap-5 justify-between"}
+          />
+          <CardLayoutBody removeBorder={true}>
+            <div className="flex flex-wrap gap-5 justify-between items-center">
+              <div>
+                <h2 className="text-xl font-semibold text-primary mb-2">
+                  Adults
+                </h2>
+                <h2 className="text-4xl text-text font-semibold">
+                  {travelersData.adults}
+                </h2>
               </div>
-            </CardLayoutBody>
-          </CardLayoutContainer>
+              <div>
+                <h2 className="text-xl font-semibold text-primary mb-2">
+                  Childs
+                </h2>
+                <h2 className="text-4xl text-text font-semibold">
+                  {travelersData.childs}
+                </h2>
+              </div>
+              <div>
+                <h2 className="text-xl font-semibold text-primary mb-2">
+                  Infants
+                </h2>
+                <h2 className="text-4xl text-text font-semibold">
+                  {travelersData.infants}
+                </h2>
+              </div>
+            </div>
+          </CardLayoutBody>
+        </CardLayoutContainer>
 
-          <CardLayoutContainer className={"flex  flex-col flex-[1]"}>
-            <CardLayoutHeader heading={"Baggage"} />
-            <CardLayoutBody removeBorder={true}>
-              <div className="flex flex-col">
-                {flightSegment.FreeBaggages &&
-                  flightSegment.FreeBaggages.map((item, index) => {
-                    return (
-                      <div
-                        key={index}
-                        className="flex flex-wrap gap-3 py-3 border-b border-slate-200 items-center justify-between"
-                      >
-                        <h2 className="text-sm font-semibold text-slate-600 flex  items-center justify-center gap-1">
-                          <span className="text-primary">
-                            <FaUser />
-                          </span>
-                          <span>Type:{item.PassengerType}</span>
-                        </h2>
-                        <h2 className="text-sm font-semibold text-slate-500 flex  items-center justify-center gap-1">
-                          <span className="text-primary">
-                            <FaSuitcase />
-                          </span>
-                          <span>
-                            Baggage {item.Quantity} {item.Unit}
-                          </span>
-                        </h2>
-                      </div>
-                    );
-                  })}
-              </div>
-            </CardLayoutBody>
-          </CardLayoutContainer>
-        </div>
+        <CardLayoutContainer className={"flex  flex-col mb-5"}>
+          <CardLayoutHeader heading={"Pricing Details"} />
+          <CardLayoutBody removeBorder={true}>
+            <div className="w-full flex flex-col">
+              {renderPassengerDetails()}
+            </div>
+          </CardLayoutBody>
+        </CardLayoutContainer>
+
+        <CardLayoutContainer className={"flex  flex-col mb-5"}>
+          <CardLayoutHeader heading={"Baggage"} />
+          <CardLayoutBody removeBorder={true}>
+            <div className="flex flex-col">
+              {flightSegment.FreeBaggages &&
+                flightSegment.FreeBaggages.map((item, index) => {
+                  return (
+                    <div
+                      key={index}
+                      className="flex flex-wrap gap-3 py-3 border-b border-slate-200 items-center justify-between"
+                    >
+                      <h2 className="text-sm font-semibold text-slate-600 flex  items-center justify-center gap-1">
+                        <span className="text-primary">
+                          <FaUser />
+                        </span>
+                        <span>Type:{item.PassengerType}</span>
+                      </h2>
+                      <h2 className="text-sm font-semibold text-slate-500 flex  items-center justify-center gap-1">
+                        <span className="text-primary">
+                          <FaSuitcase />
+                        </span>
+                        <span>
+                          Baggage {item.Quantity} {item.Unit}
+                        </span>
+                      </h2>
+                    </div>
+                  );
+                })}
+            </div>
+          </CardLayoutBody>
+        </CardLayoutContainer>
 
         <div className="flex items-center justify-end gap-3">
           <div>
@@ -283,14 +322,7 @@ const FlightDetails = () => {
             />
           </div>
           <div>
-            <Button
-              text="Continue Booking"
-              onClick={() => {
-                navigate("/dashboard/travelers-details", {
-                  state: location.state,
-                });
-              }}
-            />
+            <Button text="Confirm Booking" onClick={confirmBookingHandler} />
           </div>
         </div>
 

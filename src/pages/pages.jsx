@@ -38,5 +38,7 @@ export { default as UpdateSetting } from "./UpdateSetting/UpdateSetting";
 
 export { default as FlightResults } from "./FlightResults/FlightResults";
 export { default as FlightDetails } from "./FlightDetails/FlightDetails";
+export { default as TravelersDetails } from "./TravelersDetails/TravelersDetails";
+export { default as ConfirmBooking } from "./ConfirmBooking/ConfirmBooking";
 
 export { default as Login } from "./Login/Login";

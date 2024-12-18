@@ -82,7 +82,14 @@ const SearchFlights = () => {
       if (response.status) {
         if (response.data.PricedItineraries.PricedItinerary.length > 0) {
           navigate("/dashboard/flight-results", {
-            state: { flightsData: response.data },
+            state: {
+              flightsData: response.data,
+              travelersData: {
+                adults: payload.adult,
+                childs: payload.child,
+                infants: payload.infant,
+              },
+            },
           });
         }
       } else {
