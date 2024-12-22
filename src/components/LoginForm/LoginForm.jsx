@@ -54,7 +54,7 @@ const LoginForm = () => {
 
   return (
     <>
-      <CardLayoutContainer className={"w-2/3 m-auto p-0 shadow-3xl"}>
+      <CardLayoutContainer className={"w-[70%] m-auto p-0 shadow-3xl"}>
         <CardLayoutBody removeBorder={true} padding={"p-0"} className={"flex"}>
           <div className="flex-1 p-16 ">
             <h3 className="text-4xl font-semibold text-center mb-10">Login</h3>
