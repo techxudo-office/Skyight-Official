@@ -17,4 +17,5 @@ export { default as FlightCard } from "./FlightCard/FlightCard";
 export { default as DashboardCards } from "./DashboardCards/DashboardCards";
 export { default as ConfirmModal } from "./ConfirmModal/ConfirmModal";
 export { default as LoginForm } from "./LoginForm/LoginForm";
-
+export { default as RegistrationForm } from "./RegistrationForm/RegistrationForm";
+export { default as VerificationForm } from "./VerificationForm/VerificationForm";

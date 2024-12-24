@@ -21,19 +21,21 @@ import {
   ViewTickets,
   Support,
   Profile,
-  Setting,
   Notifications,
-  UpdateSetting,
   FlightResults,
   FlightDetails,
   TravelersDetails,
   ConfirmBooking,
   Login,
+  Registration,
+  Verification,
 } from "../pages/pages";
 
 export const routesData = [
   { path: "/", element: <Home /> },
   { path: "/login", element: <Login /> },
+  { path: "/registration", element: <Registration /> },
+  { path: "/verification", element: <Verification /> },
   {
     path: "/dashboard",
     element: <Dashboard />,
@@ -57,9 +59,7 @@ export const routesData = [
       { path: "create-ticket", element: <CreateTicket /> },
       { path: "view-tickets", element: <ViewTickets /> },
       { path: "profile", element: <Profile /> },
-      { path: "setting", element: <Setting /> },
       { path: "notifications", element: <Notifications /> },
-      { path: "update-setting", element: <UpdateSetting /> },
       { path: "flight-results", element: <FlightResults /> },
       { path: "flight-details", element: <FlightDetails /> },
       { path: "travelers-details", element: <TravelersDetails /> },

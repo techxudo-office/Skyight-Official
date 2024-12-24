@@ -32,9 +32,6 @@ export { default as Support } from "./Support/Support";
 
 export { default as Profile } from "./Profile/Profile";
 export { default as Notifications } from "./Notifications/Notifications";
-export { default as Setting } from "./Setting/Setting";
-
-export { default as UpdateSetting } from "./UpdateSetting/UpdateSetting";
 
 export { default as FlightResults } from "./FlightResults/FlightResults";
 export { default as FlightDetails } from "./FlightDetails/FlightDetails";
@@ -42,3 +39,5 @@ export { default as TravelersDetails } from "./TravelersDetails/TravelersDetails
 export { default as ConfirmBooking } from "./ConfirmBooking/ConfirmBooking";
 
 export { default as Login } from "./Login/Login";
+export { default as Registration } from "./Registration/Registration";
+export { default as Verification } from "./Verification/Verification";

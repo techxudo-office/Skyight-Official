@@ -13,18 +13,35 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate, Link } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
-
+import { login } from "../../utils/api_handler";
 import { FaCheck } from "react-icons/fa6";
 
 const LoginForm = () => {
   const navigate = useNavigate();
-
   const [loading, setLoading] = useState(false);
 
   const validationSchema = Yup.object({
-    email: Yup.string().required("Please enter your email"),
+    email: Yup.string()
+      .email("Invalid email format")
+      .required("Please enter your email"),
     password: Yup.string().required("Please enter your password"),
   });
+
+  const loginHandler = async (payload, resetForm) => {
+    setLoading(true);
+    let response = await login(payload);
+    if (response.status) {
+      toast.success(response.message);
+      setLoading(false);
+      resetForm();
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 3000);
+    } else {
+      toast.error(response.message);
+      setLoading(false);
+    }
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -32,45 +49,38 @@ const LoginForm = () => {
       password: "",
     },
     validationSchema,
-    onSubmit: (values) => {
+    onSubmit: async (values, { resetForm }) => {
       const payload = {
-        question: values.question,
-        options: [
-          values.optionOne,
-          values.optionTwo,
-          values.optionThree,
-          values.optionFour,
-          values.optionFive,
-          values.optionSix,
-        ],
-        // image: selectedImage,
-        image:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6cedo1mkf6zjpkJ8oZ_GAUW4m-7wtVr_QjA&s",
-        status: isActive ? "active" : "inactive",
+        email: values.email,
+        password: values.password,
       };
-      // createPollHandler(payload);
+      loginHandler(payload, resetForm);
     },
   });
 
   return (
     <>
-      <CardLayoutContainer className={"w-[70%] m-auto p-0 shadow-3xl"}>
-        <CardLayoutBody removeBorder={true} padding={"p-0"} className={"flex"}>
-          <div className="flex-1 p-16 ">
-            <h3 className="text-4xl font-semibold text-center mb-10">Login</h3>
-
-            <div className="flex flex-col gap-5">
+      <Toaster />
+      <CardLayoutContainer className="max-w-[900px] m-auto p-0 shadow-3xl">
+        <CardLayoutBody removeBorder padding="p-0" className="flex">
+          {/* Login Form */}
+          <div className="flex-1 p-16">
+            <h3 className="text-4xl font-extrabold text-center mb-10">Login</h3>
+            <form
+              onSubmit={formik.handleSubmit}
+              className="flex flex-col gap-5"
+            >
               <div
-                className={`relative${
+                className={`relative ${
                   formik.touched.email && formik.errors.email ? "mb-5" : ""
                 }`}
               >
                 <Input
-                  placeholder={"abc.xcv@gmail.com"}
-                  id={"email"}
-                  name={"email"}
-                  label={"Email Address*"}
-                  type={"email"}
+                  placeholder="abc.xcv@gmail.com"
+                  id="email"
+                  name="email"
+                  label="Email Address*"
+                  type="email"
                   value={formik.values.email}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
@@ -83,18 +93,18 @@ const LoginForm = () => {
               </div>
 
               <div
-                className={`relative${
+                className={`relative ${
                   formik.touched.password && formik.errors.password
                     ? "mb-5"
                     : ""
                 }`}
               >
                 <Input
-                  placeholder={"********"}
-                  id={"password"}
-                  name={"password"}
-                  label={"Password*"}
-                  type={"password"}
+                  placeholder="********"
+                  id="password"
+                  name="password"
+                  label="Password*"
+                  type="password"
                   value={formik.values.password}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
@@ -108,36 +118,40 @@ const LoginForm = () => {
 
               <Link
                 className="text-center hover:text-primary transition-all"
-                to={"/forgot-password"}
+                to="/forgot-password"
               >
                 Forgot your password?
               </Link>
 
-              <Button text={"Login"} type="submit" />
-            </div>
+              <Button
+                text={loading ? <Spinner /> : "Login"}
+                type="submit"
+                disabled={loading}
+              />
+            </form>
           </div>
-          <div className="flex-1 p-16 register-component-bg rounded-r-3xl">
-            <h3 className="text-4xl font-semibold text-center mb-10">
-              Register Company
-            </h3>
 
+          {/* Register Section */}
+          <div className="flex-1 p-16 register-component-bg rounded-r-3xl">
+            <h3 className="text-4xl font-extrabold text-center mb-10">
+              Registration
+            </h3>
             <div className="flex flex-col gap-5">
               <div className="flex flex-col">
                 <h4 className="flex items-center gap-3 mb-6 text-lg">
-                  <FaCheck className="bg-blue-100 text-primary p-1 rounded-full text-2xl" />{" "}
+                  <FaCheck className="bg-blue-100 text-primary p-1 rounded-full text-2xl" />
                   Save time when booking
                 </h4>
                 <h4 className="flex items-center gap-3 my-6 text-lg">
-                  <FaCheck className="bg-blue-100 text-primary p-1 rounded-full text-2xl" />{" "}
+                  <FaCheck className="bg-blue-100 text-primary p-1 rounded-full text-2xl" />
                   Save your favourites easily
                 </h4>
                 <h4 className="flex items-center gap-3 my-6 text-lg">
-                  <FaCheck className="bg-blue-100 text-primary p-1 rounded-full text-2xl" />{" "}
+                  <FaCheck className="bg-blue-100 text-primary p-1 rounded-full text-2xl" />
                   View your reservations and history
                 </h4>
               </div>
-
-              <SecondaryButton text={"Register Now"} className="mt-5" />
+              <SecondaryButton onClick={()=>{navigate('/registration')}} text="Register Now" className="mt-5" />
             </div>
           </div>
         </CardLayoutBody>

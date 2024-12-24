@@ -6,7 +6,7 @@ import { LoginForm } from "../../components/components";
 const Login = () => {
   return (
     <>
-      <div className="login-page h-screen w-full flex items-center justify-center">
+      <div className="animated-page h-screen w-full flex items-center justify-center">
         <LoginForm />
       </div>
     </>

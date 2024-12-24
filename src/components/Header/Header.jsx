@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { HiOutlineMenuAlt1 } from "react-icons/hi";
 import { FaCircleUser } from "react-icons/fa6";
@@ -7,15 +7,18 @@ import { IoIosSettings } from "react-icons/io";
 import { FaBell } from "react-icons/fa6";
 import { FiLogOut } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
-import { Dropdown, SecondaryButton } from "../components";
+import { Dropdown, SecondaryButton, Spinner } from "../components";
 import { HiOutlineRefresh } from "react-icons/hi";
 import { PiCoinsFill } from "react-icons/pi";
 import { PiHandCoinsFill } from "react-icons/pi";
+import { getCredits } from "../../utils/api_handler";
 
 const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
   const navigate = useNavigate();
 
   const [dropdownStatus, setDropDownStatus] = useState(false);
+  const [isActive, setIsActive] = useState(false);
+  const [credits, setCredits] = useState("");
 
   const dropdownHandler = () => {
     setDropDownStatus(!dropdownStatus);
@@ -52,6 +55,23 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
     },
   ];
 
+  const options = [
+    {
+      name: "View Credits",
+      icon: <PiCoinsFill />,
+      handler: () => {
+        setIsActive(!isActive);
+      },
+    },
+    {
+      name: "More Credits",
+      icon: <PiHandCoinsFill />,
+      handler: () => {
+        setIsActive(!isActive);
+      },
+    },
+  ];
+
   const logoutHandler = () => {
     dropdownHandler();
     localStorage.removeItem("token");
@@ -70,24 +90,20 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
     setSidebarStatusHandler(!sidebarStatus);
   };
 
-  const [isActive, setIsActive] = useState(false);
+  const getCreditsHandler = async () => {
+    let response = await getCredits();
+    if (response.status) {
+      setCredits(response.data);
+    }
+  };
 
-  const options = [
-    {
-      name: "View Credits",
-      icon: <PiCoinsFill />,
-      handler: () => {
-        setIsActive(!isActive);
-      },
-    },
-    {
-      name: "More Credits",
-      icon: <PiHandCoinsFill />,
-      handler: () => {
-        setIsActive(!isActive);
-      },
-    },
-  ];
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      getCreditsHandler();
+    }, 5000);
+
+    return () => clearInterval(intervalId);
+  }, []);
 
   return (
     <>
@@ -107,8 +123,13 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
                 setIsActive(!isActive);
               }}
             >
-              <HiOutlineRefresh />
-              <span>PKR 34,670</span>
+              {credits ? (
+                <>
+                  <HiOutlineRefresh /> <span>PKR {credits}</span>
+                </>
+              ) : (
+                <Spinner className={'text-primary'} />
+              )}
             </div>
 
             <Dropdown

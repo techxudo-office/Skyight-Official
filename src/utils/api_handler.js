@@ -1,77 +1,50 @@
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { data, useNavigate } from "react-router-dom";
 
 const baseUrl = import.meta.env.VITE_API_URL;
 
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTMsImNvbXBhbnlfaWQiOjQ2LCJyb2xlIjoic3VwZXJfYWRtaW4iLCJpYXQiOjE3MzQ1Mzk5MzEsImV4cCI6MTczNDYyNjMzMX0.OzKtOGZBrVKbB0HrdLo9fnpGiPlcS2rykVqfrl6qEF0";
-
-export const getSetting = async () => {
-  try {
-    let response = await axios({
-      method: "GET",
-      url: `${baseUrl}/api/setting`,
-      headers: {
-        Authorization: token,
-      },
-    });
-    console.log(response);
-    if (response.status === 200) {
-      const {
-        AED,
-        EUR,
-        IQD,
-        IRR,
-        PKR,
-        SAR,
-        TRY,
-        USD,
-        commission,
-        status = "active",
-      } = response.data.data;
-      return {
-        status: true,
-        data: { AED, EUR, IQD, IRR, PKR, SAR, TRY, USD, commission, status },
-      };
-    }
-  } catch (error) {
-    console.log("Failed while calling setting api: ", error);
-  }
+const getToken = () => {
+  return localStorage.getItem('auth_token');
 };
 
-export const updateSetting = async (payload) => {
+//! Authentication
+export const login = async (payload) => {
   try {
     let response = await axios({
       method: "POST",
-      url: `${baseUrl}/api/setting`,
+      url: `${baseUrl}/api/login`,
       data: payload,
-      headers: {
-        Authorization: token,
-      },
     });
     console.log(response);
     if (response.status === 200) {
+      localStorage.setItem('auth_token', response.data.data.token);
       return {
         status: true,
-        message: "Setting Updated Successfully",
+        message: "Login Successfully",
       };
     }
   } catch (error) {
-    console.log("Failed while updating settings: ", error);
+    console.log("Failed while trying to login account: ", error);
     if (error.response) {
-      const commissionErr = error.response.data.data.errors.commission;
-      const rateErr = error.response.data.data.errors.rate;
-      if (commissionErr) {
+      if (error.response.data.data.errors) {
+        const errors = Object.keys(error.response.data.data.errors);
+        const errorMessages = [];
+
+        for (let i = 0; i < errors.length; i++) {
+          errorMessages.push(error.response.data.data.errors[errors[i]]);
+        }
         return {
           status: false,
-          message: commissionErr,
+          message: errorMessages,
         };
       }
-      if (rateErr) {
-        return {
-          status: false,
-          message: rateErr,
-        };
+      else {
+        if (error.response.data.message) {
+          return {
+            status: false,
+            message: error.response.data.message
+          }
+        }
       }
     } else {
       return {
@@ -82,15 +55,173 @@ export const updateSetting = async (payload) => {
   }
 };
 
+export const registration = async (payload) => {
+  try {
+    let response = await axios({
+      method: "POST",
+      url: `${baseUrl}/api/register-company`,
+      data: payload,
+    });
+    console.log(response);
+    if (response.status === 200) {
+      return {
+        status: true,
+        message: "Please wait",
+      };
+    }
+  } catch (error) {
+    console.log("Failed while trying to register your account: ", error);
+    if (error.response) {
+      if (error.response.data.data.errors) {
+        const errors = Object.keys(error.response.data.data.errors);
+        const errorMessages = [];
+
+        for (let i = 0; i < errors.length; i++) {
+          errorMessages.push(error.response.data.data.errors[errors[i]]);
+        }
+        return {
+          status: false,
+          message: errorMessages,
+        };
+      }
+      else {
+        if (error.response.data.message) {
+          return {
+            status: false,
+            message: error.response.data.message
+          }
+        }
+      }
+    } else {
+      return {
+        status: false,
+        message: "Server Connection Error",
+      };
+    }
+  }
+};
+
+export const verifyOTP = async (payload) => {
+  try {
+    let response = await axios({
+      method: "POST",
+      url: `${baseUrl}/api/verify-verification-code`,
+      data: payload,
+    });
+    console.log(response);
+    if (response.status === 200) {
+      return {
+        status: true,
+        message: "Verified Successfully",
+      };
+    }
+  } catch (error) {
+    console.log("Failed while trying to verify your account: ", error);
+    if (error.response) {
+      if (error.response.data.data.errors) {
+        const errors = Object.keys(error.response.data.data.errors);
+        const errorMessages = [];
+
+        for (let i = 0; i < errors.length; i++) {
+          errorMessages.push(error.response.data.data.errors[errors[i]]);
+        }
+        return {
+          status: false,
+          message: errorMessages,
+        };
+      }
+      else {
+        if (error.response.data.message) {
+          return {
+            status: false,
+            message: error.response.data.message
+          }
+        }
+      }
+    } else {
+      return {
+        status: false,
+        message: "Server Connection Error",
+      };
+    }
+  }
+};
+
+export const resendCode = async (payload) => {
+  try {
+    let response = await axios({
+      method: "POST",
+      url: `${baseUrl}/api/resend-verification-code`,
+      data: payload,
+    });
+    console.log(response);
+    if (response.status === 200) {
+      return {
+        status: true,
+        message: "Resend Successfully",
+      };
+    }
+  } catch (error) {
+    console.log("Failed while trying to resend code: ", error);
+    if (error.response) {
+      if (error.response.data.data.errors) {
+        const errors = Object.keys(error.response.data.data.errors);
+        const errorMessages = [];
+
+        for (let i = 0; i < errors.length; i++) {
+          errorMessages.push(error.response.data.data.errors[errors[i]]);
+        }
+        return {
+          status: false,
+          message: errorMessages,
+        };
+      }
+      else {
+        if (error.response.data.message) {
+          return {
+            status: false,
+            message: error.response.data.message
+          }
+        }
+      }
+    } else {
+      return {
+        status: false,
+        message: "Server Connection Error",
+      };
+    }
+  }
+};
+
+//! Credits...
+export const getCredits = async () => {
+  try {
+    let response = await axios({
+      method:'POST',
+      url:`${baseUrl}/api/booking-credit`,
+      headers:{
+        Authorization:getToken()
+      }
+    });
+    // console.log(response);
+    if(response.status === 200){
+      return {
+        status:true,
+        data:response.data.data.Balence
+      }
+    }
+  } catch (error) {
+    console.log('Failed while getting credits: ', error);
+
+  }
+};
+
 //! Flight...
 export const searchFlight = async (payload) => {
-  const apiUrlWithPayload = `${baseUrl}/api/search?trip_type=${
-    payload.tripType
-  }&departure_date_time=${payload.departureDate}&origin_location_code=${
-    payload.originCode
-  }&destination_location_code=${payload.destinationCode}&adult_quantity=${
-    payload.adult
-  }&child_quantity=${[payload.child]}&infant_quantity=${payload.infant}`;
+  const apiUrlWithPayload = `${baseUrl}/api/search?trip_type=${payload.tripType
+    }&departure_date_time=${payload.departureDate}&origin_location_code=${payload.originCode
+    }&destination_location_code=${payload.destinationCode}&adult_quantity=${payload.adult
+    }&child_quantity=${[payload.child]}&infant_quantity=${payload.infant}`;
 
   try {
     let response = await axios({
@@ -98,7 +229,7 @@ export const searchFlight = async (payload) => {
       url: apiUrlWithPayload,
       headers: {
         "Content-Type": "application/json",
-        Authorization: token,
+        Authorization: getToken(),
       },
     });
     console.log(response);
@@ -152,7 +283,7 @@ export const createTransaction = async (payload) => {
       data: payload,
       headers: {
         "Content-Type": "multipart/form-data",
-        Authorization: token,
+        Authorization: getToken(),
       },
     });
     console.log(response);
@@ -199,7 +330,7 @@ export const createUser = async (payload) => {
       url: `${baseUrl}/api/user`,
       data: payload,
       headers: {
-        Authorization: token,
+        Authorization: getToken(),
       },
     });
     console.log(response);
@@ -239,7 +370,7 @@ export const getUsers = async () => {
       method: "GET",
       url: `${baseUrl}/api/user`,
       headers: {
-        Authorization: token,
+        Authorization: getToken(),
       },
     });
     console.log(response);
@@ -270,7 +401,7 @@ export const deleteUser = async (id) => {
       method: "DELETE",
       url: `${baseUrl}/api/user/${id}`,
       headers: {
-        Authorization: token,
+        Authorization: getToken(),
       },
     });
     console.log(response);
@@ -291,7 +422,7 @@ export const createTicket = async (payload) => {
       url: `${baseUrl}/api/ticket`,
       data: payload,
       headers: {
-        Authorization: token,
+        Authorization: getToken(),
       },
     });
     console.log(response);
@@ -331,7 +462,7 @@ export const getTickets = async () => {
       method: "GET",
       url: `${baseUrl}/api/ticket/company`,
       headers: {
-        Authorization: token,
+        Authorization: getToken(),
       },
     });
     console.log(response);
@@ -359,7 +490,7 @@ export const deleteTicket = async (id) => {
       method: "DELETE",
       url: `${baseUrl}/api/ticket/${id}`,
       headers: {
-        Authorization: token,
+        Authorization: getToken(),
       },
     });
     console.log(response);
@@ -379,7 +510,7 @@ export const getFlightBookings = async () => {
       method: "GET",
       url: `${baseUrl}/api/booking`,
       headers: {
-        Authorization: token,
+        Authorization: getToken(),
       },
     });
     console.log(response);
@@ -435,7 +566,7 @@ export const cancelFlightBooking = async (payload) => {
       url: `${baseUrl}/api/cancel-booking`,
       data: payload,
       headers: {
-        Authorization: token,
+        Authorization: getToken(),
       },
     });
     console.log(response);
