@@ -25,27 +25,27 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
   };
 
   const dropdownOptions = [
-    {
-      name: "Profile",
-      icon: <FaUser />,
-      handler: () => {
-        navigationHandler("/profile");
-      },
-    },
-    {
-      name: "Setting",
-      icon: <IoIosSettings />,
-      handler: () => {
-        navigationHandler("/setting");
-      },
-    },
-    {
-      name: "Notifications",
-      icon: <FaBell />,
-      handler: () => {
-        navigationHandler("/notifications");
-      },
-    },
+    // {
+    //   name: "Profile",
+    //   icon: <FaUser />,
+    //   handler: () => {
+    //     navigationHandler("/profile");
+    //   },
+    // },
+    // {
+    //   name: "Setting",
+    //   icon: <IoIosSettings />,
+    //   handler: () => {
+    //     navigationHandler("/setting");
+    //   },
+    // },
+    // {
+    //   name: "Notifications",
+    //   icon: <FaBell />,
+    //   handler: () => {
+    //     navigationHandler("/notifications");
+    //   },
+    // },
     {
       name: "Logout",
       icon: <FiLogOut />,

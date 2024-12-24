@@ -197,17 +197,17 @@ export const resendCode = async (payload) => {
 export const getCredits = async () => {
   try {
     let response = await axios({
-      method:'POST',
-      url:`${baseUrl}/api/booking-credit`,
-      headers:{
-        Authorization:getToken()
+      method: 'POST',
+      url: `${baseUrl}/api/booking-credit`,
+      headers: {
+        Authorization: getToken()
       }
     });
     // console.log(response);
-    if(response.status === 200){
+    if (response.status === 200) {
       return {
-        status:true,
-        data:response.data.data.Balence
+        status: true,
+        data: response.data.data.Balence
       }
     }
   } catch (error) {
@@ -560,10 +560,12 @@ export const getFlightBookings = async () => {
 };
 
 export const cancelFlightBooking = async (payload) => {
+  console.log(payload);
+  
   try {
     let response = await axios({
       method: "POST",
-      url: `${baseUrl}/api/cancel-booking`,
+      url: `${baseUrl}/api/request-cancel-booking`,
       data: payload,
       headers: {
         Authorization: getToken(),
@@ -585,3 +587,50 @@ export const cancelFlightBooking = async (payload) => {
     }
   }
 };
+
+export const refundRequest = async (payload) => {
+  console.log(payload);
+  
+  try {
+    let response = await axios({
+      method: "POST",
+      url: `${baseUrl}/api/request-booking-refund`,
+      data: payload,
+      headers: {
+        Authorization: getToken(),
+      },
+    });
+    console.log(response);
+  } catch (error) {
+    console.log("Failed while calling refund booking api: ", error);
+    if (error.response) {
+      return {
+        status: false,
+        message: "Failed while sending booking refund request",
+      };
+    } else {
+      return {
+        status: false,
+        message: "Server Connection Error!",
+      };
+    }
+  }
+};
+
+export const confirmBooking = async (payload) => {
+  try {
+    let response = await axios({
+      method: 'POST',
+      url: `${baseUrl}/api/booking`,
+      data: payload,
+      headers: {
+        Authorization: getToken(),
+        "Content-Type": 'application/json',
+      },
+    });
+    console.log('confirm booking response: ', response);
+  } catch (error) {
+    console.log('Failed while calling confirming booking: ', error);
+  }
+};
+

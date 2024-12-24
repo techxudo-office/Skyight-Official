@@ -6,105 +6,161 @@ import { FaUser } from "react-icons/fa";
 import { FaSuitcase } from "react-icons/fa";
 import { FaMoneyBillAlt } from "react-icons/fa";
 
-import { iranianCities } from "../../data/iranianCities";
-import { countries } from "../../data/countriesData";
-
-import { FaPlaneDeparture } from "react-icons/fa6";
-
 import {
   CardLayoutContainer,
   CardLayoutHeader,
   CardLayoutBody,
-  CardLayoutFooter,
 } from "../../components/CardLayout/CardLayout";
 
-import { Formik, Form } from "formik";
-import * as Yup from "yup";
-
-import {
-  Button,
-  SecondaryButton,
-  Spinner,
-  Select,
-  Input,
-} from "../../components/components";
+import { Button, SecondaryButton, Spinner } from "../../components/components";
 import toast, { Toaster } from "react-hot-toast";
-
-const titleOptions = [
-  { label: "Mr", value: "Mr" },
-  { label: "Mrs", value: "Mrs" },
-  { label: "Other", value: "Other" },
-];
-
-const passengerOptions = [
-  { label: "Adult", value: "ADT" },
-  { label: "Child", value: "CHD" },
-  { label: "Infant", value: "INF" },
-];
-
-const genderOptions = [
-  { label: "Male", value: "Male" },
-  { label: "Female", value: "Female" },
-  { label: "Other", value: "Other" },
-];
-
-const validationSchema = Yup.object().shape({
-  title: Yup.string().required("Please select title"),
-  firstName: Yup.string().required("Please enter first name"),
-  lastName: Yup.string().required("Please enter last name"),
-  email: Yup.string().required("Please enter email"),
-  phoneNumber: Yup.string().required("Please enter phone number"),
-  mobileNumber: Yup.string().required("Please enter mobile number"),
-  country: Yup.string().required("Please select country"),
-  city: Yup.string().required("Please select city"),
-  dateOfBirth: Yup.string().required("Please select date of birth"),
-  passengerType: Yup.string().required("Please select passenger type"),
-  gender: Yup.string().required("Please select gender"),
-  passportNumber: Yup.string().required("Please enter valid passport number"),
-  passportExpDate: Yup.string().required("Please select exp data of passport"),
-});
+import { confirmBooking } from "../../utils/api_handler";
 
 const FlightDetails = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
   const [flightData, setFlightData] = useState(null);
-  const [travelersData, setTravelersData] = useState(null);
-  const [loading, setLoading] = useState(false);
-
-  const initialValues = {
-    title: titleOptions[0].value,
-    firstName: "",
-    lastName: "",
-    email: "",
-    phoneNumber: "",
-    mobileNumber: "",
-    country: countries[0].value,
-    city: "",
-    dateOfBirth: "",
-    passengerType: passengerOptions[0].value,
-    gender: genderOptions[0].value,
-    passportNumber: "",
-    passportExpDate: "",
-  };
-
-  const handleSubmit = (values) => {
-    console.log("Form Values: ", values);
-    // searchFlightHandler(values);
-  };
+  const [travelers, setTravelers] = useState(null);
+  const [allTravelersData, setAllTravelersData] = useState([]);
 
   const flightSegment =
     flightData &&
     flightData.AirItinerary.OriginDestinationOptions[0].FlightSegment[0];
+  const referenceNumber =
+    flightData && flightData.AirItinerary.OriginDestinationOptions[0].RefNumber;
+  const directionId =
+    flightData &&
+    flightData.AirItinerary.OriginDestinationOptions[0].DirectionId;
+  const elapsedTime =
+    flightData &&
+    flightData.AirItinerary.OriginDestinationOptions[0].ElapsedTime;
+  const cabinClass =
+    flightData &&
+    flightData.AirItinerary.OriginDestinationOptions[0].CabinClass;
+  const AirItineraryPricingInfo =
+    flightData && flightData.AirItineraryPricingInfo;
 
-  const confirmBookingHandler = () => {
-    alert("Booking Confirmed !");
+  const confirmBookingHandler = async () => {
+    const payLoad = {
+      origin_location_code: flightSegment.DepartureAirport.LocationCode,
+      destination_location_code: flightSegment.ArrivalAirport.LocationCode,
+      // "origin_location_terminal": flightSegment.DepartureAirport.Terminal,
+      // "destination_location_terminal": flightSegment.ArrivalAirport.Terminal,
+      airline_code: flightSegment.OperatingAirline.Code,
+      air_equip_type: flightSegment.Equipment.AirEquipType,
+      departure_date_time: flightSegment.DepartureDateTime,
+      arrival_date_time: flightSegment.ArrivalDateTime,
+      departure_date: flightSegment.DepartureDate,
+      departure_time: flightSegment.DepartureTime,
+      arrival_date: flightSegment.ArrivalDate,
+      arrival_time: flightSegment.DepartureTime,
+      // "flight_duration": flightSegment.FlightDuration,
+      flight_number: flightSegment.FlightNumber,
+      res_book_design_Code: flightSegment.ResBookDesigCode,
+      rph: flightSegment.RPH,
+      ref_number: referenceNumber,
+      direction_id: directionId,
+      elapsed_time: elapsedTime,
+      // "cabin_class": cabinClass,
+      // "transaction_identifier": "TXN123456", // fix
+      transaction_identifier: "", // fix
+      travellers: allTravelersData,
+      booking_class_avails: flightSegment.BookingClassAvails.map(
+        (item, index) => {
+          return {
+            res_book_desig_code: item.ResBookDesigCode,
+            res_book_desig_quantity: item.ResBookDesigQuantity,
+            rph: item.RPH,
+            // "available_ptc": item.AvailablePTC,
+            res_book_desig_cabin_code: item.ResBookDesigCabinCode,
+            fare_basis: item.FareBasis,
+          };
+        }
+      ),
+      priceInfo: {
+        itin_total_fare: {
+          base_fare: {
+            amount: AirItineraryPricingInfo.ItinTotalFare.BaseFare.Amount,
+            currency_code:
+              AirItineraryPricingInfo.ItinTotalFare.BaseFare.CurrencyCode,
+            decimal_places:
+              AirItineraryPricingInfo.ItinTotalFare.BaseFare.DecimalPlaces,
+          },
+          total_fare: {
+            amount: AirItineraryPricingInfo.ItinTotalFare.TotalFare.Amount,
+            currency_code:
+              AirItineraryPricingInfo.ItinTotalFare.TotalFare.CurrencyCode,
+            decimal_places:
+              AirItineraryPricingInfo.ItinTotalFare.TotalFare.DecimalPlaces,
+          },
+          // "markup_fare": {
+          //     "amount": AirItineraryPricingInfo.ItinTotalFare.MarkupFare.Amount,
+          //     "currency_code": AirItineraryPricingInfo.ItinTotalFare.MarkupFare.CurrencyCode,
+          //     "decimal_places": AirItineraryPricingInfo.ItinTotalFare.MarkupFare.DecimalPlaces
+          // }
+          total_equiv_fare: {
+            amount: AirItineraryPricingInfo.ItinTotalFare.MarkupFare.Amount,
+            currency_code:
+              AirItineraryPricingInfo.ItinTotalFare.MarkupFare.CurrencyCode,
+            decimal_places:
+              AirItineraryPricingInfo.ItinTotalFare.MarkupFare.DecimalPlaces,
+          },
+        },
+        ptc_fare_break_downs: AirItineraryPricingInfo.PTC_FareBreakdowns.map(
+          (item, index) => {
+            return {
+              passenger_type_quantity: {
+                code: item.PassengerTypeQuantity.Code,
+                quantity: item.PassengerTypeQuantity.Quantity,
+              },
+              // "fare_basis_code": "SOMEFARE", //fix
+              fare_basis_code: "", //fix
+              passenger_fare: {
+                base_fare: {
+                  amount: item.PassengerFare.BaseFare.Amount,
+                  currency_code: item.PassengerFare.BaseFare.CurrencyCode,
+                  decimal_places: item.PassengerFare.BaseFare.DecimalPlaces,
+                },
+                total_fare: {
+                  amount: item.PassengerFare.TotalFare.Amount,
+                  currency_code: item.PassengerFare.TotalFare.CurrencyCode,
+                  decimal_places: item.PassengerFare.TotalFare.DecimalPlaces,
+                },
+                // "markup_fare": {
+                //     "amount": item.PassengerFare.MarkupFare.Amount,
+                //     "currency_code": item.PassengerFare.MarkupFare.CurrencyCode,
+                //     "decimal_places": item.PassengerFare.MarkupFare.DecimalPlaces
+                // },
+                fees: item.PassengerFare.Fees,
+                taxes: item.PassengerFare.Taxes.Tax.map((tax, key) => {
+                  return {
+                    name: tax.Name,
+                    amount: tax.Amount,
+                  };
+                }),
+              },
+              traveler_ref_number: flightSegment.RPH, //fix
+              // "pricing_source": "SYSTEM" //fix
+              pricing_source: "", //fix
+            };
+          }
+        ),
+      },
+    };
+
+    console.log(payLoad);
+
+    let response = await confirmBooking(payLoad);
   };
 
   useEffect(() => {
     if (location.state) {
-      setFlightData(location.state.data);
-      setTravelersData(location.state.travelers);
+      console.log(location.state);
+
+      setFlightData(location.state.flightData);
+      setTravelers(location.state.travelersData);
+      setAllTravelersData(location.state.allTravelersData);
     }
   }, [location.state]);
 
@@ -248,7 +304,7 @@ const FlightDetails = () => {
                   Adults
                 </h2>
                 <h2 className="text-4xl text-text font-semibold">
-                  {travelersData.adults}
+                  {travelers.adults}
                 </h2>
               </div>
               <div>
@@ -256,7 +312,7 @@ const FlightDetails = () => {
                   Childs
                 </h2>
                 <h2 className="text-4xl text-text font-semibold">
-                  {travelersData.childs}
+                  {travelers.childs}
                 </h2>
               </div>
               <div>
@@ -264,7 +320,7 @@ const FlightDetails = () => {
                   Infants
                 </h2>
                 <h2 className="text-4xl text-text font-semibold">
-                  {travelersData.infants}
+                  {travelers.infants}
                 </h2>
               </div>
             </div>
@@ -325,270 +381,6 @@ const FlightDetails = () => {
             <Button text="Confirm Booking" onClick={confirmBookingHandler} />
           </div>
         </div>
-
-        {/* <CardLayoutContainer>
-          <CardLayoutHeader heading="Traveler Details" />
-          <Formik
-            initialValues={initialValues}
-            validationSchema={validationSchema}
-            onSubmit={handleSubmit}
-          >
-            {({ values, errors, touched, setFieldValue, isSubmitting }) => (
-              <Form>
-                <CardLayoutBody>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-5 mb-7">
-                    <div className="relative mb-5">
-                      <Select
-                        id="title"
-                        label="Title"
-                        name="title"
-                        options={titleOptions}
-                        value={values.title}
-                        placeholder="Select Title"
-                        onChange={(option) =>
-                          setFieldValue("title", option.value)
-                        }
-                        optionIcons={<FaPlaneDeparture />}
-                      />
-                      {touched.country && errors.country && (
-                        <div className="text-red-500 text-sm mt-2 absolute left-0">
-                          {errors.country}
-                        </div>
-                      )}
-                    </div>
-                    <div className="relative mb-5">
-                      <Input
-                        id={"firstName"}
-                        name={"firstName"}
-                        label={"First Name"}
-                        type={"text"}
-                        value={values.firstName}
-                        placeholder={"Enter First Name"}
-                        onChange={(e) => {
-                          setFieldValue("firstName", e.target.value);
-                        }}
-                      />
-                      {touched.firstName && errors.firstName && (
-                        <div className="text-red-500 text-sm mt-2 absolute left-0">
-                          {errors.firstName}
-                        </div>
-                      )}
-                    </div>
-                    <div className="relative mb-5">
-                      <Input
-                        id={"lastName"}
-                        name={"lastName"}
-                        label={"Last Name"}
-                        type={"text"}
-                        value={values.lastName}
-                        placeholder={"Enter Last Name"}
-                        onChange={(e) =>
-                          setFieldValue("lastName", e.target.value)
-                        }
-                      />
-                      {touched.lastName && errors.lastName && (
-                        <div className="text-red-500 text-sm mt-2 absolute left-0">
-                          {errors.lastName}
-                        </div>
-                      )}
-                    </div>
-                    <div className="relative mb-5">
-                      <Input
-                        id={"email"}
-                        name={"email"}
-                        label={"Email"}
-                        type={"text"}
-                        value={values.email}
-                        placeholder={"Enter Email"}
-                        onChange={(e) => setFieldValue("email", e.target.value)}
-                      />
-                      {touched.email && errors.email && (
-                        <div className="text-red-500 text-sm mt-2 absolute left-0">
-                          {errors.email}
-                        </div>
-                      )}
-                    </div>
-                    <div className="relative mb-5">
-                      <Input
-                        id={"phoneNumber"}
-                        name={"phoneNumber"}
-                        label={"Phone Number"}
-                        type={"number"}
-                        value={values.phoneNumber}
-                        placeholder={"Enter Phone Number"}
-                        onChange={(e) =>
-                          setFieldValue("phoneNumber", e.target.value)
-                        }
-                      />
-                      {touched.phoneNumber && errors.phoneNumber && (
-                        <div className="text-red-500 text-sm mt-2 absolute left-0">
-                          {errors.phoneNumber}
-                        </div>
-                      )}
-                    </div>
-                    <div className="relative mb-5">
-                      <Input
-                        id={"mobileNumber"}
-                        name={"mobileNumber"}
-                        label={"Mobile Number"}
-                        type={"number"}
-                        value={values.mobileNumber}
-                        placeholder={"Enter Mobile Number"}
-                        onChange={(e) =>
-                          setFieldValue("mobileNumber", e.target.value)
-                        }
-                      />
-                      {touched.mobileNumber && errors.mobileNumber && (
-                        <div className="text-red-500 text-sm mt-2 absolute left-0">
-                          {errors.mobileNumber}
-                        </div>
-                      )}
-                    </div>
-                    <div className="relative mb-5">
-                      <Select
-                        id="country"
-                        label="Country"
-                        name="country"
-                        options={countries}
-                        value={values.country}
-                        placeholder="Select Country"
-                        onChange={(option) =>
-                          setFieldValue("country", option.value)
-                        }
-                        optionIcons={<FaPlaneDeparture />}
-                      />
-                      {touched.country && errors.country && (
-                        <div className="text-red-500 text-sm mt-2 absolute left-0">
-                          {errors.country}
-                        </div>
-                      )}
-                    </div>
-                    <div className="relative mb-5">
-                      <Select
-                        id="city"
-                        label="City"
-                        name="city"
-                        options={iranianCities}
-                        value={values.city}
-                        placeholder="Select City"
-                        onChange={(option) =>
-                          setFieldValue("city", option.value)
-                        }
-                        optionIcons={<FaPlaneDeparture />}
-                      />
-                      {touched.city && errors.city && (
-                        <div className="text-red-500 text-sm mt-2 absolute left-0">
-                          {errors.city}
-                        </div>
-                      )}
-                    </div>
-                    <div className="relative mb-5">
-                      <Input
-                        id={"dateOfBirth"}
-                        name={"dateOfBirth"}
-                        label={"Date Of Birth"}
-                        type={"date"}
-                        value={values.dateOfBirth}
-                        placeholder={"Select Date Of Birth"}
-                        onChange={(e) =>
-                          setFieldValue("dateOfBirth", e.target.value)
-                        }
-                      />
-                      {touched.dateOfBirth && errors.dateOfBirth && (
-                        <div className="text-red-500 text-sm mt-2 absolute left-0">
-                          {errors.dateOfBirth}
-                        </div>
-                      )}
-                    </div>
-                    <div className="relative mb-5">
-                      <Select
-                        id="passengerType"
-                        label="Passenger Type"
-                        name="passengerType"
-                        options={passengerOptions}
-                        value={values.passengerType}
-                        placeholder="Select Passenger Type"
-                        onChange={(option) =>
-                          setFieldValue("passengerType", option.value)
-                        }
-                        optionIcons={<FaUser />}
-                      />
-                      {touched.passengerType && errors.passengerType && (
-                        <div className="text-red-500 text-sm mt-2 absolute left-0">
-                          {errors.passengerType}
-                        </div>
-                      )}
-                    </div>
-                    <div className="relative mb-5">
-                      <Select
-                        id="gender"
-                        label="Gender"
-                        name="gender"
-                        options={genderOptions}
-                        value={values.gender}
-                        placeholder="Select Gender"
-                        onChange={(option) =>
-                          setFieldValue("gender", option.value)
-                        }
-                        optionIcons={<FaUser />}
-                      />
-                      {touched.gender && errors.gender && (
-                        <div className="text-red-500 text-sm mt-2 absolute left-0">
-                          {errors.gender}
-                        </div>
-                      )}
-                    </div>
-                    <div className="relative mb-5">
-                      <Input
-                        id={"passportNumber"}
-                        name={"passportNumber"}
-                        label={"Passport Number"}
-                        type={"text"}
-                        value={values.passportNumber}
-                        placeholder={"Enter Passport Number"}
-                        onChange={(e) => {
-                          setFieldValue("passportNumber", e.target.value);
-                        }}
-                      />
-                      {touched.passportNumber && errors.passportNumber && (
-                        <div className="text-red-500 text-sm mt-2 absolute left-0">
-                          {errors.passportNumber}
-                        </div>
-                      )}
-                    </div>
-                    <div className="relative mb-5">
-                      <Input
-                        id={"passportExpDate"}
-                        name={"passportExpDate"}
-                        label={"Passport Exp Date"}
-                        type={"date"}
-                        value={values.passportExpDate}
-                        placeholder={"Select Passport Exp Date"}
-                        onChange={(e) =>
-                          setFieldValue("passportExpDate", e.target.value)
-                        }
-                      />
-                      {touched.passportExpDate && errors.passportExpDate && (
-                        <div className="text-red-500 text-sm mt-2 absolute left-0">
-                          {errors.passportExpDate}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </CardLayoutBody>
-                <CardLayoutFooter>
-                  <div>
-                    <Button
-                      text={loading ? <Spinner /> : "Add Traveler"}
-                      type="submit"
-                      disabled={loading}
-                    />
-                  </div>
-                </CardLayoutFooter>
-              </Form>
-            )}
-          </Formik>
-        </CardLayoutContainer> */}
       </div>
     </>
   );

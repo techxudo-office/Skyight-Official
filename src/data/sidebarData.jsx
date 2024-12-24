@@ -17,7 +17,8 @@ export const sidebarLinks = [
     icon: <RiDashboardFill />,
   },
   {
-    title: "Flights & Hotels",
+    // title: "Flights & Hotels",
+    title: "Flights",
     icon: <MdContentPasteSearch />,
     sublinks: [
       {
@@ -25,11 +26,11 @@ export const sidebarLinks = [
         path: "/dashboard/search-flights",
         icon: <GoDotFill />,
       },
-      {
-        title: "Search Hotels",
-        path: "/dashboard/search-hotels",
-        icon: <GoDotFill />,
-      },
+      // {
+      //   title: "Search Hotels",
+      //   path: "/dashboard/search-hotels",
+      //   icon: <GoDotFill />,
+      // },
     ],
   },
   {
@@ -41,38 +42,38 @@ export const sidebarLinks = [
         path: "/dashboard/flight-bookings",
         icon: <GoDotFill />,
       },
-      {
-        title: "Hotel Bookings",
-        path: "/dashboard/hotel-bookings",
-        icon: <GoDotFill />,
-      },
+      // {
+      //   title: "Hotel Bookings",
+      //   path: "/dashboard/hotel-bookings",
+      //   icon: <GoDotFill />,
+      // },
     ],
   },
-  {
-    title: "Credits",
-    icon: <FaCreditCard />,
-    sublinks: [
-      {
-        title: "Credit Topup",
-        path: "/dashboard/credit-topup",
-        icon: <GoDotFill />,
-      },
-      {
-        title: "Add Credits",
-        path: "/dashboard/add-credits",
-        icon: <GoDotFill />,
-      },
-    ],
-  },
+  // {
+  //   title: "Credits",
+  //   icon: <FaCreditCard />,
+  //   sublinks: [
+  //     {
+  //       title: "Credit Topup",
+  //       path: "/dashboard/credit-topup",
+  //       icon: <GoDotFill />,
+  //     },
+  //     {
+  //       title: "Add Credits",
+  //       path: "/dashboard/add-credits",
+  //       icon: <GoDotFill />,
+  //     },
+  //   ],
+  // },
   {
     title: "Payments & Invoices",
     icon: <FaMoneyBill1Wave />,
     sublinks: [
-      {
-        title: "Invoices",
-        path: "/dashboard/invoices",
-        icon: <GoDotFill />,
-      },
+      // {
+      //   title: "Invoices",
+      //   path: "/dashboard/invoices",
+      //   icon: <GoDotFill />,
+      // },
       {
         title: "Create Transaction",
         path: "/dashboard/create-transaction",
@@ -80,22 +81,22 @@ export const sidebarLinks = [
       },
     ],
   },
-  {
-    title: "History",
-    icon: <IoIosStopwatch />,
-    sublinks: [
-      {
-        title: "Search History",
-        path: "/dashboard/search-history",
-        icon: <GoDotFill />,
-      },
-      {
-        title: "Transactions History",
-        path: "/dashboard/transactions-history",
-        icon: <GoDotFill />,
-      },
-    ],
-  },
+  // {
+  //   title: "History",
+  //   icon: <IoIosStopwatch />,
+  //   sublinks: [
+  //     {
+  //       title: "Search History",
+  //       path: "/dashboard/search-history",
+  //       icon: <GoDotFill />,
+  //     },
+  //     {
+  //       title: "Transactions History",
+  //       path: "/dashboard/transactions-history",
+  //       icon: <GoDotFill />,
+  //     },
+  //   ],
+  // },
   {
     title: "Administrator",
     icon: <MdAdminPanelSettings />,
@@ -138,15 +139,15 @@ export const sidebarLinks = [
       },
     ],
   },
-  {
-    title: "Help & Support",
-    icon: <FaHandsHelping />,
-    sublinks: [
-      {
-        title: "Support",
-        path: "/dashboard/support",
-        icon: <GoDotFill />,
-      },
-    ],
-  },
+  // {
+  //   title: "Help & Support",
+  //   icon: <FaHandsHelping />,
+  //   sublinks: [
+  //     {
+  //       title: "Support",
+  //       path: "/dashboard/support",
+  //       icon: <GoDotFill />,
+  //     },
+  //   ],
+  // },
 ];

@@ -7,6 +7,7 @@ import {
 import {
   getFlightBookings,
   cancelFlightBooking,
+  refundRequest,
 } from "../../utils/api_handler";
 
 import { useNavigate } from "react-router-dom";
@@ -73,15 +74,14 @@ const FlightBookings = () => {
     {
       name: "Refund",
       icon: <HiReceiptRefund title="Refund" className="text-blue-500" />,
-      handler: (index, item) => {
-        toast.success("Refund Api Calling");
+      handler: (_, item) => {
+        refundRequestHandler(item);
       },
     },
     {
       name: "Cancel",
       icon: <MdCancel title="Cancel" className="text-red-500" />,
       handler: (_, item) => {
-        toast.error("Cancel Api Calling");
         cancelFlightBookingHandler(item);
       },
     },
@@ -97,12 +97,35 @@ const FlightBookings = () => {
   const cancelFlightBookingHandler = async (flight) => {
     console.log(flight);
 
-    // let response = await cancelFlightBooking();
-    // if (response.status) {
-    //   toast.success(response.message);
-    // } else {
-    //   toast.error(response.message);
-    // }
+    const bookingId = {
+      booking_id: flight.booking_reference_id,
+    };
+
+    console.log(bookingId);
+
+    let response = await cancelFlightBooking(bookingId);
+    if (response.status) {
+      toast.success(response.message);
+    } else {
+      toast.error(response.message);
+    }
+  };
+
+  const refundRequestHandler = async (flight) => {
+    console.log(flight);
+
+    const bookingId = {
+      booking_id: flight.booking_reference_id,
+    };
+
+    console.log(bookingId);
+
+    let response = await refundRequest(bookingId);
+    if (response.status) {
+      toast.success(response.message);
+    } else {
+      toast.error(response.message);
+    }
   };
 
   const abortDeleteHandler = () => {

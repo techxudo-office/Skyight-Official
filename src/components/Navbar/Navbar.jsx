@@ -20,7 +20,7 @@ const Navbar = () => {
         <div className='flex gap-2'>
           {/* <Button text={'Login'} onClick={()=>{navigationHandler('/login')}} /> */}
           {/* <Button text={'Register'} onClick={()=>{navigationHandler('/register')}} /> */}
-          <Button text={'Dashboard'} onClick={()=>{navigationHandler('/dashboard')}} />
+          <Button text={'Login'} onClick={()=>{navigationHandler('/login')}} />
         </div>
 
       </div>
