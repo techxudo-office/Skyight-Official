@@ -31,6 +31,10 @@ const FlightBookings = () => {
   const [modalStatus, setModalStatus] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
 
+  const navigationHandler = () => {
+    navigate("/dashboard/search-flights");
+  };
+
   const columnsData = [
     { columnName: "No.", fieldName: "no.", type: "no." },
     { columnName: "Origin", fieldName: "origin", type: "text" },
@@ -153,7 +157,7 @@ const FlightBookings = () => {
           <div className="relative">
             <SecondaryButton
               text={"Create New Booking"}
-              // onClick={navigationHandler}
+              onClick={navigationHandler}
             />
           </div>
         </CardLayoutHeader>

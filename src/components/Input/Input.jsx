@@ -48,11 +48,11 @@ const Input = ({
             </span>
           ) : type === "date" ? (
             <span className="cursor-pointer">
-              <MdDateRange />
+              {/* <MdDateRange /> */}
             </span>
           ) : type === "datetime-local" ? (
             <span className="cursor-pointer">
-              <MdDateRange />
+              {/* <MdDateRange /> */}
             </span>
           ) : (
             ""

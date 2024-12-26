@@ -561,7 +561,7 @@ export const getFlightBookings = async () => {
 
 export const cancelFlightBooking = async (payload) => {
   console.log(payload);
-  
+
   try {
     let response = await axios({
       method: "POST",
@@ -590,7 +590,7 @@ export const cancelFlightBooking = async (payload) => {
 
 export const refundRequest = async (payload) => {
   console.log(payload);
-  
+
   try {
     let response = await axios({
       method: "POST",
@@ -629,6 +629,12 @@ export const confirmBooking = async (payload) => {
       },
     });
     console.log('confirm booking response: ', response);
+    if (response.status === 200) {
+      return {
+        status: true,
+        message: 'Booking Created'
+      }
+    }
   } catch (error) {
     console.log('Failed while calling confirming booking: ', error);
   }

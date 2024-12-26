@@ -7,6 +7,8 @@ import { countries } from "../../data/countriesData";
 import { FaPlaneDeparture } from "react-icons/fa6";
 import { FaChevronCircleDown } from "react-icons/fa";
 
+import PhoneInput from "react-phone-number-input";
+
 import {
   CardLayoutContainer,
   CardLayoutHeader,
@@ -26,9 +28,8 @@ import {
 import toast, { Toaster } from "react-hot-toast";
 
 const titleOptions = [
-  { label: "Mr", value: "Mr" },
-  { label: "Mrs", value: "Mrs" },
-  { label: "Other", value: "Other" },
+  { label: "Mr", value: "MR" },
+  { label: "Mrs", value: "MS" },
 ];
 
 const passengerOptions = [
@@ -45,23 +46,27 @@ const genderOptions = [
 
 const validationSchema = Yup.object().shape({
   title: Yup.string().required("Please select title"),
-  firstName: Yup.string().required("Please enter first name"),
-  lastName: Yup.string().required("Please enter last name"),
+  first_name: Yup.string().required("Please enter first name"),
+  last_name: Yup.string().required("Please enter last name"),
   email: Yup.string().required("Please enter email"),
-  phoneNumber: Yup.string().required("Please enter phone number"),
-  mobileNumber: Yup.string().required("Please enter mobile number"),
+  telephone: Yup.string().required("Please enter phone number"),
+  mobile: Yup.string().required("Please enter mobile number"),
   country: Yup.string().required("Please select country"),
   city: Yup.string().required("Please select city"),
-  dateOfBirth: Yup.string().required("Please select date of birth"),
-  passengerType: Yup.string().required("Please select passenger type"),
+  date_of_birth: Yup.string().required("Please select date of birth"),
+  passenger_type: Yup.string().required("Please select passenger type"),
   gender: Yup.string().required("Please select gender"),
-  passportNumber: Yup.string().required("Please enter valid passport number"),
-  passportExpDate: Yup.string().required("Please select exp data of passport"),
+  passport_number: Yup.string().required("Please enter valid passport number"),
+  passport_expiry_date: Yup.string().required(
+    "Please select exp data of passport"
+  ),
 });
 
 const TravelersDetails = () => {
   const location = useLocation();
   const navigate = useNavigate();
+
+  const [value, setValue] = useState();
 
   const [flightData, setFlightData] = useState(null);
   const [travelersData, setTravelersData] = useState(null);
@@ -77,25 +82,48 @@ const TravelersDetails = () => {
 
   const initialValues = {
     title: titleOptions[0].value,
-    firstName: "",
-    lastName: "",
+    first_name: "",
+    last_name: "",
     email: "",
-    phoneNumber: "",
-    mobileNumber: "",
+    telephone: "",
+    mobile: "",
     country: countries[0].value,
     city: "",
-    dateOfBirth: "",
-    passengerType: passengerOptions[0].value,
+    date_of_birth: "",
+    passenger_type: passengerOptions[0].value,
     gender: genderOptions[0].value,
-    passportNumber: "",
-    passportExpDate: "",
+    passport_number: "",
+    passport_expiry_date: "",
   };
 
   const [allTravelersData, setAllTravelersData] = useState([]);
 
   const handleSubmit = (travelerIndex, values) => {
-    console.log(values);
-    setAllTravelersData((prevData) => [...prevData, values]);
+    const payload = {
+      city: values.city,
+      country: values.country,
+      date_of_birth: values.date_of_birth,
+      email: values.email,
+      first_name: values.first_name,
+      gender: values.gender,
+      last_name: values.last_name,
+      mobile: {
+        area_code: "912",
+        country_code: "98",
+        number: "2569355",
+      },
+      passenger_type: values.passenger_type,
+      passport_expiry_date: values.passport_expiry_date,
+      passport_number: values.passport_number,
+      telephone: {
+        area_code: "21",
+        country_code: "98",
+        number: "12345678",
+      },
+      title: values.title,
+    };
+    console.log(payload);
+    setAllTravelersData((prevData) => [...prevData, payload]);
   };
 
   const addAllTravelers = () => {
@@ -233,19 +261,19 @@ const TravelersDetails = () => {
                             {/* First Name */}
                             <div className="relative mb-5">
                               <Input
-                                id={"firstName"}
-                                name={"firstName"}
+                                id={"first_name"}
+                                name={"first_name"}
                                 label={"First Name"}
                                 type={"text"}
-                                value={values.firstName}
+                                value={values.first_name}
                                 placeholder={"Enter First Name"}
                                 onChange={(e) => {
-                                  setFieldValue("firstName", e.target.value);
+                                  setFieldValue("first_name", e.target.value);
                                 }}
                               />
-                              {touched.firstName && errors.firstName && (
+                              {touched.first_name && errors.first_name && (
                                 <div className="text-red-500 text-sm mt-2 absolute left-0">
-                                  {errors.firstName}
+                                  {errors.first_name}
                                 </div>
                               )}
                             </div>
@@ -253,19 +281,19 @@ const TravelersDetails = () => {
                             {/* Last Name */}
                             <div className="relative mb-5">
                               <Input
-                                id={"lastName"}
-                                name={"lastName"}
+                                id={"last_name"}
+                                name={"last_name"}
                                 label={"Last Name"}
                                 type={"text"}
-                                value={values.lastName}
+                                value={values.last_name}
                                 placeholder={"Enter Last Name"}
                                 onChange={(e) =>
-                                  setFieldValue("lastName", e.target.value)
+                                  setFieldValue("last_name", e.target.value)
                                 }
                               />
-                              {touched.lastName && errors.lastName && (
+                              {touched.last_name && errors.last_name && (
                                 <div className="text-red-500 text-sm mt-2 absolute left-0">
-                                  {errors.lastName}
+                                  {errors.last_name}
                                 </div>
                               )}
                             </div>
@@ -293,19 +321,19 @@ const TravelersDetails = () => {
                             {/* Phone Number */}
                             <div className="relative mb-5">
                               <Input
-                                id={"phoneNumber"}
-                                name={"phoneNumber"}
+                                id={"telephone"}
+                                name={"telephone"}
                                 label={"Phone Number"}
                                 type={"number"}
-                                value={values.phoneNumber}
+                                value={values.telephone}
                                 placeholder={"Enter Phone Number"}
                                 onChange={(e) =>
-                                  setFieldValue("phoneNumber", e.target.value)
+                                  setFieldValue("telephone", e.target.value)
                                 }
                               />
-                              {touched.phoneNumber && errors.phoneNumber && (
+                              {touched.telephone && errors.telephone && (
                                 <div className="text-red-500 text-sm mt-2 absolute left-0">
-                                  {errors.phoneNumber}
+                                  {errors.telephone}
                                 </div>
                               )}
                             </div>
@@ -313,19 +341,19 @@ const TravelersDetails = () => {
                             {/* Mobile Number */}
                             <div className="relative mb-5">
                               <Input
-                                id={"mobileNumber"}
-                                name={"mobileNumber"}
+                                id={"mobile"}
+                                name={"mobile"}
                                 label={"Mobile Number"}
                                 type={"number"}
-                                value={values.mobileNumber}
+                                value={values.mobile}
                                 placeholder={"Enter Mobile Number"}
                                 onChange={(e) =>
-                                  setFieldValue("mobileNumber", e.target.value)
+                                  setFieldValue("mobile", e.target.value)
                                 }
                               />
-                              {touched.mobileNumber && errors.mobileNumber && (
+                              {touched.mobile && errors.mobile && (
                                 <div className="text-red-500 text-sm mt-2 absolute left-0">
-                                  {errors.mobileNumber}
+                                  {errors.mobile}
                                 </div>
                               )}
                             </div>
@@ -375,41 +403,42 @@ const TravelersDetails = () => {
                             {/* Date Of Birth */}
                             <div className="relative mb-5">
                               <Input
-                                id={"dateOfBirth"}
-                                name={"dateOfBirth"}
+                                id={"date_of_birth"}
+                                name={"date_of_birth"}
                                 label={"Date Of Birth"}
                                 type={"date"}
-                                value={values.dateOfBirth}
+                                value={values.date_of_birth}
                                 placeholder={"Select Date Of Birth"}
                                 onChange={(e) =>
-                                  setFieldValue("dateOfBirth", e.target.value)
+                                  setFieldValue("date_of_birth", e.target.value)
                                 }
                               />
-                              {touched.dateOfBirth && errors.dateOfBirth && (
-                                <div className="text-red-500 text-sm mt-2 absolute left-0">
-                                  {errors.dateOfBirth}
-                                </div>
-                              )}
+                              {touched.date_of_birth &&
+                                errors.date_of_birth && (
+                                  <div className="text-red-500 text-sm mt-2 absolute left-0">
+                                    {errors.date_of_birth}
+                                  </div>
+                                )}
                             </div>
 
                             {/* Passenger Type */}
                             <div className="relative mb-5">
                               <Select
-                                id="passengerType"
+                                id="passenger_type"
                                 label="Passenger Type"
-                                name="passengerType"
+                                name="passenger_type"
                                 options={passengerOptions}
-                                value={values.passengerType}
+                                value={values.passenger_type}
                                 placeholder="Select Passenger Type"
                                 onChange={(option) =>
-                                  setFieldValue("passengerType", option.value)
+                                  setFieldValue("passenger_type", option.value)
                                 }
                                 optionIcons={<FaUser />}
                               />
-                              {touched.passengerType &&
-                                errors.passengerType && (
+                              {touched.passenger_type &&
+                                errors.passenger_type && (
                                   <div className="text-red-500 text-sm mt-2 absolute left-0">
-                                    {errors.passengerType}
+                                    {errors.passenger_type}
                                   </div>
                                 )}
                             </div>
@@ -438,23 +467,23 @@ const TravelersDetails = () => {
                             {/* Passport Number */}
                             <div className="relative mb-5">
                               <Input
-                                id={"passportNumber"}
-                                name={"passportNumber"}
+                                id={"passport_number"}
+                                name={"passport_number"}
                                 label={"Passport Number"}
                                 type={"text"}
-                                value={values.passportNumber}
+                                value={values.passport_number}
                                 placeholder={"Enter Passport Number"}
                                 onChange={(e) => {
                                   setFieldValue(
-                                    "passportNumber",
+                                    "passport_number",
                                     e.target.value
                                   );
                                 }}
                               />
-                              {touched.passportNumber &&
-                                errors.passportNumber && (
+                              {touched.passport_number &&
+                                errors.passport_number && (
                                   <div className="text-red-500 text-sm mt-2 absolute left-0">
-                                    {errors.passportNumber}
+                                    {errors.passport_number}
                                   </div>
                                 )}
                             </div>
@@ -462,23 +491,23 @@ const TravelersDetails = () => {
                             {/* Passport Exp Date */}
                             <div className="relative mb-5">
                               <Input
-                                id={"passportExpDate"}
-                                name={"passportExpDate"}
+                                id={"passport_expiry_date"}
+                                name={"passport_expiry_date"}
                                 label={"Passport Exp Date"}
                                 type={"date"}
-                                value={values.passportExpDate}
+                                value={values.passport_expiry_date}
                                 placeholder={"Select Passport Exp Date"}
                                 onChange={(e) =>
                                   setFieldValue(
-                                    "passportExpDate",
+                                    "passport_expiry_date",
                                     e.target.value
                                   )
                                 }
                               />
-                              {touched.passportExpDate &&
-                                errors.passportExpDate && (
+                              {touched.passport_expiry_date &&
+                                errors.passport_expiry_date && (
                                   <div className="text-red-500 text-sm mt-2 absolute left-0">
-                                    {errors.passportExpDate}
+                                    {errors.passport_expiry_date}
                                   </div>
                                 )}
                             </div>
@@ -574,19 +603,19 @@ const TravelersDetails = () => {
                             {/* First Name */}
                             <div className="relative mb-5">
                               <Input
-                                id={"firstName"}
-                                name={"firstName"}
+                                id={"first_name"}
+                                name={"first_name"}
                                 label={"First Name"}
                                 type={"text"}
-                                value={values.firstName}
+                                value={values.first_name}
                                 placeholder={"Enter First Name"}
                                 onChange={(e) => {
-                                  setFieldValue("firstName", e.target.value);
+                                  setFieldValue("first_name", e.target.value);
                                 }}
                               />
-                              {touched.firstName && errors.firstName && (
+                              {touched.first_name && errors.first_name && (
                                 <div className="text-red-500 text-sm mt-2 absolute left-0">
-                                  {errors.firstName}
+                                  {errors.first_name}
                                 </div>
                               )}
                             </div>
@@ -594,19 +623,19 @@ const TravelersDetails = () => {
                             {/* Last Name */}
                             <div className="relative mb-5">
                               <Input
-                                id={"lastName"}
-                                name={"lastName"}
+                                id={"last_name"}
+                                name={"last_name"}
                                 label={"Last Name"}
                                 type={"text"}
-                                value={values.lastName}
+                                value={values.last_name}
                                 placeholder={"Enter Last Name"}
                                 onChange={(e) =>
-                                  setFieldValue("lastName", e.target.value)
+                                  setFieldValue("last_name", e.target.value)
                                 }
                               />
-                              {touched.lastName && errors.lastName && (
+                              {touched.last_name && errors.last_name && (
                                 <div className="text-red-500 text-sm mt-2 absolute left-0">
-                                  {errors.lastName}
+                                  {errors.last_name}
                                 </div>
                               )}
                             </div>
@@ -634,19 +663,19 @@ const TravelersDetails = () => {
                             {/* Phone Number */}
                             <div className="relative mb-5">
                               <Input
-                                id={"phoneNumber"}
-                                name={"phoneNumber"}
+                                id={"telephone"}
+                                name={"telephone"}
                                 label={"Phone Number"}
                                 type={"number"}
-                                value={values.phoneNumber}
+                                value={values.telephone}
                                 placeholder={"Enter Phone Number"}
                                 onChange={(e) =>
-                                  setFieldValue("phoneNumber", e.target.value)
+                                  setFieldValue("telephone", e.target.value)
                                 }
                               />
-                              {touched.phoneNumber && errors.phoneNumber && (
+                              {touched.telephone && errors.telephone && (
                                 <div className="text-red-500 text-sm mt-2 absolute left-0">
-                                  {errors.phoneNumber}
+                                  {errors.telephone}
                                 </div>
                               )}
                             </div>
@@ -654,19 +683,19 @@ const TravelersDetails = () => {
                             {/* Mobile Number */}
                             <div className="relative mb-5">
                               <Input
-                                id={"mobileNumber"}
-                                name={"mobileNumber"}
+                                id={"mobile"}
+                                name={"mobile"}
                                 label={"Mobile Number"}
                                 type={"number"}
-                                value={values.mobileNumber}
+                                value={values.mobile}
                                 placeholder={"Enter Mobile Number"}
                                 onChange={(e) =>
-                                  setFieldValue("mobileNumber", e.target.value)
+                                  setFieldValue("mobile", e.target.value)
                                 }
                               />
-                              {touched.mobileNumber && errors.mobileNumber && (
+                              {touched.mobile && errors.mobile && (
                                 <div className="text-red-500 text-sm mt-2 absolute left-0">
-                                  {errors.mobileNumber}
+                                  {errors.mobile}
                                 </div>
                               )}
                             </div>
@@ -716,41 +745,42 @@ const TravelersDetails = () => {
                             {/* Date Of Birth */}
                             <div className="relative mb-5">
                               <Input
-                                id={"dateOfBirth"}
-                                name={"dateOfBirth"}
+                                id={"date_of_birth"}
+                                name={"date_of_birth"}
                                 label={"Date Of Birth"}
                                 type={"date"}
-                                value={values.dateOfBirth}
+                                value={values.date_of_birth}
                                 placeholder={"Select Date Of Birth"}
                                 onChange={(e) =>
-                                  setFieldValue("dateOfBirth", e.target.value)
+                                  setFieldValue("date_of_birth", e.target.value)
                                 }
                               />
-                              {touched.dateOfBirth && errors.dateOfBirth && (
-                                <div className="text-red-500 text-sm mt-2 absolute left-0">
-                                  {errors.dateOfBirth}
-                                </div>
-                              )}
+                              {touched.date_of_birth &&
+                                errors.date_of_birth && (
+                                  <div className="text-red-500 text-sm mt-2 absolute left-0">
+                                    {errors.date_of_birth}
+                                  </div>
+                                )}
                             </div>
 
                             {/* Passenger Type */}
                             <div className="relative mb-5">
                               <Select
-                                id="passengerType"
+                                id="passenger_type"
                                 label="Passenger Type"
-                                name="passengerType"
+                                name="passenger_type"
                                 options={passengerOptions}
-                                value={values.passengerType}
+                                value={values.passenger_type}
                                 placeholder="Select Passenger Type"
                                 onChange={(option) =>
-                                  setFieldValue("passengerType", option.value)
+                                  setFieldValue("passenger_type", option.value)
                                 }
                                 optionIcons={<FaUser />}
                               />
-                              {touched.passengerType &&
-                                errors.passengerType && (
+                              {touched.passenger_type &&
+                                errors.passenger_type && (
                                   <div className="text-red-500 text-sm mt-2 absolute left-0">
-                                    {errors.passengerType}
+                                    {errors.passenger_type}
                                   </div>
                                 )}
                             </div>
@@ -779,23 +809,23 @@ const TravelersDetails = () => {
                             {/* Passport Number */}
                             <div className="relative mb-5">
                               <Input
-                                id={"passportNumber"}
-                                name={"passportNumber"}
+                                id={"passport_number"}
+                                name={"passport_number"}
                                 label={"Passport Number"}
                                 type={"text"}
-                                value={values.passportNumber}
+                                value={values.passport_number}
                                 placeholder={"Enter Passport Number"}
                                 onChange={(e) => {
                                   setFieldValue(
-                                    "passportNumber",
+                                    "passport_number",
                                     e.target.value
                                   );
                                 }}
                               />
-                              {touched.passportNumber &&
-                                errors.passportNumber && (
+                              {touched.passport_number &&
+                                errors.passport_number && (
                                   <div className="text-red-500 text-sm mt-2 absolute left-0">
-                                    {errors.passportNumber}
+                                    {errors.passport_number}
                                   </div>
                                 )}
                             </div>
@@ -803,23 +833,23 @@ const TravelersDetails = () => {
                             {/* Passport Exp Date */}
                             <div className="relative mb-5">
                               <Input
-                                id={"passportExpDate"}
-                                name={"passportExpDate"}
+                                id={"passport_expiry_date"}
+                                name={"passport_expiry_date"}
                                 label={"Passport Exp Date"}
                                 type={"date"}
-                                value={values.passportExpDate}
+                                value={values.passport_expiry_date}
                                 placeholder={"Select Passport Exp Date"}
                                 onChange={(e) =>
                                   setFieldValue(
-                                    "passportExpDate",
+                                    "passport_expiry_date",
                                     e.target.value
                                   )
                                 }
                               />
-                              {touched.passportExpDate &&
-                                errors.passportExpDate && (
+                              {touched.passport_expiry_date &&
+                                errors.passport_expiry_date && (
                                   <div className="text-red-500 text-sm mt-2 absolute left-0">
-                                    {errors.passportExpDate}
+                                    {errors.passport_expiry_date}
                                   </div>
                                 )}
                             </div>
@@ -915,19 +945,19 @@ const TravelersDetails = () => {
                             {/* First Name */}
                             <div className="relative mb-5">
                               <Input
-                                id={"firstName"}
-                                name={"firstName"}
+                                id={"first_name"}
+                                name={"first_name"}
                                 label={"First Name"}
                                 type={"text"}
-                                value={values.firstName}
+                                value={values.first_name}
                                 placeholder={"Enter First Name"}
                                 onChange={(e) => {
-                                  setFieldValue("firstName", e.target.value);
+                                  setFieldValue("first_name", e.target.value);
                                 }}
                               />
-                              {touched.firstName && errors.firstName && (
+                              {touched.first_name && errors.first_name && (
                                 <div className="text-red-500 text-sm mt-2 absolute left-0">
-                                  {errors.firstName}
+                                  {errors.first_name}
                                 </div>
                               )}
                             </div>
@@ -935,19 +965,19 @@ const TravelersDetails = () => {
                             {/* Last Name */}
                             <div className="relative mb-5">
                               <Input
-                                id={"lastName"}
-                                name={"lastName"}
+                                id={"last_name"}
+                                name={"last_name"}
                                 label={"Last Name"}
                                 type={"text"}
-                                value={values.lastName}
+                                value={values.last_name}
                                 placeholder={"Enter Last Name"}
                                 onChange={(e) =>
-                                  setFieldValue("lastName", e.target.value)
+                                  setFieldValue("last_name", e.target.value)
                                 }
                               />
-                              {touched.lastName && errors.lastName && (
+                              {touched.last_name && errors.last_name && (
                                 <div className="text-red-500 text-sm mt-2 absolute left-0">
-                                  {errors.lastName}
+                                  {errors.last_name}
                                 </div>
                               )}
                             </div>
@@ -975,19 +1005,19 @@ const TravelersDetails = () => {
                             {/* Phone Number */}
                             <div className="relative mb-5">
                               <Input
-                                id={"phoneNumber"}
-                                name={"phoneNumber"}
+                                id={"telephone"}
+                                name={"telephone"}
                                 label={"Phone Number"}
                                 type={"number"}
-                                value={values.phoneNumber}
+                                value={values.telephone}
                                 placeholder={"Enter Phone Number"}
                                 onChange={(e) =>
-                                  setFieldValue("phoneNumber", e.target.value)
+                                  setFieldValue("telephone", e.target.value)
                                 }
                               />
-                              {touched.phoneNumber && errors.phoneNumber && (
+                              {touched.telephone && errors.telephone && (
                                 <div className="text-red-500 text-sm mt-2 absolute left-0">
-                                  {errors.phoneNumber}
+                                  {errors.telephone}
                                 </div>
                               )}
                             </div>
@@ -995,19 +1025,19 @@ const TravelersDetails = () => {
                             {/* Mobile Number */}
                             <div className="relative mb-5">
                               <Input
-                                id={"mobileNumber"}
-                                name={"mobileNumber"}
+                                id={"mobile"}
+                                name={"mobile"}
                                 label={"Mobile Number"}
                                 type={"number"}
-                                value={values.mobileNumber}
+                                value={values.mobile}
                                 placeholder={"Enter Mobile Number"}
                                 onChange={(e) =>
-                                  setFieldValue("mobileNumber", e.target.value)
+                                  setFieldValue("mobile", e.target.value)
                                 }
                               />
-                              {touched.mobileNumber && errors.mobileNumber && (
+                              {touched.mobile && errors.mobile && (
                                 <div className="text-red-500 text-sm mt-2 absolute left-0">
-                                  {errors.mobileNumber}
+                                  {errors.mobile}
                                 </div>
                               )}
                             </div>
@@ -1057,41 +1087,42 @@ const TravelersDetails = () => {
                             {/* Date Of Birth */}
                             <div className="relative mb-5">
                               <Input
-                                id={"dateOfBirth"}
-                                name={"dateOfBirth"}
+                                id={"date_of_birth"}
+                                name={"date_of_birth"}
                                 label={"Date Of Birth"}
                                 type={"date"}
-                                value={values.dateOfBirth}
+                                value={values.date_of_birth}
                                 placeholder={"Select Date Of Birth"}
                                 onChange={(e) =>
-                                  setFieldValue("dateOfBirth", e.target.value)
+                                  setFieldValue("date_of_birth", e.target.value)
                                 }
                               />
-                              {touched.dateOfBirth && errors.dateOfBirth && (
-                                <div className="text-red-500 text-sm mt-2 absolute left-0">
-                                  {errors.dateOfBirth}
-                                </div>
-                              )}
+                              {touched.date_of_birth &&
+                                errors.date_of_birth && (
+                                  <div className="text-red-500 text-sm mt-2 absolute left-0">
+                                    {errors.date_of_birth}
+                                  </div>
+                                )}
                             </div>
 
                             {/* Passenger Type */}
                             <div className="relative mb-5">
                               <Select
-                                id="passengerType"
+                                id="passenger_type"
                                 label="Passenger Type"
-                                name="passengerType"
+                                name="passenger_type"
                                 options={passengerOptions}
-                                value={values.passengerType}
+                                value={values.passenger_type}
                                 placeholder="Select Passenger Type"
                                 onChange={(option) =>
-                                  setFieldValue("passengerType", option.value)
+                                  setFieldValue("passenger_type", option.value)
                                 }
                                 optionIcons={<FaUser />}
                               />
-                              {touched.passengerType &&
-                                errors.passengerType && (
+                              {touched.passenger_type &&
+                                errors.passenger_type && (
                                   <div className="text-red-500 text-sm mt-2 absolute left-0">
-                                    {errors.passengerType}
+                                    {errors.passenger_type}
                                   </div>
                                 )}
                             </div>
@@ -1120,23 +1151,23 @@ const TravelersDetails = () => {
                             {/* Passport Number */}
                             <div className="relative mb-5">
                               <Input
-                                id={"passportNumber"}
-                                name={"passportNumber"}
+                                id={"passport_number"}
+                                name={"passport_number"}
                                 label={"Passport Number"}
                                 type={"text"}
-                                value={values.passportNumber}
+                                value={values.passport_number}
                                 placeholder={"Enter Passport Number"}
                                 onChange={(e) => {
                                   setFieldValue(
-                                    "passportNumber",
+                                    "passport_number",
                                     e.target.value
                                   );
                                 }}
                               />
-                              {touched.passportNumber &&
-                                errors.passportNumber && (
+                              {touched.passport_number &&
+                                errors.passport_number && (
                                   <div className="text-red-500 text-sm mt-2 absolute left-0">
-                                    {errors.passportNumber}
+                                    {errors.passport_number}
                                   </div>
                                 )}
                             </div>
@@ -1144,23 +1175,23 @@ const TravelersDetails = () => {
                             {/* Passport Exp Date */}
                             <div className="relative mb-5">
                               <Input
-                                id={"passportExpDate"}
-                                name={"passportExpDate"}
+                                id={"passport_expiry_date"}
+                                name={"passport_expiry_date"}
                                 label={"Passport Exp Date"}
                                 type={"date"}
-                                value={values.passportExpDate}
+                                value={values.passport_expiry_date}
                                 placeholder={"Select Passport Exp Date"}
                                 onChange={(e) =>
                                   setFieldValue(
-                                    "passportExpDate",
+                                    "passport_expiry_date",
                                     e.target.value
                                   )
                                 }
                               />
-                              {touched.passportExpDate &&
-                                errors.passportExpDate && (
+                              {touched.passport_expiry_date &&
+                                errors.passport_expiry_date && (
                                   <div className="text-red-500 text-sm mt-2 absolute left-0">
-                                    {errors.passportExpDate}
+                                    {errors.passport_expiry_date}
                                   </div>
                                 )}
                             </div>

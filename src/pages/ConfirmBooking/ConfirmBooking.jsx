@@ -148,10 +148,13 @@ const FlightDetails = () => {
         ),
       },
     };
-
-    console.log(payLoad);
-
     let response = await confirmBooking(payLoad);
+    if (response.status) {
+      toast.success(response.message);
+      setTimeout(() => {
+        navigate("/dashboard/flight-bookings");
+      }, 2000);
+    }
   };
 
   useEffect(() => {
