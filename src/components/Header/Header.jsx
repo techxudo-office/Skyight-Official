@@ -97,10 +97,17 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
     }
   };
 
+  const refreshCredits = () => {
+    setCredits("");
+    setTimeout(() => {
+      getCreditsHandler();
+    }, 2000);
+  };
+
   useEffect(() => {
     const intervalId = setInterval(() => {
       getCreditsHandler();
-    }, 5000);
+    }, 10000);
 
     return () => clearInterval(intervalId);
   }, []);
@@ -119,25 +126,25 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
           <div className="relative">
             <div
               className={`w-full flex items-center justify-center gap-3 cursor-pointer py-[7px] px-6 bg-blue-100 hover:text-black text-primary font-semibold rounded-full transition duration-300 ease-in-out transform focus:outline-none`}
-              onClick={() => {
-                setIsActive(!isActive);
-              }}
+              // onClick={() => {
+              //   setIsActive(!isActive);
+              // }}
             >
               {credits ? (
-                <>
-                  <HiOutlineRefresh /> <span>PKR {credits}</span>
-                </>
+                <span
+                  onClick={refreshCredits}
+                  className="flex items-center gap-2"
+                >
+                  <HiOutlineRefresh />
+                  <span>PKR {credits}</span>
+                </span>
               ) : (
-                <Spinner className={'text-primary'} />
+                <span className="flex items-center gap-2">
+                  <HiOutlineRefresh />
+                  <span>Refreshing...</span>
+                </span>
               )}
             </div>
-
-            <Dropdown
-              className={"top-16 right-10"}
-              status={isActive}
-              changeStatus={setIsActive}
-              options={options}
-            />
           </div>
           <div className="px-3">
             <FaCircleUser

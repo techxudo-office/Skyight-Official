@@ -66,7 +66,8 @@ export const sidebarLinks = [
   //   ],
   // },
   {
-    title: "Payments & Invoices",
+    // title: "Payments & Invoices",
+    title: "Transactions",
     icon: <FaMoneyBill1Wave />,
     sublinks: [
       // {
@@ -77,6 +78,11 @@ export const sidebarLinks = [
       {
         title: "Create Transaction",
         path: "/dashboard/create-transaction",
+        icon: <GoDotFill />,
+      },
+      {
+        title: "Transaction History",
+        path: "/dashboard/transactions",
         icon: <GoDotFill />,
       },
     ],
