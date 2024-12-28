@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 
-const Dropdown = ({ status, changeStatus, options, className }) => {
+const Dropdown = ({ status, changeStatus, options, className, right }) => {
   const dropdownRef = useRef(null);
 
   useEffect(() => {
@@ -23,7 +23,10 @@ const Dropdown = ({ status, changeStatus, options, className }) => {
           ref={dropdownRef}
           className={`absolute inline-block text-left ${className}`}
         >
-          <div className="absolute right-[-40px] z-10 w-40 rounded-xl bg-white shadow-lg">
+          <div
+            className="absolute z-10 w-40 rounded-xl top-3 bg-white shadow-lg"
+            style={{ right: right ? `${right}px` : "-40px" }}
+          >
             <ul>
               {options &&
                 options.map((option, index) => {

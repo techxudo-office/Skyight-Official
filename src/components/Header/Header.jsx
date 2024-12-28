@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { HiOutlineMenuAlt1 } from "react-icons/hi";
 import { FaCircleUser } from "react-icons/fa6";
@@ -12,9 +12,12 @@ import { HiOutlineRefresh } from "react-icons/hi";
 import { PiCoinsFill } from "react-icons/pi";
 import { PiHandCoinsFill } from "react-icons/pi";
 import { getCredits } from "../../utils/api_handler";
+import { IoHome } from "react-icons/io5";
+import { AuthContext } from "../../context/AuthContext";
 
 const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
   const navigate = useNavigate();
+  const { updateAuthToken } = useContext(AuthContext);
 
   const [dropdownStatus, setDropDownStatus] = useState(false);
   const [isActive, setIsActive] = useState(false);
@@ -29,23 +32,30 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
     //   name: "Profile",
     //   icon: <FaUser />,
     //   handler: () => {
-    //     navigationHandler("/profile");
+    //     navigationHandler("/dashboard/profile");
     //   },
     // },
     // {
     //   name: "Setting",
     //   icon: <IoIosSettings />,
     //   handler: () => {
-    //     navigationHandler("/setting");
+    //     navigationHandler("/dashboard/setting");
     //   },
     // },
     // {
     //   name: "Notifications",
     //   icon: <FaBell />,
     //   handler: () => {
-    //     navigationHandler("/notifications");
+    //     navigationHandler("/dashboard/notifications");
     //   },
     // },
+    {
+      name: "Home",
+      icon: <IoHome />,
+      handler: () => {
+        navigationHandler("/");
+      },
+    },
     {
       name: "Logout",
       icon: <FiLogOut />,
@@ -74,16 +84,15 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
 
   const logoutHandler = () => {
     dropdownHandler();
-    localStorage.removeItem("token");
     toast.success("Logout Successfully");
     setTimeout(() => {
-      navigate("/");
+      updateAuthToken();
     }, 2000);
   };
 
   const navigationHandler = (path) => {
     dropdownHandler();
-    navigate(`/dashboard${path}`);
+    navigate(path);
   };
 
   const sidebarHandler = () => {

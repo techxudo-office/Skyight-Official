@@ -95,7 +95,7 @@ const Sidebar = ({ status, updateStatus }) => {
       <div>
         <div className="p-5 flex items-center">
           <h3
-            onClick={() => navigationHandler("/dashboard")}
+            onClick={() => navigationHandler("/")}
             className="text-2xl font-semibold flex items-center gap-3 text-text cursor-pointer"
           >
             <GiCommercialAirplane />

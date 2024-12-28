@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   CardLayoutContainer,
   CardLayoutBody,
@@ -15,9 +15,12 @@ import { useNavigate, Link } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { login } from "../../utils/api_handler";
 import { FaCheck } from "react-icons/fa6";
+import { AuthContext } from "../../context/AuthContext";
 
 const LoginForm = () => {
   const navigate = useNavigate();
+  const { updateAuthToken } = useContext(AuthContext);
+
   const [loading, setLoading] = useState(false);
 
   const validationSchema = Yup.object({
@@ -31,6 +34,7 @@ const LoginForm = () => {
     setLoading(true);
     let response = await login(payload);
     if (response.status) {
+      updateAuthToken(response.token);
       toast.success(response.message);
       setLoading(false);
       resetForm();
@@ -151,7 +155,13 @@ const LoginForm = () => {
                   View your reservations and history
                 </h4>
               </div>
-              <SecondaryButton onClick={()=>{navigate('/registration')}} text="Register Now" className="mt-5" />
+              <SecondaryButton
+                onClick={() => {
+                  navigate("/registration");
+                }}
+                text="Register Now"
+                className="mt-5"
+              />
             </div>
           </div>
         </CardLayoutBody>

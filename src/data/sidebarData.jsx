@@ -113,18 +113,8 @@ export const sidebarLinks = [
         icon: <GoDotFill />,
       },
       {
-        title: "Create Role",
-        path: "/dashboard/create-role",
-        icon: <GoDotFill />,
-      },
-      {
         title: "Users",
         path: "/dashboard/users",
-        icon: <GoDotFill />,
-      },
-      {
-        title: "Create User",
-        path: "/dashboard/create-user",
         icon: <GoDotFill />,
       },
     ],

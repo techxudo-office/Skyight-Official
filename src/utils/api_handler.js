@@ -21,6 +21,7 @@ export const login = async (payload) => {
       return {
         status: true,
         message: "Login Successfully",
+        token:response.data.data.token
       };
     }
   } catch (error) {
