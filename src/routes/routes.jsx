@@ -4,11 +4,16 @@ import { routesData } from "../data/routesData";
 import { AuthContext } from "../context/AuthContext";
 
 const ProtectedRoute = ({ element }) => {
-  const { authToken } = useContext(AuthContext);
+  const { authToken, loading } = useContext(AuthContext);
+
+  if (loading) {
+    return null; 
+  }
 
   if (!authToken) {
     return <Navigate to="/" replace />;
   }
+
   return element;
 };
 

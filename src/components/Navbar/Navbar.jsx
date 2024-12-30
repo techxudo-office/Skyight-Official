@@ -8,6 +8,9 @@ import { RiDashboardFill } from "react-icons/ri";
 import { AuthContext } from "../../context/AuthContext";
 import toast, { Toaster } from "react-hot-toast";
 
+import logo from "../../assets/logo/logo.png";
+import planeIcon from "../../assets/icons/plane.png";
+
 const Navbar = ({ hideLinks }) => {
   const navigate = useNavigate();
   const { authToken, updateAuthToken } = useContext(AuthContext);
@@ -84,11 +87,7 @@ const Navbar = ({ hideLinks }) => {
         <div className="container mx-auto flex items-center justify-between ps-3 pe-6">
           <Link to="/">
             <div className="flex items-center gap-3 ">
-              <img
-                src="http://localhost:2000/static/media/navbaricon.d3d3994ce25dc3b2a2a3.png"
-                alt="logo"
-                className="h-14"
-              />
+              <img src={logo} alt="logo" className="h-14" />
               <span className="text-2xl font-bold text-primary ms-[-20px]">
                 SKYIGHT
               </span>
@@ -121,7 +120,7 @@ const Navbar = ({ hideLinks }) => {
                   className="flex items-center justify-center rounded-full px-3 py-2 gap-2 border-2 border-primary hover:border-secondary text-primary hover:text-secondary transition-all text-4xl cursor-pointer"
                 >
                   <img
-                    src="http://localhost:2000/static/media/nav.377a0bb50be2f2a372fc.png"
+                    src={planeIcon}
                     alt="plane"
                     className={`h-8 transition-all ${
                       dropdownStatus && "rotate-180"

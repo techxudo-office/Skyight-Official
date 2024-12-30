@@ -41,7 +41,7 @@ const Table = ({ columns, data, viewColumns, actions, activeIndex }) => {
                       return column.type === "no." ? (
                         <td
                           key={columnKey}
-                          className="px-4 py-3 text-sm text-slate-500"
+                          className="px-4 h-[64px] text-sm text-slate-500"
                         >
                           #{dataIndex + 1}
                         </td>
@@ -50,14 +50,18 @@ const Table = ({ columns, data, viewColumns, actions, activeIndex }) => {
                           key={columnKey}
                           className="px-4 py-3 text-sm text-slate-500"
                         >
-                          {item[column.fieldName] ? item[column.fieldName] : '-'}
+                          {item[column.fieldName]
+                            ? item[column.fieldName]
+                            : "-"}
                         </td>
                       ) : column.type === "text" ? (
                         <td
                           key={columnKey}
                           className="px-4 py-3 text-sm text-slate-500"
                         >
-                          {item[column.fieldName] ? item[column.fieldName] : '-'}
+                          {item[column.fieldName]
+                            ? item[column.fieldName]
+                            : "-"}
                         </td>
                       ) : column.type === "img" ? (
                         <td
@@ -66,7 +70,11 @@ const Table = ({ columns, data, viewColumns, actions, activeIndex }) => {
                         >
                           <img
                             loading="lazy"
-                            src={item[column.fieldName] ? item[column.fieldName] : '-'}
+                            src={
+                              item[column.fieldName]
+                                ? item[column.fieldName]
+                                : "-"
+                            }
                             className="h-10"
                           />
                         </td>
@@ -82,30 +90,30 @@ const Table = ({ columns, data, viewColumns, actions, activeIndex }) => {
                                 : "bg-red-100 text-red-500"
                             }`}
                           >
-                            {item[column.fieldName] ? item[column.fieldName] : '-'}
+                            {item[column.fieldName]
+                              ? item[column.fieldName]
+                              : "-"}
                           </span>
                         </td>
                       ) : (
                         ""
                       );
                     })}
-                    <td className="px-4 h-[64px] flex items-center justify-start">
-                      {actions
-                        ? actions.map((action, actionIndex) => {
-                            return (
-                              <span
-                                className="cursor-pointer hover:bg-blue-50 p-2 rounded-full text-lg"
-                                key={actionIndex}
-                                onClick={() => [
-                                  action.handler(dataIndex, item),
-                                ]}
-                              >
-                                {action.icon}
-                              </span>
-                            );
-                          })
-                        : ""}
-                    </td>
+                    {actions && (
+                      <td className="px-4 h-[64px] flex items-center justify-start">
+                        {actions.map((action, actionIndex) => {
+                          return (
+                            <span
+                              className="cursor-pointer hover:bg-blue-50 p-2 rounded-full text-lg"
+                              key={actionIndex}
+                              onClick={() => [action.handler(dataIndex, item)]}
+                            >
+                              {action.icon}
+                            </span>
+                          );
+                        })}
+                      </td>
+                    )}
                   </tr>
                   {
                     <tr
@@ -125,7 +133,11 @@ const Table = ({ columns, data, viewColumns, actions, activeIndex }) => {
                                   <p className="text-text font-semibold">
                                     {[column.columnName]}
                                   </p>
-                                  <span>{item[column.fieldName] ? item[column.fieldName] : '-'}</span>
+                                  <span>
+                                    {item[column.fieldName]
+                                      ? item[column.fieldName]
+                                      : "-"}
+                                  </span>
                                 </div>
                               ) : column.type === "text" ? (
                                 <div
@@ -135,7 +147,11 @@ const Table = ({ columns, data, viewColumns, actions, activeIndex }) => {
                                   <p className="text-text font-semibold">
                                     {[column.columnName]}
                                   </p>
-                                  <span>{item[column.fieldName] ? item[column.fieldName] : '-'}</span>
+                                  <span>
+                                    {item[column.fieldName]
+                                      ? item[column.fieldName]
+                                      : "-"}
+                                  </span>
                                 </div>
                               ) : (
                                 ""
@@ -156,7 +172,11 @@ const Table = ({ columns, data, viewColumns, actions, activeIndex }) => {
                                   </p> */}
                                   <img
                                     loading="lazy"
-                                    src={item[column.fieldName] ? item[column.fieldName] : '-'}
+                                    src={
+                                      item[column.fieldName]
+                                        ? item[column.fieldName]
+                                        : "-"
+                                    }
                                     className="h-96 "
                                   />
                                 </div>

@@ -4,7 +4,7 @@ import { data, useNavigate } from "react-router-dom";
 const baseUrl = import.meta.env.VITE_API_URL;
 
 const getToken = () => {
-  return localStorage.getItem('auth_token');
+  return localStorage.getItem("auth_token");
 };
 
 //! Authentication
@@ -17,11 +17,11 @@ export const login = async (payload) => {
     });
     console.log(response);
     if (response.status === 200) {
-      localStorage.setItem('auth_token', response.data.data.token);
+      localStorage.setItem("auth_token", response.data.data.token);
       return {
         status: true,
         message: "Login Successfully",
-        token:response.data.data.token
+        token: response.data.data.token,
       };
     }
   } catch (error) {
@@ -38,13 +38,12 @@ export const login = async (payload) => {
           status: false,
           message: errorMessages,
         };
-      }
-      else {
+      } else {
         if (error.response.data.message) {
           return {
             status: false,
-            message: error.response.data.message
-          }
+            message: error.response.data.message,
+          };
         }
       }
     } else {
@@ -84,13 +83,12 @@ export const registration = async (payload) => {
           status: false,
           message: errorMessages,
         };
-      }
-      else {
+      } else {
         if (error.response.data.message) {
           return {
             status: false,
-            message: error.response.data.message
-          }
+            message: error.response.data.message,
+          };
         }
       }
     } else {
@@ -130,13 +128,12 @@ export const verifyOTP = async (payload) => {
           status: false,
           message: errorMessages,
         };
-      }
-      else {
+      } else {
         if (error.response.data.message) {
           return {
             status: false,
-            message: error.response.data.message
-          }
+            message: error.response.data.message,
+          };
         }
       }
     } else {
@@ -176,13 +173,12 @@ export const resendCode = async (payload) => {
           status: false,
           message: errorMessages,
         };
-      }
-      else {
+      } else {
         if (error.response.data.message) {
           return {
             status: false,
-            message: error.response.data.message
-          }
+            message: error.response.data.message,
+          };
         }
       }
     } else {
@@ -198,31 +194,33 @@ export const resendCode = async (payload) => {
 export const getCredits = async () => {
   try {
     let response = await axios({
-      method: 'POST',
+      method: "POST",
       url: `${baseUrl}/api/booking-credit`,
       headers: {
-        Authorization: getToken()
-      }
+        Authorization: getToken(),
+      },
     });
     // console.log(response);
     if (response.status === 200) {
       return {
         status: true,
-        data: response.data.data.Balence
-      }
+        data: response.data.data.Balence,
+      };
     }
   } catch (error) {
-    console.log('Failed while getting credits: ', error);
-
+    console.log("Failed while getting credits: ", error);
   }
 };
 
 //! Flight...
 export const searchFlight = async (payload) => {
-  const apiUrlWithPayload = `${baseUrl}/api/search?trip_type=${payload.tripType
-    }&departure_date_time=${payload.departureDate}&origin_location_code=${payload.originCode
-    }&destination_location_code=${payload.destinationCode}&adult_quantity=${payload.adult
-    }&child_quantity=${[payload.child]}&infant_quantity=${payload.infant}`;
+  const apiUrlWithPayload = `${baseUrl}/api/search?trip_type=${
+    payload.tripType
+  }&departure_date_time=${payload.departureDate}&origin_location_code=${
+    payload.originCode
+  }&destination_location_code=${payload.destinationCode}&adult_quantity=${
+    payload.adult
+  }&child_quantity=${[payload.child]}&infant_quantity=${payload.infant}`;
 
   try {
     let response = await axios({
@@ -621,23 +619,45 @@ export const refundRequest = async (payload) => {
 export const confirmBooking = async (payload) => {
   try {
     let response = await axios({
-      method: 'POST',
+      method: "POST",
       url: `${baseUrl}/api/booking`,
       data: payload,
       headers: {
         Authorization: getToken(),
-        "Content-Type": 'application/json',
+        "Content-Type": "application/json",
       },
     });
-    console.log('confirm booking response: ', response);
+    console.log("confirm booking response: ", response);
     if (response.status === 200) {
       return {
         status: true,
-        message: 'Booking Created'
-      }
+        message: "Booking Created",
+      };
     }
   } catch (error) {
-    console.log('Failed while calling confirming booking: ', error);
+    console.log("Failed while calling confirming booking: ", error);
   }
 };
 
+//! Booking Active Routes
+export const getRoutes = async () => {
+  try {
+    let response = await axios({
+      method: "POST",
+      url: `${baseUrl}/api/booking-all-active-routes`,
+      headers: {
+        Authorization: getToken(),
+      },
+    });
+    // console.log(response);
+    if (response.status === 200) {
+      const data = response.data.data.Routes;
+      return {
+        status: true,
+        data: data,
+      };
+    }
+  } catch (error) {
+    console.log("Failed while getting routes: ", error);
+  }
+};
