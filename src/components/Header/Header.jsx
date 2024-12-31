@@ -149,7 +149,11 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
                 </span>
               ) : (
                 <span className="flex items-center gap-2">
-                  <HiOutlineRefresh />
+                  <HiOutlineRefresh
+                    className={`transition-all ${
+                      !credits ? "rotate-180" : "rotate-0"
+                    }`}
+                  />
                   <span>Refreshing...</span>
                 </span>
               )}
