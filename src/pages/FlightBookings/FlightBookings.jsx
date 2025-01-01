@@ -69,10 +69,13 @@ const FlightBookings = () => {
     {
       name: "View",
       icon: <FaEye title="View" className="text-green-500" />,
-      handler: (index) => {
-        if (activeIndex === index) {
-          setActiveIndex(null);
-        } else setActiveIndex(index);
+      // handler: (index) => {
+      //   if (activeIndex === index) {
+      //     setActiveIndex(null);
+      //   } else setActiveIndex(index);
+      // },
+      handler: (index, item) => {
+        navigate("/dashboard/booking-details", { state: item.booking_reference_id });
       },
     },
     {
@@ -177,4 +180,3 @@ const FlightBookings = () => {
 };
 
 export default FlightBookings;
-

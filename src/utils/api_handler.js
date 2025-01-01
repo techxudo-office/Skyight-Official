@@ -558,6 +558,27 @@ export const getFlightBookings = async () => {
   }
 };
 
+export const getBookingDetails = async (id) => {
+  try {
+    let response = await axios({
+      method: "POST",
+      url: `${baseUrl}/api/booking-issue`,
+      data:{
+          pnr: id        
+      },
+      headers: {
+        Authorization: getToken(),
+      },
+    });
+    console.log(response);
+    if (response.status === 200) {
+      return { status: true, data: response.data.data };
+    }
+  } catch (error) {
+    console.log("Failed while getting bookings: ", error);
+  }
+};
+
 export const cancelFlightBooking = async (payload) => {
   console.log(payload);
 

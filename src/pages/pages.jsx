@@ -12,6 +12,8 @@ export { default as SearchFlights } from "./SearchFlights/SearchFlights";
 export { default as SearchHotels } from "./SearchHotels/SearchHotels";
 
 export { default as FlightBookings } from "./FlightBookings/FlightBookings";
+export { default as BookingDetails } from "./BookingDetails/BookingDetails";
+
 export { default as HotelBookings } from "./HotelBookings/HotelBookings";
 
 export { default as CreditTopup } from "./CreditTopup/CreditTopup";

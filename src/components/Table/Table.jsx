@@ -85,7 +85,7 @@ const Table = ({ columns, data, viewColumns, actions, activeIndex }) => {
                         >
                           <span
                             className={`text-center rounded-full px-3 py-1 ${
-                              item[column.fieldName] === "active"
+                              item[column.fieldName] === "active" || item[column.fieldName] === 'open'
                                 ? "bg-green-100 text-green-500"
                                 : "bg-red-100 text-red-500"
                             }`}
