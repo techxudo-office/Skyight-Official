@@ -75,7 +75,9 @@ const FlightBookings = () => {
       //   } else setActiveIndex(index);
       // },
       handler: (index, item) => {
-        navigate("/dashboard/booking-details", { state: item.booking_reference_id });
+        navigate("/dashboard/booking-details", {
+          state: item.booking_reference_id,
+        });
       },
     },
     {
@@ -105,7 +107,7 @@ const FlightBookings = () => {
     console.log(flight);
 
     const bookingId = {
-      booking_id: flight.booking_reference_id,
+      booking_id: flight.id,
     };
 
     console.log(bookingId);
@@ -113,6 +115,8 @@ const FlightBookings = () => {
     let response = await cancelFlightBooking(bookingId);
     if (response.status) {
       toast.success(response.message);
+      setBookingsData([]);
+      gettingFlightBookings();
     } else {
       toast.error(response.message);
     }
@@ -122,7 +126,7 @@ const FlightBookings = () => {
     console.log(flight);
 
     const bookingId = {
-      booking_id: flight.booking_reference_id,
+      booking_id: flight.id,
     };
 
     console.log(bookingId);
@@ -130,6 +134,8 @@ const FlightBookings = () => {
     let response = await refundRequest(bookingId);
     if (response.status) {
       toast.success(response.message);
+      setBookingsData([]);
+      gettingFlightBookings();
     } else {
       toast.error(response.message);
     }

@@ -563,8 +563,8 @@ export const getBookingDetails = async (id) => {
     let response = await axios({
       method: "POST",
       url: `${baseUrl}/api/booking-issue`,
-      data:{
-          pnr: id        
+      data: {
+        pnr: id,
       },
       headers: {
         Authorization: getToken(),
@@ -592,6 +592,9 @@ export const cancelFlightBooking = async (payload) => {
       },
     });
     console.log(response);
+    if (response.status === 200) {
+      return { status: true, message: "Refund Requested" };
+    }
   } catch (error) {
     console.log("Failed while calling cancel booking api: ", error);
     if (error.response) {
@@ -621,6 +624,9 @@ export const refundRequest = async (payload) => {
       },
     });
     console.log(response);
+    if (response.status === 200) {
+      return { status: true, message: "Refund Requested" };
+    }
   } catch (error) {
     console.log("Failed while calling refund booking api: ", error);
     if (error.response) {
