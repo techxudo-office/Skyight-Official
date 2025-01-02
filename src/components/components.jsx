@@ -2,6 +2,7 @@ export { default as Navbar } from "./Navbar/Navbar";
 export { default as Header } from "./Header/Header";
 export { default as Table } from "./Table/Table";
 export { default as Sidebar } from "./Sidebar/Sidebar";
+export { default as Footer } from "./Footer/Footer";
 
 export { default as Container } from "./Container/Container";
 export { default as Form } from "./Form/Form";

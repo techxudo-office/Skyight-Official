@@ -688,3 +688,28 @@ export const getRoutes = async () => {
     console.log("Failed while getting routes: ", error);
   }
 };
+
+//! Banks
+export const getBanks = async () => {
+  try {
+    let response = await axios({
+      method: "GET",
+      url: `${baseUrl}/api/bank`,
+      headers: {
+        Authorization: getToken(),
+      },
+    });
+    console.log(response);
+    if (response.status === 200) {
+      if (response.data.data[0].length > 0) {
+        const extractedData = response.data.data[0].map(({ id, bank }) => ({
+          value: id,
+          label: bank,
+        }));        
+        return { status: true, data: extractedData };
+      }
+    }
+  } catch (error) {
+    console.log("Failed while getting banks: ", error);
+  }
+};

@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaCloudUploadAlt } from "react-icons/fa";
+import { PiBankBold } from "react-icons/pi";
 
 import {
   CardLayoutContainer,
@@ -13,9 +14,10 @@ import {
   Spinner,
   Button,
   SecondaryButton,
+  Select,
 } from "../../components/components";
 
-import { createTransaction } from "../../utils/api_handler";
+import { createTransaction, getBanks } from "../../utils/api_handler";
 
 import { useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
@@ -37,6 +39,7 @@ const validationSchema = Yup.object().shape({
 const CreateTransaction = () => {
   const navigate = useNavigate();
 
+  const [banksData, setBanksData] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -48,6 +51,14 @@ const CreateTransaction = () => {
     payment_date: "",
     amount: "",
     comment: "",
+  };
+
+  const getBanksHandler = async () => {
+    let response = await getBanks();
+    console.log(response);
+    if (response.status) {
+      setBanksData(response.data);
+    }
   };
 
   const handleImageChange = (e) => {
@@ -65,6 +76,9 @@ const CreateTransaction = () => {
 
     if (response.status) {
       toast.success(response.message);
+      setTimeout(() => {
+        navigate("/dashboard/transactions");
+      }, 2000);
     } else {
       if (Array.isArray(response.message)) {
         response.message.map((error) => {
@@ -95,6 +109,10 @@ const CreateTransaction = () => {
       createTransactionHandler(formData);
     }
   };
+
+  useEffect(() => {
+    getBanksHandler();
+  }, []);
 
   return (
     <>
@@ -157,6 +175,25 @@ const CreateTransaction = () => {
                 <CardLayoutBody>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-5 mb-7">
                     <div className="relative mb-5">
+                      <Select
+                        id="bank_name"
+                        label="Bank Name"
+                        name="bank_name"
+                        options={banksData}
+                        value={values.bank_name}
+                        placeholder="Select Bank"
+                        onChange={(option) =>
+                          setFieldValue("bank_name", option.value)
+                        }
+                        optionIcons={<PiBankBold />}
+                      />
+                      {touched.bank_name && errors.bank_name && (
+                        <div className="text-red-500 text-sm mt-2 absolute left-0">
+                          {errors.bank_name}
+                        </div>
+                      )}
+                    </div>
+                    {/* <div className="relative mb-5">
                       <Input
                         id={"bank_name"}
                         name={"bank_name"}
@@ -173,7 +210,7 @@ const CreateTransaction = () => {
                           {errors.bank_name}
                         </div>
                       )}
-                    </div>
+                    </div> */}
                     <div className="relative mb-5">
                       <Input
                         id={"bank_number"}

@@ -42,18 +42,18 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
     //     navigationHandler("/dashboard/setting");
     //   },
     // },
-    // {
-    //   name: "Notifications",
-    //   icon: <FaBell />,
-    //   handler: () => {
-    //     navigationHandler("/dashboard/notifications");
-    //   },
-    // },
     {
       name: "Home",
       icon: <IoHome />,
       handler: () => {
         navigationHandler("/");
+      },
+    },
+    {
+      name: "Notifications",
+      icon: <FaBell />,
+      handler: () => {
+        navigationHandler("/dashboard/notifications");
       },
     },
     {
