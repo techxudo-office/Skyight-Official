@@ -122,9 +122,9 @@ const LoginForm = () => {
 
               <Link
                 className="text-center hover:text-primary transition-all"
-                to="/forgot-password"
+                to="/forget-password"
               >
-                Forgot your password?
+                Forget your password?
               </Link>
 
               <Button

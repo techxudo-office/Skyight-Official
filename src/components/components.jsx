@@ -20,3 +20,4 @@ export { default as ConfirmModal } from "./ConfirmModal/ConfirmModal";
 export { default as LoginForm } from "./LoginForm/LoginForm";
 export { default as RegistrationForm } from "./RegistrationForm/RegistrationForm";
 export { default as VerificationForm } from "./VerificationForm/VerificationForm";
+export { default as ForgetPassForm } from "./ForgetPassForm/ForgetPassForm";

@@ -34,6 +34,7 @@ import {
   Login,
   Registration,
   Verification,
+  ForgetPassword
 } from "../pages/pages";
 
 export const routesData = [
@@ -44,6 +45,7 @@ export const routesData = [
   { path: "/login", element: <Login /> },
   { path: "/registration", element: <Registration /> },
   { path: "/verification", element: <Verification /> },
+  { path: "/forget-password", element: <ForgetPassword /> },
   {
     path: "/dashboard",
     element: <Dashboard />,

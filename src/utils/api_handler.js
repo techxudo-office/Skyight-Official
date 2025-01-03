@@ -190,6 +190,51 @@ export const resendCode = async (payload) => {
   }
 };
 
+export const forgotPassword = async (payload) => {
+  try {
+    let response = await axios({
+      method: "POST",
+      url: `${baseUrl}/api/forgot-password`,
+      data: payload,
+    });
+    console.log(response);
+    if (response.status === 200) {
+      return {
+        status: true,
+        message: "Please check your mail box",
+      };
+    }
+  } catch (error) {
+    console.log("Failed while trying to forget your password: ", error);
+    if (error.response) {
+      if (error.response.data.data.errors) {
+        const errors = Object.keys(error.response.data.data.errors);
+        const errorMessages = [];
+
+        for (let i = 0; i < errors.length; i++) {
+          errorMessages.push(error.response.data.data.errors[errors[i]]);
+        }
+        return {
+          status: false,
+          message: errorMessages,
+        };
+      } else {
+        if (error.response.data.message) {
+          return {
+            status: false,
+            message: error.response.data.message,
+          };
+        }
+      }
+    } else {
+      return {
+        status: false,
+        message: "Server Connection Error",
+      };
+    }
+  }
+};
+
 //! Credits...
 export const getCredits = async () => {
   try {
