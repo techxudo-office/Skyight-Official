@@ -6,6 +6,8 @@
 
 * {
   font-family: "Poppins", sans-serif;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
 }
 
 :root {
@@ -96,5 +98,23 @@ input::-webkit-calendar-picker-indicator {
 
   100% {
     transform: scale(1);
+  }
+}
+
+@media print {
+  #header-container {
+    display: none !important;
+  }
+
+  #sidebar-container {
+    display: none !important;
+  }
+
+  #footer-container {
+    display: none !important;
+  }
+
+  #hide-buttons {
+    display: none !important;
   }
 }

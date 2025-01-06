@@ -124,7 +124,7 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
   return (
     <>
       <Toaster />
-      <div className="flex justify-between items-center shadow-sm bg-white p-3">
+      <div id="header-container" className="flex justify-between items-center shadow-sm bg-white p-3">
         <HiOutlineMenuAlt1
           className={`text-3xl cursor-pointer hover:text-text ${
             sidebarStatus ? "text-slate-400" : "text-primary"

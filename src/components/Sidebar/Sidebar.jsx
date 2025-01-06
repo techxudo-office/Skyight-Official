@@ -87,10 +87,13 @@ const Sidebar = ({ status, updateStatus }) => {
 
   return (
     <div
+      id="sidebar-container"
       ref={sidebarRef}
       className={`transition-all z-10 bg-white  ${
         status ? "w-64 shadow-md" : "w-0 overflow-hidden"
-      } flex flex-col justify-between ${mobileView && "absolute h-screen shadow-2xl"}`}
+      } flex flex-col justify-between ${
+        mobileView && "absolute h-screen shadow-2xl"
+      }`}
     >
       <div>
         <div className="p-5 flex items-center">

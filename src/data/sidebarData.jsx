@@ -87,22 +87,22 @@ export const sidebarLinks = [
       },
     ],
   },
-  {
-    title: "History",
-    icon: <IoIosStopwatch />,
-    sublinks: [
-      {
-        title: "Search History",
-        path: "/dashboard/search-history",
-        icon: <GoDotFill />,
-      },
-      {
-        title: "Transactions History",
-        path: "/dashboard/transactions-history",
-        icon: <GoDotFill />,
-      },
-    ],
-  },
+  // {
+  //   title: "History",
+  //   icon: <IoIosStopwatch />,
+  //   sublinks: [
+  //     {
+  //       title: "Search History",
+  //       path: "/dashboard/search-history",
+  //       icon: <GoDotFill />,
+  //     },
+  //     // {
+  //     //   title: "Transactions History",
+  //     //   path: "/dashboard/transactions-history",
+  //     //   icon: <GoDotFill />,
+  //     // },
+  //   ],
+  // },
   {
     title: "Administrator",
     icon: <MdAdminPanelSettings />,

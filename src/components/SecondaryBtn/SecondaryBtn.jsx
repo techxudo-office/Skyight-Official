@@ -7,10 +7,12 @@ const SecondaryButton = ({
   className = "",
   styles,
   disabled,
+  id,
 }) => {
   return (
     <>
       <button
+        id={id}
         type={type}
         onClick={onClick}
         disabled={disabled}

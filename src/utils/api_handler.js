@@ -259,13 +259,10 @@ export const getCredits = async () => {
 
 //! Flight...
 export const searchFlight = async (payload) => {
-  const apiUrlWithPayload = `${baseUrl}/api/search?trip_type=${
-    payload.tripType
-  }&departure_date_time=${payload.departureDate}&origin_location_code=${
-    payload.originCode
-  }&destination_location_code=${payload.destinationCode}&adult_quantity=${
-    payload.adult
-  }&child_quantity=${[payload.child]}&infant_quantity=${payload.infant}`;
+  const apiUrlWithPayload = `${baseUrl}/api/search?trip_type=${payload.tripType
+    }&departure_date_time=${payload.departureDate}&origin_location_code=${payload.originCode
+    }&destination_location_code=${payload.destinationCode}&adult_quantity=${payload.adult
+    }&child_quantity=${[payload.child]}&infant_quantity=${payload.infant}`;
 
   try {
     let response = await axios({
@@ -363,6 +360,29 @@ export const createTransaction = async (payload) => {
         message: "Server Connection Error",
       };
     }
+  }
+};
+
+export const getTransactions = async () => {
+  try {
+    let response = await axios({
+      method: "GET",
+      url: `${baseUrl}/api/company/user-transactions`,
+      headers: {
+        Authorization: getToken(),
+      },
+    });
+    console.log(response);
+    if (response.status === 200) {
+      if (response.data.data[0].length > 0) {
+        const extractedData = response.data.data[0].map(
+          ({ id, company_id, bank_name, bank_number, account_holder_name, document_number, payment_date, amount, document_url, comment, status, reasonIds }) => ({ id, company_id, bank_name, bank_number, account_holder_name, document_number, payment_date, amount, document_url, comment, status, reasonIds })
+        );
+        return { status: true, data: extractedData };
+      }
+    }
+  } catch (error) {
+    console.log("Failed while getting transactions: ", error);
   }
 };
 
@@ -638,7 +658,7 @@ export const cancelFlightBooking = async (payload) => {
     });
     console.log(response);
     if (response.status === 200) {
-      return { status: true, message: "Refund Requested" };
+      return { status: true, message: "Cancelled Requested" };
     }
   } catch (error) {
     console.log("Failed while calling cancel booking api: ", error);
@@ -750,7 +770,7 @@ export const getBanks = async () => {
         const extractedData = response.data.data[0].map(({ id, bank }) => ({
           value: id,
           label: bank,
-        }));        
+        }));
         return { status: true, data: extractedData };
       }
     }

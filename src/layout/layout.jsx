@@ -24,7 +24,10 @@ const Layout = () => {
           <div className="w-full flex justify-center items-center p-5">
             <Outlet />
           </div>
-          <div className="flex bg-white p-3 pb-0 w-full justify-center items-center">
+          <div
+            id="footer-container"
+            className="flex bg-white p-3 pb-0 w-full justify-center items-center"
+          >
             <h2 className="text-text text-md font-semibold mt-2 text-center">
               © 2024 All rights reserved by SKYIGHT AIR & BOOKING SYSTEM
             </h2>

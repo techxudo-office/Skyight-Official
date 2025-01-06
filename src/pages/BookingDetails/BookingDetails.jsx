@@ -1,4 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
+
 import { FaPlane, FaUser, FaSuitcase, FaMoneyBillAlt } from "react-icons/fa";
 import {
   CardLayoutContainer,
@@ -6,7 +9,7 @@ import {
   CardLayoutBody,
   CardLayoutFooter,
 } from "../../components/CardLayout/CardLayout";
-import { Button, Spinner } from "../../components/components";
+import { Button, Spinner, SecondaryButton } from "../../components/components";
 import toast, { Toaster } from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getBookingDetails } from "../../utils/api_handler";
@@ -15,21 +18,44 @@ const TicketDetails = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-    // const [ticketData, setTicketData] = useState([]);
+  const printRef = useRef();
 
-    // const getBookingDetailsHandler = async (id) => {
-    //   const response = await getBookingDetails(id);
-    //   if (response.status) {
-    //     setTicketData(response.data);
-    //   }
-    // };
+  const downloadAsPDF = async () => {
+    const element = printRef.current;
+    const canvas = await html2canvas(element);
+    const imgData = canvas.toDataURL("image/png");
 
-    // useEffect(() => {
-    //   if (location.state) {
-    //     const refId = location.state;
-    //     getBookingDetailsHandler(refId);
-    //   }
-    // }, []);
+    const pdf = new jsPDF("p", "mm", "a4");
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+    pdf.save("download.pdf");
+  };
+
+  const printHandler = () => {
+    window.print();
+  };
+
+  const downloadHandler = () => {
+    // alert("download handler");
+    downloadAsPDF();
+  };
+
+  // const [ticketData, setTicketData] = useState([]);
+
+  // const getBookingDetailsHandler = async (id) => {
+  //   const response = await getBookingDetails(id);
+  //   if (response.status) {
+  //     setTicketData(response.data);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   if (location.state) {
+  //     const refId = location.state;
+  //     getBookingDetailsHandler(refId);
+  //   }
+  // }, []);
 
   const ticketData = {
     AirReservation: {
@@ -262,11 +288,29 @@ const TicketDetails = () => {
   return (
     <>
       <Toaster />
-      <div className="w-full flex flex-col gap-5">
+      <div ref={printRef} className="w-full flex flex-col gap-5">
         <CardLayoutContainer>
           <CardLayoutHeader
             heading={`Booking Reference: ${bookingReferenceID.Id}`}
-          />
+            className={"flex items-center justify-between"}
+          >
+            <div className="flex flex-wrap gap-2">
+              <div>
+                <Button
+                  id={"hide-buttons"}
+                  onClick={printHandler}
+                  text={"Print Ticket"}
+                />
+              </div>
+              <div>
+                <Button
+                  id={"hide-buttons"}
+                  onClick={downloadHandler}
+                  text={"Download"}
+                />
+              </div>
+            </div>
+          </CardLayoutHeader>
           <CardLayoutBody>
             <div className="flex items-center justify-between flex-wrap gap-5">
               <div>
@@ -312,8 +356,11 @@ const TicketDetails = () => {
         <div className="flex items-center justify-end gap-3">
           <div>
             <Button
+              id={"hide-buttons"}
               text="Go Back"
-              onClick={() => {navigate(-1)}}
+              onClick={() => {
+                navigate(-1);
+              }}
             />
           </div>
         </div>
