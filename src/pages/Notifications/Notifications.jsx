@@ -1,66 +1,62 @@
 import React from "react";
+import { HiOutlineBell } from "react-icons/hi"; // Importing an icon for notification
 
-const NotificationItem = ({ title, message, time, isNew }) => (
-  <div
-    className={`flex items-start gap-4 p-4 border-b ${
-      isNew ? "bg-blue-50 border-blue-200" : "bg-white border-gray-200"
-    }`}
-  >
-    <div className="flex-shrink-0 h-10 w-10 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold">
-      N
-    </div>
-    <div className="flex-1">
-      <h4 className="text-lg font-semibold text-gray-800">{title}</h4>
-      <p className="text-sm text-gray-600">{message}</p>
-      <span className="text-xs text-gray-500">{time}</span>
-    </div>
-    {isNew && (
-      <span className="text-xs text-blue-500 font-semibold px-2 py-1 border border-blue-500 rounded-md">
-        New
-      </span>
-    )}
-  </div>
-);
-
-const Notifications = () => {
-  const notifications = [
-    {
-      id: 1,
-      title: "New Message",
-      message: "You have received a new message from John.",
-      time: "5 mins ago",
-      isNew: true,
-    },
-    {
-      id: 2,
-      title: "Meeting Reminder",
-      message: "Don't forget about your meeting at 3 PM.",
-      time: "2 hours ago",
-      isNew: false,
-    },
-    {
-      id: 3,
-      title: "System Update",
-      message: "A new system update is available. Please update your app.",
-      time: "Yesterday",
-      isNew: false,
-    },
-  ];
+const NotificationCard = ({ notification }) => {
+  const { title, description, type, user } = notification;
 
   return (
-    <div className="min-h-screen w-full bg-gray-100 p-4">
-      <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-        <div className="bg-blue-500 text-white text-center py-4">
-          <h1 className="text-2xl font-semibold">Notifications</h1>
+    <div className="p-4 border rounded-lg shadow-lg bg-white flex items-start gap-4 hover:shadow-xl transition-shadow duration-300">
+      <div className="flex-shrink-0">
+        {/* User image or initials */}
+        {user.image_url ? (
+          <img
+            src={user.image_url}
+            alt={`${user.first_name} ${user.last_name}`}
+            className="w-14 h-14 rounded-full object-cover border-2 border-indigo-500"
+          />
+        ) : (
+          <div className="w-14 h-14 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-lg border-2 border-indigo-500">
+            {user.first_name[0].toUpperCase()}
+            {user.last_name[0].toUpperCase()}
+          </div>
+        )}
+      </div>
+
+      <div className="flex-grow">
+        <div className="flex items-center gap-2 mb-1">
+          <HiOutlineBell className="text-indigo-500 text-xl" />
+          <h2 className="text-lg font-semibold text-gray-800">{title}</h2>
         </div>
-        <div className="divide-y divide-gray-200">
-          {notifications.map((notification) => (
-            <NotificationItem key={notification.id} {...notification} />
-          ))}
-        </div>
+        <p className="text-sm text-gray-600">{description}</p>
+        <p className="text-xs text-gray-500 mt-2">
+          Type: <span className="font-medium text-indigo-600">{type}</span>
+        </p>
       </div>
     </div>
   );
 };
 
-export default Notifications;
+// Example usage
+const App = () => {
+  const notificationData = {
+    id: 16,
+    created_at: "2025-01-06T23:47:38.997Z",
+    title: "New Booking Created",
+    description: "New Booking has been created by ali",
+    type: "UserToAdmin",
+    user: {
+      id: 63,
+      first_name: "ali",
+      last_name: "khan",
+      image_url: null, // Set to a valid URL if available
+    },
+  };
+
+  return (
+    <div className="p-6 bg-gray-100 min-h-screen flex items-center justify-center">
+      <NotificationCard notification={notificationData} />
+    </div>
+  );
+};
+
+export default App;
