@@ -778,3 +778,25 @@ export const getBanks = async () => {
     console.log("Failed while getting banks: ", error);
   }
 };
+
+//! Notifications...
+export const getNotifications = async () => {
+  try {
+    let response = await axios({
+      method: "GET",
+      url: `${baseUrl}/api/notification?isMaster=${true}`,
+      headers: {
+        Authorization: getToken(),
+      },
+    });
+    console.log(response);
+    if (response.status === 200) {
+      return {
+        status: true,
+        data: response.data.data
+      }
+    }
+  } catch (error) {
+    console.log("Failed while getting notifications: ", error);
+  }
+};
