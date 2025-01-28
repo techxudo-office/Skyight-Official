@@ -1,9 +1,10 @@
 import axios from "axios";
 import { data, useNavigate } from "react-router-dom";
 
-const baseUrl = import.meta.env.VITE_API_URL;
+export const baseUrl = import.meta.env.VITE_API_URL;
+export const adminBaseURL = import.meta.env.VITE_ADMIN_API_URL;
 
-const getToken = () => {
+export const getToken = () => {
   return localStorage.getItem("auth_token");
 };
 
@@ -259,10 +260,13 @@ export const getCredits = async () => {
 
 //! Flight...
 export const searchFlight = async (payload) => {
-  const apiUrlWithPayload = `${baseUrl}/api/search?trip_type=${payload.tripType
-    }&departure_date_time=${payload.departureDate}&origin_location_code=${payload.originCode
-    }&destination_location_code=${payload.destinationCode}&adult_quantity=${payload.adult
-    }&child_quantity=${[payload.child]}&infant_quantity=${payload.infant}`;
+  const apiUrlWithPayload = `${baseUrl}/api/search?trip_type=${
+    payload.tripType
+  }&departure_date_time=${payload.departureDate}&origin_location_code=${
+    payload.originCode
+  }&destination_location_code=${payload.destinationCode}&adult_quantity=${
+    payload.adult
+  }&child_quantity=${[payload.child]}&infant_quantity=${payload.infant}`;
 
   try {
     let response = await axios({
@@ -376,7 +380,33 @@ export const getTransactions = async () => {
     if (response.status === 200) {
       if (response.data.data[0].length > 0) {
         const extractedData = response.data.data[0].map(
-          ({ id, company_id, bank_name, bank_number, account_holder_name, document_number, payment_date, amount, document_url, comment, status, reasonIds }) => ({ id, company_id, bank_name, bank_number, account_holder_name, document_number, payment_date, amount, document_url, comment, status, reasonIds })
+          ({
+            id,
+            company_id,
+            bank_name,
+            bank_number,
+            account_holder_name,
+            document_number,
+            payment_date,
+            amount,
+            document_url,
+            comment,
+            status,
+            reasonIds,
+          }) => ({
+            id,
+            company_id,
+            bank_name,
+            bank_number,
+            account_holder_name,
+            document_number,
+            payment_date,
+            amount,
+            document_url,
+            comment,
+            status,
+            reasonIds,
+          })
         );
         return { status: true, data: extractedData };
       }
@@ -552,7 +582,7 @@ export const deleteTicket = async (id) => {
   try {
     let response = await axios({
       method: "DELETE",
-      url: `${baseUrl}/api/ticket/${id}`,
+      url: `${baseUrl}/api/ticket/?ticket_id=${id}`,
       headers: {
         Authorization: getToken(),
       },
@@ -755,28 +785,38 @@ export const getRoutes = async () => {
 };
 
 //! Banks
+// export const getBanks = async () => {
+//   try {
+//     let response = await axios({
+//       method: "GET",
+//       url: `${adminBaseURL}/api/bank`, // dev-Bakhtawar - Calling it from Admin Controller
+//       headers: {
+//         Authorization: getToken(),
+//       },
+//     });
+//     console.log(response);
+//     if (response.status === 200) {
+//       if (response.data.data[0].length > 0) {
+//         const extractedData = response.data.data[0].map(({ id, bank }) => ({
+//           value: id,
+//           label: bank,
+//         }));
+//         return { status: true, data: extractedData };
+//       }
+//     }
+//   } catch (error) {
+//     console.log("Failed while getting banks: ", error);
+//   }
+// };
 export const getBanks = async () => {
-  try {
-    let response = await axios({
-      method: "GET",
-      url: `${baseUrl}/api/bank`,
-      headers: {
-        Authorization: getToken(),
-      },
-    });
-    console.log(response);
-    if (response.status === 200) {
-      if (response.data.data[0].length > 0) {
-        const extractedData = response.data.data[0].map(({ id, bank }) => ({
-          value: id,
-          label: bank,
-        }));
-        return { status: true, data: extractedData };
-      }
-    }
-  } catch (error) {
-    console.log("Failed while getting banks: ", error);
-  }
+  let response = await axios({
+    method: "GET",
+    url: `${adminBaseURL}/api/bank`, // dev-Bakhtawar - Calling it from Admin Controller
+    headers: {
+      Authorization: getToken(),
+    },
+  });
+  console.log(response);
 };
 
 //! Notifications...
@@ -793,8 +833,8 @@ export const getNotifications = async () => {
     if (response.status === 200) {
       return {
         status: true,
-        data: response.data.data
-      }
+        data: response.data.data,
+      };
     }
   } catch (error) {
     console.log("Failed while getting notifications: ", error);

@@ -23,6 +23,9 @@ import { useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import toast, { Toaster } from "react-hot-toast";
+import axios from "axios";
+
+import { adminBaseURL, getToken } from "../../utils/api_handler";
 
 const validationSchema = Yup.object().shape({
   bank_name: Yup.string().required("Please enter bank name"),
@@ -53,12 +56,23 @@ const CreateTransaction = () => {
     comment: "",
   };
 
+  // const getBanksHandler = async () => {
+  //   let response = await getBanks();
+  //   console.log(response);
+  //   if (response.status) {
+  //     setBanksData(response.data);
+  //   }
+  // };
   const getBanksHandler = async () => {
-    let response = await getBanks();
-    console.log(response);
-    if (response.status) {
-      setBanksData(response.data);
-    }
+    let response = await axios({
+      method: "GET",
+      url: `${adminBaseURL}/api/bank`, // dev-Bakhtawar - Calling it from Admin Controller
+      headers: {
+        Authorization: getToken(),
+      },
+    });
+    setBanksData(response.data);
+    console.log("responsebank", response);
   };
 
   const handleImageChange = (e) => {

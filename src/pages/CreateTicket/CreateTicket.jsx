@@ -42,6 +42,7 @@ const CreateTicket = () => {
       }
     } catch (error) {
       toast.error(error.message);
+      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -50,14 +51,14 @@ const CreateTicket = () => {
   const validationSchema = Yup.object({
     title: Yup.string().required("Please enter ticket title"),
     description: Yup.string().required("Please enter description"),
-    status: Yup.string().required("Status Required"),
+    // status: Yup.string().required("Status Required"),
   });
 
   const formik = useFormik({
     initialValues: {
       title: "",
       description: "",
-      status: isActive ? "open" : "close",
+      // status: isActive ? "open" : "close",
     },
     validationSchema,
     onSubmit: (values, { resetForm }) => {
