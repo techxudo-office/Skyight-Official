@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import { FaChevronDown } from "react-icons/fa";
 
 const Select = ({
@@ -30,9 +30,12 @@ const Select = ({
     setSelectStatus(false);
   };
 
-  const filteredOptions = options.filter((option) =>
-    option.label.toLowerCase().includes(searchValue.toLowerCase())
-  );
+  // Memoize filtered options to avoid re-calculations
+  const filteredOptions = useMemo(() => {
+    return options?.filter((option) =>
+      option?.bank?.toLowerCase().includes(searchValue?.toLowerCase())
+    );
+  }, [options, searchValue]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -79,22 +82,22 @@ const Select = ({
             </div>
 
             <ul className="max-h-40 overflow-y-auto">
-              {filteredOptions.map((option, index) => (
+              {filteredOptions?.map((option, index) => (
                 <li
                   key={index}
                   className={`p-3 flex items-center justify-start gap-3 text-sm cursor-pointer hover:bg-slate-100 ${
                     value?.value === option.value
-                      ? "text-primary font-medium"
+                      ? "text-[#666] font-bold"
                       : "text-slate-500"
                   }`}
                   onClick={() => selectOptionHandler(option)}
                 >
                   {optionIcons && <span>{optionIcons}</span>}
-                  {option.label}
+                  {option.bank}
                 </li>
               ))}
-              {filteredOptions.length === 0 && (
-                <li className="p-3 text-sm text-gray-500">No options found</li>
+              {filteredOptions?.length === 0 && (
+                <li className="p-3 text-sm text-red-500">No options found</li>
               )}
             </ul>
           </div>

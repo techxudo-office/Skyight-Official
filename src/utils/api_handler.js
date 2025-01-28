@@ -2,7 +2,7 @@ import axios from "axios";
 import { data, useNavigate } from "react-router-dom";
 
 export const baseUrl = import.meta.env.VITE_API_URL;
-export const adminBaseURL = import.meta.env.VITE_ADMIN_API_URL;
+export const adminBaseURL = `${import.meta.env.VITE_ADMIN_API_URL}`;
 
 export const getToken = () => {
   return localStorage.getItem("auth_token");
@@ -746,6 +746,7 @@ export const confirmBooking = async (payload) => {
       data: payload,
       headers: {
         Authorization: getToken(),
+        // Authorization: "", 
         "Content-Type": "application/json",
       },
     });
@@ -817,6 +818,7 @@ export const getBanks = async () => {
     },
   });
   console.log(response);
+  return response.data.data
 };
 
 //! Notifications...

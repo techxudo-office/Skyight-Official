@@ -14,6 +14,7 @@ export { default as Spinner } from "./Spinner/Spinner";
 export { default as Switch } from "./Switch/Switch";
 export { default as Dropdown } from "./Dropdown/Dropdown";
 export { default as FlightCard } from "./FlightCard/FlightCard";
+export { default as Textarea } from "./Textarea/Textarea";
 
 export { default as DashboardCards } from "./DashboardCards/DashboardCards";
 export { default as ConfirmModal } from "./ConfirmModal/ConfirmModal";

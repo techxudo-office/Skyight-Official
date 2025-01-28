@@ -18,26 +18,14 @@ import {
 } from "../../components/components";
 
 import { createTransaction, getBanks } from "../../utils/api_handler";
-
+import {
+  validationSchema,
+  initialValues,
+} from "../../schema/validationSchema";
+import { allowedTypes } from "../../helper/allowedTypes";
 import { useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
-import * as Yup from "yup";
 import toast, { Toaster } from "react-hot-toast";
-import axios from "axios";
-
-import { adminBaseURL, getToken } from "../../utils/api_handler";
-
-const validationSchema = Yup.object().shape({
-  bank_name: Yup.string().required("Please enter bank name"),
-  bank_number: Yup.string().required("Please enter bank number"),
-  account_holder_name: Yup.string().required(
-    "Please enter account holder name"
-  ),
-  document_number: Yup.string().required("Please enter document number"),
-  payment_date: Yup.string().required("Please enter payment date"),
-  amount: Yup.string().required("Please enter amount"),
-  comment: Yup.string().required("Please enter comment"),
-});
 
 const CreateTransaction = () => {
   const navigate = useNavigate();
@@ -45,40 +33,27 @@ const CreateTransaction = () => {
   const [banksData, setBanksData] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [isBanksLoading, setIsBanksLoading] = useState(false);
 
-  const initialValues = {
-    bank_name: "",
-    bank_number: "",
-    account_holder_name: "",
-    document_number: "",
-    payment_date: "",
-    amount: "",
-    comment: "",
-  };
-
-  // const getBanksHandler = async () => {
-  //   let response = await getBanks();
-  //   console.log(response);
-  //   if (response.status) {
-  //     setBanksData(response.data);
-  //   }
-  // };
   const getBanksHandler = async () => {
-    let response = await axios({
-      method: "GET",
-      url: `${adminBaseURL}/api/bank`, // dev-Bakhtawar - Calling it from Admin Controller
-      headers: {
-        Authorization: getToken(),
-      },
-    });
-    setBanksData(response.data);
-    console.log("responsebank", response);
+    setIsBanksLoading(true);
+    try {
+      const response = await getBanks();
+      setBanksData(response);
+    } catch (error) {
+      toast.error("Failed to fetch banks");
+    } finally {
+      setIsBanksLoading(false);
+    }
   };
-
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setSelectedFile(file);
+      if (allowedTypes.includes(file.type)) {
+        setSelectedFile(file);
+      } else {
+        toast.error("Only JPG, JPEG, and PNG formats are allowed.");
+      }
     }
   };
 
@@ -105,8 +80,6 @@ const CreateTransaction = () => {
   };
 
   const handleSubmit = (values) => {
-    console.log("Form Values: ", values);
-
     const formData = new FormData();
     formData.append("bank_name", values.bank_name);
     formData.append("bank_number", values.bank_number);
@@ -193,11 +166,11 @@ const CreateTransaction = () => {
                         id="bank_name"
                         label="Bank Name"
                         name="bank_name"
-                        options={banksData}
+                        options={isBanksLoading ? [] : banksData}
                         value={values.bank_name}
                         placeholder="Select Bank"
                         onChange={(option) =>
-                          setFieldValue("bank_name", option.value)
+                          setFieldValue("bank_name", option.bank)
                         }
                         optionIcons={<PiBankBold />}
                       />

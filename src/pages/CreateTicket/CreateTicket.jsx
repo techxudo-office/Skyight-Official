@@ -5,13 +5,19 @@ import {
   CardLayoutBody,
   CardLayoutFooter,
 } from "../../components/CardLayout/CardLayout";
-import { Input, Button, Switch, Spinner } from "../../components/components";
+import {
+  Input,
+  Button,
+  Switch,
+  Spinner,
+  Textarea,
+} from "../../components/components";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { createTicket } from "../../utils/api_handler";
-
+import { ticketSchema } from "../../schema/validationSchema";
 const CreateTicket = () => {
   const navigate = useNavigate();
 
@@ -48,19 +54,13 @@ const CreateTicket = () => {
     }
   };
 
-  const validationSchema = Yup.object({
-    title: Yup.string().required("Please enter ticket title"),
-    description: Yup.string().required("Please enter description"),
-    // status: Yup.string().required("Status Required"),
-  });
-
   const formik = useFormik({
     initialValues: {
       title: "",
       description: "",
       // status: isActive ? "open" : "close",
     },
-    validationSchema,
+    ticketSchema,
     onSubmit: (values, { resetForm }) => {
       createTicketHandler(values, resetForm);
     },
@@ -86,7 +86,7 @@ const CreateTicket = () => {
               setIsActive(!isActive);
             }}
           >
-            <Switch switchStatus={isActive} />
+            {/* <Switch switchStatus={isActive} /> */}
           </span>
         </CardLayoutHeader>
         <form onSubmit={handleFormSubmit} noValidate>
@@ -121,7 +121,7 @@ const CreateTicket = () => {
                       : ""
                   }`}
                 >
-                  <Input
+                  {/* <Input
                     placeholder={"Enter Ticket Description"}
                     id={"description"}
                     name={"description"}
@@ -135,10 +135,24 @@ const CreateTicket = () => {
                     <div className="text-red-500 text-sm mt-2 absolute left-0">
                       {formik.errors.description}
                     </div>
-                  )}
+                  )} */}
                 </div>
               </div>
             </div>
+            <Textarea
+              id={"description"}
+              name={"description"}
+              label={"Ticket Description*"}
+              placeholder={"Enter Ticket Description"}
+              value={formik.values.description}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+            {formik.touched.description && formik.errors.description && (
+              <div className="text-red-500 text-sm mt-2 absolute left-0">
+                {formik.errors.description}
+              </div>
+            )}
           </CardLayoutBody>
           <CardLayoutFooter>
             <div>
