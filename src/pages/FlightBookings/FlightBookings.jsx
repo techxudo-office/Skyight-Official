@@ -123,7 +123,7 @@ const FlightBookings = () => {
   };
 
   const refundRequestHandler = async (flight) => {
-    console.log(flight);
+    console.log("flihg", flight);
 
     const bookingId = {
       booking_id: flight.id,

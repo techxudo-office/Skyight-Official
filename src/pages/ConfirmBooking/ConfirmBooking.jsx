@@ -18,6 +18,8 @@ import { confirmBooking } from "../../utils/api_handler";
 
 const FlightDetails = () => {
   const location = useLocation();
+  console.log(`Page Location: ${JSON.stringify(location)}`)
+  console.log(`Page Location: ${JSON.stringify(location.state)}`)
   const navigate = useNavigate();
 
   const [flightData, setFlightData] = useState(null);
@@ -165,7 +167,7 @@ const FlightDetails = () => {
       setTravelers(location.state.travelersData);
       setAllTravelersData(location.state.allTravelersData);
     }
-  }, [location.state]);
+  }, []);
 
   if (!flightData) {
     return <Spinner className={"text-primary"} />;

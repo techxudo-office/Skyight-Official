@@ -16,13 +16,18 @@ export const login = async (payload) => {
       url: `${baseUrl}/api/login`,
       data: payload,
     });
-    console.log(response);
+    // console.log("data", response.data.data);
+    // console.log("user", response.data.data.user)
+    // console.log(response.data.data)
+
     if (response.status === 200) {
       localStorage.setItem("auth_token", response.data.data.token);
+      localStorage.setItem("userData", JSON.stringify(response.data.data.user))
       return {
         status: true,
         message: "Login Successfully",
         token: response.data.data.token,
+        user: JSON.stringify(response.data.data.user)
       };
     }
   } catch (error) {
@@ -260,13 +265,10 @@ export const getCredits = async () => {
 
 //! Flight...
 export const searchFlight = async (payload) => {
-  const apiUrlWithPayload = `${baseUrl}/api/search?trip_type=${
-    payload.tripType
-  }&departure_date_time=${payload.departureDate}&origin_location_code=${
-    payload.originCode
-  }&destination_location_code=${payload.destinationCode}&adult_quantity=${
-    payload.adult
-  }&child_quantity=${[payload.child]}&infant_quantity=${payload.infant}`;
+  const apiUrlWithPayload = `${baseUrl}/api/search?trip_type=${payload.tripType
+    }&departure_date_time=${payload.departureDate}&origin_location_code=${payload.originCode
+    }&destination_location_code=${payload.destinationCode}&adult_quantity=${payload.adult
+    }&child_quantity=${[payload.child]}&infant_quantity=${payload.infant}`;
 
   try {
     let response = await axios({
@@ -599,15 +601,26 @@ export const deleteTicket = async (id) => {
 
 //! Bookings
 export const getFlightBookings = async () => {
+  // let user = localStorage.getItem("userData")
+  // console.log(user)
+  // let company_id = user?.company_id
+  // console.log(company_id)
+
+  let user = JSON.parse(localStorage.getItem("userData"));
+  // console.log(user);
+
+  let company_id = user?.company_id;
+  // console.log(company_id);
+
   try {
     let response = await axios({
       method: "GET",
-      url: `${baseUrl}/api/booking`,
+      url: `${baseUrl}/api/booking/company/${company_id}`,
       headers: {
         Authorization: getToken(),
       },
     });
-    console.log(response);
+    // console.log(response);
     if (response.status === 200) {
       if (response.data.data.length > 0) {
         const extractedData = response.data.data.map(
@@ -656,8 +669,9 @@ export const getFlightBookings = async () => {
 export const getBookingDetails = async (id) => {
   try {
     let response = await axios({
-      method: "POST",
-      url: `${baseUrl}/api/booking-issue`,
+      method: "GET",
+      // url: `${baseUrl}/api/booking-issue`,
+      url: `${baseUrl}/api/booking/37`,
       data: {
         pnr: id,
       },
@@ -665,7 +679,7 @@ export const getBookingDetails = async (id) => {
         Authorization: getToken(),
       },
     });
-    console.log(response);
+    // console.log(response);
     if (response.status === 200) {
       return { status: true, data: response.data.data };
     }
@@ -686,7 +700,7 @@ export const cancelFlightBooking = async (payload) => {
         Authorization: getToken(),
       },
     });
-    console.log(response);
+    // console.log(response);
     if (response.status === 200) {
       return { status: true, message: "Cancelled Requested" };
     }
@@ -739,6 +753,7 @@ export const refundRequest = async (payload) => {
 };
 
 export const confirmBooking = async (payload) => {
+  console.log(`Paylload Booking ${payload}`)
   try {
     let response = await axios({
       method: "POST",

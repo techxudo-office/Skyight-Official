@@ -33,7 +33,7 @@ const Select = ({
   // Memoize filtered options to avoid re-calculations
   const filteredOptions = useMemo(() => {
     return options?.filter((option) =>
-      option?.bank?.toLowerCase().includes(searchValue?.toLowerCase())
+      option?.value?.toLowerCase().includes(searchValue?.toLowerCase())
     );
   }, [options, searchValue]);
 
@@ -93,7 +93,7 @@ const Select = ({
                   onClick={() => selectOptionHandler(option)}
                 >
                   {optionIcons && <span>{optionIcons}</span>}
-                  {option.bank}
+                  {option.value}
                 </li>
               ))}
               {filteredOptions?.length === 0 && (
