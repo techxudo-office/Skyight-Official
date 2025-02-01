@@ -76,7 +76,7 @@ const FlightBookings = () => {
       // },
       handler: (index, item) => {
         navigate("/dashboard/booking-details", {
-          state: item.booking_reference_id,
+          state: item.id,
         });
       },
     },

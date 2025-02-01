@@ -671,7 +671,7 @@ export const getBookingDetails = async (id) => {
     let response = await axios({
       method: "GET",
       // url: `${baseUrl}/api/booking-issue`,
-      url: `${baseUrl}/api/booking/37`,
+      url: `${baseUrl}/api/booking/${id}`,
       data: {
         pnr: id,
       },
