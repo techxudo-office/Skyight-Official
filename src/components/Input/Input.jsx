@@ -15,6 +15,7 @@ const Input = ({
   autoComplete,
   onKeyPressHandler,
   className,
+  disabled
 }) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -25,12 +26,13 @@ const Input = ({
   return (
     <>
       <div className={`flex flex-col w-full ${className}`}>
-        <label htmlFor={id} className="text-md font-medium text-gray-700 mb-2">
+       
+        <div className={`rounded-lg flex items-center justify-between ${disabled?'bg-slate-100':'bg-white'}  `}>
+        <label htmlFor={id} className="text-md rounded-md font-medium  mb-2 absolute -top-3 left-3 bg-white px-1 text-gray">
           {label}
         </label>
-        <div className="rounded-lg flex items-center justify-between pe-3 bg-slate-100">
           <input
-            className="flex flex-1 w-full bg-transparent p-3 outline-none border-none cursor-pointer text-text"
+            className={`flex flex-1 w-full bg-transparent p-3 outline-none border-gray border rounded-md py-5 px-3 cursor-pointer text-gray`}
             id={id}
             type={
               type === "password" ? (showPassword ? "text" : "password") : type

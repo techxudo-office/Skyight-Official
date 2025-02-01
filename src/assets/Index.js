@@ -1,0 +1,1 @@
+export {default as forBackArrows} from './svgs/forBackArrows.svg'

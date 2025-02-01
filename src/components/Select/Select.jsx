@@ -1,9 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
-import { FaChevronDown } from "react-icons/fa";
+// import { FaChevronDown } from "react-icons/fa";
+import { FaCaretDown } from "react-icons/fa";
 
 const Select = ({
   id,
   label,
+  disabled,
   name,
   options,
   value,
@@ -11,13 +13,19 @@ const Select = ({
   onChange,
   className,
   optionIcons,
+  selectIcon
 }) => {
   const selectRef = useRef(null);
   const [selectStatus, setSelectStatus] = useState(false);
   const [searchValue, setSearchValue] = useState("");
 
   const selectHandler = () => {
-    setSelectStatus((prev) => !prev);
+    if(disabled){
+      return
+    }else{
+      setSelectStatus((prev) => !prev);
+
+    }
   };
 
   const searchHandler = (e) => {
@@ -48,26 +56,27 @@ const Select = ({
   }, []);
 
   return (
-    <div className={`flex flex-col w-full ${className}`} ref={selectRef}>
-      <label htmlFor={id} className="text-md font-medium text-gray-700 mb-2">
-        {label}
-      </label>
+    <div className={`flex flex-col w-full   ${className}`} ref={selectRef}>
 
-      <div className="relative rounded-lg flex items-center justify-between bg-slate-100">
+
+      <div className={`relative rounded-md border border-gray flex items-center justify-between px-2 ${disabled && 'bg-slate-100'}`}>
+       <label htmlFor={id} className={` text-md bg-white font-medium  mb-2 absolute -top-3 left-3  px-1 roounded-md text-gray`}>
+          {label}
+        </label>
         <div
-          className="flex flex-1 items-center justify-between p-3 cursor-pointer bg-transparent text-text"
+          className="flex w-full items-center justify-between py-5 px-3 cursor-pointer bg-transparent text-text"
           onClick={selectHandler}
         >
-          <span>{(value && value) || placeholder}</span>
-          <FaChevronDown
-            className={`text-gray-500 transform transition-transform ${
-              selectStatus ? "rotate-180" : ""
-            }`}
+
+          <span className="text-gray flex gap-3 items-center"><span className="text-primary">{selectIcon}</span>{(value && value) || placeholder}</span>
+          <FaCaretDown
+            className={`text-gray transform transition-transform ${selectStatus ? "rotate-180" : ""
+              }`}
           />
         </div>
 
         {selectStatus && (
-          <div className="absolute top-full left-0 z-10 w-full bg-white shadow-md mt-2 rounded-lg">
+          <div className="absolute top-full left-0 z-10 w-full bg-white shadow-md border-[1px] border-gray mt-2 rounded-md">
             <div className="p-2">
               <input
                 type="text"
@@ -78,15 +87,14 @@ const Select = ({
               />
             </div>
 
-            <ul className="max-h-40 overflow-y-auto">
+            <ul className="max-h-40 overflow-y-auto ">
               {filteredOptions.map((option, index) => (
                 <li
                   key={index}
-                  className={`p-3 flex items-center justify-start gap-3 text-sm cursor-pointer hover:bg-slate-100 ${
-                    value?.value === option.value
-                      ? "text-primary font-medium"
-                      : "text-slate-500"
-                  }`}
+                  className={`p-3 flex items-center justify-start gap-3 text-sm cursor-pointer hover:bg-slate-100 ${value?.value === option.value
+                    ? "text-primary font-medium"
+                    : "text-slate-500"
+                    }`}
                   onClick={() => selectOptionHandler(option)}
                 >
                   {optionIcons && <span>{optionIcons}</span>}
