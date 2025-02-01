@@ -208,20 +208,20 @@ const TicketDetails = () => {
             {ticketData?.flightSegments?.map((item, index) => (
               <div key={index} className="passenger-card ml-10">
                 <h3>
-                  <strong>Full Name: </strong>
+                  <strong>Flight Number: </strong>
                   {item.flight_number}
                 </h3>
                 <p>
-                  <strong>Nationality:</strong> {item.arrival_airport}
+                  <strong>Arrival Airport:</strong> {item.arrival_airport}
                 </p>
                 <p>
-                  <strong>Nationality:</strong> {item.arrival_datetime}
+                  <strong>Arrival Time:</strong> {item.arrival_datetime}
                 </p>
                 <p>
-                  <strong>Birth Date:</strong> {item.departure_airport}
+                  <strong>Departure Airport:</strong> {item.departure_airport}
                 </p>
                 <p>
-                  <strong>Document ID:</strong> {item.departure_datetime}
+                  <strong>Departure Time:</strong> {item.departure_datetime}
                 </p>
               </div>
             ))}
