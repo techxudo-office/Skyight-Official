@@ -1,5 +1,5 @@
 import { GoDotFill } from "react-icons/go";
-
+import { MdFlight } from "react-icons/md";
 import { RiDashboardFill } from "react-icons/ri";
 import { MdContentPasteSearch } from "react-icons/md";
 import { FaBusinessTime } from "react-icons/fa6";
@@ -9,7 +9,13 @@ import { IoIosStopwatch } from "react-icons/io";
 import { MdAdminPanelSettings } from "react-icons/md";
 import { IoTicket } from "react-icons/io5";
 import { FaHandsHelping } from "react-icons/fa";
-
+import { BiSolidBookmarks } from "react-icons/bi";
+import { MdPayments } from "react-icons/md";
+import { MdOutlineHistory } from "react-icons/md";
+import { MdSupervisedUserCircle } from "react-icons/md";
+import { ImUser } from "react-icons/im";
+import { HiUsers } from "react-icons/hi";
+import { MdAirplaneTicket } from "react-icons/md";
 export const sidebarLinks = [
   {
     title: "Dashboard",
@@ -24,7 +30,7 @@ export const sidebarLinks = [
       {
         title: "Search Flights",
         path: "/dashboard/search-flights",
-        icon: <GoDotFill />,
+        icon: <MdFlight  />,
       },
       // {
       //   title: "Search Hotels",
@@ -40,7 +46,7 @@ export const sidebarLinks = [
       {
         title: "Flight Bookings",
         path: "/dashboard/flight-bookings",
-        icon: <GoDotFill />,
+        icon: <BiSolidBookmarks  />,
       },
       // {
       //   title: "Hotel Bookings",
@@ -78,12 +84,12 @@ export const sidebarLinks = [
       {
         title: "Create Transaction",
         path: "/dashboard/create-transaction",
-        icon: <GoDotFill />,
+        icon: <MdPayments/>,
       },
       {
         title: "Transaction History",
         path: "/dashboard/transactions",
-        icon: <GoDotFill />,
+        icon: <MdOutlineHistory />,
       },
     ],
   },
@@ -110,12 +116,12 @@ export const sidebarLinks = [
       {
         title: "Roles",
         path: "/dashboard/roles",
-        icon: <GoDotFill />,
+        icon: <MdSupervisedUserCircle />,
       },
       {
         title: "Users",
         path: "/dashboard/users",
-        icon: <GoDotFill />,
+        icon: < HiUsers />,
       },
     ],
   },
@@ -126,12 +132,12 @@ export const sidebarLinks = [
       {
         title: "View Tickets",
         path: "/dashboard/view-tickets",
-        icon: <GoDotFill />,
+        icon: <IoTicket />,
       },
       {
         title: "Create Ticket",
         path: "/dashboard/create-ticket",
-        icon: <GoDotFill />,
+        icon: < MdAirplaneTicket />,
       },
     ],
   },

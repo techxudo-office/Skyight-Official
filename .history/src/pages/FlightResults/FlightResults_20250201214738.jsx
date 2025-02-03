@@ -171,7 +171,7 @@ const FlightResults = () => {
           <FlightCard key={index} data={item} travelers={travelersData} />
         ))
       ) :
-        <Spinner className={'border-primary'}/>}
+        ''}
     </div>
   );
 };

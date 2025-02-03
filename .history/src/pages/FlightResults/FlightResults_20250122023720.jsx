@@ -26,7 +26,6 @@ const FlightResults = () => {
   const [ChangeFlight, setChangeFlight] = useState(false);
   const [originalDates, setOriginalDates] = useState([]);
   const [filteredFlightsData, setFilteredFlightsData] = useState([]);
-
   const navigate = useNavigate()
   useEffect(() => {
     if (location.state) {
@@ -171,7 +170,7 @@ const FlightResults = () => {
           <FlightCard key={index} data={item} travelers={travelersData} />
         ))
       ) :
-        <Spinner className={'border-primary'}/>}
+        <p>no data found</p>}
     </div>
   );
 };

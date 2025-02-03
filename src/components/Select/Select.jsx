@@ -13,7 +13,8 @@ const Select = ({
   onChange,
   className,
   optionIcons,
-  selectIcon
+  selectIcon,
+  isSelected
 }) => {
   const selectRef = useRef(null);
   const [selectStatus, setSelectStatus] = useState(false);
@@ -24,7 +25,6 @@ const Select = ({
       return
     }else{
       setSelectStatus((prev) => !prev);
-
     }
   };
 
@@ -48,11 +48,13 @@ const Select = ({
         setSelectStatus(false);
       }
     };
+    
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
+    
   }, []);
 
   return (
@@ -70,12 +72,12 @@ const Select = ({
 
           <span className="text-gray flex gap-3 items-center"><span className="text-primary">{selectIcon}</span>{(value && value) || placeholder}</span>
           <FaCaretDown
-            className={`text-gray transform transition-transform ${selectStatus ? "rotate-180" : ""
+            className={`text-gray transform transition-transform ${selectStatus || isSelected ? "rotate-180" : ""
               }`}
           />
         </div>
 
-        {selectStatus && (
+        {(selectStatus || isSelected ) && (
           <div className="absolute top-full left-0 z-10 w-full bg-white shadow-md border-[1px] border-gray mt-2 rounded-md">
             <div className="p-2">
               <input

@@ -19,15 +19,14 @@ const Sidebar = ({ status, updateStatus }) => {
   };
 
   const menuItemHandler = (index, link) => {
-
-    if (link.sublinks && link.sublinks.length > 0) {
-      // navigationHandler(link.sublinks[0].path);
-      setActiveMenu((prevIndex) => (prevIndex === index ? null : index));
-
-    } else if (link.path) {
-      navigationHandler(link.path);
+    if (activeMenu !== index) {
+      if (link.sublinks && link.sublinks.length > 0) {
+        navigationHandler(link.sublinks[0].path);
+      } else if (link.path) {
+        navigationHandler(link.path);
+      }
     }
-
+    setActiveMenu((prevIndex) => (prevIndex === index ? null : index));
   };
 
   useEffect(() => {
@@ -88,14 +87,14 @@ const Sidebar = ({ status, updateStatus }) => {
 
   return (
     <div
-      id="sidebar-container" 
+      id="sidebar-container"
       ref={sidebarRef}
-      className={`transition-all z-10 bg-white  ${status ? "w-72 shadow-md" : "w-0 "
-        } flex flex-col justify-between transition-all duration-300 overflow-auto ${mobileView && "absolute h-screen shadow-2xl"
+      className={`transition-all z-10 bg-white  ${status ? "w-64 shadow-md" : "w-0 overflow-hidden"
+        } flex flex-col justify-between ${mobileView && "absolute h-screen shadow-2xl"
         }`}
     >
       <div>
-        <div className="py-3 px-5  flex items-center">
+        <div className="p-5 flex items-center">
           <h3
             onClick={() => navigationHandler("/")}
             className="text-2xl font-semibold flex items-center gap-3 text-text cursor-pointer"
@@ -105,22 +104,25 @@ const Sidebar = ({ status, updateStatus }) => {
           </h3>
         </div>
 
-        <div className="p-3">
+        <div className="p-5 px-3">
           <ul className="w-full flex flex-col">
             {sidebarLinks.map((link, linkIndex) => (
               <div key={linkIndex} className="flex flex-col w-full">
                 <li
                   onClick={() => menuItemHandler(linkIndex, link)}
-                  className={`mb-2 w-full flex items-center  gap-4 px-4 py-5 cursor-pointer transition-all hover:bg-slate-100 text-text rounded-full  text-md `}
+                  className={`mb-2 w-full flex items-center  gap-3 p-2 py-4 cursor-pointer transition-all hover:bg-slate-100 ${activeMenu === linkIndex && !activeSubmenu
+                      ? "text-primary bg-slate-100"
+                      : "text-slate-500"
+                    } rounded-full px-3 text-md font-semibold`}
                 >
                   {link.sublinks && (
                     <IoIosArrowForward
-                      className={`text-xl transition-transform duration-300 ${activeMenu === linkIndex ? "rotate-90" : "-rotate-90"
+                      className={`text-sm transition-transform duration-300 ${activeMenu === linkIndex ? "rotate-90" : "-rotate-90"
                         }`}
                     />
                   )}
                   <span className="flex items-center gap-3">
-                    {link.title == 'Dashboard' ? <span className="text-2xl">{link.icon}</span> : ''}
+                    {/* <span className="text-lg">{link.icon}</span> */}
                     <span className="text-base">{link.title}</span>
                   </span>
 
@@ -132,10 +134,14 @@ const Sidebar = ({ status, updateStatus }) => {
                     <li
                       key={sublinkIndex}
                       onClick={() => navigationHandler(sublink.path)}
-                      className={`  w-full flex items-center gap-4 px-3 cursor-pointer transition-all  ${activeMenu === linkIndex &&
-                        link.sublinks ? 'h-auto py-4' : 'h-0 overflow-hidden '} text-text rounded-full text-base  transition-all duration-300 hover:bg-slate-100`}
+                      className={`  w-full flex items-center gap-2 px-3 cursor-pointer transition-all ${activeMenu === linkIndex &&
+                          activeSubmenu === sublinkIndex
+                          ? "text-primary"
+                          : "text-slate-400"
+                        } ${activeMenu === linkIndex &&
+                          link.sublinks ?'h-auto py-1':'h-0 overflow-hidden '} hover:text-primary rounded-full text-sm font-semibold transition-all duration-300`}
                     >
-                      <span className="text-3xl">{sublink.icon}</span>
+                      <span className="text-sm">{sublink.icon}</span>
                       {sublink.title}
                     </li>
                   ))}

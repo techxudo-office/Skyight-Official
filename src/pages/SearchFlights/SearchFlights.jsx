@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import plane from "../../assets/images/plane.webp";
 // icons
 import { FaPlaneArrival } from "react-icons/fa";
@@ -73,11 +73,32 @@ const validationSchema = Yup.object().shape({
 
 
 
-const SearchFlights = ({OnlySearch}) => {
+const SearchFlights = ({ OnlySearch }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState()
   const [loading, setLoading] = useState(false);
+  const [activeField, setActiveField] = useState({
+    departure: false,
+    arrival: false,
+    departureDate: false,
+    returnDate: false,
+    cabinClass: false,
+    adult: false,
+    child: false,
+    infant: false,
+  })
+  const activateField = (fieldName) => {
+    setActiveField((prev) => {
+      const newState = Object.keys(prev).reduce((acc, key) => {
+        acc[key] = false; // Set all fields to false
+        return acc;
+      }, {});
+      newState[fieldName] = true; // Set only the desired field to true
+      return newState;
+    });
+  };
 
+  console.log(activeField)
   const initialValues = {
     tripType: "OneWay", // Default value
     departure: "",
@@ -89,6 +110,8 @@ const SearchFlights = ({OnlySearch}) => {
     child: childOptions[0].value,
     infant: infantOptions[0].value,
   };
+
+
 
   const searchFlightHandler = async (values) => {
     const payload = {
@@ -109,14 +132,14 @@ const SearchFlights = ({OnlySearch}) => {
         if (response.data.PricedItineraries.PricedItinerary.length > 0) {
           navigate("/dashboard/flight-results", {
             state: {
-              payload:payload,
+              payload: payload,
               flightsData: response.data,
               travelersData: {
                 adults: payload.adult,
                 childs: payload.child,
                 infants: payload.infant,
               },
-              
+
             },
           });
         }
@@ -144,14 +167,14 @@ const SearchFlights = ({OnlySearch}) => {
   }
 
   const handleOnTripchange = (values) => {
-    values=[]
+    values = []
 
   }
   return (
     <>
       <Toaster />
       <div className="flex flex-col w-full items-center justify-center">
-       {OnlySearch?'': <CardLayoutContainer className="w-full mb-5">
+        {OnlySearch ? '' : <CardLayoutContainer className="w-full mb-5">
           <CardLayoutHeader
             className="flex items-center justify-start flex-wrap gap-5 py-3"
             removeBorder={true}
@@ -172,7 +195,7 @@ const SearchFlights = ({OnlySearch}) => {
             onSubmit={handleSubmit}
           >
 
-            {({ values,setValues, errors, touched, setFieldValue, isSubmitting }) => (
+            {({ values, setValues, errors, touched, setFieldValue, isSubmitting }) => (
               <Form>
                 <CardLayoutBody>
                   <div className="flex gap-7 mb-9">
@@ -188,7 +211,7 @@ const SearchFlights = ({OnlySearch}) => {
                           value={option.value}
                           checked={values.tripType === option.value}
                           onChange={() =>
-                            setFieldValue("tripType", option.value) 
+                            setFieldValue("tripType", option.value)
                           }
                         />
                         {option.value}
@@ -204,9 +227,10 @@ const SearchFlights = ({OnlySearch}) => {
                         options={iranianCities}
                         value={values.departure}
                         placeholder="Select Departure"
-                        onChange={(option) =>
-                          setFieldValue("departure", option.value)
-                        }
+                        onChange={(option) => {
+                          setFieldValue("departure", option.value);
+                          activateField('arrival')
+                        }}
                         className={''}
                         optionIcons={<FaPlaneDeparture />}
                         selectIcon={<FaPlaneDeparture />}
@@ -225,14 +249,19 @@ const SearchFlights = ({OnlySearch}) => {
 
                     <div className="relative mb-5">
                       <Select
+
+                        isSelected={activeField.arrival}
                         id="arrival"
                         label="Arrival To"
                         name="arrival"
                         options={iranianCities}
                         value={values.arrival}
                         placeholder="Select Arrival"
-                        onChange={(option) =>
-                          setFieldValue("arrival", option.value)
+                        onChange={(option) => {
+                          setFieldValue("arrival", option.value);
+                          activateField('departureDate')
+                        }
+
                         }
                         optionIcons={<FaPlaneArrival />}
                         selectIcon={<FaPlaneArrival size={18} />}
@@ -246,15 +275,21 @@ const SearchFlights = ({OnlySearch}) => {
 
                     <div className="relative mb-5">
                       <Input
+                        isSelected={activeField.departureDate}
                         id={"departureDate"}
                         name={"departureDate"}
                         label={"Departure Date"}
                         type={"date"}
                         value={values.departureDate}
                         placeholder={"Select Departure Date"}
-                        onChange={(e) =>
+                        onChange={(e) => {
                           setFieldValue("departureDate", e.target.value)
-                        }
+                          if (values.tripType != "OneWay") {
+                            activateField('returnDate')
+                          } else {
+                            activateField('adult')
+                          }
+                        }}
                       />
                       {touched.departureDate && errors.departureDate && (
                         <div className="text-red-500 text-sm mt-2 absolute left-0">
@@ -264,6 +299,7 @@ const SearchFlights = ({OnlySearch}) => {
                     </div>
                     <div className="relative mb-5">
                       <Input
+                        isSelected={activeField.returnDate}
                         disabled={values.tripType == "OneWay"}
                         // disabled={true}
                         id={"returnDate"}
@@ -275,6 +311,7 @@ const SearchFlights = ({OnlySearch}) => {
                         onChange={(e) => {
                           if (values.tripType !== "OneWay") {
                             setFieldValue("returnDate", e.target.value);
+                            activateField('adult')
                           }
                         }}
                       />
@@ -286,15 +323,17 @@ const SearchFlights = ({OnlySearch}) => {
                     </div>
                     <div className="relative mb-5">
                       <Select
+                        isSelected={activeField.adult}
                         id="adult"
                         label="Adult"
                         name="adult"
                         options={adultOptions}
                         value={values.adult}
                         placeholder="Select Adults"
-                        onChange={(option) =>
+                        onChange={(option) => {
                           setFieldValue("adult", option.value)
-                        }
+                          activateField('child')
+                        }}
                         optionIcons={<IoIosMan />
 
                         }
@@ -308,15 +347,17 @@ const SearchFlights = ({OnlySearch}) => {
                     </div>
                     <div className="relative mb-5">
                       <Select
+                        isSelected={activeField.child}
                         id="child"
                         label="Child"
                         name="child"
                         options={childOptions}
                         value={values.child}
                         placeholder="Select Childrens"
-                        onChange={(option) =>
+                        onChange={(option) => {
                           setFieldValue("child", option.value)
-                        }
+                          activateField('infant')
+                        }}
                         optionIcons={<FaChild />}
                         selectIcon={<FaChild />}
                       />
@@ -328,15 +369,17 @@ const SearchFlights = ({OnlySearch}) => {
                     </div>
                     <div className="relative mb-5">
                       <Select
+                        isSelected={activeField.infant}
                         id="infant"
                         label="Infant"
                         name="infant"
                         options={infantOptions}
                         value={values.infant}
                         placeholder="Select Infants"
-                        onChange={(option) =>
+                        onChange={(option) => {
                           setFieldValue("infant", option.value)
-                        }
+                          activateField('cabinClass')
+                        }}
                         optionIcons={<MdChildFriendly />}
                         selectIcon={<MdChildFriendly />}
                       />
@@ -348,15 +391,17 @@ const SearchFlights = ({OnlySearch}) => {
                     </div>
                     <div className="relative mb-5">
                       <Select
+                        isSelected={activeField.cabinClass}
                         id="cabinClass"
                         label="Cabin Class"
                         name="cabinClass"
                         options={cabinClassOptions}
                         value={values.cabinClass}
                         placeholder="Cabin Class"
-                        onChange={(option) =>
+                        onChange={(option) =>{
                           setFieldValue("cabinClass", option.value)
-                        }
+                          activateField(null)
+                        }}
                         optionIcons={<MdChildFriendly />}
                       />
                       {touched.cabinClass && errors.cabinClass && (

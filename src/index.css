@@ -5,7 +5,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
 
 * {
-  font-family: "Poppins", sans-serif;
+  font-family: "Roboto", sans-serif;
   -webkit-user-select: none;
   -webkit-user-drag: none;
 }
@@ -15,7 +15,7 @@
   /* Custom primary color */
   --secondary-color: #1d4ed8;
   /* Custom secondary color */
-  --text-color: #333333;
+  --text-color: #49454f;
   /* Custom text color */
   --background-color: #f9fafb;
   /* Custom background color */
@@ -26,8 +26,8 @@
 }
 
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 6px;
+  height: 6px;
   scroll-behavior: smooth;
 }
 
@@ -39,10 +39,17 @@
 ::-webkit-scrollbar-thumb {
   background-color: var(--lightgray);
   border-radius: 10px;
+  cursor: pointer;
+  transition-property: all  ;
+  transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+  transition-duration: 700ms;
+
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background-color: var(--text-color);
+
+
 }
 
 .hide-scrollbar {
