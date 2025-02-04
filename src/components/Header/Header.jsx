@@ -7,7 +7,7 @@ import { IoIosSettings } from "react-icons/io";
 import { FaBell } from "react-icons/fa6";
 import { FiLogOut } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
-import { Credits, Dropdown, SecondaryButton, Spinner } from "../components";
+import {  Dropdown, SecondaryButton, Spinner } from "../components";
 import { HiOutlineRefresh } from "react-icons/hi";
 import { PiCoinsFill } from "react-icons/pi";
 import { PiHandCoinsFill } from "react-icons/pi";

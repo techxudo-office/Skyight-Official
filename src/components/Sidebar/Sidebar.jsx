@@ -121,7 +121,7 @@ const Sidebar = ({ status, updateStatus }) => {
               <div key={linkIndex} className={`flex flex-col    ${status ? 'w-full' : 'items-center'}`}>
                 <li
                   onClick={() => menuItemHandler(linkIndex, link)}
-                  className={`mb-2 flex items-center  gap-4 ${status ? 'px-4' : ''}  py-5 cursor-pointer transition-all hover:bg-slate-100 text-text rounded-full   text-md `}
+                  className={`mb-2 flex items-center  gap-4 ${status ? 'px-4' : ''}  py-5 cursor-pointer transition-all hover:text-primary text-text rounded-full   text-md `}
                 >
                   {link.sublinks && status && (
                     <IoIosArrowForward
@@ -144,7 +144,7 @@ const Sidebar = ({ status, updateStatus }) => {
                       key={sublinkIndex}
                       onClick={() => navigationHandler(sublink.path)}
                       className={`  w-full flex items-center gap-4 ${status ? 'px-3' : ''} cursor-pointer transition-all  ${activeMenu === linkIndex &&
-                        link.sublinks ? 'h-auto py-4' : 'h-0 overflow-hidden '} text-text rounded-full text-base  transition-all duration-300 hover:bg-slate-100`}
+                        link.sublinks ? 'h-auto py-4 ' : 'h-0 overflow-hidden '} text-text rounded-full text-base  transition-all duration-300 hover:text-primary`}
                     >
                       <span className="text-3xl">{sublink.icon}</span>
                       {sublink.title}
