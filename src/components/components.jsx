@@ -22,3 +22,5 @@ export { default as RegistrationForm } from "./RegistrationForm/RegistrationForm
 export { default as VerificationForm } from "./VerificationForm/VerificationForm";
 export { default as ForgetPassForm } from "./ForgetPassForm/ForgetPassForm";
 export { default as ChangeSearch } from "./ChangeSearch/ChangeSearch";
+export { default as DateSlider } from "./DateSlider/DateSlider";
+export { default as Credits } from "./Credits/Credits";

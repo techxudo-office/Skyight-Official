@@ -10,18 +10,20 @@ const Layout = () => {
   };
 
   return (
-    <div className="flex h-screen">
-      <Sidebar status={sidebarStatus} updateStatus={setSidebarStatus} />
-      <div className="flex-1">
-        <Header
+    <>
+     <Header
           sidebarStatus={sidebarStatus}
           setSidebarStatusHandler={setSidebarStatusHandler}
         />
+    <div className="flex h-screen">
+      <Sidebar status={sidebarStatus} updateStatus={setSidebarStatus} />
+      <div className="flex-1">
+       
         <div
           className="flex flex-col justify-between items-center h-[88%] bg-slate-100 overflow-scroll"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
-          <div className="w-full flex justify-center items-center p-5">
+          <div className="w-full flex justify-center items-center p-4">
             <Outlet />
           </div>
           <div
@@ -35,6 +37,7 @@ const Layout = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

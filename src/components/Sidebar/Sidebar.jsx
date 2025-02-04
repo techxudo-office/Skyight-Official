@@ -17,6 +17,18 @@ const Sidebar = ({ status, updateStatus }) => {
   const navigationHandler = (path) => {
     navigate(path);
   };
+  useEffect(() => {
+    console.log('active menu', activeMenu)
+    console.log('status', status, activeMenu != null)
+    if (!status) {
+      setActiveMenu(null)
+    }
+    if (activeMenu != null || status) {
+
+      updateStatus(true)
+    }
+
+  }, [activeMenu, status])
 
   const menuItemHandler = (index, link) => {
 
@@ -88,40 +100,39 @@ const Sidebar = ({ status, updateStatus }) => {
 
   return (
     <div
-      id="sidebar-container" 
+      id="sidebar-container"
       ref={sidebarRef}
-      className={`transition-all z-10 bg-white  ${status ? "w-72 shadow-md" : "w-0 "
-        } flex flex-col justify-between transition-all duration-300 overflow-auto ${mobileView && "absolute h-screen shadow-2xl"
-        }`}
+      className={`transition-all z-10 bg-white  ${!mobileView ? status ? "w-80 shadow-md " : "w-32  items-center" : status ? 'w-60 shadow-md fixed left-0 h-screen' : 'w-0 p-0'} flex flex-col justify-between  transition-all duration-300 overflow-auto`}
     >
       <div>
-        <div className="py-3 px-5  flex items-center">
+        <div className={`py-3 items-center  flex ${status ? 'px-5' : 'justify-center'} `}>
           <h3
             onClick={() => navigationHandler("/")}
             className="text-2xl font-semibold flex items-center gap-3 text-text cursor-pointer"
           >
             <GiCommercialAirplane />
-            Skyight
+            {status ? 'Skyight' : ''}
           </h3>
         </div>
 
         <div className="p-3">
-          <ul className="w-full flex flex-col">
+          <ul className=" flex flex-col items-center">
             {sidebarLinks.map((link, linkIndex) => (
-              <div key={linkIndex} className="flex flex-col w-full">
+              <div key={linkIndex} className={`flex flex-col    ${status ? 'w-full' : 'items-center'}`}>
                 <li
                   onClick={() => menuItemHandler(linkIndex, link)}
-                  className={`mb-2 w-full flex items-center  gap-4 px-4 py-5 cursor-pointer transition-all hover:bg-slate-100 text-text rounded-full  text-md `}
+                  className={`mb-2 flex items-center  gap-4 ${status ? 'px-4' : ''}  py-5 cursor-pointer transition-all hover:bg-slate-100 text-text rounded-full   text-md `}
                 >
-                  {link.sublinks && (
+                  {link.sublinks && status && (
                     <IoIosArrowForward
                       className={`text-xl transition-transform duration-300 ${activeMenu === linkIndex ? "rotate-90" : "-rotate-90"
                         }`}
                     />
                   )}
-                  <span className="flex items-center gap-3">
-                    {link.title == 'Dashboard' ? <span className="text-2xl">{link.icon}</span> : ''}
-                    <span className="text-base">{link.title}</span>
+                  <span className={`flex ${status ? 'flex-row' : 'flex-col'}  items-center gap-3`}>
+                    {link.title == 'Dashboard' && status ? <span className="text-2xl">{link.icon}</span> : ''}
+                    <span className={`${status ? 'hidden' : 'text-3xl'}`}>{link.icon}</span>
+                    <span className={`${status ? 'text-base' : 'text-sm'}`}>{link.title}</span>
                   </span>
 
                 </li>
@@ -132,7 +143,7 @@ const Sidebar = ({ status, updateStatus }) => {
                     <li
                       key={sublinkIndex}
                       onClick={() => navigationHandler(sublink.path)}
-                      className={`  w-full flex items-center gap-4 px-3 cursor-pointer transition-all  ${activeMenu === linkIndex &&
+                      className={`  w-full flex items-center gap-4 ${status ? 'px-3' : ''} cursor-pointer transition-all  ${activeMenu === linkIndex &&
                         link.sublinks ? 'h-auto py-4' : 'h-0 overflow-hidden '} text-text rounded-full text-base  transition-all duration-300 hover:bg-slate-100`}
                     >
                       <span className="text-3xl">{sublink.icon}</span>

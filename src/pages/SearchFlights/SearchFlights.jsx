@@ -73,7 +73,7 @@ const validationSchema = Yup.object().shape({
 
 
 
-const SearchFlights = ({ OnlySearch }) => {
+const SearchFlights = ({ OnlySearch,onSearch }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState()
   const [loading, setLoading] = useState(false);
@@ -98,7 +98,7 @@ const SearchFlights = ({ OnlySearch }) => {
     });
   };
 
-  console.log(activeField)
+  // console.log(activeField)
   const initialValues = {
     tripType: "OneWay", // Default value
     departure: "",
@@ -156,15 +156,13 @@ const SearchFlights = ({ OnlySearch }) => {
   };
 
   const handleSubmit = (values) => {
-    console.log("handleSubmit");
+    // console.log("handleSubmit");
     setFormData(values)
-    console.log("Form Values: ", values);
-    sendData()
+    // console.log("Form Values: ", values);
+   
+    searchFlightHandler(values)
 
   };
-  const sendData = () => {
-    searchFlightHandler(formData);
-  }
 
   const handleOnTripchange = (values) => {
     values = []
@@ -413,8 +411,9 @@ const SearchFlights = ({ OnlySearch }) => {
                   </div>
                 </CardLayoutBody>
                 <CardLayoutFooter>
-                  <div>
+                  <div onClick={onSearch}>
                     <Button
+                    
                       text={loading ? <Spinner /> : "Search Flight"}
                       type="submit"
                       disabled={loading}

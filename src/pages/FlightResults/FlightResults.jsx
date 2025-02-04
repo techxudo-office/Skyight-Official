@@ -3,7 +3,7 @@
 
 
 import React, { useState, useEffect, useRef } from "react";
-import { Button, ChangeSearch, FlightCard, Spinner } from "../../components/components";
+import { Button, ChangeSearch, DateSlider, FlightCard, Spinner } from "../../components/components";
 import { useLocation, useNavigate } from "react-router-dom";
 import Slider from "react-slick";
 import toast, { Toaster } from "react-hot-toast";
@@ -25,13 +25,14 @@ const FlightResults = () => {
   const [selectedDate, setSelectedDate] = useState("");
   const [ChangeFlight, setChangeFlight] = useState(false);
   const [originalDates, setOriginalDates] = useState([]);
+  const [noFlight, setNoFlight] = useState(false);
   const [filteredFlightsData, setFilteredFlightsData] = useState([]);
 
   const navigate = useNavigate()
   useEffect(() => {
     if (location.state) {
-      console.log("state", location.state)
-      console.log("payload", location.state.payload)
+      // console.log("state", location.state)
+      // console.log("payload", location.state.payload)
 
       const flights = location.state.flightsData.PricedItineraries.PricedItinerary;
       const travelers = location.state.travelersData;
@@ -47,10 +48,9 @@ const FlightResults = () => {
   }, [location.state]); // Add location.state as a dependency to trigger useEffect on reload
 
   const searchFlightHandler = async (date, index) => {
-    console.log("olddate", dateOptions)
+    // console.log("olddate", dateOptions)
     const original = dayjs(originalDates[index])
-    // console.log(`${original.$y}-0${original.$m+1}-${original.$D}`)
-    console.log(original.format("YYYY-MM-DD"))
+
 
 
     const payload = {
@@ -58,7 +58,6 @@ const FlightResults = () => {
       departureDate: original.format("YYYY-MM-DD"),
     };
     const response = await searchFlight(payload);
-    console.log("new date response", response)
     if (response) {
       if (response.status) {
         if (response.data.PricedItineraries.PricedItinerary.length > 0) {
@@ -74,10 +73,12 @@ const FlightResults = () => {
 
             },
           });
+          setNoFlight(false)
         }
       } else {
         if (Array.isArray(response.message)) {
           response.message.map((error) => {
+            setNoFlight(true)
             return toast.error(error.toUpperCase());
           });
         } else {
@@ -141,37 +142,28 @@ const FlightResults = () => {
       <Toaster />
       {ChangeFlight ?
         <div className="fixed top-0 flex justify-center items-center p-32 backdrop-blur-sm left-0 w-full h-screen z-[999] ">
-          <div className="shadow-xl rounded-md relative">
+          <div className="shadow-xl w-[1000px] rounded-md relative">
             <Button onClick={() => setChangeFlight(false)} text={"Close"} className="absolute right-3 top-3" />
-            <SearchFlights OnlySearch={true} />
+            <SearchFlights OnlySearch={true}
+            //  onSearch={()=>setChangeFlight(false)} 
+             />
           </div>
         </div>
         : ''}
-      <ChangeSearch flights={filteredFlightsData.length} onclick={onChangeSearch} />
-      {/* Date Slider */}
-      <div ref={sliderRef} className="date-slider flex justify-between bg-white rounded-md p-3 mb-4">
-        {dateOptions.map((date, index) => (
-          <div key={index} className="px-2">
-            <button
-              onClick={() => handleDateSelect(date, index)}
-              className={`py-2 px-4 rounded-lg text-center ${selectedDate === date
-                ? "bg-primary text-white"
-                : "bg-gray-200 text-gray-700"
-                }`}
-            >
-              {date}
-            </button>
-          </div>
-        ))}
-      </div>
 
+      {/* flight info  */}
+      <ChangeSearch flights={filteredFlightsData.length} onclick={onChangeSearch} />
+
+      {/* Date Slider */}
+      <DateSlider ref={sliderRef} selectedDate={selectedDate} handleDateSelect={handleDateSelect}
+        dateOptions={dateOptions} />
       {/* Filtered Flights Data */}
       {filteredFlightsData.length > 0 ? (
         filteredFlightsData.map((item, index) => (
           <FlightCard key={index} data={item} travelers={travelersData} />
         ))
-      ) :
-        <Spinner className={'border-primary'}/>}
+      ) : noFlight ? <p className="capitalize py-5 text-text w-full text-center">no flight found</p> :
+        <Spinner className={'border-primary'} />}
     </div>
   );
 };

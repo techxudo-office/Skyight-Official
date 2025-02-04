@@ -7,15 +7,15 @@ import { IoIosSettings } from "react-icons/io";
 import { FaBell } from "react-icons/fa6";
 import { FiLogOut } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
-import { Dropdown, SecondaryButton, Spinner } from "../components";
+import { Credits, Dropdown, SecondaryButton, Spinner } from "../components";
 import { HiOutlineRefresh } from "react-icons/hi";
 import { PiCoinsFill } from "react-icons/pi";
 import { PiHandCoinsFill } from "react-icons/pi";
 import { getCredits } from "../../utils/api_handler";
 import { IoHome } from "react-icons/io5";
 import { AuthContext } from "../../context/AuthContext";
-
 const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
+  
   const navigate = useNavigate();
   const { updateAuthToken } = useContext(AuthContext);
 
@@ -124,7 +124,7 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
   return (
     <>
       <Toaster />
-      <div id="header-container" className="flex justify-between items-center shadow-sm bg-white p-3">
+      <div id="header-container" className="flex  justify-between items-center fixed shadow-xl z-[999] bg-white w-full p-3">
         <HiOutlineMenuAlt1
           className={`text-3xl cursor-pointer hover:text-text ${
             sidebarStatus ? "text-slate-400" : "text-primary"
@@ -134,7 +134,7 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
         <div className="flex items-center justify-center ">
           <div className="relative">
             <div
-              className={`w-full flex items-center justify-center gap-3 cursor-pointer py-[7px] px-6 bg-blue-100 hover:text-black text-primary font-semibold rounded-full transition duration-300 ease-in-out transform focus:outline-none`}
+              className={`w-full flex items-center justify-center gap-3 cursor-pointer py-[7px] px-6 bg-blue-100 hover:text-black  text-primary font-semibold rounded-full transition duration-300 ease-in-out transform focus:outline-none`}
               // onClick={() => {
               //   setIsActive(!isActive);
               // }}
@@ -172,8 +172,10 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
           </div>
         </div>
       </div>
+      
     </>
   );
 };
+export default Header
 
-export default Header;
+
