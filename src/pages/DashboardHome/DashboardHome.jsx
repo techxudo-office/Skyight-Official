@@ -18,19 +18,44 @@ import toast from "react-hot-toast";
 import { FaEye } from "react-icons/fa";
 import { HiReceiptRefund } from "react-icons/hi";
 import { MdCancel } from "react-icons/md";
-
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 const DashboardHome = () => {
   var settings = {
     dots: false,
     infinite: true,
-    speed: 500,
-    slidesToShow: 3,
+    speed: 800,
+    slidesToShow: 2,
     slidesToScroll: 1,
     initialSlide: 0,
     autoplay: true,
-    autoplaySpeed: 1000,
+    autoplaySpeed: 2000,
     arrows: false,
+    responsive: [
+      
+      {
+        breakpoint: 768, // Tablets
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          autoplaySpeed: 2500, // Adjust speed for smaller screens
+          dots:false
+        },
+      },
+      {
+        breakpoint: 480, // Mobile devices
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          autoplaySpeed: 3000,
+          dots:false
+
+        },
+      },
+    ],
   };
+  
 
   const navigate = useNavigate();
 
@@ -66,6 +91,7 @@ const DashboardHome = () => {
     const response = await getFlightBookings();
     if (response.status) {
       setBookingsData(response.data);
+      console.log('bookking',response.data)
     }
   };
 
@@ -88,16 +114,23 @@ const DashboardHome = () => {
         <h2 className="text-3xl font-semibold text-text mb-7">
           Featured Flights
         </h2>
-        <div className="hide-scrollbar grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 overflow-x-scroll gap-6 gap-x-44">
-          {flightsData.length > 0 &&
-            flightsData.map((item, index) => (
-              <DashboardCards key={index} index={index} data={item} />
-            ))}
+        <div className="w-full  overflow-x-hidden">
+          
+            <Slider {...settings}
+              className=" flex gap-3 "
+            >
+              {flightsData.length > 0 &&
+                flightsData.map((item, index) => (
+                  <DashboardCards key={index} index={index} data={item} />
+                ))}
+            </Slider>
+          
         </div>
-      </div>
 
+
+      </div>
       {/* Flights */}
-      <CardLayoutContainer removeBg={true} className={'mt-5'}> 
+      <CardLayoutContainer removeBg={true} className={'mt-5'}>
         <CardLayoutHeader
           removeBorder={true}
           heading={"Flight Bookings"}

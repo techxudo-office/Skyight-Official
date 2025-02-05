@@ -26,6 +26,9 @@ const Input = ({
   useEffect(() => {
     if (isSelected) {
       inputRef.current.focus()
+      if (type === "date" || type === "datetime-local") {
+        inputRef.current.showPicker();
+      }
     }
   },[isSelected])
 
@@ -34,7 +37,7 @@ const Input = ({
       <div className={`flex flex-col w-full ${className}`}>
 
         <div className={`rounded-lg flex items-center justify-between ${disabled ? 'bg-slate-100' : 'bg-white'}  `}>
-          <label htmlFor={id} className="text-md rounded-md font-medium  mb-2 absolute -top-3 left-3 bg-white px-1 text-gray">
+          <label htmlFor={id} className="text-base rounded-md font-medium  mb-2 absolute -top-3 left-3 bg-white px-1 text-gray">
             {label}
           </label>
           <input

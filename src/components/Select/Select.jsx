@@ -19,11 +19,16 @@ const Select = ({
   const selectRef = useRef(null);
   const [selectStatus, setSelectStatus] = useState(false);
   const [searchValue, setSearchValue] = useState("");
+  // const [dropDown, setdropDown] = useState(true);
+
+
 
   const selectHandler = () => {
-    if(disabled){
+    if (disabled) {
       return
-    }else{
+    } else {
+    // setdropDown((prev)=>!prev)
+
       setSelectStatus((prev) => !prev);
     }
   };
@@ -48,13 +53,13 @@ const Select = ({
         setSelectStatus(false);
       }
     };
-    
+
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-    
+
   }, []);
 
   return (
@@ -62,7 +67,7 @@ const Select = ({
 
 
       <div className={`relative rounded-md border border-gray flex items-center justify-between px-2 ${disabled && 'bg-slate-100'}`}>
-       <label htmlFor={id} className={` text-md bg-white font-medium  mb-2 absolute -top-3 left-3  px-1 roounded-md text-gray`}>
+        <label htmlFor={id} className={` text-md bg-white font-medium  mb-2 absolute -top-3 left-3  px-1 roounded-md text-gray`}>
           {label}
         </label>
         <div
@@ -72,12 +77,12 @@ const Select = ({
 
           <span className="text-gray flex gap-3 items-center"><span className="text-primary">{selectIcon}</span>{(value && value) || placeholder}</span>
           <FaCaretDown
-            className={`text-gray transform transition-transform ${selectStatus || isSelected ? "rotate-180" : ""
+            className={`text-gray transform transition-transform ${(selectStatus || isSelected)  ? "rotate-180" : ""
               }`}
           />
         </div>
 
-        {(selectStatus || isSelected ) && (
+        { (selectStatus || isSelected) && (
           <div className="absolute top-full left-0 z-10 w-full bg-white shadow-md border-[1px] border-gray mt-2 rounded-md">
             <div className="p-2">
               <input

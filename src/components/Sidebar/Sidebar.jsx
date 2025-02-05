@@ -102,10 +102,10 @@ const Sidebar = ({ status, updateStatus }) => {
     <div
       id="sidebar-container"
       ref={sidebarRef}
-      className={`transition-all z-10 bg-white  ${!mobileView ? status ? "w-80 shadow-md " : "w-32  items-center" : status ? 'w-60 shadow-md fixed left-0 h-screen' : 'w-0 p-0'} flex flex-col justify-between  transition-all duration-300 overflow-auto`}
+      className={`transition-all z-10 bg-white pt-20  shadow-md ${!mobileView ? status ? "w-1/5 pt-20 " : "w-28  items-center pt-20" : status ? 'w-60 shadow-md fixed left-0 h-screen' : 'w-0 p-0'} flex flex-col justify-between  transition-all duration-300 overflow-auto overflow-x-hidden`}
     >
       <div>
-        <div className={`py-3 items-center  flex ${status ? 'px-5' : 'justify-center'} `}>
+        {/* <div className={`py-3 items-center  flex ${status ? 'px-5' : 'justify-center'} `}>
           <h3
             onClick={() => navigationHandler("/")}
             className="text-2xl font-semibold flex items-center gap-3 text-text cursor-pointer"
@@ -113,7 +113,7 @@ const Sidebar = ({ status, updateStatus }) => {
             <GiCommercialAirplane />
             {status ? 'Skyight' : ''}
           </h3>
-        </div>
+        </div> */}
 
         <div className="p-3">
           <ul className=" flex flex-col items-center">
@@ -121,11 +121,11 @@ const Sidebar = ({ status, updateStatus }) => {
               <div key={linkIndex} className={`flex flex-col    ${status ? 'w-full' : 'items-center'}`}>
                 <li
                   onClick={() => menuItemHandler(linkIndex, link)}
-                  className={`mb-2 flex items-center  gap-4 ${status ? 'px-4' : ''}  py-5 cursor-pointer transition-all hover:text-primary text-text rounded-full   text-md `}
+                  className={`mb-2 flex items-center  gap-4 ${status ? 'px-4' : ''}  py-4 cursor-pointer transition-all hover:text-primary text-text rounded-full   text-base `}
                 >
                   {link.sublinks && status && (
                     <IoIosArrowForward
-                      className={`text-xl transition-transform duration-300 ${activeMenu === linkIndex ? "rotate-90" : "-rotate-90"
+                      className={`text-xl transition-transform duration-300 ${activeMenu === linkIndex ? "-rotate-90" : "rotate-90"
                         }`}
                     />
                   )}

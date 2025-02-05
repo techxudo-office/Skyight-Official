@@ -139,7 +139,7 @@ const FlightResults = () => {
 
   return (
     <div className="flex relative flex-col w-fit">
-      <Toaster />
+      {/* <Toaster /> */}
       {ChangeFlight ?
         <div className="fixed top-0 flex justify-center items-center p-32 backdrop-blur-sm left-0 w-full h-screen z-[999] ">
           <div className="shadow-xl w-[1000px] rounded-md relative">

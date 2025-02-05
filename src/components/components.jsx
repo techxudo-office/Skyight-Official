@@ -23,3 +23,5 @@ export { default as VerificationForm } from "./VerificationForm/VerificationForm
 export { default as ForgetPassForm } from "./ForgetPassForm/ForgetPassForm";
 export { default as ChangeSearch } from "./ChangeSearch/ChangeSearch";
 export { default as DateSlider } from "./DateSlider/DateSlider";
+export { default as CustomDate } from "./CustomDate/CustomDate";
+export { default as TableNew } from "./TableNew/TableNew";

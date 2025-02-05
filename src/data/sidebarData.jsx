@@ -24,7 +24,7 @@ export const sidebarLinks = [
   },
   {
     // title: "Flights & Hotels",
-    title: "Flights",
+    title: "Search",
     icon: <MdContentPasteSearch />,
     sublinks: [
       {

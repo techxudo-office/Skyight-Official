@@ -3,6 +3,7 @@ import {
   Table,
   SecondaryButton,
   ConfirmModal,
+  TableNew,
 } from "../../components/components";
 import {
   getFlightBookings,
@@ -177,7 +178,8 @@ const FlightBookings = () => {
             data={bookingsData}
             actions={actionsData}
             activeIndex={activeIndex}
-          />
+          /> 
+          <TableNew columnsToView={columnsData} tableData={bookingsData}/>
         </CardLayoutBody>
         <CardLayoutFooter></CardLayoutFooter>
       </CardLayoutContainer>

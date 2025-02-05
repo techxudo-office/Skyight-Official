@@ -13,7 +13,7 @@ import {
   CardLayoutFooter,
 } from "../../components/CardLayout/CardLayout";
 
-import { Select, Input, Spinner, Button } from "../../components/components";
+import { Select, Input, Spinner, Button, CustomDate } from "../../components/components";
 
 import { iranianCities } from "../../data/iranianCities";
 import { searchFlight } from "../../utils/api_handler";
@@ -24,7 +24,7 @@ import { useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import toast, { Toaster } from "react-hot-toast";
-import { forBackArrows } from "../../assets/Index";
+import { FlightsBanner, forBackArrows } from "../../assets/Index";
 
 
 const adultOptions = [
@@ -73,7 +73,7 @@ const validationSchema = Yup.object().shape({
 
 
 
-const SearchFlights = ({ OnlySearch,onSearch }) => {
+const SearchFlights = ({ OnlySearch, onSearch }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState()
   const [loading, setLoading] = useState(false);
@@ -123,7 +123,7 @@ const SearchFlights = ({ OnlySearch,onSearch }) => {
       child: values.child,
       infant: values.infant,
     };
-
+    console.log('values', values)
     setLoading(true);
     const response = await searchFlight(payload);
     setLoading(false);
@@ -159,7 +159,7 @@ const SearchFlights = ({ OnlySearch,onSearch }) => {
     // console.log("handleSubmit");
     setFormData(values)
     // console.log("Form Values: ", values);
-   
+
     searchFlightHandler(values)
 
   };
@@ -172,19 +172,14 @@ const SearchFlights = ({ OnlySearch,onSearch }) => {
     <>
       <Toaster />
       <div className="flex flex-col w-full items-center justify-center">
-        {OnlySearch ? '' : <CardLayoutContainer className="w-full mb-5">
-          <CardLayoutHeader
-            className="flex items-center justify-start flex-wrap gap-5 py-3"
-            removeBorder={true}
-          >
-            <img src={plane} alt="profile-img" className="h-60 w-full" />
-          </CardLayoutHeader>
-        </CardLayoutContainer>}
+        {OnlySearch ? '' :
+            <img src={FlightsBanner} alt="profile-img" className="h-60 w-full max-md:object-contain" />
+        }
 
-        <CardLayoutContainer>
+        <CardLayoutContainer className={'mb-10'}>
           <CardLayoutHeader
             heading="Search Flight"
-            className={"flex items-center justify-between"}
+            className={"flex items-center justify-between "}
           />
 
           <Formik
@@ -272,7 +267,23 @@ const SearchFlights = ({ OnlySearch,onSearch }) => {
                     </div>
 
                     <div className="relative mb-5">
-                      <Input
+                      <CustomDate
+                        onChange={(e) => {
+                          setFieldValue("departureDate", e.target.value)
+                          if (values.tripType != "OneWay") {
+                            activateField('returnDate')
+                          } else {
+                            activateField('adult')
+                          }
+                        }}
+                        value={values.departureDate}
+                        isSelected={activeField.departureDate}
+                        name={"departureDate"}
+                        label={"Departure Date"}
+                        disabled={false}
+
+                      />
+                      {/* <Input
                         isSelected={activeField.departureDate}
                         id={"departureDate"}
                         name={"departureDate"}
@@ -288,7 +299,7 @@ const SearchFlights = ({ OnlySearch,onSearch }) => {
                             activateField('adult')
                           }
                         }}
-                      />
+                      /> */}
                       {touched.departureDate && errors.departureDate && (
                         <div className="text-red-500 text-sm mt-2 absolute left-0">
                           {errors.departureDate}
@@ -296,9 +307,23 @@ const SearchFlights = ({ OnlySearch,onSearch }) => {
                       )}
                     </div>
                     <div className="relative mb-5">
-                      <Input
+                      <CustomDate
+                        onChange={(e) => {
+                          setFieldValue("returnDate", e.target.value)
+                          activateField('adult')
+                        }}
+                        value={values.returnDate}
+                        isSelected={activeField.returnDate}
+                        name={"returnDate"}
+                        label={"Return Date"}
+                        disabled={values.tripType == "OneWay"}
+
+
+                      />
+                      {/* <Input
                         isSelected={activeField.returnDate}
                         disabled={values.tripType == "OneWay"}
+
                         // disabled={true}
                         id={"returnDate"}
                         name={"returnDate"}
@@ -312,7 +337,7 @@ const SearchFlights = ({ OnlySearch,onSearch }) => {
                             activateField('adult')
                           }
                         }}
-                      />
+                      /> */}
                       {values.tripType !== "OneWay" && touched.returnDate && errors.returnDate && (
                         <div className="text-red-500 text-sm mt-2 absolute left-0">
                           {errors.returnDate}
@@ -396,7 +421,7 @@ const SearchFlights = ({ OnlySearch,onSearch }) => {
                         options={cabinClassOptions}
                         value={values.cabinClass}
                         placeholder="Cabin Class"
-                        onChange={(option) =>{
+                        onChange={(option) => {
                           setFieldValue("cabinClass", option.value)
                           activateField(null)
                         }}
@@ -413,7 +438,7 @@ const SearchFlights = ({ OnlySearch,onSearch }) => {
                 <CardLayoutFooter>
                   <div onClick={onSearch}>
                     <Button
-                    
+
                       text={loading ? <Spinner /> : "Search Flight"}
                       type="submit"
                       disabled={loading}
