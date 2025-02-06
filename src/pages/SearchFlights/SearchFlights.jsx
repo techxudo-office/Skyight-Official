@@ -98,8 +98,12 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
     });
   };
 
+  const loadFormData = () => {
+    const storedValues = localStorage.getItem("flightSearchForm");
+    return storedValues ? JSON.parse(storedValues) : null;
+  };
   // console.log(activeField)
-  const initialValues = {
+  const initialValues = loadFormData() || {
     tripType: "OneWay", // Default value
     departure: "",
     arrival: "",
@@ -157,6 +161,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
 
   const handleSubmit = (values) => {
     // console.log("handleSubmit");
+    localStorage.setItem("flightSearchForm", JSON.stringify(values));
     setFormData(values)
     // console.log("Form Values: ", values);
 
@@ -164,10 +169,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
 
   };
 
-  const handleOnTripchange = (values) => {
-    values = []
 
-  }
   return (
     <>
       <Toaster />
@@ -283,23 +285,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                         disabled={false}
 
                       />
-                      {/* <Input
-                        isSelected={activeField.departureDate}
-                        id={"departureDate"}
-                        name={"departureDate"}
-                        label={"Departure Date"}
-                        type={"date"}
-                        value={values.departureDate}
-                        placeholder={"Select Departure Date"}
-                        onChange={(e) => {
-                          setFieldValue("departureDate", e.target.value)
-                          if (values.tripType != "OneWay") {
-                            activateField('returnDate')
-                          } else {
-                            activateField('adult')
-                          }
-                        }}
-                      /> */}
+                    
                       {touched.departureDate && errors.departureDate && (
                         <div className="text-red-500 text-sm mt-2 absolute left-0">
                           {errors.departureDate}

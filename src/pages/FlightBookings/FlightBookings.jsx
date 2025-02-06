@@ -37,45 +37,46 @@ const FlightBookings = () => {
   };
 
   const columnsData = [
-    { columnName: "No.", fieldName: "no.", type: "no." },
+    // { columnName: "No.", fieldName: "no.", type: "no." },
     { columnName: "Origin", fieldName: "origin", type: "text" },
     { columnName: "Destination", fieldName: "destination", type: "text" },
     { columnName: "Total Fare", fieldName: "total_fare", type: "text" },
-    { columnName: "Currency", fieldName: "currency", type: "text" },
+    // { columnName: "Currency", fieldName: "currency", type: "text" },
     { columnName: "Status", fieldName: "booking_status", type: "status" },
-    { columnName: "Created At", fieldName: "created_at", type: "text" },
-    { columnName: "Actions", fieldName: "actions", type: "actions" },
+    { columnName: "Created At", fieldName: "created_at", type: "date" },
+    // { columnName: "Actions", fieldName: "actions", type: "actions" },
   ];
 
-  const viewColumns = [
-    { columnName: "Ref Id", fieldName: "booking_reference_id", type: "text" },
-    { columnName: "Updated At", fieldName: "updated_at", type: "text" },
-    {
-      columnName: "Transaction Identifier",
-      fieldName: "transaction_identifier",
-      type: "text",
-    },
-    {
-      columnName: "Ticketing Time Limit",
-      fieldName: "ticketing_time_limit",
-      type: "text",
-    },
-    { columnName: "Booking Id", fieldName: "id", type: "id" },
-    { columnName: "Rate", fieldName: "rate", type: "text" },
-    { columnName: "Percentage", fieldName: "persantage", type: "text" },
-    { columnName: "Cancel At", fieldName: "canceled_at", type: "text" },
-  ];
+  // const viewColumns = [
+  //   { columnName: "Ref Id", fieldName: "booking_reference_id", type: "text" },
+  //   { columnName: "Updated At", fieldName: "updated_at", type: "text" },
+  //   {
+  //     columnName: "Transaction Identifier",
+  //     fieldName: "transaction_identifier",
+  //     type: "text",
+  //   },
+  //   {
+  //     columnName: "Ticketing Time Limit",
+  //     fieldName: "ticketing_time_limit",
+  //     type: "text",
+  //   },
+  //   { columnName: "Booking Id", fieldName: "id", type: "id" },
+  //   { columnName: "Rate", fieldName: "rate", type: "text" },
+  //   { columnName: "Percentage", fieldName: "persantage", type: "text" },
+  //   { columnName: "Cancel At", fieldName: "canceled_at", type: "text" },
+  // ];
 
   const actionsData = [
     {
       name: "View",
-      icon: <FaEye title="View" className="text-green-500" />,
+      icon: <FaEye title="View" className="text-green-500 " />,
       // handler: (index) => {
       //   if (activeIndex === index) {
       //     setActiveIndex(null);
       //   } else setActiveIndex(index);
       // },
-      handler: (index, item) => {
+      handler: (item) => {
+        console.log('item', item)
         navigate("/dashboard/booking-details", {
           state: item.booking_reference_id,
         });
@@ -84,14 +85,14 @@ const FlightBookings = () => {
     {
       name: "Refund",
       icon: <HiReceiptRefund title="Refund" className="text-blue-500" />,
-      handler: (_, item) => {
+      handler: (item) => {
         refundRequestHandler(item);
       },
     },
     {
       name: "Cancel",
       icon: <MdCancel title="Cancel" className="text-red-500" />,
-      handler: (_, item) => {
+      handler: (item) => {
         cancelFlightBookingHandler(item);
       },
     },
@@ -172,14 +173,18 @@ const FlightBookings = () => {
           </div>
         </CardLayoutHeader>
         <CardLayoutBody removeBorder={true}>
-          <Table
+          {/* <Table
             columns={columnsData}
-            viewColumns={viewColumns}
             data={bookingsData}
             actions={actionsData}
             activeIndex={activeIndex}
-          /> 
-          <TableNew columnsToView={columnsData} tableData={bookingsData}/>
+          /> */}
+          {bookingsData.length > 0 &&
+            <TableNew
+              columnsToView={columnsData}
+              tableData={bookingsData}
+              // actions={actionsData}
+            />}
         </CardLayoutBody>
         <CardLayoutFooter></CardLayoutFooter>
       </CardLayoutContainer>

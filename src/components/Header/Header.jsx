@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { HiOutlineMenuAlt1 } from "react-icons/hi";
 import { FaCircleUser } from "react-icons/fa6";
-import { FaUser } from "react-icons/fa";
+import { FaUser, FaUserCircle } from "react-icons/fa";
 import { IoIosSettings } from "react-icons/io";
 import { FaBell } from "react-icons/fa6";
 import { FiLogOut } from "react-icons/fi";
@@ -16,7 +16,7 @@ import { IoHome } from "react-icons/io5";
 import { AuthContext } from "../../context/AuthContext";
 import { logo } from "../../assets/Index";
 import { GiHamburgerMenu } from "react-icons/gi";
-import { MdNotificationsNone, MdLogout } from "react-icons/md";
+import { MdNotificationsNone, MdLogout, MdPerson, MdPersonPinCircle, MdOutlinePersonPinCircle, MdPersonPin } from "react-icons/md";
 import { SlSettings } from "react-icons/sl";
 import { TfiEmail } from "react-icons/tfi";
 
@@ -233,11 +233,22 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
 
 
               {/* User Logout Button */}
-              <button className="p-2 text-primary  hover:bg-slate-100 rounded-full transition"
+              {/* <button className="p-2 text-primary  hover:bg-slate-100 rounded-full transition"
                 onClick={logoutHandler}
               >
-                <MdLogout size={22} /> {/* Consistent size for logout icon */}
-              </button>
+                <MdLogout size={22} /> 
+              </button> */}
+               <div className="px-3">
+            <FaUserCircle
+              onClick={dropdownHandler}
+              className="text-primary hover:text-secondary transition-all text-4xl cursor-pointer"
+            />
+            <Dropdown
+              status={dropdownStatus}
+              changeStatus={setDropDownStatus}
+              options={dropdownOptions}
+            />
+          </div>
 
             </div>
            

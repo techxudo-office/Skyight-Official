@@ -126,19 +126,19 @@ export const sidebarLinks = [
     ],
   },
   {
-    title: "Tickets",
+    title: "Support",
     icon: <IoTicket />,
     sublinks: [
       {
-        title: "View Tickets",
+        title: "Tickets",
         path: "/dashboard/view-tickets",
         icon: <IoTicket />,
       },
-      {
-        title: "Create Ticket",
-        path: "/dashboard/create-ticket",
-        icon: < MdAirplaneTicket />,
-      },
+      // {
+      //   title: "Create Ticket",
+      //   path: "/dashboard/create-ticket",
+      //   icon: < MdAirplaneTicket />,
+      // },
     ],
   },
   // {
