@@ -12,6 +12,7 @@ const CustomDate = ({
     onChange,
     disabled,
     isSelected,
+    pastDate
 }) => {
     const handleDateChange = (newValue) => {
         if (onChange) {
@@ -30,20 +31,21 @@ const CustomDate = ({
 
     // Effect to synchronize isSelected prop with internal state
     useEffect(() => {
-      if (isSelected) {
-        setOpen(true); // Open the date picker if isSelected is true
-      }
+        if (isSelected) {
+            setOpen(true); // Open the date picker if isSelected is true
+        }
     }, [isSelected]);
-    
+
     const handleInputClick = () => {
-      if (!disabled) {
-        setOpen(true);  // Open the calendar when the input field is clicked
-      }
+        if (!disabled) {
+            setOpen(true);  // Open the calendar when the input field is clicked
+        }
     };
-  
+
     const handleClose = () => {
-      setOpen(false); // Close the calendar
+        setOpen(false); // Close the calendar
     };
+
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
@@ -52,13 +54,12 @@ const CustomDate = ({
                 disabled={disabled}
                 label={label}
                 autoFocus={isSelected}
-                value={value ? dayjs(value) : null} // Convert value to dayjs
+                value={value ?  dayjs(value) : null} // Convert value to dayjs
                 onChange={handleDateChange} // Corrected onChange
-                minDate={dayjs()} // Prevent past dates
-                open={open} // Controlled by the state and isSelected prop
-                onClose={handleClose} // Close the calendar when done
-                onInputClick={handleInputClick} // Open calendar on input click
-                
+                minDate={!pastDate? dayjs():null} // Prevent past dates
+                // open={open} // Controlled by the state and isSelected prop
+                // onClose={handleClose} // Close the calendar when done
+                // onInputClick={handleInputClick} // Open calendar on input click
                 sx={{
                     "& .MuiOutlinedInput-root": {
                         padding: "6px 12px",

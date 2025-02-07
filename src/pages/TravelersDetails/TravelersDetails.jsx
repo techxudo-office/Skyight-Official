@@ -24,6 +24,7 @@ import {
   Spinner,
   Select,
   Input,
+  CustomDate,
 } from "../../components/components";
 import toast, { Toaster } from "react-hot-toast";
 import { MdCalendarMonth, MdCalendarToday, MdCalendarViewMonth, MdCalendarViewWeek, MdChildCare, MdChildFriendly, MdOutlineCalendarMonth, MdPerson } from "react-icons/md";
@@ -71,8 +72,10 @@ const TravelersDetails = () => {
 
   const [flightData, setFlightData] = useState(null);
   const [travelersData, setTravelersData] = useState(null);
-  const [toogleForm, setToogleForm] = useState(null);
+  const [toogleForm, setToogleForm] = useState(0);
+  const [fareBreakdown, setFareBreakdown] = useState(false);
   // const [Value, setValue] = useState(null);
+
 
   const toogleFormHandler = (index) => {
     if (index === toogleForm) {
@@ -162,7 +165,7 @@ const TravelersDetails = () => {
       }
     }
   });
-  console.log('result data', result)
+
   return (
     <>
       <Toaster />
@@ -201,7 +204,7 @@ const TravelersDetails = () => {
           {/* Forms */}
         </CardLayoutContainer>
         <div className="flex w-full">
-          <div className="flex flex-wrap w-full">
+          <div className="flex flex-wrap w-2/3">
 
             {
               result.map((travelertype, index) => {
@@ -222,7 +225,7 @@ const TravelersDetails = () => {
                         <div>
 
                           <h2 className="text-xl font-semibold text-primary capitalize">
-                            {`Traveller ${index + 1}. ${travelertype=='ADL'?'adult':travelertype=='CHD'?'child':'infants'}`}
+                            {`Traveller ${index + 1}. ${travelertype == 'ADL' ? 'adult' : travelertype == 'CHD' ? 'child' : 'infants'}`}
                           </h2>
                         </div>
 
@@ -329,7 +332,7 @@ const TravelersDetails = () => {
                                         id={"email"}
                                         name={"email"}
                                         label={"Email"}
-                                        type={"text"}
+                                        type={"email"}
                                         value={values.email}
                                         placeholder={"Enter Email"}
                                         onChange={(e) =>
@@ -427,17 +430,18 @@ const TravelersDetails = () => {
 
                                     {/* Date Of Birth */}
                                     <div className="relative mb-5">
-                                      <Input
-                                        id={"date_of_birth"}
-                                        name={"date_of_birth"}
-                                        label={"Date Of Birth"}
-                                        type={"date"}
-                                        value={values.date_of_birth}
-                                        placeholder={"Select Date Of Birth"}
-                                        onChange={(e) =>
-                                          setFieldValue("date_of_birth", e.target.value)
-                                        }
+                                      <CustomDate
+                                       id={"date_of_birth"}
+                                       label={"Date Of Birth"}
+                                       name={'date of birth'}
+                                       pastDate={true}
+                                       value={values.date_of_birth}
+                                      //  placeholder={"Select Date Of Birth"}
+                                       onChange={(e) =>
+                                         setFieldValue("date_of_birth", e.target.value)
+                                       }
                                       />
+                                     
                                       {touched.date_of_birth &&
                                         errors.date_of_birth && (
                                           <div className="text-red-500 text-sm mt-2 absolute left-0">
@@ -493,7 +497,7 @@ const TravelersDetails = () => {
 
                                     {/* Passport Exp Date */}
                                     <div className="relative mb-5">
-                                      <Input
+                                      {/* <Input
                                         id={"passport_expiry_date"}
                                         name={"passport_expiry_date"}
                                         label={"Passport Exp Date"}
@@ -506,6 +510,18 @@ const TravelersDetails = () => {
                                             e.target.value
                                           )
                                         }
+                                      /> */}
+                                      <CustomDate
+                                      id={"passport_expiry_date"}
+                                      name={"passport_expiry_date"}
+                                      label={"Passport Exp Date"}
+                                      value={values.passport_expiry_date}
+                                      onChange={(e) =>
+                                        setFieldValue(
+                                          "passport_expiry_date",
+                                          e.target.value
+                                        )
+                                      }
                                       />
                                       {touched.passport_expiry_date &&
                                         errors.passport_expiry_date && (
@@ -548,16 +564,54 @@ const TravelersDetails = () => {
               })
             }
           </div>
-          {/* <div className="px-3 w-1/3 ">
-            <div >
+          <div className="px-3 w-1/3 ">
+            <div className="flex flex-col gap-3 text-text bg-white p-4 py-8 rounded-lg text-sm">
+              <h2 className="text-xl font-semibold">Price Summary</h2>
+              <div className="flex-col gap-3">
+                <div className="flex justify-between items-center border-b border-lightgray py-3">
+                  <p className="w-1/2">Pakistan International Airlines (adult) x 1</p>
+                  <p className="text-gray">PKR 104,421</p>
+                </div>
+                <div className="flex justify-between items-center border-b border-lightgray py-3">
+                  <p>price you pay</p>
+                  <p className="text-gray">PKR 104,421</p>
+                </div>
+                <div className="flex flex-col gap-3 pt-5">
+                  <p onClick={() => setFareBreakdown((prev) => !prev)} className="font-semibold text-lg flex justify-between cursor-pointer items-center">Fare Break Down <span><FaChevronCircleDown className={`text-primary ${fareBreakdown ? 'rotate-180' : 'rotate-0'} transition-all duration-300 ease-in-out `} /></span></p>
+                  <div className={` ${fareBreakdown ? 'h-auto' : 'h-0 overflow-hidden'} transition-all duration-300 ease-in-out flex flex-col gap-3 px-3`}>
+                    <h2 className="text-lg font-semibold">Adult Break Down</h2>
+                    <div className="flex justify-between items-center border-b border-lightgray py-2">
+                      <p>Base Fare:</p>
+                      <p className="text-gray">PKR 103,400</p>
+                    </div>
+                    <div className="flex justify-between items-center border-b border-lightgray py-2">
+                      <p>Tax:</p>
+                      <p className="text-gray">PKR 4,640</p>
+                    </div>
+                    <div className="flex justify-between items-center border-b border-lightgray py-2">
+                      <p>Gross Fare:</p>
+                      <p className="text-gray">PKR 108,040</p>
+                    </div>
+                    <div className="flex justify-between items-center border-b border-lightgray py-2">
+                      <p>Discount:</p>
+                      <p className="text-gray">-PKR 3,619</p>
+                    </div>
+                    <div className="flex justify-between items-center  y-3">
+                      <p className="text-primary font-semibold text-xl">Total</p>
+                      <p className="text-gray">PKR 104,421</p>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
 
             </div>
-          </div> */}
+          </div>
         </div>
 
 
         {/* Final Button to console all travelers data */}
-        <div className="flex items-center justify-end gap-3">
+        <div className="flex items-center justify-end gap-3 my-5">
           <div>
             <SecondaryButton
               text="Cancel Booking"

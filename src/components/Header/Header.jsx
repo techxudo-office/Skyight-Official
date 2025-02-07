@@ -57,13 +57,6 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
       },
     },
     {
-      name: "Notifications",
-      icon: <FaBell />,
-      handler: () => {
-        navigationHandler("/dashboard/notifications");
-      },
-    },
-    {
       name: "Logout",
       icon: <FiLogOut />,
       handler: () => {

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import plane from "../../assets/images/plane.webp";
 // icons
 import { FaPlaneArrival } from "react-icons/fa";
@@ -169,13 +169,37 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
 
   };
 
+  useEffect(() => {
+    const selectRef = document.getElementsByClassName('select')
+    const handleClickOutside = (event) => {
+      if (selectRef.current && !selectRef.current.contains(event.target)) {
+        setActiveField({
+          departure: false,
+          arrival: false,
+          departureDate: false,
+          returnDate: false,
+          cabinClass: false,
+          adult: false,
+          child: false,
+          infant: false
+        })
+      }
+    };
+
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+
+  }, []);
 
   return (
     <>
       <Toaster />
       <div className="flex flex-col w-full items-center justify-center">
         {OnlySearch ? '' :
-            <img src={FlightsBanner} alt="profile-img" className="h-60 w-full max-md:object-contain" />
+          <img src={FlightsBanner} alt="profile-img" className="h-60 w-full max-md:object-contain" />
         }
 
         <CardLayoutContainer className={'mb-10'}>
@@ -226,7 +250,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                           setFieldValue("departure", option.value);
                           activateField('arrival')
                         }}
-                        className={''}
+                        className={'select'}
                         optionIcons={<FaPlaneDeparture />}
                         selectIcon={<FaPlaneDeparture />}
                       />
@@ -244,7 +268,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
 
                     <div className="relative mb-5">
                       <Select
-
+                        className={'select'}
                         isSelected={activeField.arrival}
                         id="arrival"
                         label="Arrival To"
@@ -268,7 +292,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                       )}
                     </div>
 
-                    <div className="relative mb-5">
+                    <div className="relative mb-5 select">
                       <CustomDate
                         onChange={(e) => {
                           setFieldValue("departureDate", e.target.value)
@@ -278,6 +302,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                             activateField('adult')
                           }
                         }}
+                        pastDate={false}
                         value={values.departureDate}
                         isSelected={activeField.departureDate}
                         name={"departureDate"}
@@ -285,14 +310,14 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                         disabled={false}
 
                       />
-                    
+
                       {touched.departureDate && errors.departureDate && (
                         <div className="text-red-500 text-sm mt-2 absolute left-0">
                           {errors.departureDate}
                         </div>
                       )}
                     </div>
-                    <div className="relative mb-5">
+                    <div className="relative mb-5 select">
                       <CustomDate
                         onChange={(e) => {
                           setFieldValue("returnDate", e.target.value)
@@ -303,7 +328,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                         name={"returnDate"}
                         label={"Return Date"}
                         disabled={values.tripType == "OneWay"}
-
+                        pastDate={false}
 
                       />
                       {/* <Input
@@ -330,7 +355,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                         </div>
                       )}
                     </div>
-                    <div className="relative mb-5">
+                    <div className="relative mb-5 select">
                       <Select
                         isSelected={activeField.adult}
                         id="adult"
@@ -354,7 +379,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                         </div>
                       )}
                     </div>
-                    <div className="relative mb-5">
+                    <div className="relative mb-5 select">
                       <Select
                         isSelected={activeField.child}
                         id="child"
@@ -376,7 +401,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                         </div>
                       )}
                     </div>
-                    <div className="relative mb-5">
+                    <div className="relative mb-5 select">
                       <Select
                         isSelected={activeField.infant}
                         id="infant"
@@ -398,7 +423,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                         </div>
                       )}
                     </div>
-                    <div className="relative mb-5">
+                    <div className="relative mb-5  select">
                       <Select
                         isSelected={activeField.cabinClass}
                         id="cabinClass"

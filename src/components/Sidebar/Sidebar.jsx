@@ -102,7 +102,7 @@ const Sidebar = ({ status, updateStatus }) => {
     <div
       id="sidebar-container"
       ref={sidebarRef}
-      className={`transition-all z-10 bg-white pt-20  shadow-md ${!mobileView ? status ? "w-1/5 pt-20 " : "w-28  items-center pt-20" : status ? 'w-60 shadow-md fixed left-0 h-screen' : 'w-0 p-0'} flex flex-col justify-between  transition-all duration-300 overflow-auto overflow-x-hidden`}
+      className={`transition-all z-10  bg-white pt-20  shadow-md ${!mobileView ? status ? "w-1/5 pt-20 " : "w-28  items-center pt-20" : status ? 'w-60 shadow-md fixed left-0 h-screen' : 'w-0 p-0'} flex flex-col justify-between  transition-all duration-300 overflow-auto overflow-x-hidden`}
     >
       <div>
         {/* <div className={`py-3 items-center  flex ${status ? 'px-5' : 'justify-center'} `}>

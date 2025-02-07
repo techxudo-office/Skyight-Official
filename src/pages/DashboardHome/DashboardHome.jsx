@@ -4,6 +4,7 @@ import {
   Table,
   SecondaryButton,
   ConfirmModal,
+  TableNew,
 } from "../../components/components";
 import { getRoutes, getFlightBookings } from "../../utils/api_handler";
 import { useNavigate } from "react-router-dom";
@@ -78,13 +79,13 @@ const DashboardHome = () => {
   }, []);
 
   const columnsData = [
-    { columnName: "No.", fieldName: "no.", type: "no." },
+    // { columnName: "No.", fieldName: "no.", type: "no." },
     { columnName: "Origin", fieldName: "origin", type: "text" },
     { columnName: "Destination", fieldName: "destination", type: "text" },
     { columnName: "Total Fare", fieldName: "total_fare", type: "text" },
-    { columnName: "Currency", fieldName: "currency", type: "text" },
+    // { columnName: "Currency", fieldName: "currency", type: "text" },
     { columnName: "Status", fieldName: "booking_status", type: "status" },
-    { columnName: "Created At", fieldName: "created_at", type: "text" },
+    { columnName: "Created At", fieldName: "created_at", type: "date" },
   ];
 
   const gettingFlightBookings = async () => {
@@ -138,13 +139,25 @@ const DashboardHome = () => {
         >
         </CardLayoutHeader>
         <CardLayoutBody removeBorder={true}>
-          <Table
+          {/* <Table
             columns={columnsData}
             data={bookingsData}
-          />
+          /> */}
+         { <TableNew
+            columnsToView={columnsData}
+            tableData={bookingsData}
+          />}
         </CardLayoutBody>
         <CardLayoutFooter></CardLayoutFooter>
       </CardLayoutContainer>
+      <div
+            id="footer-container"
+            className="flex bg-white p-3 pb-0 w-full justify-center items-center"
+          >
+            <h2 className="text-text text-md font-semibold mt-2 text-center">
+              © 2024 All rights reserved by SKYIGHT AIR & BOOKING SYSTEM
+            </h2>
+          </div>
     </div>
   );
 };

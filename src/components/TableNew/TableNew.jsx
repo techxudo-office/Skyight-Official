@@ -5,11 +5,54 @@ import { format } from 'date-fns';
 import { TbCheck, TbChevronLeft, TbChevronLeftPipe, TbChevronRight, TbChevronRightPipe } from "react-icons/tb";
 import { object } from 'yup';
 import dayjs from 'dayjs';
+import { CustomTooltip, Spinner } from '../components';
+import { BsThreeDots } from 'react-icons/bs';
+// import {Cell}  from "@table-library/react-table-library/table";
 
-const TableNew = ({ columnsToView, tableData, actions }) => {
-    const data = React.useMemo(() => tableData, []);
+const TableNew = ({ columnsToView, tableData, actions, activeIndex }) => {
+    // const data = React.useMemo(() => tableData, []);
+    const data = tableData;
     const [rowsPerPage, setRowsPerPage] = useState(15);
     const [finalRowsPerPage, setfinalRowsPerPage] = useState(15);
+    const [loader, setLoader] = useState(true);
+    const [extraRow, setExtraRow] = useState(null);
+    const [toggle, setToggle] = useState(false);
+    const [maxLength, setmaxLength] = useState(null);
+
+    console.log('tableData', tableData)
+    console.log('active index', activeIndex)
+    // console.log('columns', columnsToView)
+    // console.log(extraRow);
+
+
+    const fieldNames = columnsToView.map(item => item.fieldName)
+
+    useEffect(() => {
+        if (toggle) {
+            setmaxLength(1000)
+        } else {
+            setmaxLength(15)
+        }
+
+    }, [toggle])
+    useEffect(() => {
+        setTimeout(() => {
+            setLoader(false)
+        }, 3000);
+    }, [])
+
+
+
+    useEffect(() => {
+        // it is to get the field names from tableData which are not present in columnsToView an and show them when click on viw button action
+        if (activeIndex != null) {
+
+            setExtraRow(Object.entries(tableData[activeIndex])
+                .filter(([key]) => !fieldNames.includes(key))) // Compare key with fieldName values
+
+        }
+    }, [activeIndex]);
+
 
     const columnsView =
         columnsToView.map((item, i) => {
@@ -32,7 +75,7 @@ const TableNew = ({ columnsToView, tableData, actions }) => {
                     accessor: item.fieldName,
                     Cell: ({ value }) => (
                         <span>
-                            <p className={`text-xs md:text-sm w-40 md:w-44 mx-auto  border-[1px]  tracking-tight px-2 py-1  rounded-lg ${value == 'pending' ? 'text-yellowColor border-yellowColor bg-yellowbg' : value == 'requested-cancellation' ? 'text-redColor border-redColor bg-redbg' : 'text-greenColor bg-greenbg border-greenColor'} font-semibold  capitalize`}>
+                            <p className={`text-xs md:text-sm w-40 md:w-44 mx-auto  border-[1px]  tracking-tight px-2 py-1  rounded-lg ${value == 'pending' ? 'text-yellowColor border-yellowColor bg-yellowbg' : value == 'requested-cancellation' || value == 'inactive' ? 'text-redColor border-redColor bg-redbg' : 'text-greenColor bg-greenbg border-greenColor'} font-semibold  capitalize`}>
                                 {value}
                             </p>
                         </span>
@@ -69,22 +112,30 @@ const TableNew = ({ columnsToView, tableData, actions }) => {
             Header: 'Actions',
             id: 'actions',
             Cell: ({ row }) => (
-                <span className="text-text text-lg flex gap-2 items-center">
+                <span className="text-text text-lg flex gap-2 items-center relative">
                     {actions.map((action, idx) => (
-                        <div
-                            className="cursor-pointer"
-                            key={idx}
-                            title={action.name}
-                            onClick={() => action.handler(tableData[row.index])}
-                        >
-                            {action.icon}
-                        </div>
+                        <CustomTooltip key={idx} content={action.name}>
+                            <div
+                                className="cursor-pointer "
+                                onClick={() => action.handler(row.index, tableData[row.index])}
+                            >
+                                <div className=''>
+                                    {action.icon}
+
+                                </div>
+
+
+                            </div>
+                        </CustomTooltip>
                     ))}
+                    {/* {activeIndex != null & activeIndex === row.index ?
+                        <p className='absolute z-10 right-0 text-sm top-6 w-56 bg-white border-gray border-[1px] rounded-lg text-text px-3 py-1 shadow-lg font-semibold'>
+                            {tableData[activeIndex].roleRights}
+                        </p> : ''} */}
                 </span>
             )
         }] : [])
-    ], []);
-
+    ], [activeIndex]);
 
     // [
     //     {
@@ -184,6 +235,7 @@ const TableNew = ({ columnsToView, tableData, actions }) => {
         gotoPage,
         nextPage,
         previousPage,
+
         prepareRow,
         state: { pageIndex },
         setPageSize
@@ -201,12 +253,10 @@ const TableNew = ({ columnsToView, tableData, actions }) => {
 
     return (
         <div className="">
-            <div className="text-2xl flex items-center justify-center text-text font-semibold italic  mb-4">
-                {/* <h1>Customer Data Table</h1> */}
-            </div>
+
             <div className="container mx-auto max-w- overflow-x-auto scrollbar-hide shadow-md">
                 <table className="min-w-full bg-white  rounded-lg overflow-hidden " {...getTableProps()}>
-                    <thead className="bg-primary">
+                    {columnsToView.length > 0 && <thead className="bg-primary">
                         {headerGroups.map((headerGroup) => (
                             <tr {...headerGroup.getHeaderGroupProps()}>
                                 {headerGroup.headers.map((column) => (
@@ -219,26 +269,81 @@ const TableNew = ({ columnsToView, tableData, actions }) => {
                                 ))}
                             </tr>
                         ))}
-                    </thead>
-                    <tbody {...getTableBodyProps()}>
-                        {page.map((row) => {
-                            prepareRow(row);
-                            return (
-                                <tr {...row.getRowProps()} className="hover:bg-slate-50 transition-colors">
-                                    {row.cells.map((cell) => (
-                                        <td
-                                            {...cell.getCellProps()}
-                                            className="px-4 lg:px-6 py-3 text-center text-lg text-text border-t border-slate-100 "
-                                        >
-                                            {cell.render("Cell")}
-                                        </td>
-                                    ))}
-                                </tr>
-                            );
-                        })}
-                    </tbody>
+                    </thead>}
+                    {tableData.length > 0 ?
+                        <tbody {...getTableBodyProps()}>
+                            {page.map((row) => {
+                                prepareRow(row);
+                                return (
+                                    <>
+                                        <tr {...row.getRowProps()} className="hover:bg-slate-50 transition-colors">
+                                            {row.cells.map((cell) => (
+                                                <>
+                                                    <td
+                                                        {...cell.getCellProps()}
+                                                        className="px-4 lg:px-6 py-3 text-center text-lg text-text border-t border-slate-100 "
+                                                    >
+                                                        {cell.render("Cell")}
+                                                    </td>
+
+                                                </>
+                                            ))}
+                                        </tr>
+                                        {activeIndex !== null && extraRow != null && activeIndex === row.index ? (
+                                            <tr className="h-10 bg-slate-200 w-full transition-colors  text-text ">
+                                                <td colSpan={columns.length} className="w-full pl-5 ">
+                                                    <button className='border-[1px] border-primary text-primary capitalize bg-bluebg hover:text-secondary px-3 py-1 my-4 rounded-lg cursor-pointer' onClick={() => setToggle((prev) => !prev)}>view Full Info</button>
+                                                    {extraRow.length > 1 ?
+                                                        extraRow.map((item, i) => (
+                                                            <div key={i} className='flex gap-2'>
+                                                                <span className='capitalize font-semibold'>
+                                                                    {item[0].replaceAll('_', ' ')}:
+                                                                </span>
+                                                                <span>{
+                                                                    item[1] && item[1].length > maxLength ?
+                                                                        <span className='flex gap-1 items-end'>
+                                                                            {item[1].slice(0, maxLength)}<BsThreeDots />
+                                                                        </span> :
+                                                                        item[1]}
+                                                                </span>
+                                                            </div>
+                                                        )) :
+                                                        <div className='flex gap-2'>
+                                                            <span className='capitalize font-semibold'>
+                                                                {extraRow[0][0].replaceAll('_', ' ')}:
+                                                            </span>
+                                                            <span>{
+                                                                extraRow && extraRow[0][1].length > maxLength ?
+                                                                    <span className='flex gap-1 items-end'>
+                                                                        {extraRow[0][1].slice(0, maxLength)}<BsThreeDots />
+                                                                    </span>
+                                                                    :
+                                                                    extraRow[0][1]}
+                                                            </span>
+                                                        </div>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        ) : ''}
+                                    </>
+                                );
+                            })}
+                        </tbody> :
+
+                        loader ?
+                            <div className='w-[1000px] flex justify-center items-center my-5'>
+                                <Spinner className={'text-primary mx-auto'} />
+                            </div> :
+                            <div className='w-[1000px] flex justify-center items-center'>
+                                <h2 className='text-text capitalize text-center'>No Data Found</h2>
+                            </div>
+
+                    }
                 </table>
             </div>
+            {
+
+            }
 
             {/* Paginaion  */}
             <div className="flex flex-wrap items-center justify-end gap-2 my-4 mx-6">

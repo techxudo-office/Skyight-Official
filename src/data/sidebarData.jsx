@@ -81,11 +81,11 @@ export const sidebarLinks = [
       //   path: "/dashboard/invoices",
       //   icon: <GoDotFill />,
       // },
-      {
-        title: "Create Transaction",
-        path: "/dashboard/create-transaction",
-        icon: <MdPayments/>,
-      },
+      // {
+      //   title: "Create Transaction",
+      //   path: "/dashboard/create-transaction",
+      //   icon: <MdPayments/>,
+      // },
       {
         title: "Transaction History",
         path: "/dashboard/transactions",

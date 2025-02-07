@@ -3,6 +3,7 @@ import {
   Table,
   SecondaryButton,
   ConfirmModal,
+  TableNew,
 } from "../../components/components";
 import { FaEye } from "react-icons/fa";
 import { MdEditSquare } from "react-icons/md";
@@ -32,13 +33,11 @@ const Transactions = () => {
   const [deleteId, setDeleteId] = useState(null);
 
   const columnsData = [
-    { columnName: "No.", fieldName: "no.", type: "no." },
     { columnName: "Bank", fieldName: "bank_name", type: "text" },
     { columnName: "Bank No.", fieldName: "bank_number", type: "text" },
-    { columnName: "Payment Date", fieldName: "payment_date", type: "text" },
+    { columnName: "Payment Date", fieldName: "payment_date", type: "date" },
     { columnName: "Amount", fieldName: "amount", type: "text" },
     { columnName: "Status", fieldName: "status", type: "status" },
-    { columnName: "Actions", fieldName: "actions", type: "actions" },
   ];
 
   const viewColumns = [
@@ -127,12 +126,20 @@ const Transactions = () => {
           </div>
         </CardLayoutHeader>
         <CardLayoutBody removeBorder={true}>
-          <Table
+          {/* <Table
             columns={columnsData}
             viewColumns={viewColumns}
             data={transactionsData}
             actions={actionsData}
             activeIndex={activeIndex}
+          /> */}
+          <TableNew
+          columnsToView={columnsData}
+          tableData={transactionsData}
+          actions={actionsData}
+
+          activeIndex={activeIndex}
+
           />
         </CardLayoutBody>
         <CardLayoutFooter></CardLayoutFooter>

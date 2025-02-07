@@ -25,3 +25,5 @@ export { default as ChangeSearch } from "./ChangeSearch/ChangeSearch";
 export { default as DateSlider } from "./DateSlider/DateSlider";
 export { default as CustomDate } from "./CustomDate/CustomDate";
 export { default as TableNew } from "./TableNew/TableNew";
+export { default as CustomTooltip } from "./CustomTooltip/CustomTooltip";
+export { default as Backbutton } from "./Backbutton/Backbutton";

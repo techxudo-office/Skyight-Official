@@ -14,8 +14,10 @@
     "@emotion/styled": "^11.14.0",
     "@mui/material": "^6.4.3",
     "@mui/x-date-pickers": "^7.25.0",
+    "@radix-ui/react-tooltip": "^1.1.8",
     "aos": "^2.3.4",
     "axios": "^1.7.7",
+    "class-variance-authority": "^0.7.1",
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.13",
     "formik": "^2.4.6",
@@ -34,6 +36,7 @@
     "react-table": "^7.8.0",
     "react-to-print": "^3.0.4",
     "slick-carousel": "^1.8.1",
+    "tailwind-merge": "^3.0.1",
     "yup": "^1.4.0"
   },
   "devDependencies": {

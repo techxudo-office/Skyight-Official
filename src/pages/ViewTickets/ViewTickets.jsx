@@ -3,6 +3,8 @@ import {
   Table,
   SecondaryButton,
   ConfirmModal,
+  TableNew,
+  Spinner,
 } from "../../components/components";
 import { getTickets, deleteTicket } from "../../utils/api_handler";
 import { MdAutoDelete } from "react-icons/md";
@@ -15,6 +17,7 @@ import {
   CardLayoutFooter,
 } from "../../components/CardLayout/CardLayout";
 import toast from "react-hot-toast";
+import { FaEye } from "react-icons/fa";
 
 const ViewTickets = () => {
   const navigate = useNavigate();
@@ -26,22 +29,32 @@ const ViewTickets = () => {
   const [ticketsData, setTicketsData] = useState([]);
   const [modalStatus, setModalStatus] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
+  const [activeIndex, setActiveIndex] = useState(null);
 
   const columnsData = [
-    { columnName: "No.", fieldName: "no.", type: "no." },
+    // { columnName: "No.", fieldName: "no.", type: "no." },
     { columnName: "Title", fieldName: "title", type: "text" },
     { columnName: "Description", fieldName: "description", type: "text" },
     { columnName: "Status", fieldName: "status", type: "status" },
-    { columnName: "Actions", fieldName: "actions", type: "actions" },
+    // { columnName: "Actions", fieldName: "actions", type: "actions" },
   ];
 
   const actionsData = [
+    // {
+    //   name: "Delete",
+    //   icon: <MdAutoDelete title="Delete" className="text-red-500" />,
+    //   handler: (_, item) => {
+    //     setModalStatus(true);
+    //     setDeleteId(item.id);
+    //   },
+    // },
     {
-      name: "Delete",
-      icon: <MdAutoDelete title="Delete" className="text-red-500" />,
-      handler: (_, item) => {
-        setModalStatus(true);
-        setDeleteId(item.id);
+      name: "View",
+      icon: <FaEye title="View" className="text-green-500" />,
+      handler: (index) => {
+        if (activeIndex === index) {
+          setActiveIndex(null);
+        } else setActiveIndex(index);
       },
     },
   ];
@@ -100,10 +113,16 @@ const ViewTickets = () => {
           </div>
         </CardLayoutHeader>
         <CardLayoutBody removeBorder={true}>
-          <Table
+          {/* <Table
             columns={columnsData}
             data={ticketsData}
             actions={actionsData}
+          /> */}
+          <TableNew
+            columnsToView={columnsData}
+            tableData={ticketsData}
+            actions={actionsData}
+            activeIndex={activeIndex}
           />
         </CardLayoutBody>
         <CardLayoutFooter></CardLayoutFooter>

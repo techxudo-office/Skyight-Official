@@ -3,6 +3,7 @@ import {
   Table,
   SecondaryButton,
   ConfirmModal,
+  TableNew,
 } from "../../components/components";
 import { getUsers, deleteUser } from "../../utils/api_handler";
 import { MdEditSquare } from "react-icons/md";
@@ -29,7 +30,6 @@ const Users = () => {
   const [deleteId, setDeleteId] = useState(null);
 
   const columnsData = [
-    { columnName: "No.", fieldName: "no.", type: "no." },
     // { columnName: "User", fieldName: "image", type: 'img' },
     { columnName: "First Name", fieldName: "first_name", type: "text" },
     { columnName: "Last Name", fieldName: "last_name", type: "text" },
@@ -38,7 +38,6 @@ const Users = () => {
     { columnName: "Id", fieldName: "id", type: "id" },
     { columnName: "Role", fieldName: "role", type: "text" },
     { columnName: "Status", fieldName: "status", type: "status" },
-    { columnName: "Actions", fieldName: "actions", type: "actions" },
   ];
 
   const actionsData = [
@@ -113,10 +112,16 @@ const Users = () => {
           </div>
         </CardLayoutHeader>
         <CardLayoutBody removeBorder={true}>
-          <Table
+          {/* <Table
             columns={columnsData}
             data={usersData}
             actions={actionsData}
+          /> */}
+          <TableNew
+          columnsToView={columnsData}
+          tableData={usersData}
+          actions={actionsData}
+
           />
         </CardLayoutBody>
         <CardLayoutFooter></CardLayoutFooter>

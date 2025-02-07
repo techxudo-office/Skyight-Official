@@ -4,6 +4,7 @@ import {
   SecondaryButton,
   ConfirmModal,
   TableNew,
+  Spinner,
 } from "../../components/components";
 import {
   getFlightBookings,
@@ -75,7 +76,7 @@ const FlightBookings = () => {
       //     setActiveIndex(null);
       //   } else setActiveIndex(index);
       // },
-      handler: (item) => {
+      handler: (_,item) => {
         console.log('item', item)
         navigate("/dashboard/booking-details", {
           state: item.booking_reference_id,
@@ -85,14 +86,14 @@ const FlightBookings = () => {
     {
       name: "Refund",
       icon: <HiReceiptRefund title="Refund" className="text-blue-500" />,
-      handler: (item) => {
+      handler: (_,item) => {
         refundRequestHandler(item);
       },
     },
     {
       name: "Cancel",
       icon: <MdCancel title="Cancel" className="text-red-500" />,
-      handler: (item) => {
+      handler: (_,item) => {
         cancelFlightBookingHandler(item);
       },
     },
@@ -179,12 +180,12 @@ const FlightBookings = () => {
             actions={actionsData}
             activeIndex={activeIndex}
           /> */}
-          {bookingsData.length > 0 &&
+         
             <TableNew
               columnsToView={columnsData}
               tableData={bookingsData}
               // actions={actionsData}
-            />}
+            />
         </CardLayoutBody>
         <CardLayoutFooter></CardLayoutFooter>
       </CardLayoutContainer>

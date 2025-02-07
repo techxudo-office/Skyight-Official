@@ -6,12 +6,12 @@ import {
   CardLayoutFooter,
 } from "../../components/CardLayout/CardLayout";
 
-import { FaEye } from "react-icons/fa";
+import { FaCross, FaEye } from "react-icons/fa";
 import { MdEditSquare } from "react-icons/md";
 import { FaRegCircleCheck } from "react-icons/fa6";
 import { MdAutoDelete } from "react-icons/md";
 
-import { Table, Dropdown, SecondaryButton } from "../../components/components";
+import { Table, Dropdown, SecondaryButton, TableNew } from "../../components/components";
 
 const Roles = () => {
   const [activeIndex, setActiveIndex] = useState(null);
@@ -51,12 +51,12 @@ const Roles = () => {
   ];
 
   const columnsData = [
-    { columnName: "No.", fieldName: "no.", type: "no." },
+    // { columnName: "No.", fieldName: "no.", type: "no." },
     // { columnName: "Role Img", fieldName: "image", type: 'img' },
     { columnName: "Role", fieldName: "role", type: "text" },
     { columnName: "Role ID", fieldName: "id", type: "id" },
     { columnName: "Status", fieldName: "status", type: "status" },
-    { columnName: "Actions", fieldName: "actions", type: "actions" },
+    // { columnName: "Actions", fieldName: "actions", type: "actions" },
   ];
 
   const viewColumns = [
@@ -121,6 +121,17 @@ const Roles = () => {
 
   return (
     <>
+      {/* {data.map((item, i) => (
+
+        i == activeIndex && <div className="fixed h-screen w-full flex justify-center items-center">
+          <div className="relative w-96  h-96 flex justify-center items-center text-text rounded-lg bg-white p-3">
+            <FaCross onClick={() => setActiveIndex(null)} className="text-redColor absolute text-4xl top-5 right-5" />
+            {item.roleRights}
+          </div>
+        </div>
+
+      ))} */}
+
       <CardLayoutContainer removeBg={true}>
         <CardLayoutHeader
           removeBorder={true}
@@ -143,12 +154,19 @@ const Roles = () => {
           </div>
         </CardLayoutHeader>
         <CardLayoutBody removeBorder={true}>
-          <Table
+          {/* <Table
             columns={columnsData}
             viewColumns={viewColumns}
             data={data}
             actions={actionsData}
             activeIndex={activeIndex}
+          /> */}
+          <TableNew
+            columnsToView={columnsData}
+            tableData={data}
+            actions={actionsData}
+            activeIndex={activeIndex}
+            // activeField={["roleRights"]}
           />
         </CardLayoutBody>
         <CardLayoutFooter></CardLayoutFooter>
