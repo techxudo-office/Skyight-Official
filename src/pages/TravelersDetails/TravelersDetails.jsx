@@ -25,9 +25,15 @@ import {
   Select,
   Input,
   CustomDate,
+  FlightInfoCard,
+  PriceSummary,
+  Dropdown,
 } from "../../components/components";
 import toast, { Toaster } from "react-hot-toast";
-import { MdCalendarMonth, MdCalendarToday, MdCalendarViewMonth, MdCalendarViewWeek, MdChildCare, MdChildFriendly, MdOutlineCalendarMonth, MdPerson } from "react-icons/md";
+import { MdCalendarMonth, MdCalendarToday, MdCalendarViewMonth, MdCalendarViewWeek, MdCancel, MdChildCare, MdChildFriendly, MdOutlineCalendarMonth, MdPerson } from "react-icons/md";
+import { IoIosAirplane, IoMdTimer } from "react-icons/io";
+import { IoTimer } from "react-icons/io5";
+
 
 const titleOptions = [
   { label: "Mr", value: "MR" },
@@ -72,8 +78,10 @@ const TravelersDetails = () => {
 
   const [flightData, setFlightData] = useState(null);
   const [travelersData, setTravelersData] = useState(null);
+  const [flightSegments, setFlightSegments] = useState([]);
+  const [pricingInfo, setPricingInfo] = useState();
   const [toogleForm, setToogleForm] = useState(0);
-  const [fareBreakdown, setFareBreakdown] = useState(false);
+  const [passenger, setPassenger] = useState(0);
   // const [Value, setValue] = useState(null);
 
 
@@ -87,6 +95,7 @@ const TravelersDetails = () => {
 
   const initialValues = {
     title: titleOptions[0].value,
+    previousPassenger: '',
     first_name: "",
     last_name: "",
     email: "",
@@ -143,7 +152,9 @@ const TravelersDetails = () => {
     if (location.state) {
       setFlightData(location.state.data);
       setTravelersData(location.state.travelers);
-      console.log('data', location.state.data)
+      setPricingInfo(location.state.pricingInfo);
+      setFlightSegments(location.state.data.AirItinerary.OriginDestinationOptions[0].FlightSegment)
+      console.log('data', location.state)
       console.log('travelersdata', location.state.travelers)
     }
   }, [location.state]);
@@ -165,6 +176,15 @@ const TravelersDetails = () => {
       }
     }
   });
+  const [flightHrs, flightMins] = flightSegments[0].FlightDuration.split(":")
+  const passengersList = [
+    { value: 'Ahsan Ali', label: 'Ahsan Ali' },
+    { value: 'Talha', label: 'Talha' },
+    { value: 'Bakhtawar', label: 'Bakhtawar' },
+    { value: 'Abdullah', label: 'Abdullah' },
+    { value: 'Hashamuddin', label: 'Hashamuddin' },
+    { value: 'Umer Khalid', label: 'Umer Khalid' }
+  ]
 
   return (
     <>
@@ -173,7 +193,18 @@ const TravelersDetails = () => {
         <CardLayoutContainer className={'mb-5'}>
           <div className="flex justify-between px-6 items-end py-9 text-text">
             <div>
-              <p className="text-text text-lg font-bold uppercase flex gap-2 pb-3"><span>LHE</span>-<span>ISB</span></p>
+              <p className="text-text text-xl items-center font-bold uppercase flex gap-2 pb-3">
+                <span>{flightSegments[0].DepartureAirport.LocationCode}</span>
+                <div className="flex gap-3 items-center text-primary">
+                  <span className="h-0.5 w-6 bg-primary"></span>
+                  <IoIosAirplane className="text-2xl" />
+                  <span className="h-0.5 w-6 bg-primary"></span>
+                </div>
+                <span>{flightSegments[0].ArrivalAirport.LocationCode}</span>
+                <div className="text-sm flex items-end gap-1 ml-4 h-fit pt-1 lowercase rounded-lg  text-primary">
+                  <IoTimer className="mb-[3px] text-base" />{flightHrs.replace('0', '')} hrs {flightMins} mins
+                </div>
+              </p>
               <div className="flex gap-4 flex-wrap items-center ">
                 <div className="flex gap-1 text-base text-text font-semibold items-start">
                   <MdCalendarMonth className="text-xl" />
@@ -237,267 +268,297 @@ const TravelersDetails = () => {
                           )}
                         </span>
                       </div>
+
                     </CardLayoutHeader>
-                    {toogleForm === index &&
-                      <Formik
-                        initialValues={initialValues}
-                        // validationSchema={validationSchema}
-                        onSubmit={(values) => handleSubmit(index, values)}
-                        enableReinitialize
-
-                      >
-                        {({
-                          values,
-                          errors,
-                          touched,
-                          setFieldValue,
-                          handleSubmit,
-                        }) => (
-                          <>
-                            <Form>
-                              <div className="flex ">
 
 
-                                <CardLayoutBody
-                                  className={
-                                    `w-1/2 }`
-                                  }
-                                  removeBorder={true}
-                                >
-                                  <div className="flex flex-col gap-3 md:gap-5 mb-7">
-                                    {/* Title */}
-                                    <div className="relative mb-5">
-                                      <Select
-                                        id="title"
-                                        label="Title"
-                                        name="title"
-                                        options={titleOptions}
-                                        value={values.title}
-                                        placeholder="Select Title"
-                                        onChange={(option) =>
-                                          setFieldValue("title", option.value)
-                                        }
-                                        optionIcons={<FaPlaneDeparture />}
-                                      />
-                                      {touched.title && errors.title && (
-                                        <div className="text-red-500 text-sm mt-2 absolute left-0">
-                                          {errors.title}
-                                        </div>
-                                      )}
-                                    </div>
 
-                                    {/* First Name */}
-                                    <div className="relative mb-5">
-                                      <Input
-                                        id={"first_name"}
-                                        name={"first_name"}
-                                        label={"First Name"}
-                                        type={"text"}
-                                        value={values.first_name}
-                                        placeholder={"Enter First Name"}
-                                        onChange={(e) => {
-                                          setFieldValue("first_name", e.target.value);
-                                        }}
-                                      />
-                                      {touched.first_name && errors.first_name && (
-                                        <div className="text-red-500 text-sm mt-2 absolute left-0">
-                                          {errors.first_name}
-                                        </div>
-                                      )}
-                                    </div>
 
-                                    {/* Last Name */}
-                                    <div className="relative mb-5">
-                                      <Input
-                                        id={"last_name"}
-                                        name={"last_name"}
-                                        label={"Last Name"}
-                                        type={"text"}
-                                        value={values.last_name}
-                                        placeholder={"Enter Last Name"}
-                                        onChange={(e) =>
-                                          setFieldValue("last_name", e.target.value)
-                                        }
-                                      />
-                                      {touched.last_name && errors.last_name && (
-                                        <div className="text-red-500 text-sm mt-2 absolute left-0">
-                                          {errors.last_name}
-                                        </div>
-                                      )}
-                                    </div>
+                    <Formik
+                      initialValues={initialValues}
+                      // validationSchema={validationSchema}
+                      onSubmit={(values) => handleSubmit(index, values)}
+                      enableReinitialize
 
-                                    {/* Email */}
-                                    <div className="relative mb-5">
-                                      <Input
-                                        id={"email"}
-                                        name={"email"}
-                                        label={"Email"}
-                                        type={"email"}
-                                        value={values.email}
-                                        placeholder={"Enter Email"}
-                                        onChange={(e) =>
-                                          setFieldValue("email", e.target.value)
-                                        }
-                                      />
-                                      {touched.email && errors.email && (
-                                        <div className="text-red-500 text-sm mt-2 absolute left-0">
-                                          {errors.email}
-                                        </div>
-                                      )}
-                                    </div>
+                    >
+                      {({
+                        values,
+                        errors,
+                        touched,
+                        setFieldValue,
+                        handleSubmit,
+                      }) => (
 
-                                    {/* Phone Number */}
-                                    <div className="relative mb-5">
-                                      <Input
-                                        id={"telephone"}
-                                        name={"telephone"}
-                                        label={"Phone Number"}
-                                        type={"number"}
-                                        value={values.telephone}
-                                        placeholder={"Enter Phone Number"}
-                                        onChange={(e) =>
-                                          setFieldValue("telephone", e.target.value)
-                                        }
-                                      />
-                                      {touched.telephone && errors.telephone && (
-                                        <div className="text-red-500 text-sm mt-2 absolute left-0">
-                                          {errors.telephone}
-                                        </div>
-                                      )}
-                                    </div>
+                        <>
+                          <div className="w-80 mx-auto  py-10 flex flex-col gap-6">
+                            <div className=" flex items-center gap-2">
+                              <Select
+                                id={'passengers'}
+                                label={'Passengers'}
+                                onChange={(option) => setFieldValue("previousPassenger", option.value)}
+                                value={values.previousPassenger}
+                                options={passengersList}
+                              />
+                              {values.previousPassenger&&
+                              <MdCancel className="text-primary text-2xl cursor-pointer" onClick={()=>setFieldValue("previousPassenger", '')}/>
 
-                                    {/* Mobile Number */}
-                                    <div className="relative mb-5">
-                                      <Input
-                                        id={"mobile"}
-                                        name={"mobile"}
-                                        label={"Mobile Number"}
-                                        type={"number"}
-                                        value={values.mobile}
-                                        placeholder={"Enter Mobile Number"}
-                                        onChange={(e) =>
-                                          setFieldValue("mobile", e.target.value)
-                                        }
-                                      />
-                                      {touched.mobile && errors.mobile && (
-                                        <div className="text-red-500 text-sm mt-2 absolute left-0">
-                                          {errors.mobile}
-                                        </div>
-                                      )}
-                                    </div>
+                              }
+                            </div>
 
-                                    {/* Country */}
-                                    <div className="relative mb-5">
-                                      <Select
-                                        id="country"
-                                        label="Country"
-                                        name="country"
-                                        options={countries}
-                                        value={values.country}
-                                        placeholder="Select Country"
-                                        onChange={(option) =>
-                                          setFieldValue("country", option.value)
-                                        }
-                                        optionIcons={<FaPlaneDeparture />}
-                                      />
-                                      {touched.country && errors.country && (
-                                        <div className="text-red-500 text-sm mt-2 absolute left-0">
-                                          {errors.country}
-                                        </div>
-                                      )}
-                                    </div>
 
-                                    {/* City */}
-                                    <div className="relative mb-5">
-                                      <Select
-                                        id="city"
-                                        label="City"
-                                        name="city"
-                                        options={iranianCities}
-                                        value={values.city}
-                                        placeholder="Select City"
-                                        onChange={(option) =>
-                                          setFieldValue("city", option.value)
-                                        }
-                                        optionIcons={<FaPlaneDeparture />}
-                                      />
-                                      {touched.city && errors.city && (
-                                        <div className="text-red-500 text-sm mt-2 absolute left-0">
-                                          {errors.city}
-                                        </div>
-                                      )}
-                                    </div>
+                            <div className="flex gap-3 w-full items-center text-primary">
+                              <span className="h-0.5 w-2/5 bg-primary"></span>
+                              <p className="text-2xl w-1/5 text-center" >OR</p>
+                              <span className="h-0.5 w-2/5 bg-primary"></span>
+                            </div>
+                            <h1 onClick={()=>toogleFormHandler(index)} className="capitalize text-text text-center font-semibold text-xl">Add a new traveler</h1>
+                          </div>
+                          {toogleForm === index &&
+                            <>
+                              <Form>
+                                <div className="flex ">
 
-                                    {/* Date Of Birth */}
-                                    <div className="relative mb-5">
-                                      <CustomDate
-                                       id={"date_of_birth"}
-                                       label={"Date Of Birth"}
-                                       name={'date of birth'}
-                                       pastDate={true}
-                                       value={values.date_of_birth}
-                                      //  placeholder={"Select Date Of Birth"}
-                                       onChange={(e) =>
-                                         setFieldValue("date_of_birth", e.target.value)
-                                       }
-                                      />
-                                     
-                                      {touched.date_of_birth &&
-                                        errors.date_of_birth && (
+
+                                  <CardLayoutBody
+                                    className={
+                                      `w-1/2 }`
+                                    }
+                                    removeBorder={true}
+                                  >
+                                    <div className="flex flex-col gap-3 md:gap-5 mb-7">
+                                      {/* Title */}
+                                      <div className="relative mb-5">
+                                        <Select
+                                          id="title"
+                                          label="Title"
+                                          name="title"
+                                          options={titleOptions}
+                                          value={values.title}
+                                          placeholder="Select Title"
+                                          onChange={(option) =>
+                                            setFieldValue("title", option.value)
+                                          }
+                                          optionIcons={<FaPlaneDeparture />}
+                                        />
+                                        {touched.title && errors.title && (
                                           <div className="text-red-500 text-sm mt-2 absolute left-0">
-                                            {errors.date_of_birth}
+                                            {errors.title}
                                           </div>
                                         )}
-                                    </div>
+                                      </div>
 
-                                    {/* Gender */}
-                                    <div className="relative mb-5">
-                                      <Select
-                                        id="gender"
-                                        label="Gender"
-                                        name="gender"
-                                        options={genderOptions}
-                                        value={values.gender}
-                                        placeholder="Select Gender"
-                                        onChange={(option) =>
-                                          setFieldValue("gender", option.value)
-                                        }
-                                        optionIcons={<FaUser />}
-                                      />
-                                      {touched.gender && errors.gender && (
-                                        <div className="text-red-500 text-sm mt-2 absolute left-0">
-                                          {errors.gender}
-                                        </div>
-                                      )}
-                                    </div>
-
-                                    {/* Passport Number */}
-                                    <div className="relative mb-5">
-                                      <Input
-                                        id={"passport_number"}
-                                        name={"passport_number"}
-                                        label={"Passport Number"}
-                                        type={"text"}
-                                        value={values.passport_number}
-                                        placeholder={"Enter Passport Number"}
-                                        onChange={(e) => {
-                                          setFieldValue(
-                                            "passport_number",
-                                            e.target.value
-                                          );
-                                        }}
-                                      />
-                                      {touched.passport_number &&
-                                        errors.passport_number && (
+                                      {/* First Name */}
+                                      <div className="relative mb-5">
+                                        <Input
+                                          id={"first_name"}
+                                          name={"first_name"}
+                                          label={"First Name"}
+                                          type={"text"}
+                                          value={values.first_name}
+                                          placeholder={"Enter First Name"}
+                                          onChange={(e) => {
+                                            setFieldValue("first_name", e.target.value);
+                                          }}
+                                        />
+                                        {touched.first_name && errors.first_name && (
                                           <div className="text-red-500 text-sm mt-2 absolute left-0">
-                                            {errors.passport_number}
+                                            {errors.first_name}
                                           </div>
                                         )}
-                                    </div>
+                                      </div>
 
-                                    {/* Passport Exp Date */}
-                                    <div className="relative mb-5">
-                                      {/* <Input
+                                      {/* Last Name */}
+                                      <div className="relative mb-5">
+                                        <Input
+                                          id={"last_name"}
+                                          name={"last_name"}
+                                          label={"Last Name"}
+                                          type={"text"}
+                                          value={values.last_name}
+                                          placeholder={"Enter Last Name"}
+                                          onChange={(e) =>
+                                            setFieldValue("last_name", e.target.value)
+                                          }
+                                        />
+                                        {touched.last_name && errors.last_name && (
+                                          <div className="text-red-500 text-sm mt-2 absolute left-0">
+                                            {errors.last_name}
+                                          </div>
+                                        )}
+                                      </div>
+
+                                      {/* Email */}
+                                      <div className="relative mb-5">
+                                        <Input
+                                          id={"email"}
+                                          name={"email"}
+                                          label={"Email"}
+                                          type={"email"}
+                                          value={values.email}
+                                          placeholder={"Enter Email"}
+                                          onChange={(e) =>
+                                            setFieldValue("email", e.target.value)
+                                          }
+                                        />
+                                        {touched.email && errors.email && (
+                                          <div className="text-red-500 text-sm mt-2 absolute left-0">
+                                            {errors.email}
+                                          </div>
+                                        )}
+                                      </div>
+
+                                      {/* Phone Number */}
+                                      <div className="relative mb-5">
+                                        <Input
+                                          id={"telephone"}
+                                          name={"telephone"}
+                                          label={"Phone Number"}
+                                          type={"number"}
+                                          value={values.telephone}
+                                          placeholder={"Enter Phone Number"}
+                                          onChange={(e) =>
+                                            setFieldValue("telephone", e.target.value)
+                                          }
+                                        />
+                                        {touched.telephone && errors.telephone && (
+                                          <div className="text-red-500 text-sm mt-2 absolute left-0">
+                                            {errors.telephone}
+                                          </div>
+                                        )}
+                                      </div>
+
+                                      {/* Mobile Number */}
+                                      <div className="relative mb-5">
+                                        <Input
+                                          id={"mobile"}
+                                          name={"mobile"}
+                                          label={"Mobile Number"}
+                                          type={"number"}
+                                          value={values.mobile}
+                                          placeholder={"Enter Mobile Number"}
+                                          onChange={(e) =>
+                                            setFieldValue("mobile", e.target.value)
+                                          }
+                                        />
+                                        {touched.mobile && errors.mobile && (
+                                          <div className="text-red-500 text-sm mt-2 absolute left-0">
+                                            {errors.mobile}
+                                          </div>
+                                        )}
+                                      </div>
+
+                                      {/* Country */}
+                                      <div className="relative mb-5">
+                                        <Select
+                                          id="country"
+                                          label="Country"
+                                          name="country"
+                                          options={countries}
+                                          value={values.country}
+                                          placeholder="Select Country"
+                                          onChange={(option) =>
+                                            setFieldValue("country", option.value)
+                                          }
+                                          optionIcons={<FaPlaneDeparture />}
+                                        />
+                                        {touched.country && errors.country && (
+                                          <div className="text-red-500 text-sm mt-2 absolute left-0">
+                                            {errors.country}
+                                          </div>
+                                        )}
+                                      </div>
+
+                                      {/* City */}
+                                      <div className="relative mb-5">
+                                        <Select
+                                          id="city"
+                                          label="City"
+                                          name="city"
+                                          options={iranianCities}
+                                          value={values.city}
+                                          placeholder="Select City"
+                                          onChange={(option) =>
+                                            setFieldValue("city", option.value)
+                                          }
+                                          optionIcons={<FaPlaneDeparture />}
+                                        />
+                                        {touched.city && errors.city && (
+                                          <div className="text-red-500 text-sm mt-2 absolute left-0">
+                                            {errors.city}
+                                          </div>
+                                        )}
+                                      </div>
+
+                                      {/* Date Of Birth */}
+                                      <div className="relative mb-5">
+                                        <CustomDate
+                                          id={"date_of_birth"}
+                                          label={"Date Of Birth"}
+                                          name={'date of birth'}
+                                          pastDate={true}
+                                          value={values.date_of_birth}
+                                          //  placeholder={"Select Date Of Birth"}
+                                          onChange={(e) =>
+                                            setFieldValue("date_of_birth", e.target.value)
+                                          }
+                                        />
+
+                                        {touched.date_of_birth &&
+                                          errors.date_of_birth && (
+                                            <div className="text-red-500 text-sm mt-2 absolute left-0">
+                                              {errors.date_of_birth}
+                                            </div>
+                                          )}
+                                      </div>
+
+                                      {/* Gender */}
+                                      <div className="relative mb-5">
+                                        <Select
+                                          id="gender"
+                                          label="Gender"
+                                          name="gender"
+                                          options={genderOptions}
+                                          value={values.gender}
+                                          placeholder="Select Gender"
+                                          onChange={(option) =>
+                                            setFieldValue("gender", option.value)
+                                          }
+                                          optionIcons={<FaUser />}
+                                        />
+                                        {touched.gender && errors.gender && (
+                                          <div className="text-red-500 text-sm mt-2 absolute left-0">
+                                            {errors.gender}
+                                          </div>
+                                        )}
+                                      </div>
+
+                                      {/* Passport Number */}
+                                      <div className="relative mb-5">
+                                        <Input
+                                          id={"passport_number"}
+                                          name={"passport_number"}
+                                          label={"Passport Number"}
+                                          type={"text"}
+                                          value={values.passport_number}
+                                          placeholder={"Enter Passport Number"}
+                                          onChange={(e) => {
+                                            setFieldValue(
+                                              "passport_number",
+                                              e.target.value
+                                            );
+                                          }}
+                                        />
+                                        {touched.passport_number &&
+                                          errors.passport_number && (
+                                            <div className="text-red-500 text-sm mt-2 absolute left-0">
+                                              {errors.passport_number}
+                                            </div>
+                                          )}
+                                      </div>
+
+                                      {/* Passport Exp Date */}
+                                      <div className="relative mb-5">
+                                        {/* <Input
                                         id={"passport_expiry_date"}
                                         name={"passport_expiry_date"}
                                         label={"Passport Exp Date"}
@@ -511,101 +572,65 @@ const TravelersDetails = () => {
                                           )
                                         }
                                       /> */}
-                                      <CustomDate
-                                      id={"passport_expiry_date"}
-                                      name={"passport_expiry_date"}
-                                      label={"Passport Exp Date"}
-                                      value={values.passport_expiry_date}
-                                      onChange={(e) =>
-                                        setFieldValue(
-                                          "passport_expiry_date",
-                                          e.target.value
-                                        )
-                                      }
-                                      />
-                                      {touched.passport_expiry_date &&
-                                        errors.passport_expiry_date && (
-                                          <div className="text-red-500 text-sm mt-2 absolute left-0">
-                                            {errors.passport_expiry_date}
-                                          </div>
-                                        )}
+                                        <CustomDate
+                                          id={"passport_expiry_date"}
+                                          name={"passport_expiry_date"}
+                                          label={"Passport Exp Date"}
+                                          value={values.passport_expiry_date}
+                                          onChange={(e) =>
+                                            setFieldValue(
+                                              "passport_expiry_date",
+                                              e.target.value
+                                            )
+                                          }
+                                        />
+                                        {touched.passport_expiry_date &&
+                                          errors.passport_expiry_date && (
+                                            <div className="text-red-500 text-sm mt-2 absolute left-0">
+                                              {errors.passport_expiry_date}
+                                            </div>
+                                          )}
+                                      </div>
+                                    </div>
+                                  </CardLayoutBody>
+                                  <div className="px-4 w-1/2 filledfields">
+                                    <div className=" mt-5 rounded-xl p-7 bg-bluebg shadow-lg border-primary border-[1px] h-fit">
+                                      <h1 className="text-text font-semibold text-2xl pb-3">Travelers Detail</h1>
+                                      <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-text ">title <span>{values.title}</span></p>
+                                      <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-text ">First name <span>{values.first_name}</span></p>
+                                      <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-text ">last name <span>{values.last_name}</span></p>
+                                      <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-text ">date of birth <span>{values.date_of_birth}</span></p>
+                                      <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-text ">gender <span>{values.gender}</span></p>
+                                      <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-text ">nationality <span>{values.country}</span></p>
+                                      <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold  text-text">Passport no. <span>{values.passport_number}</span></p>
                                     </div>
                                   </div>
-                                </CardLayoutBody>
-                                <div className="px-4 w-1/2 filledfields">
-                                  <div className=" mt-5 rounded-xl p-7 bg-bluebg shadow-lg border-primary border-[1px] h-fit">
-                                    <h1 className="text-text font-semibold text-2xl pb-3">Travelers Detail</h1>
-                                    <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-text ">title <span>{values.title}</span></p>
-                                    <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-text ">First name <span>{values.first_name}</span></p>
-                                    <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-text ">last name <span>{values.last_name}</span></p>
-                                    <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-text ">date of birth <span>{values.date_of_birth}</span></p>
-                                    <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-text ">gender <span>{values.gender}</span></p>
-                                    <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-text ">nationality <span>{values.country}</span></p>
-                                    <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold  text-text">Passport no. <span>{values.passport_number}</span></p>
-                                  </div>
+
                                 </div>
 
+                              </Form>
+                              <div className="flex items-center justify-end p-3">
+                                <div>
+                                  <SecondaryButton
+                                    text="Add Traveler"
+                                    onClick={handleSubmit}
+                                  />
+                                </div>
                               </div>
-
-                            </Form>
-                            <div className="flex items-center justify-end p-3">
-                              <div>
-                                <SecondaryButton
-                                  text="Add Traveler"
-                                  onClick={handleSubmit}
-                                />
-                              </div>
-                            </div>
-                          </>
-                        )}
-                      </Formik>}
+                            </>}
+                        </>
+                      )}
+                    </Formik>
                   </CardLayoutContainer>
                 )
               })
             }
           </div>
-          <div className="px-3 w-1/3 ">
-            <div className="flex flex-col gap-3 text-text bg-white p-4 py-8 rounded-lg text-sm">
-              <h2 className="text-xl font-semibold">Price Summary</h2>
-              <div className="flex-col gap-3">
-                <div className="flex justify-between items-center border-b border-lightgray py-3">
-                  <p className="w-1/2">Pakistan International Airlines (adult) x 1</p>
-                  <p className="text-gray">PKR 104,421</p>
-                </div>
-                <div className="flex justify-between items-center border-b border-lightgray py-3">
-                  <p>price you pay</p>
-                  <p className="text-gray">PKR 104,421</p>
-                </div>
-                <div className="flex flex-col gap-3 pt-5">
-                  <p onClick={() => setFareBreakdown((prev) => !prev)} className="font-semibold text-lg flex justify-between cursor-pointer items-center">Fare Break Down <span><FaChevronCircleDown className={`text-primary ${fareBreakdown ? 'rotate-180' : 'rotate-0'} transition-all duration-300 ease-in-out `} /></span></p>
-                  <div className={` ${fareBreakdown ? 'h-auto' : 'h-0 overflow-hidden'} transition-all duration-300 ease-in-out flex flex-col gap-3 px-3`}>
-                    <h2 className="text-lg font-semibold">Adult Break Down</h2>
-                    <div className="flex justify-between items-center border-b border-lightgray py-2">
-                      <p>Base Fare:</p>
-                      <p className="text-gray">PKR 103,400</p>
-                    </div>
-                    <div className="flex justify-between items-center border-b border-lightgray py-2">
-                      <p>Tax:</p>
-                      <p className="text-gray">PKR 4,640</p>
-                    </div>
-                    <div className="flex justify-between items-center border-b border-lightgray py-2">
-                      <p>Gross Fare:</p>
-                      <p className="text-gray">PKR 108,040</p>
-                    </div>
-                    <div className="flex justify-between items-center border-b border-lightgray py-2">
-                      <p>Discount:</p>
-                      <p className="text-gray">-PKR 3,619</p>
-                    </div>
-                    <div className="flex justify-between items-center  y-3">
-                      <p className="text-primary font-semibold text-xl">Total</p>
-                      <p className="text-gray">PKR 104,421</p>
-                    </div>
+          <div className="px-3 w-1/3 flex flex-col gap-3 ">
+            <PriceSummary pricingInfo={pricingInfo} travelers={travelersData} />
+            <h2 className="text-2xl font-semibold text-text pl-1 pt-4">Trip Summary</h2>
 
-                  </div>
-                </div>
-              </div>
-
-            </div>
+            <FlightInfoCard flights={flightSegments} />
           </div>
         </div>
 

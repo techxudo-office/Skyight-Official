@@ -280,10 +280,10 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                           setFieldValue("arrival", option.value);
                           activateField('departureDate')
                         }
-
                         }
                         optionIcons={<FaPlaneArrival />}
-                        selectIcon={<FaPlaneArrival size={18} />}
+                        selectIcon={<FaPlaneArrival size={18} />
+                        }
                       />
                       {touched.arrival && errors.arrival && (
                         <div className="text-red-500 text-sm mt-2 absolute left-0">

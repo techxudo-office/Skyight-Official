@@ -19,7 +19,7 @@ const Backbutton = () => {
   }
 
     return (
-        <div className="mb-4 w-full flex justify-end">
+        <div className="mb-4 w-full flex justify-end pr-6">
 
             <CustomTooltip content={"go Back"}>
                 <div className="">

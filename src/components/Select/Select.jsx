@@ -20,14 +20,14 @@ const Select = ({
   const [selectStatus, setSelectStatus] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   // const [dropDown, setdropDown] = useState(true);
-
+  console.log(options)
 
 
   const selectHandler = () => {
     if (disabled) {
       return
     } else {
-    // setdropDown((prev)=>!prev)
+      // setdropDown((prev)=>!prev)
 
       setSelectStatus((prev) => !prev);
     }
@@ -63,7 +63,7 @@ const Select = ({
   }, []);
 
   return (
-    <div className={`flex flex-col w-full   ${className}`} ref={selectRef}>
+    <div className={`flex flex-col    ${className ? className : 'w-full'}`} ref={selectRef}>
 
 
       <div className={`relative rounded-md border border-gray flex items-center justify-between px-2 ${disabled && 'bg-slate-100'}`}>
@@ -71,18 +71,18 @@ const Select = ({
           {label}
         </label>
         <div
-          className="flex w-full items-center justify-between py-5 px-3 cursor-pointer bg-transparent text-text"
+          className="flex w-full items-center justify-between py-5 px-3  bg-transparent text-text"
           onClick={selectHandler}
         >
 
           <span className="text-gray flex gap-3 items-center"><span className="text-primary">{selectIcon}</span>{(value && value) || placeholder}</span>
           <FaCaretDown
-            className={`text-gray transform transition-transform ${(selectStatus || isSelected)  ? "rotate-180" : ""
+            className={`text-gray transform transition-transform ${(selectStatus || isSelected) ? "rotate-180" : ""
               }`}
           />
         </div>
 
-        { (selectStatus || isSelected) && (
+        {(selectStatus || isSelected) && (
           <div className="absolute top-full left-0 z-10 w-full bg-white shadow-md border-[1px] border-gray mt-2 rounded-md">
             <div className="p-2">
               <input
@@ -98,7 +98,7 @@ const Select = ({
               {filteredOptions.map((option, index) => (
                 <li
                   key={index}
-                  className={`p-3 flex items-center justify-start gap-3 text-sm cursor-pointer hover:bg-slate-100 ${value?.value === option.value
+                  className={`p-3 flex items-center justify-start gap-3 text-sm  hover:bg-slate-100 ${value?.value === option.value
                     ? "text-primary font-medium"
                     : "text-slate-500"
                     }`}

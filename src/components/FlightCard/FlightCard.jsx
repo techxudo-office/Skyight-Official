@@ -13,14 +13,14 @@ import { FaUser } from "react-icons/fa";
 import { FaSuitcase } from "react-icons/fa";
 import { FaMoneyBillAlt } from "react-icons/fa";
 
-const FlightCard = ({ data, travelers }) => {
+const FlightCard = ({ data, travelers,pricingInfo}) => {
   const navigate = useNavigate();
 
   const flightSegment =
     data.AirItinerary.OriginDestinationOptions[0].FlightSegment[0];
 
   const viewDetails = () => {
-    navigate("/dashboard/flight-details", { state: { data, travelers } });
+    navigate("/dashboard/travelers-details", { state: { data, travelers,pricingInfo } });
   };
 
   return (

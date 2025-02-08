@@ -27,3 +27,6 @@ export { default as CustomDate } from "./CustomDate/CustomDate";
 export { default as TableNew } from "./TableNew/TableNew";
 export { default as CustomTooltip } from "./CustomTooltip/CustomTooltip";
 export { default as Backbutton } from "./Backbutton/Backbutton";
+export { default as FlightInfoCard } from "./FlightInfoCard/FlightInfoCard";
+export { default as PriceSummary } from "./PriceSummary/PriceSummary";
+export { default as Modal } from "./Modal/Modal";

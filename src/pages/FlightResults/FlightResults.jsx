@@ -15,6 +15,7 @@ import "slick-carousel/slick/slick-theme.css";
 import "./FlightResult.css";
 import SearchFlights from "../SearchFlights/SearchFlights";
 import { searchFlight } from "../../utils/api_handler";
+import TravelersDetails from "../TravelersDetails/TravelersDetails";
 
 const FlightResults = () => {
   const location = useLocation();
@@ -27,16 +28,18 @@ const FlightResults = () => {
   const [originalDates, setOriginalDates] = useState([]);
   const [noFlight, setNoFlight] = useState(false);
   const [filteredFlightsData, setFilteredFlightsData] = useState([]);
+  const [pricingInfo, setPricingInfo] = useState()
 
   const navigate = useNavigate()
   useEffect(() => {
     if (location.state) {
-      // console.log("state", location.state)
+      console.log("state", location.state)
       // console.log("payload", location.state.payload)
 
       const flights = location.state.flightsData.PricedItineraries.PricedItinerary;
       const travelers = location.state.travelersData;
-
+      const priceInfo = location.state.flightsData.PricedItineraries
+      setPricingInfo(location.state.flightsData.PricedItineraries.PricedItinerary[0].AirItineraryPricingInfo)
       setFlightsData(flights);
       setTravelersData(travelers);
 
@@ -64,6 +67,7 @@ const FlightResults = () => {
           navigate("/dashboard/flight-results", {
             state: {
               payload: payload,
+              pricingData:pricingInfo,
               flightsData: response.data,
               travelersData: {
                 adults: payload.adult,
@@ -146,7 +150,7 @@ const FlightResults = () => {
             <Button onClick={() => setChangeFlight(false)} text={"Close"} className="absolute right-3 top-3" />
             <SearchFlights OnlySearch={true}
             //  onSearch={()=>setChangeFlight(false)} 
-             />
+            />
           </div>
         </div>
         : ''}
@@ -160,7 +164,9 @@ const FlightResults = () => {
       {/* Filtered Flights Data */}
       {filteredFlightsData.length > 0 ? (
         filteredFlightsData.map((item, index) => (
-          <FlightCard key={index} data={item} travelers={travelersData} />
+          <FlightCard key={index} data={item} pricingInfo={pricingInfo} travelers={travelersData} />
+
+
         ))
       ) : noFlight ? <p className="capitalize py-5 text-text w-full text-center">no flight found</p> :
         <Spinner className={'border-primary'} />}

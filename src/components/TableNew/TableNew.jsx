@@ -330,13 +330,21 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex }) => {
                             })}
                         </tbody> :
 
-                        loader ?
-                            <div className='w-[1000px] flex justify-center items-center my-5'>
-                                <Spinner className={'text-primary mx-auto'} />
-                            </div> :
-                            <div className='w-[1000px] flex justify-center items-center'>
-                                <h2 className='text-text capitalize text-center'>No Data Found</h2>
-                            </div>
+
+                        <tbody>
+                            <tr>
+                                <td colSpan={columns.length} className="w-full py-5 ">
+                                    {loader ?
+                                       
+                                            <Spinner className={'text-primary mx-auto'} />
+                                         :
+                                            <h2 className='text-text capitalize text-center'>No Data Found</h2>
+                                        }
+                                </td>
+                            </tr>
+
+                        </tbody>
+
 
                     }
                 </table>
