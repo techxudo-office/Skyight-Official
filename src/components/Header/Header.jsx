@@ -14,7 +14,7 @@ import { PiHandCoinsFill } from "react-icons/pi";
 import { getCredits } from "../../utils/api_handler";
 import { IoHome } from "react-icons/io5";
 import { AuthContext } from "../../context/AuthContext";
-import { logo } from "../../assets/Index";
+import { logo, skyightLogo } from "../../assets/Index";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { MdNotificationsNone, MdLogout, MdPerson, MdPersonPinCircle, MdOutlinePersonPinCircle, MdPersonPin } from "react-icons/md";
 import { SlSettings } from "react-icons/sl";
@@ -177,16 +177,16 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
       <nav className="w-full fixed z-[999] bg-white shadow-md border-b-[1px] border-grayBg ">
         <div className="mx-auto px-2">
           <div className="flex items-center justify-between p-2 sm:p-4"> {/* Adjust padding for mobile and desktop */}
-            <div className="flex ">
+            <div className="flex items-end gap-3">
             {/* Left Section: Hamburger Menu */}
             <button className="text-gray-700 hover:text-gray-900 transition" onClick={sidebarHandler}>
               <GiHamburgerMenu size={22} /> {/* Consistent size for mobile and desktop */}
             </button>
 
             {/* Center Section: Logo */}
-            <div className="flex items-center">
-              <img src={logo} className="w-16 translate-x-3" alt="" />
-              <span className="text-text font-semibold text-xl">Skyight</span>
+            <div className="flex items-center ">
+              <img src={skyightLogo} className="w-24 translate-x-3" alt="" />
+              {/* <span className="text-text font-semibold text-xl">Skyight</span> */}
             </div>
             </div>
 

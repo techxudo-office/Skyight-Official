@@ -7,6 +7,7 @@ import { object } from 'yup';
 import dayjs from 'dayjs';
 import { CustomTooltip, Spinner } from '../components';
 import { BsThreeDots } from 'react-icons/bs';
+import { IoIosAirplane } from 'react-icons/io';
 // import {Cell}  from "@table-library/react-table-library/table";
 
 const TableNew = ({ columnsToView, tableData, actions, activeIndex }) => {
@@ -55,52 +56,81 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex }) => {
 
 
     const columnsView =
-        columnsToView.map((item, i) => {
-            if (item.type == 'date') {
-                return {
-                    Header: item.columnName,
-                    accessor: item.fieldName,
-                    Cell: ({ value }) => (
-                        <span>
-                            <p className={`text-text  text-sm `}>
-                                {dayjs(value).format('MMM-DD-YYYY')}
-                            </p>
-                        </span>
-                    )
+        columnsToView
+            .filter(item => item.fieldName !== 'origin' && item.fieldName !== 'destination')
+            .map((item, i) => {
+                if(item.type=='number'){
+                    return {
+                        Header: item.columnName,
+                        accessor: item.fieldName,
+                        Cell: ({ value }) => (
+                            <span>
+                                <p className={`text-text  text-sm `}>
+                                    {Number(value).toLocaleString()}
+                                </p>
+                            </span>
+                        )
+                    }
                 }
-            }
-            if (item.columnName == 'Status') {
-                return {
-                    Header: item.columnName,
-                    accessor: item.fieldName,
-                    Cell: ({ value }) => (
-                        <span>
-                            <p className={`text-xs md:text-sm w-40 md:w-44 mx-auto  border-[1px]  tracking-tight px-2 py-1  rounded-lg ${value == 'pending' ? 'text-yellowColor border-yellowColor bg-yellowbg' : value == 'requested-cancellation' || value == 'inactive' ? 'text-redColor border-redColor bg-redbg' : 'text-greenColor bg-greenbg border-greenColor'} font-semibold  capitalize`}>
+                else if (item.type == 'date') {
+                    return {
+                        Header: item.columnName,
+                        accessor: item.fieldName,
+                        Cell: ({ value }) => (
+                            <span>
+                                <p className={`text-text  text-sm `}>
+                                    {dayjs(value).format('MMM-DD-YYYY')}
+                                </p>
+                            </span>
+                        )
+                    }
+                }
+                if (item.columnName == 'Status') {
+                    return {
+                        Header: item.columnName,
+                        accessor: item.fieldName,
+                        Cell: ({ value }) => (
+                            <span>
+                                <p className={`text-xs md:text-sm w-40 md:w-44 mx-auto  border-[1px]  tracking-tight px-2 py-1  rounded-lg ${value == 'pending' ? 'text-yellowColor border-yellowColor bg-yellowbg' : value == 'requested-cancellation' || value == 'inactive' ? 'text-redColor border-redColor bg-redbg' : 'text-greenColor bg-greenbg border-greenColor'} font-semibold  capitalize`}>
+                                    {value}
+                                </p>
+                            </span>
+                        )
+                    }
+                } else {
+                    return {
+                        Header: item.columnName,
+                        accessor: item.fieldName,
+                        Cell: ({ value }) => (
+                            <span className="text-text  text-sm">
                                 {value}
-                            </p>
-                        </span>
-                    )
+                            </span>
+                        )
+                    }
                 }
-            } else {
-                return {
-                    Header: item.columnName,
-                    accessor: item.fieldName,
-                    Cell: ({ value }) => (
-                        <span className="text-text  text-sm">
-                            {value}
-                        </span>
-                    )
-                }
+
+
             }
+            )
+  
+    columnsView.unshift({
+        Header: "Route",
+        Cell: ({ row }) => (
+            <span className="text-text text-sm flex items-center gap-2 justify-center">
+                {row.original.origin}
+                <div className='flex items-center gap-1'>
+                    <span className="h-0.5 w-3 bg-primary"></span>
+                    <IoIosAirplane className="text-lg text-primary" />
+                    <span className="h-0.5 w-3 bg-primary"></span>
+                </div>
 
-
-        }
+                {row.original.destination}
+            </span>
         )
-
-
+    });
 
     const columns = React.useMemo(() => [
-        {
+        {id:'no',
             Header: "No.",
             accessor: (row, i) => i + 1, // Row index starting from 1
             Cell: ({ row }) => (
@@ -108,6 +138,13 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex }) => {
             )
         },
         ...columnsView,
+        {id:'pnr',
+            Header: "PNR",
+            accessor: (row, i) => i + 1, // Row index starting from 1
+            Cell: ({ row }) => (
+                <span className="text-sm text-text">active</span>
+            )
+        },
         ...(actions ? [{
             Header: 'Actions',
             id: 'actions',
@@ -250,7 +287,7 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex }) => {
     useEffect(() => {
         setPageSize(Number(finalRowsPerPage)); // Ensure it's a number
     }, [finalRowsPerPage, setPageSize]);
-
+    console.log('headers', headerGroups)
     return (
         <div className="">
 
@@ -259,14 +296,25 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex }) => {
                     {columnsToView.length > 0 && <thead className="bg-primary">
                         {headerGroups.map((headerGroup) => (
                             <tr {...headerGroup.getHeaderGroupProps()}>
-                                {headerGroup.headers.map((column) => (
-                                    <th
+                                {headerGroup.headers.map((column) => {
+                                    // if (column == "Route")
+                                    //     return <th
+                                    //         colSpan={columns.length - 4}
+                                    //         {...column.getHeaderProps()}
+                                    //         className="px-7 py-4 text-center  text-sm font-bold text-white uppercase tracking-wider"
+                                    //     >
+                                    //         {column.render("Header")}
+                                    //     </th>
+                                    // else
+
+                                    return <th
                                         {...column.getHeaderProps()}
                                         className="px-7 py-4 text-center  text-sm font-bold text-white uppercase tracking-wider"
                                     >
                                         {column.render("Header")}
                                     </th>
-                                ))}
+                                }
+                                )}
                             </tr>
                         ))}
                     </thead>}
@@ -335,11 +383,11 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex }) => {
                             <tr>
                                 <td colSpan={columns.length} className="w-full py-5 ">
                                     {loader ?
-                                       
-                                            <Spinner className={'text-primary mx-auto'} />
-                                         :
-                                            <h2 className='text-text capitalize text-center'>No Data Found</h2>
-                                        }
+
+                                        <Spinner className={'text-primary mx-auto'} />
+                                        :
+                                        <h2 className='text-text capitalize text-center'>No Data Found</h2>
+                                    }
                                 </td>
                             </tr>
 

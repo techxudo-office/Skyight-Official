@@ -31,7 +31,7 @@ const CustomDate = ({
 
     // Effect to synchronize isSelected prop with internal state
     useEffect(() => {
-        if (isSelected) {
+        if (!disabled) {
             setOpen(true); // Open the date picker if isSelected is true
         }
     }, [isSelected]);
@@ -53,7 +53,7 @@ const CustomDate = ({
                 className="w-full"
                 disabled={disabled}
                 label={label}
-                autoFocus={isSelected}
+                autoFocus={open}
                 value={value ?  dayjs(value) : null} // Convert value to dayjs
                 onChange={handleDateChange} // Corrected onChange
                 minDate={!pastDate? dayjs():null} // Prevent past dates

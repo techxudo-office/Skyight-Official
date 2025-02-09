@@ -82,6 +82,7 @@ const TravelersDetails = () => {
   const [pricingInfo, setPricingInfo] = useState();
   const [toogleForm, setToogleForm] = useState(0);
   const [passenger, setPassenger] = useState(0);
+  const [travelersQuantity, setTravelersQuantity] = useState(0);
   // const [Value, setValue] = useState(null);
 
 
@@ -156,8 +157,34 @@ const TravelersDetails = () => {
       setFlightSegments(location.state.data.AirItinerary.OriginDestinationOptions[0].FlightSegment)
       console.log('data', location.state)
       console.log('travelersdata', location.state.travelers)
+      setTravelersQuantity(Object.entries(location.state.travelers)
+      .filter(([key, value]) => value > 0)
+      .map(([key, value]) => {
+        if (key == 'adults') {
+          return {
+            icon: <MdPerson />,
+            name: 'Adult',
+            value: value
+          }
+        } else if (key == 'childs') {
+          return {
+            icon: <MdChildCare />,
+            name: 'Child',
+            value: value
+          }
+        } else {
+          return {
+            icon: < MdChildFriendly />,
+            name: 'Infant',
+            value: value
+          }
+        }
+      }))
     }
+  
+    
   }, [location.state]);
+
 
   if (!flightData || !travelersData) {
     return <Spinner className={"text-primary"} />;
@@ -178,7 +205,7 @@ const TravelersDetails = () => {
   });
   const [flightHrs, flightMins] = flightSegments[0].FlightDuration.split(":")
   const passengersList = [
-    { value: 'Ahsan Ali', label: 'Ahsan Ali' },
+    { value: 'Ahsan', label: 'Ahsan' },
     { value: 'Talha', label: 'Talha' },
     { value: 'Bakhtawar', label: 'Bakhtawar' },
     { value: 'Abdullah', label: 'Abdullah' },
@@ -210,10 +237,16 @@ const TravelersDetails = () => {
                   <MdCalendarMonth className="text-xl" />
                   <span>Feb 12</span>
                 </div>
-                <div className="flex gap-1 text-base text-text font-semibold items-start">
-                  <MdPerson className="text-xl" />
-                  <span> {travelersData.adults} Adults</span>
-                </div>
+                {travelersQuantity.map((traveler, i) => (
+                  <div key={i} className="flex gap-1 text-xl text-text font-semibold items-start">
+                    {traveler.icon}
+
+                    <span className="text-base"> {traveler.value} {traveler.name}{traveler.value > 1 &&( traveler.name == 'Child'?'ren' : 's')}</span>
+
+
+                  </div>
+                ))}
+                {/* 
                 <div className="flex gap-1 text-base text-text font-semibold items-start">
                   <MdChildCare className="text-xl" />
                   <span> {travelersData.childs} Children</span>
@@ -221,12 +254,18 @@ const TravelersDetails = () => {
                 <div className="flex gap-1 text-base text-text font-semibold items-start">
                   <MdChildFriendly className="text-xl" />
                   <span> {travelersData.infants} Infants</span>
-                </div>
+                </div> */}
               </div>
             </div>
             <div className=''>
-              <p className="text-base text-primary font-semibold pb-2">Booking Confirmation</p>
-              <p className="text-2xl font-semibold">W3UI4CWFKEX</p>
+              <p className="text-base text-primary font-semibold pb-2">Free Baggages</p>
+              {flightSegments[0].FreeBaggages.map((passenger, idx) => (
+                <div key={idx} className=" font-semibold flex gap-2">
+                  <p>{passenger.PassengerType}</p>
+                  <p>{passenger.Quantity}{passenger.Unit}</p>
+                </div>
+
+              ))}
             </div>
 
           </div>
@@ -299,8 +338,8 @@ const TravelersDetails = () => {
                                 value={values.previousPassenger}
                                 options={passengersList}
                               />
-                              {values.previousPassenger&&
-                              <MdCancel className="text-primary text-2xl cursor-pointer" onClick={()=>setFieldValue("previousPassenger", '')}/>
+                              {values.previousPassenger &&
+                                <MdCancel className="text-primary text-2xl cursor-pointer" onClick={() => setFieldValue("previousPassenger", '')} />
 
                               }
                             </div>
@@ -311,7 +350,7 @@ const TravelersDetails = () => {
                               <p className="text-2xl w-1/5 text-center" >OR</p>
                               <span className="h-0.5 w-2/5 bg-primary"></span>
                             </div>
-                            <h1 onClick={()=>toogleFormHandler(index)} className="capitalize text-text text-center font-semibold text-xl">Add a new traveler</h1>
+                            <h1 onClick={() => toogleFormHandler(index)} className="capitalize text-text text-center font-semibold text-xl">Add a new traveler</h1>
                           </div>
                           {toogleForm === index &&
                             <>
@@ -627,7 +666,7 @@ const TravelersDetails = () => {
             }
           </div>
           <div className="px-3 w-1/3 flex flex-col gap-3 ">
-            <PriceSummary pricingInfo={pricingInfo} travelers={travelersData} />
+            <PriceSummary pricingInfo={pricingInfo} travelers={travelersData} totalTravelers={result} />
             <h2 className="text-2xl font-semibold text-text pl-1 pt-4">Trip Summary</h2>
 
             <FlightInfoCard flights={flightSegments} />

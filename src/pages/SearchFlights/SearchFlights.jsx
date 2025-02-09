@@ -250,7 +250,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                           setFieldValue("departure", option.value);
                           activateField('arrival')
                         }}
-                        className={'select'}
+                        className={'select w-full'}
                         optionIcons={<FaPlaneDeparture />}
                         selectIcon={<FaPlaneDeparture />}
                       />
@@ -268,7 +268,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
 
                     <div className="relative mb-5">
                       <Select
-                        className={'select'}
+                        className={'select w-full'}
                         isSelected={activeField.arrival}
                         id="arrival"
                         label="Arrival To"

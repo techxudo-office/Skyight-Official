@@ -21,6 +21,11 @@ const Select = ({
   const [searchValue, setSearchValue] = useState("");
   // const [dropDown, setdropDown] = useState(true);
   console.log(options)
+  // Sync selectStatus with isSelected
+  useEffect(() => {
+    setSelectStatus(isSelected);
+  }, [isSelected]); // Whenever isSelected changes, update selectStatus
+
 
 
   const selectHandler = () => {
@@ -77,12 +82,12 @@ const Select = ({
 
           <span className="text-gray flex gap-3 items-center"><span className="text-primary">{selectIcon}</span>{(value && value) || placeholder}</span>
           <FaCaretDown
-            className={`text-gray transform transition-transform ${(selectStatus || isSelected) ? "rotate-180" : ""
+            className={`text-gray transform transition-transform ${(selectStatus) ? "rotate-180" : ""
               }`}
           />
         </div>
 
-        {(selectStatus || isSelected) && (
+        {(selectStatus ) && (
           <div className="absolute top-full left-0 z-10 w-full bg-white shadow-md border-[1px] border-gray mt-2 rounded-md">
             <div className="p-2">
               <input

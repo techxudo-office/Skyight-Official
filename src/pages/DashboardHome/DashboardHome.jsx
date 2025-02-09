@@ -82,7 +82,7 @@ const DashboardHome = () => {
     // { columnName: "No.", fieldName: "no.", type: "no." },
     { columnName: "Origin", fieldName: "origin", type: "text" },
     { columnName: "Destination", fieldName: "destination", type: "text" },
-    { columnName: "Total Fare", fieldName: "total_fare", type: "text" },
+    { columnName: "Total Fare", fieldName: "total_fare", type: "number" },
     // { columnName: "Currency", fieldName: "currency", type: "text" },
     { columnName: "Status", fieldName: "booking_status", type: "status" },
     { columnName: "Created At", fieldName: "created_at", type: "date" },
