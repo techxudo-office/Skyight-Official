@@ -27,3 +27,21 @@ export const transactionInitialValues = {
     amount: "",
     comment: "",
 };
+
+export const userSchema = Yup.object({
+    first_name: Yup.string().required("Please enter first name"),
+    last_name: Yup.string().required("Please enter last name"),
+    email: Yup.string().required("Please enter email address"),
+    mobile_number: Yup.string().required("Please enter mobile number"),
+    password: Yup.string().required("Please set a password"),
+    role: Yup.string().required("Role is required")
+});
+
+export const userInitialValues = {
+    first_name: "",
+    last_name: "",
+    email: "",
+    mobile_number: "",
+    password: "",
+    role: "",
+}

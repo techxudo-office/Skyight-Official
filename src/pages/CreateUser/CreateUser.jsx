@@ -11,6 +11,7 @@ import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { createUser } from "../../utils/api_handler";
+import { userSchema } from "../../validations/index"
 
 const CreateUser = () => {
   const navigate = useNavigate();
@@ -19,6 +20,7 @@ const CreateUser = () => {
   const [loading, setLoading] = useState(false);
 
   const createUserHandler = async (payload, resetForm) => {
+    console.log(payload)
     try {
       setLoading(true);
 
@@ -47,14 +49,6 @@ const CreateUser = () => {
     }
   };
 
-  const validationSchema = Yup.object({
-    first_name: Yup.string().required("Please enter first name"),
-    last_name: Yup.string().required("Please enter last name"),
-    email: Yup.string().required("Please enter email address"),
-    mobile_number: Yup.string().required("Please enter mobile number"),
-    password: Yup.string().required("Please set a password"),
-    role: Yup.string().required("Please enter role"),
-  });
 
   const formik = useFormik({
     initialValues: {
@@ -63,13 +57,14 @@ const CreateUser = () => {
       email: "",
       mobile_number: "",
       password: "",
-      role: "",
+      role_id: 0,
     },
-    validationSchema,
+    userSchema, // Assuming userSchema is your validation schema
     onSubmit: (values, { resetForm }) => {
       createUserHandler(values, resetForm);
     },
   });
+
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
@@ -99,11 +94,10 @@ const CreateUser = () => {
             <div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-5 mb-7">
                 <div
-                  className={`relative ${
-                    formik.touched.first_name && formik.errors.first_name
-                      ? "mb-5"
-                      : ""
-                  }`}
+                  className={`relative ${formik.touched.first_name && formik.errors.first_name
+                    ? "mb-5"
+                    : ""
+                    }`}
                 >
                   <Input
                     placeholder={"Enter First Name"}
@@ -122,11 +116,10 @@ const CreateUser = () => {
                   )}
                 </div>
                 <div
-                  className={`relative ${
-                    formik.touched.last_name && formik.errors.last_name
-                      ? "mb-5"
-                      : ""
-                  }`}
+                  className={`relative ${formik.touched.last_name && formik.errors.last_name
+                    ? "mb-5"
+                    : ""
+                    }`}
                 >
                   <Input
                     placeholder={"Enter Last Name"}
@@ -145,9 +138,8 @@ const CreateUser = () => {
                   )}
                 </div>
                 <div
-                  className={`relative ${
-                    formik.touched.email && formik.errors.email ? "mb-5" : ""
-                  }`}
+                  className={`relative ${formik.touched.email && formik.errors.email ? "mb-5" : ""
+                    }`}
                 >
                   <Input
                     placeholder={"Enter Email"}
@@ -166,11 +158,10 @@ const CreateUser = () => {
                   )}
                 </div>
                 <div
-                  className={`relative ${
-                    formik.touched.mobile_number && formik.errors.mobile_number
-                      ? "mb-5"
-                      : ""
-                  }`}
+                  className={`relative ${formik.touched.mobile_number && formik.errors.mobile_number
+                    ? "mb-5"
+                    : ""
+                    }`}
                 >
                   <Input
                     placeholder={"Enter Mobile Number"}
@@ -190,11 +181,10 @@ const CreateUser = () => {
                     )}
                 </div>
                 <div
-                  className={`relative ${
-                    formik.touched.password && formik.errors.password
-                      ? "mb-5"
-                      : ""
-                  }`}
+                  className={`relative ${formik.touched.password && formik.errors.password
+                    ? "mb-5"
+                    : ""
+                    }`}
                 >
                   <Input
                     placeholder={"Enter Password"}
@@ -213,23 +203,25 @@ const CreateUser = () => {
                   )}
                 </div>
                 <div
-                  className={`relative ${
-                    formik.touched.role && formik.errors.role ? "mb-5" : ""
-                  }`}
+                  className={`relative ${formik.touched.role && formik.errors.role ? "mb-5" : ""
+                    }`}
                 >
                   <Input
-                    placeholder={"Enter Role"}
-                    id={"role"}
-                    name={"role"}
+                    placeholder={"Enter Role of User"}
+                    id={"role_id"}
+                    name={"role_id"}
                     label={"Role*"}
-                    type={"role"}
-                    value={formik.values.role}
-                    onChange={formik.handleChange}
+                    type={"number"}
+                    value={formik.values.role_id || ""} 
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      formik.setFieldValue("role_id", value === "" ? "" : Number(value)); // Allow empty string
+                    }}
                     onBlur={formik.handleBlur}
                   />
-                  {formik.touched.role && formik.errors.role && (
+                  {formik.touched.role_id && formik.errors.role_id && (
                     <div className="text-red-500 text-sm mt-2 absolute left-0">
-                      {formik.errors.role}
+                      {formik.errors.role_id}
                     </div>
                   )}
                 </div>

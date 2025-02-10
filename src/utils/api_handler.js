@@ -388,44 +388,59 @@ export const getTransactions = async () => {
 };
 
 //! Users
+// export const createUser = async (payload) => {
+//   try {
+//     let response = await axios({
+//       method: "POST",
+//       url: `${baseUrl}/api/user`,
+//       data: payload,
+// headers: {
+//   Authorization: getToken(),
+// },
+//     });
+//     console.log(response);
+//     if (response.status === 200) {
+//       return {
+//         status: true,
+//         message: "New User Created",
+//       };
+//     }
+//   } catch (error) {
+//     console.log("Failed while creating user: ", error);
+//     if (error.response) {
+//       if (error.response.data.data.errors) {
+//         const errors = Object.keys(error.response.data.data.errors);
+//         const errorMessages = [];
+
+//         for (let i = 0; i < errors.length; i++) {
+//           errorMessages.push(error.response.data.data.errors[errors[i]]);
+//         }
+//         return {
+//           status: false,
+//           message: errorMessages,
+//         };
+//       }
+//     } else {
+//       return {
+//         status: false,
+//         message: "Server Connection Error",
+//       };
+//     }
+//   }
+// };
+
 export const createUser = async (payload) => {
   try {
-    let response = await axios({
-      method: "POST",
-      url: `${baseUrl}/api/user`,
-      data: payload,
+    const response = await axios.post(`${baseUrl}/api/user`, payload, {
       headers: {
         Authorization: getToken(),
+        "Content-Type": "application/json",
       },
     });
-    console.log(response);
-    if (response.status === 200) {
-      return {
-        status: true,
-        message: "New User Created",
-      };
-    }
+    return response.data; // Return the response data
   } catch (error) {
-    console.log("Failed while creating user: ", error);
-    if (error.response) {
-      if (error.response.data.data.errors) {
-        const errors = Object.keys(error.response.data.data.errors);
-        const errorMessages = [];
-
-        for (let i = 0; i < errors.length; i++) {
-          errorMessages.push(error.response.data.data.errors[errors[i]]);
-        }
-        return {
-          status: false,
-          message: errorMessages,
-        };
-      }
-    } else {
-      return {
-        status: false,
-        message: "Server Connection Error",
-      };
-    }
+    console.error("Error creating user:", error.response?.data || error.message);
+    throw error; // Rethrow error for handling in calling function
   }
 };
 
