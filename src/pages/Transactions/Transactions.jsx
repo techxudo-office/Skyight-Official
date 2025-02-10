@@ -18,7 +18,8 @@ import {
   CardLayoutBody,
   CardLayoutFooter,
 } from "../../components/CardLayout/CardLayout";
-import toast from "react-hot-toast";
+import { transactionColumns } from "../../data/columns";
+import { successToastify, errorToastify } from "../../helper/toast";
 
 const Transactions = () => {
   const navigate = useNavigate();
@@ -30,33 +31,6 @@ const Transactions = () => {
   const [activeIndex, setActiveIndex] = useState(null);
   const [transactionsData, setTransactionsData] = useState([]);
   const [modalStatus, setModalStatus] = useState(false);
-  const [deleteId, setDeleteId] = useState(null);
-
-  const columnsData = [
-    { columnName: "Bank", fieldName: "bank_name", type: "text" },
-    { columnName: "Bank No.", fieldName: "bank_number", type: "text" },
-    { columnName: "Payment Date", fieldName: "payment_date", type: "date" },
-    { columnName: "Amount", fieldName: "amount", type: "text" },
-    { columnName: "Status", fieldName: "status", type: "status" },
-  ];
-
-  const viewColumns = [
-    { columnName: "Transaction ID", fieldName: "id", type: "id" },
-    { columnName: "Company", fieldName: "company_id", type: "id" },
-    {
-      columnName: "Document Number",
-      fieldName: "document_number",
-      type: "text",
-    },
-    { columnName: "Document", fieldName: "document_url", type: "img" },
-    { columnName: "Comment", fieldName: "comment", type: "text" },
-    { columnName: "Reasons", fieldName: "reasonIds", type: "text" },
-    {
-      columnName: "Account Holder Name",
-      fieldName: "account_holder_name",
-      type: "text",
-    },
-  ];
 
   const actionsData = [
     {
@@ -77,29 +51,6 @@ const Transactions = () => {
     }
   };
 
-  const deleteReasonHandler = async () => {
-    if (!deleteId) {
-      toast.error("Failed to delete this record");
-      setModalStatus(false);
-    } else {
-      const response = await deleteReason(deleteId);
-      if (response.status) {
-        setTransactionsData(
-          transactionsData.filter(({ id }) => id !== deleteId)
-        );
-        setModalStatus(false);
-        setDeleteId(null);
-        toast.success(response.message);
-      } else {
-        toast.error(response.message);
-      }
-    }
-  };
-
-  const abortDeleteHandler = () => {
-    setModalStatus(false);
-    setDeleteId(null);
-  };
 
   useEffect(() => {
     gettingTransactions();
@@ -107,11 +58,6 @@ const Transactions = () => {
 
   return (
     <>
-      <ConfirmModal
-        status={modalStatus}
-        abortDelete={abortDeleteHandler}
-        deleteHandler={deleteReasonHandler}
-      />
       <CardLayoutContainer removeBg={true}>
         <CardLayoutHeader
           removeBorder={true}
@@ -126,18 +72,10 @@ const Transactions = () => {
           </div>
         </CardLayoutHeader>
         <CardLayoutBody removeBorder={true}>
-          {/* <Table
-            columns={columnsData}
-            viewColumns={viewColumns}
-            data={transactionsData}
-            actions={actionsData}
-            activeIndex={activeIndex}
-          /> */}
           <TableNew
-          columnsToView={columnsData}
+          columnsToView={transactionColumns}
           tableData={transactionsData}
           actions={actionsData}
-
           activeIndex={activeIndex}
 
           />

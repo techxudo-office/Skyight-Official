@@ -1,9 +1,8 @@
 import axios from "axios";
 import { data, useNavigate } from "react-router-dom";
 
-const baseUrl = import.meta.env.VITE_API_URL;
-
-const getToken = () => {
+export const baseUrl = import.meta.env.VITE_API_URL;
+export const getToken = () => {
   return localStorage.getItem("auth_token");
 };
 
@@ -18,10 +17,12 @@ export const login = async (payload) => {
     console.log(response);
     if (response.status === 200) {
       localStorage.setItem("auth_token", response.data.data.token);
+      localStorage.setItem("userData", JSON.stringify(response.data.data.user))
       return {
         status: true,
         message: "Login Successfully",
         token: response.data.data.token,
+        user: JSON.stringify(response.data.data.user)
       };
     }
   } catch (error) {
@@ -245,7 +246,7 @@ export const getCredits = async () => {
         Authorization: getToken(),
       },
     });
-    // console.log(response);
+
     if (response.status === 200) {
       return {
         status: true,
@@ -432,7 +433,7 @@ export const getUsers = async () => {
   try {
     let response = await axios({
       method: "GET",
-      url: `${baseUrl}/api/user`,
+      url: `${baseUrl}/api/user/company-user`,
       headers: {
         Authorization: getToken(),
       },

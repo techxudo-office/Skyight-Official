@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { PiBankBold } from "react-icons/pi";
 
@@ -21,20 +21,10 @@ import { createTransaction, getBanks } from "../../utils/api_handler";
 
 import { useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
-import * as Yup from "yup";
-import toast, { Toaster } from "react-hot-toast";
+import { transactionInitialValues, transactionSchema } from "../../validations";
+import { allowedTypes } from "../../helper/allowedTypes";
+import { successToastify, errorToastify } from "../../helper/toast"
 
-const validationSchema = Yup.object().shape({
-  bank_name: Yup.string().required("Please enter bank name"),
-  bank_number: Yup.string().required("Please enter bank number"),
-  account_holder_name: Yup.string().required(
-    "Please enter account holder name"
-  ),
-  document_number: Yup.string().required("Please enter document number"),
-  payment_date: Yup.string().required("Please enter payment date"),
-  amount: Yup.string().required("Please enter amount"),
-  comment: Yup.string().required("Please enter comment"),
-});
 
 const CreateTransaction = () => {
   const navigate = useNavigate();
@@ -43,28 +33,28 @@ const CreateTransaction = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const initialValues = {
-    bank_name: "",
-    bank_number: "",
-    account_holder_name: "",
-    document_number: "",
-    payment_date: "",
-    amount: "",
-    comment: "",
-  };
+  useEffect(() => {
+    const fetchBanks = async () => {
+      const response = await getBanks();
+      if (response.status) {
+        setBanksData(response.data);
+      }
+    };
 
-  const getBanksHandler = async () => {
-    let response = await getBanks();
-    console.log(response);
-    if (response.status) {
-      setBanksData(response.data);
+    if (banksData.length === 0) {
+      fetchBanks();
     }
-  };
+  }, [banksData]);
+  const memoizedBanks = useMemo(() => banksData, [banksData]);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setSelectedFile(file);
+      if (allowedTypes.includes(file.type)) {
+        setSelectedFile(file);
+      } else {
+        errorToastify("Only JPG, JPEG, and PNG formats are allowed.");
+      }
     }
   };
 
@@ -75,17 +65,17 @@ const CreateTransaction = () => {
     setLoading(false);
 
     if (response.status) {
-      toast.success(response.message);
+      successToastify(response.message);
       setTimeout(() => {
         navigate("/dashboard/transactions");
       }, 2000);
     } else {
       if (Array.isArray(response.message)) {
         response.message.map((error) => {
-          return toast.error(error.toUpperCase());
+          return errorToastify(error.toUpperCase());
         });
       } else {
-        toast.error(response.message);
+        errorToastify(response.message);
       }
     }
   };
@@ -103,20 +93,15 @@ const CreateTransaction = () => {
     formData.append("comment", values.comment);
 
     if (!selectedFile) {
-      toast.error("Please upload transaction receipt");
+      errorToastify("Please upload transaction receipt");
     } else {
       formData.append("document", selectedFile);
       createTransactionHandler(formData);
     }
   };
 
-  useEffect(() => {
-    getBanksHandler();
-  }, []);
-
   return (
     <>
-      <Toaster />
       <div className="w-full flex flex-col">
         <CardLayoutContainer className={"mb-5"}>
           <CardLayoutHeader
@@ -166,8 +151,8 @@ const CreateTransaction = () => {
             className={"flex items-center justify-between"}
           />
           <Formik
-            initialValues={initialValues}
-            validationSchema={validationSchema}
+            initialValues={transactionInitialValues}
+            validationSchema={transactionSchema}
             onSubmit={handleSubmit}
           >
             {({ values, errors, touched, setFieldValue }) => (
@@ -179,7 +164,7 @@ const CreateTransaction = () => {
                         id="bank_name"
                         label="Bank Name"
                         name="bank_name"
-                        options={banksData}
+                        options={memoizedBanks}
                         value={values.bank_name}
                         placeholder="Select Bank"
                         onChange={(option) =>
@@ -252,10 +237,10 @@ const CreateTransaction = () => {
                       <Input
                         id={"document_number"}
                         name={"document_number"}
-                        label={"Document Number"}
+                        label={"Account Number"}
                         type={"text"}
                         value={values.document_number}
-                        placeholder={"Enter Document Number"}
+                        placeholder={"Enter Account Number"}
                         onChange={(e) =>
                           setFieldValue("document_number", e.target.value)
                         }

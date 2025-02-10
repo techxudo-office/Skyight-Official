@@ -7,15 +7,13 @@ import {
 } from "../../components/CardLayout/CardLayout";
 import { Input, Button, Switch, Spinner } from "../../components/components";
 import { useFormik } from "formik";
-import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { createTicket } from "../../utils/api_handler";
+import { ticketSchema } from "../../validations";
 
 const CreateTicket = () => {
   const navigate = useNavigate();
-
-  const [isActive, setIsActive] = useState(true);
   const [loading, setLoading] = useState(false);
 
   const createTicketHandler = async (payload, resetForm) => {
@@ -47,19 +45,12 @@ const CreateTicket = () => {
     }
   };
 
-  const validationSchema = Yup.object({
-    title: Yup.string().required("Please enter ticket title"),
-    description: Yup.string().required("Please enter description"),
-    status: Yup.string().required("Status Required"),
-  });
-
   const formik = useFormik({
     initialValues: {
       title: "",
-      description: "",
-      status: isActive ? "open" : "close",
+      description: ""
     },
-    validationSchema,
+    ticketSchema,
     onSubmit: (values, { resetForm }) => {
       createTicketHandler(values, resetForm);
     },
@@ -80,13 +71,6 @@ const CreateTicket = () => {
           heading="Create Ticket"
           className={"flex items-center justify-between"}
         >
-          <span
-            onClick={() => {
-              setIsActive(!isActive);
-            }}
-          >
-            <Switch switchStatus={isActive} />
-          </span>
         </CardLayoutHeader>
         <form onSubmit={handleFormSubmit} noValidate>
           <CardLayoutBody>

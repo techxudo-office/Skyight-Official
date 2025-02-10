@@ -7,7 +7,6 @@ import {
   Spinner,
 } from "../../components/components";
 import { getTickets, deleteTicket } from "../../utils/api_handler";
-import { MdAutoDelete } from "react-icons/md";
 
 import { useNavigate } from "react-router-dom";
 import {
@@ -16,13 +15,15 @@ import {
   CardLayoutBody,
   CardLayoutFooter,
 } from "../../components/CardLayout/CardLayout";
-import toast from "react-hot-toast";
 import { FaEye } from "react-icons/fa";
+import { ticketColumns } from "../../data/columns";
+import { successToastify, errorToastify } from "../../helper/toast"
 
 const ViewTickets = () => {
   const navigate = useNavigate();
 
   const navigationHandler = () => {
+    setActiveIndex(null); // Reset active state
     navigate("/dashboard/create-ticket");
   };
 
@@ -31,23 +32,8 @@ const ViewTickets = () => {
   const [deleteId, setDeleteId] = useState(null);
   const [activeIndex, setActiveIndex] = useState(null);
 
-  const columnsData = [
-    // { columnName: "No.", fieldName: "no.", type: "no." },
-    { columnName: "Title", fieldName: "title", type: "text" },
-    { columnName: "Description", fieldName: "description", type: "text" },
-    { columnName: "Status", fieldName: "status", type: "status" },
-    // { columnName: "Actions", fieldName: "actions", type: "actions" },
-  ];
 
   const actionsData = [
-    // {
-    //   name: "Delete",
-    //   icon: <MdAutoDelete title="Delete" className="text-red-500" />,
-    //   handler: (_, item) => {
-    //     setModalStatus(true);
-    //     setDeleteId(item.id);
-    //   },
-    // },
     {
       name: "View",
       icon: <FaEye title="View" className="text-green-500" />,
@@ -68,17 +54,21 @@ const ViewTickets = () => {
 
   const deleteTicketHandler = async () => {
     if (!deleteId) {
-      toast.error("Failed to delete this ticket");
+      errorToastify("Failed to delete this ticket");
       setModalStatus(false);
     } else {
       const response = await deleteTicket(deleteId);
       if (response.status) {
-        setTicketsData(ticketsData.filter(({ id }) => id !== deleteId));
+        // setTicketsData(ticketsData.filter(({ id }) => id !== deleteId));
+        // Fix: Use prevState.filter() instead of directly modifying state.
+        setTicketsData((prevTickets) =>
+          prevTickets.filter(({ id }) => id !== deleteId)
+        );
         setModalStatus(false);
         setDeleteId(null);
-        toast.success(response.message);
+        successToastify(response.message);
       } else {
-        toast.error(response.message);
+        errorToastify(response.message);
       }
     }
   };
@@ -113,13 +103,8 @@ const ViewTickets = () => {
           </div>
         </CardLayoutHeader>
         <CardLayoutBody removeBorder={true}>
-          {/* <Table
-            columns={columnsData}
-            data={ticketsData}
-            actions={actionsData}
-          /> */}
           <TableNew
-            columnsToView={columnsData}
+            columnsToView={ticketColumns}
             tableData={ticketsData}
             actions={actionsData}
             activeIndex={activeIndex}

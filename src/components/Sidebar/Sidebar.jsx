@@ -18,8 +18,6 @@ const Sidebar = ({ status, updateStatus }) => {
     navigate(path);
   };
   useEffect(() => {
-    console.log('active menu', activeMenu)
-    console.log('status', status, activeMenu != null)
     if (!status) {
       setActiveMenu(null)
     }

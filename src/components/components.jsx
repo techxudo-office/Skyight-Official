@@ -30,3 +30,5 @@ export { default as Backbutton } from "./Backbutton/Backbutton";
 export { default as FlightInfoCard } from "./FlightInfoCard/FlightInfoCard";
 export { default as PriceSummary } from "./PriceSummary/PriceSummary";
 export { default as Modal } from "./Modal/Modal";
+export { default as PopupModal } from "./Modal/PopupModal";
+export { default as BellIcon } from "./BellIcon/BellIcon"

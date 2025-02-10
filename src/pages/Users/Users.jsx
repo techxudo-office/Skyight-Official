@@ -60,6 +60,7 @@ const Users = () => {
 
   const gettingUsers = async () => {
     const response = await getUsers();
+    console.log(response)
     if (response.status) {
       setUsersData(response.data);
     }

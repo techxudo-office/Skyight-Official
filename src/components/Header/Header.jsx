@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useCallback } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { HiOutlineMenuAlt1 } from "react-icons/hi";
 import { FaCircleUser } from "react-icons/fa6";
@@ -99,12 +99,14 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
     setSidebarStatusHandler(!sidebarStatus);
   };
 
-  const getCreditsHandler = async () => {
-    let response = await getCredits();
-    if (response.status) {
-      setCredits(response.data);
+  const getCreditsHandler = useCallback(async () => {
+    if (!credits) {
+      let response = await getCredits();
+      if (response?.status) {
+        setCredits(response.data);
+      }
     }
-  };
+  }, [credits]);
 
   const refreshCredits = () => {
     setCredits("");
@@ -114,65 +116,13 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
   };
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      getCreditsHandler();
-    }, 10000);
-
-    return () => clearInterval(intervalId);
-  }, []);
+    getCreditsHandler(); // Component mount hone pe ek bar call hoga
+  }, [getCreditsHandler]);
 
   return (
     <>
       <Toaster />
-      {/* <div id="header-container" className="flex  justify-between items-center fixed shadow-md z-[999] bg-white w-full p-3 py-4">
-        <button className="text-gray-700 hover:text-gray-900 transition" onClick={sidebarHandler}>
-          <GiHamburgerMenu size={20} /> 
-        </button>
-        <div className="flex items-center text-text text-xl ">
-          <img src={logo} className="w-20" alt="" />
-          Skyight
-        </div>
 
-        <div className="flex items-center justify-center ">
-          <div className="relative">
-            <div
-              className={`w-full flex items-center justify-center gap-3 cursor-pointer py-4 border-primary border-[1px] px-6 bg-blue-100 hover:text-text  text-primary font-semibold rounded-xl transition duration-300 ease-in-out transform focus:outline-none`}
-            onClick={() => {
-              setIsActive(!isActive);
-            }}
-            >
-              {credits ? (
-                <span
-                  onClick={refreshCredits}
-                  className="flex items-center gap-2"
-                >
-                  <HiOutlineRefresh />
-                  <span>PKR {credits}</span>
-                </span>
-              ) : (
-                <span className="flex items-center gap-2">
-                  <HiOutlineRefresh
-                    className={`transition-all ${!credits ? "rotate-180" : "rotate-0"
-                      }`}
-                  />
-                  <span>Refreshing...</span>
-                </span>
-              )}
-            </div>
-          </div>
-          <div className="px-3">
-            <FaCircleUser
-              onClick={dropdownHandler}
-              className="text-slate-300 hover:text-slate-400 transition-all text-5xl cursor-pointer"
-            />
-            <Dropdown
-              status={dropdownStatus}
-              changeStatus={setDropDownStatus}
-              options={dropdownOptions}
-            />
-          </div>
-        </div>
-      </div> */}
 
       <nav className="w-full fixed z-[999] bg-white shadow-md border-b-[1px] border-grayBg ">
         <div className="mx-auto px-2">
@@ -186,7 +136,6 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
             {/* Center Section: Logo */}
             <div className="flex items-center ">
               <img src={skyightLogo} className="w-24 translate-x-3" alt="" />
-              {/* <span className="text-text font-semibold text-xl">Skyight</span> */}
             </div>
             </div>
 
@@ -210,7 +159,7 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
                       className="flex items-center gap-2"
                     >
                       <HiOutlineRefresh />
-                      <span>PKR {credits}</span>
+                      <span>PKR {credits?.toLocaleString("en-US")}</span>
                     </span>
                   ) : (
                     <span className="flex items-center gap-2">
@@ -223,14 +172,6 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
                   )}
                 </div>
               </div>
-
-
-              {/* User Logout Button */}
-              {/* <button className="p-2 text-primary  hover:bg-slate-100 rounded-full transition"
-                onClick={logoutHandler}
-              >
-                <MdLogout size={22} /> 
-              </button> */}
                <div className="px-3">
             <FaUserCircle
               onClick={dropdownHandler}
@@ -252,49 +193,3 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
   );
 };
 export default Header
-
-
-
-
-// Hamburger Menu Icon
-// const MenuIcon = ({ onClick }) => (
-//   <button className="text-gray-700 hover:text-gray-900 transition" onClick={onClick}>
-//     <GiHamburgerMenu size={20} /> {/* Consistent size for mobile and desktop */}
-//   </button>
-// );
-
-// // Logo Component
-// const Logo = ({ src, companyName }) => (
-//   <div className="flex items-center gap-2">
-//     <img src={src} alt="Logo" className="h-6 sm:h-8 rounded-lg" /> {/* Adjust logo size for mobile and desktop */}
-//     <p className="hidden lg:block text-sm font-semibold text-gray-800 truncate">
-//       {companyName}
-//     </p>
-//   </div>
-// );
-
-// // Icon Button (for Notifications, Settings, etc.)
-// const IconButton = ({ icon: Icon, onClick, className }) => (
-//   <button
-//     className={`flex items-center border-1 mx-1 justify-center p-1.5 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-full transition ${className}`}
-//     onClick={onClick}
-//   >
-//     <Icon size={18} /> {/* Consistent size for all icons */}
-//   </button>
-// );
-
-// // User Logout Button (Without Dropdown)
-// const UserLogoutButton = () => (
-//   <button className="p-1.5 text-[#0FB07B] w-8 h-8 border-1 flex items-center hover:bg-gray-100 rounded-full transition">
-//     <MdLogout size={18} /> {/* Consistent size for logout icon */}
-//   </button>
-// );
-
-// const Navbar = ({ logoSrc, companyName }) => {
-//   return (
-   
-//   );
-// };
-
-// export default Navbar;
-

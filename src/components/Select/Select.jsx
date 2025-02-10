@@ -20,7 +20,7 @@ const Select = ({
   const [selectStatus, setSelectStatus] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   // const [dropDown, setdropDown] = useState(true);
-  console.log(options)
+  // console.log(options)
   // Sync selectStatus with isSelected
   useEffect(() => {
     setSelectStatus(isSelected);

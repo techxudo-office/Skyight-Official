@@ -20,8 +20,8 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex }) => {
     const [toggle, setToggle] = useState(false);
     const [maxLength, setmaxLength] = useState(null);
 
-    console.log('tableData', tableData)
-    console.log('active index', activeIndex)
+    // console.log('tableData', tableData)
+    // console.log('active in/dex', activeIndex)
     // console.log('columns', columnsToView)
     // console.log(extraRow);
 
@@ -59,7 +59,7 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex }) => {
         columnsToView
             .filter(item => item.fieldName !== 'origin' && item.fieldName !== 'destination')
             .map((item, i) => {
-                if(item.type=='number'){
+                if (item.type == 'number') {
                     return {
                         Header: item.columnName,
                         accessor: item.fieldName,
@@ -97,7 +97,19 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex }) => {
                             </span>
                         )
                     }
-                } else {
+                }
+                if (item.columnName == 'Description') {
+                    return {
+                        Header: item.columnName,
+                        accessor: item.fieldName,
+                        Cell: ({ value }) => (
+                            <p className={`text-text text-sm flex items-center gap-2 justify-center`}>
+                                {value.length > 30 ? `${value.substring(0, 10)}...` : value}
+                            </p>
+                        )
+                    }
+                }
+                else {
                     return {
                         Header: item.columnName,
                         accessor: item.fieldName,
@@ -112,7 +124,7 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex }) => {
 
             }
             )
-  
+
     columnsView.unshift({
         Header: "Route",
         Cell: ({ row }) => (
@@ -130,7 +142,8 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex }) => {
     });
 
     const columns = React.useMemo(() => [
-        {id:'no',
+        {
+            id: 'no',
             Header: "No.",
             accessor: (row, i) => i + 1, // Row index starting from 1
             Cell: ({ row }) => (
@@ -138,7 +151,8 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex }) => {
             )
         },
         ...columnsView,
-        {id:'pnr',
+        {
+            id: 'pnr',
             Header: "PNR",
             accessor: (row, i) => i + 1, // Row index starting from 1
             Cell: ({ row }) => (
@@ -287,7 +301,7 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex }) => {
     useEffect(() => {
         setPageSize(Number(finalRowsPerPage)); // Ensure it's a number
     }, [finalRowsPerPage, setPageSize]);
-    console.log('headers', headerGroups)
+    // console.log('headers', headerGroups)
     return (
         <div className="">
 
