@@ -81,13 +81,6 @@ const CreateUser = () => {
           heading="Create User"
           className={"flex items-center justify-between"}
         >
-          <span
-            onClick={() => {
-              setIsActive(!isActive);
-            }}
-          >
-            <Switch switchStatus={isActive} />
-          </span>
         </CardLayoutHeader>
         <form onSubmit={handleFormSubmit} noValidate>
           <CardLayoutBody>

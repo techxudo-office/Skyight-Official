@@ -19,7 +19,7 @@ const ProtectedRoute = ({ element }) => {
 
 const AppRoutes = () => {
   return (
-    <Router>
+   
       <Routes>
         {routesData.map((route, index) => {
           if (route.children) {
@@ -67,7 +67,7 @@ const AppRoutes = () => {
           );
         })}
       </Routes>
-    </Router>
+   
   );
 };
 
