@@ -109,6 +109,32 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex }) => {
                         )
                     }
                 }
+                if (item.columnName === "Role") {
+                    return {
+                        Header: item.columnName,
+                        accessor: item.fieldName,
+                        Cell: ({ value }) => {
+                            // Define role mappings
+                            const roleMappings = {
+                                super_admin: "Super Admin",
+                                support_manager: "Support Manager",
+                            };
+
+                            // Format the value based on predefined mappings or capitalize dynamically
+                            const formattedValue =
+                                roleMappings[value] ||
+                                value
+                                    .replace(/_/g, " ") // Replace underscores with spaces
+                                    .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize first letter
+
+                            return (
+                                <p className="text-text text-sm flex items-center gap-2 justify-center">
+                                    {formattedValue}
+                                </p>
+                            );
+                        },
+                    };
+                }
                 else {
                     return {
                         Header: item.columnName,

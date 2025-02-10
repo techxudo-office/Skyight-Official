@@ -429,36 +429,46 @@ export const createUser = async (payload) => {
   }
 };
 
+// export const getUsers = async () => {
+//   try {
+//     let response = await axios({
+//       method: "GET",
+//       url: `${baseUrl}/api/user/company-user`,
+//       headers: {
+//         Authorization: getToken(),
+//       },
+//     });
+//     console.log(response);
+//     if (response.status === 200) {
+//       if (response.data.data.length > 0) {
+//         const extractedData = response.data.data.map(
+//           ({ id, first_name, last_name, email, mobile_number, role }) => ({
+//             id,
+//             first_name,
+//             last_name,
+//             email,
+//             mobile_number,
+//             role,
+//             status: "active",
+//           })
+//         );
+//         return { status: true, data: extractedData };
+//       }
+//     }
+//   } catch (error) {
+//     console.log("Failed while getting users: ", error);
+//   }
+// };
+
+
 export const getUsers = async () => {
-  try {
-    let response = await axios({
-      method: "GET",
-      url: `${baseUrl}/api/user/company-user`,
-      headers: {
-        Authorization: getToken(),
-      },
-    });
-    console.log(response);
-    if (response.status === 200) {
-      if (response.data.data.length > 0) {
-        const extractedData = response.data.data.map(
-          ({ id, first_name, last_name, email, mobile_number, role }) => ({
-            id,
-            first_name,
-            last_name,
-            email,
-            mobile_number,
-            role,
-            status: "active",
-          })
-        );
-        return { status: true, data: extractedData };
-      }
+  let response = await axios.get(`${baseUrl}/api/user/company-user`, {
+    headers: {
+      Authorization: getToken(),
     }
-  } catch (error) {
-    console.log("Failed while getting users: ", error);
-  }
-};
+  })
+  return response?.data?.data
+}
 
 export const deleteUser = async (id) => {
   try {

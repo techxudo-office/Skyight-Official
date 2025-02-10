@@ -16,7 +16,8 @@ import {
   CardLayoutBody,
   CardLayoutFooter,
 } from "../../components/CardLayout/CardLayout";
-import toast from "react-hot-toast";
+import { userColumns } from "../../data/columns";
+import { successToastify, errorToastify } from "../../helper/toast";
 
 const Users = () => {
   const navigate = useNavigate();
@@ -29,16 +30,6 @@ const Users = () => {
   const [modalStatus, setModalStatus] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
 
-  const columnsData = [
-    // { columnName: "User", fieldName: "image", type: 'img' },
-    { columnName: "First Name", fieldName: "first_name", type: "text" },
-    { columnName: "Last Name", fieldName: "last_name", type: "text" },
-    { columnName: "Email", fieldName: "email", type: "text" },
-    { columnName: "Mobile Number", fieldName: "mobile_number", type: "text" },
-    { columnName: "Id", fieldName: "id", type: "id" },
-    { columnName: "Role", fieldName: "role", type: "text" },
-    { columnName: "Status", fieldName: "status", type: "status" },
-  ];
 
   const actionsData = [
     {
@@ -60,15 +51,12 @@ const Users = () => {
 
   const gettingUsers = async () => {
     const response = await getUsers();
-    console.log(response)
-    if (response.status) {
-      setUsersData(response.data);
-    }
+    setUsersData(response[0])
   };
 
   const deleteUserHandler = async () => {
     if (!deleteId) {
-      toast.error("Failed to delete this user");
+      errorToastify("Failed to delete this user");
       setModalStatus(false);
     } else {
       const response = await deleteUser(deleteId);
@@ -76,9 +64,9 @@ const Users = () => {
         setUsersData(usersData.filter(({ id }) => id !== deleteId));
         setModalStatus(false);
         setDeleteId(null);
-        toast.success(response.message);
+        successToastify(response.message);
       } else {
-        toast.error(response.message);
+        errorToastify(response.message);
       }
     }
   };
@@ -113,15 +101,10 @@ const Users = () => {
           </div>
         </CardLayoutHeader>
         <CardLayoutBody removeBorder={true}>
-          {/* <Table
-            columns={columnsData}
-            data={usersData}
-            actions={actionsData}
-          /> */}
           <TableNew
-          columnsToView={columnsData}
-          tableData={usersData}
-          actions={actionsData}
+            columnsToView={userColumns}
+            tableData={usersData}
+            actions={actionsData}
 
           />
         </CardLayoutBody>
