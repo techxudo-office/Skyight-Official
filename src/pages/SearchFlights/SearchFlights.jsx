@@ -13,7 +13,7 @@ import {
   CardLayoutFooter,
 } from "../../components/CardLayout/CardLayout";
 
-import { Select, Input, Spinner, Button, CustomDate } from "../../components/components";
+import { Select, Input, Spinner, Button, CustomDate, MultiCity } from "../../components/components";
 
 import { iranianCities } from "../../data/iranianCities";
 import { searchFlight } from "../../utils/api_handler";
@@ -25,6 +25,7 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import toast, { Toaster } from "react-hot-toast";
 import { FlightsBanner, forBackArrows } from "../../assets/Index";
+import RadioButtons from "../../components/RadioButtons/RadioButtons";
 
 
 const adultOptions = [
@@ -53,12 +54,6 @@ const cabinClassOptions = [
   { value: "Premium Economy", label: "Premium Economy" },
 ];
 
-const tripTypeOptions = [
-  { value: "OneWay", label: "One Way" },
-  { value: "RoundTrip", label: "Round Trip" },
-  { value: "MultiCity", label: "Multi-City" },
-];
-
 const validationSchema = Yup.object().shape({
   tripType: Yup.string().required("Please select a trip type"),
   departure: Yup.string().required("Please select departure"),
@@ -77,6 +72,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState()
   const [loading, setLoading] = useState(false);
+  const [Triptype, setTriptype] = useState(false);
   const [activeField, setActiveField] = useState({
     departure: false,
     arrival: false,
@@ -207,258 +203,225 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
             heading="Search Flight"
             className={"flex items-center justify-between "}
           />
+          <CardLayoutBody>
+            <RadioButtons options={["One-Way", "Round-Trip", "Multi-City"]} selectedOption={(option) => setTriptype(option)} />
+          </CardLayoutBody>
 
-          <Formik
-            initialValues={initialValues}
-            validationSchema={validationSchema}
-            onSubmit={handleSubmit}
-          >
+          {Triptype != 'Multi-City' ?
+            <Formik
+              initialValues={initialValues}
+              validationSchema={validationSchema}
+              onSubmit={handleSubmit}
+            >
 
-            {({ values, setValues, errors, touched, setFieldValue, isSubmitting }) => (
-              <Form>
-                <CardLayoutBody>
-                  <div className="flex gap-7 mb-9">
-                    {tripTypeOptions.map((option) => (
-                      <label
-                        key={option.value}
-                        className="flex items-center gap-2 cursor-pointer text-gray"
-                      >
-                        <input
-                          label={option.value}
-                          type="radio"
-                          name="tripType"
-                          value={option.value}
-                          checked={values.tripType === option.value}
-                          onChange={() =>
-                            setFieldValue("tripType", option.value)
+              {({ values, setValues, errors, touched, setFieldValue, isSubmitting }) => (
+                <Form>
+                  <CardLayoutBody>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 mb-7">
+                      <div className="relative mb-5 flex md:flex-row flex-col max-md:items-center ">
+                        <Select
+                          id="departure"
+                          label="Departure From"
+                          name="departure"
+                          options={iranianCities.filter((item) => item.value != values.arrival)}
+                          value={values.departure}
+                          placeholder="Select Departure"
+                          onChange={(option) => {
+                            setFieldValue("departure", option.value);
+                            activateField('arrival')
+                          }}
+                          className={'select w-full'}
+                          optionIcons={<FaPlaneDeparture />}
+                          selectIcon={<FaPlaneDeparture />}
+                        />
+                        {touched.departure && errors.departure && (
+                          <div className="text-red-500 text-sm mt-2 absolute -bottom-6 left-0">
+                            {errors.departure}
+                          </div>
+                        )}
+                        <div className=" rounded-full border-gray border-[1px] w-fit h-fit pt-3 pl-3 p-2 z-10 -mt-3 md:-ml-3 md:mt-2 -mb-11 md:-mr-8  bg-white" >
+                          <img src={forBackArrows} alt="" className="p-0 w-8 md:w-6 bg-white " />
+
+                        </div>
+                      </div>
+
+
+                      <div className="relative mb-5">
+                        <Select
+                          className={'select w-full'}
+                          isSelected={activeField.arrival}
+                          id="arrival"
+                          label="Arrival To"
+                          name="arrival"
+                          options={iranianCities.filter((item) => item.value != values.departure)}
+                          value={values.arrival}
+                          placeholder="Select Arrival"
+                          onChange={(option) => {
+                            setFieldValue("arrival", option.value);
+                            activateField('departureDate')
+                          }
+                          }
+                          optionIcons={<FaPlaneArrival />}
+                          selectIcon={<FaPlaneArrival size={18} />
                           }
                         />
-                        {option.value}
-                      </label>
-                    ))}
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 mb-7">
-                    <div className="relative mb-5 flex md:flex-row flex-col max-md:items-center ">
-                      <Select
-                        id="departure"
-                        label="Departure From"
-                        name="departure"
-                        options={iranianCities.filter((item) => item.value != values.arrival)}
-                        value={values.departure}
-                        placeholder="Select Departure"
-                        onChange={(option) => {
-                          setFieldValue("departure", option.value);
-                          activateField('arrival')
-                        }}
-                        className={'select w-full'}
-                        optionIcons={<FaPlaneDeparture />}
-                        selectIcon={<FaPlaneDeparture />}
-                      />
-                      {touched.departure && errors.departure && (
-                        <div className="text-red-500 text-sm mt-2 absolute -bottom-6 left-0">
-                          {errors.departure}
-                        </div>
-                      )}
-                      <div className=" rounded-full border-gray border-[1px] w-fit h-fit pt-3 pl-3 p-2 z-10 -mt-3 md:-ml-3 md:mt-2 -mb-11 md:-mr-8  bg-white" >
-                        <img src={forBackArrows} alt="" className="p-0 w-8 md:w-6 bg-white " />
+                        {touched.arrival && errors.arrival && (
+                          <div className="text-red-500 text-sm mt-2 absolute left-0">
+                            {errors.arrival}
+                          </div>
+                        )}
+                      </div>
 
+                      <div className="relative mb-5 select">
+                        <CustomDate
+                          onChange={(e) => {
+                            setFieldValue("departureDate", e.target.value)
+                            if (Triptype != "One-Way") {
+                              activateField('returnDate')
+                            } else {
+                              activateField('adult')
+                            }
+                          }}
+                          pastDate={false}
+                          value={values.departureDate}
+                          isSelected={activeField.departureDate}
+                          name={"departureDate"}
+                          label={"Departure Date"}
+                          disabled={false}
+
+                        />
+
+                        {touched.departureDate && errors.departureDate && (
+                          <div className="text-red-500 text-sm mt-2 absolute left-0">
+                            {errors.departureDate}
+                          </div>
+                        )}
+                      </div>
+                      <div className="relative mb-5 select">
+                        <CustomDate
+                          onChange={(e) => {
+                            setFieldValue("returnDate", e.target.value)
+                            activateField('adult')
+                          }}
+                          value={values.returnDate}
+                          isSelected={activeField.returnDate}
+                          name={"returnDate"}
+                          label={"Return Date"}
+                          disabled={Triptype == "One-Way"}
+                          pastDate={false}
+
+                        />
+                        {Triptype !== "One-Way" && touched.returnDate && errors.returnDate && (
+                          <div className="text-red-500 text-sm mt-2 absolute left-0">
+                            {errors.returnDate}
+                          </div>
+                        )}
+                      </div>
+                      <div className="relative mb-5 select">
+                        <Select
+                          isSelected={activeField.adult}
+                          id="adult"
+                          label="Adult"
+                          name="adult"
+                          options={adultOptions}
+                          value={values.adult}
+                          placeholder="Select Adults"
+                          onChange={(option) => {
+                            setFieldValue("adult", option.value)
+                            activateField('child')
+                          }}
+                          optionIcons={<IoIosMan />
+
+                          }
+                          selectIcon={<IoIosMan />}
+                        />
+                        {touched.adult && errors.adult && (
+                          <div className="text-red-500 text-sm mt-2 absolute left-0">
+                            {errors.adult}
+                          </div>
+                        )}
+                      </div>
+                      <div className="relative mb-5 select">
+                        <Select
+                          isSelected={activeField.child}
+                          id="child"
+                          label="Child"
+                          name="child"
+                          options={childOptions}
+                          value={values.child}
+                          placeholder="Select Childrens"
+                          onChange={(option) => {
+                            setFieldValue("child", option.value)
+                            activateField('infant')
+                          }}
+                          optionIcons={<FaChild />}
+                          selectIcon={<FaChild />}
+                        />
+                        {touched.child && errors.child && (
+                          <div className="text-red-500 text-sm mt-2 absolute left-0">
+                            {errors.child}
+                          </div>
+                        )}
+                      </div>
+                      <div className="relative mb-5 select">
+                        <Select
+                          isSelected={activeField.infant}
+                          id="infant"
+                          label="Infant"
+                          name="infant"
+                          options={infantOptions}
+                          value={values.infant}
+                          placeholder="Select Infants"
+                          onChange={(option) => {
+                            setFieldValue("infant", option.value)
+                            activateField('cabinClass')
+                          }}
+                          optionIcons={<MdChildFriendly />}
+                          selectIcon={<MdChildFriendly />}
+                        />
+                        {touched.infant && errors.infant && (
+                          <div className="text-red-500 text-sm mt-2 absolute left-0">
+                            {errors.infant}
+                          </div>
+                        )}
+                      </div>
+                      <div className="relative mb-5  select">
+                        <Select
+                          isSelected={activeField.cabinClass}
+                          id="cabinClass"
+                          label="Cabin Class"
+                          name="cabinClass"
+                          options={cabinClassOptions}
+                          value={values.cabinClass}
+                          placeholder="Cabin Class"
+                          onChange={(option) => {
+                            setFieldValue("cabinClass", option.value)
+                            activateField(null)
+                          }}
+                          optionIcons={<MdChildFriendly />}
+                        />
+                        {touched.cabinClass && errors.cabinClass && (
+                          <div className="text-red-500 text-sm mt-2 absolute left-0">
+                            {errors.infant}
+                          </div>
+                        )}
                       </div>
                     </div>
+                  </CardLayoutBody>
+                  <CardLayoutFooter>
+                    <div onClick={onSearch}>
+                      <Button
 
-
-                    <div className="relative mb-5">
-                      <Select
-                        className={'select w-full'}
-                        isSelected={activeField.arrival}
-                        id="arrival"
-                        label="Arrival To"
-                        name="arrival"
-                        options={iranianCities.filter((item) => item.value != values.departure)}
-                        value={values.arrival}
-                        placeholder="Select Arrival"
-                        onChange={(option) => {
-                          setFieldValue("arrival", option.value);
-                          activateField('departureDate')
-                        }
-                        }
-                        optionIcons={<FaPlaneArrival />}
-                        selectIcon={<FaPlaneArrival size={18} />
-                        }
+                        text={loading ? <Spinner /> : "Search Flight"}
+                        type="submit"
+                        disabled={loading}
                       />
-                      {touched.arrival && errors.arrival && (
-                        <div className="text-red-500 text-sm mt-2 absolute left-0">
-                          {errors.arrival}
-                        </div>
-                      )}
                     </div>
-
-                    <div className="relative mb-5 select">
-                      <CustomDate
-                        onChange={(e) => {
-                          setFieldValue("departureDate", e.target.value)
-                          if (values.tripType != "OneWay") {
-                            activateField('returnDate')
-                          } else {
-                            activateField('adult')
-                          }
-                        }}
-                        pastDate={false}
-                        value={values.departureDate}
-                        isSelected={activeField.departureDate}
-                        name={"departureDate"}
-                        label={"Departure Date"}
-                        disabled={false}
-
-                      />
-
-                      {touched.departureDate && errors.departureDate && (
-                        <div className="text-red-500 text-sm mt-2 absolute left-0">
-                          {errors.departureDate}
-                        </div>
-                      )}
-                    </div>
-                    <div className="relative mb-5 select">
-                      <CustomDate
-                        onChange={(e) => {
-                          setFieldValue("returnDate", e.target.value)
-                          activateField('adult')
-                        }}
-                        value={values.returnDate}
-                        isSelected={activeField.returnDate}
-                        name={"returnDate"}
-                        label={"Return Date"}
-                        disabled={values.tripType == "OneWay"}
-                        pastDate={false}
-
-                      />
-                      {/* <Input
-                        isSelected={activeField.returnDate}
-                        disabled={values.tripType == "OneWay"}
-
-                        // disabled={true}
-                        id={"returnDate"}
-                        name={"returnDate"}
-                        label={"Return Date"}
-                        type={"date"}
-                        value={values.returnDate}
-                        placeholder={"Select Return Date"}
-                        onChange={(e) => {
-                          if (values.tripType !== "OneWay") {
-                            setFieldValue("returnDate", e.target.value);
-                            activateField('adult')
-                          }
-                        }}
-                      /> */}
-                      {values.tripType !== "OneWay" && touched.returnDate && errors.returnDate && (
-                        <div className="text-red-500 text-sm mt-2 absolute left-0">
-                          {errors.returnDate}
-                        </div>
-                      )}
-                    </div>
-                    <div className="relative mb-5 select">
-                      <Select
-                        isSelected={activeField.adult}
-                        id="adult"
-                        label="Adult"
-                        name="adult"
-                        options={adultOptions}
-                        value={values.adult}
-                        placeholder="Select Adults"
-                        onChange={(option) => {
-                          setFieldValue("adult", option.value)
-                          activateField('child')
-                        }}
-                        optionIcons={<IoIosMan />
-
-                        }
-                        selectIcon={<IoIosMan />}
-                      />
-                      {touched.adult && errors.adult && (
-                        <div className="text-red-500 text-sm mt-2 absolute left-0">
-                          {errors.adult}
-                        </div>
-                      )}
-                    </div>
-                    <div className="relative mb-5 select">
-                      <Select
-                        isSelected={activeField.child}
-                        id="child"
-                        label="Child"
-                        name="child"
-                        options={childOptions}
-                        value={values.child}
-                        placeholder="Select Childrens"
-                        onChange={(option) => {
-                          setFieldValue("child", option.value)
-                          activateField('infant')
-                        }}
-                        optionIcons={<FaChild />}
-                        selectIcon={<FaChild />}
-                      />
-                      {touched.child && errors.child && (
-                        <div className="text-red-500 text-sm mt-2 absolute left-0">
-                          {errors.child}
-                        </div>
-                      )}
-                    </div>
-                    <div className="relative mb-5 select">
-                      <Select
-                        isSelected={activeField.infant}
-                        id="infant"
-                        label="Infant"
-                        name="infant"
-                        options={infantOptions}
-                        value={values.infant}
-                        placeholder="Select Infants"
-                        onChange={(option) => {
-                          setFieldValue("infant", option.value)
-                          activateField('cabinClass')
-                        }}
-                        optionIcons={<MdChildFriendly />}
-                        selectIcon={<MdChildFriendly />}
-                      />
-                      {touched.infant && errors.infant && (
-                        <div className="text-red-500 text-sm mt-2 absolute left-0">
-                          {errors.infant}
-                        </div>
-                      )}
-                    </div>
-                    <div className="relative mb-5  select">
-                      <Select
-                        isSelected={activeField.cabinClass}
-                        id="cabinClass"
-                        label="Cabin Class"
-                        name="cabinClass"
-                        options={cabinClassOptions}
-                        value={values.cabinClass}
-                        placeholder="Cabin Class"
-                        onChange={(option) => {
-                          setFieldValue("cabinClass", option.value)
-                          activateField(null)
-                        }}
-                        optionIcons={<MdChildFriendly />}
-                      />
-                      {touched.cabinClass && errors.cabinClass && (
-                        <div className="text-red-500 text-sm mt-2 absolute left-0">
-                          {errors.infant}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </CardLayoutBody>
-                <CardLayoutFooter>
-                  <div onClick={onSearch}>
-                    <Button
-
-                      text={loading ? <Spinner /> : "Search Flight"}
-                      type="submit"
-                      disabled={loading}
-                    />
-                  </div>
-                </CardLayoutFooter>
-              </Form>
-            )}
-          </Formik>
+                  </CardLayoutFooter>
+                </Form>
+              )}
+            </Formik> :
+            <MultiCity />}
         </CardLayoutContainer>
       </div>
     </>

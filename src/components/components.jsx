@@ -32,3 +32,6 @@ export { default as PriceSummary } from "./PriceSummary/PriceSummary";
 export { default as Modal } from "./Modal/Modal";
 export { default as PopupModal } from "./Modal/PopupModal";
 export { default as BellIcon } from "./BellIcon/BellIcon"
+export { default as TextArea } from "./TextArea/TextArea"
+export { default as Searchbar } from "./Searchbar/Searchbar"
+export { default as MultiCity } from "./MultiCity/MultiCity"

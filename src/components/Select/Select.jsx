@@ -72,7 +72,7 @@ const Select = ({
 
 
       <div className={`relative rounded-md border border-gray flex items-center justify-between px-2 ${disabled && 'bg-slate-100'}`}>
-        <label htmlFor={id} className={` text-md bg-white font-medium  mb-2 absolute -top-3 left-3  px-1 roounded-md text-gray`}>
+        <label htmlFor={id} className={` text-md bg-white font-medium  mb-2 absolute -top-3 left-3  px-1 roounded-md text-text`}>
           {label}
         </label>
         <div
@@ -80,9 +80,9 @@ const Select = ({
           onClick={selectHandler}
         >
 
-          <span className="text-gray flex gap-3 items-center"><span className="text-primary">{selectIcon}</span>{(value && value) || placeholder}</span>
+          <span className="text-text flex gap-3 items-center"><span className="text-primary">{selectIcon}</span>{(value && value) || placeholder}</span>
           <FaCaretDown
-            className={`text-gray transform transition-transform ${(selectStatus) ? "rotate-180" : ""
+            className={`text-text transform transition-transform ${(selectStatus) ? "rotate-180" : ""
               }`}
           />
         </div>
@@ -114,7 +114,7 @@ const Select = ({
                 </li>
               ))}
               {filteredOptions.length === 0 && (
-                <li className="p-3 text-sm text-gray-500">No options found</li>
+                <li className="p-3 text-sm text-text-500">No options found</li>
               )}
             </ul>
           </div>

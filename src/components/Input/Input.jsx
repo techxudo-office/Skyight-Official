@@ -30,30 +30,32 @@ const Input = ({
         inputRef.current.showPicker();
       }
     }
-  },[isSelected])
+  }, [isSelected])
 
   return (
     <>
       <div className={`flex flex-col w-full ${className}`}>
 
         <div className={`rounded-lg relative flex items-center justify-between ${disabled ? 'bg-slate-100' : 'bg-white'}  `}>
-          <label htmlFor={id} className="text-base rounded-md font-medium  mb-2 absolute -top-3 left-3 bg-white px-1 text-gray">
+          <label htmlFor={id} className="text-base rounded-md font-medium  mb-2 absolute -top-3 left-3 bg-white px-1 text-text">
             {label}
           </label>
-          <input
-            ref={inputRef}
-            className={`flex flex-1 w-full bg-transparent p-3 outline-none border-gray border rounded-md py-5 px-3 cursor-default text-gray`}
-            id={id}
-            type={
-              type === "password" ? (showPassword ? "text" : "password") : type
-            }
-            name={name}
-            value={value}
-            placeholder={placeholder}
-            onChange={onChange}
-            onKeyPress={onKeyPressHandler}
-            autoComplete={autoComplete}
-          />
+          <div className="flex flex-1 w-full items-center gap-1 bg-transparent border-gray border rounded-md py-5 px-3 cursor-default text-text">
+            <input
+              ref={inputRef}
+              className={`w-full bg-transparent  outline-none  `}
+              id={id}
+              type={
+                type === "password" ? (showPassword ? "text" : "password") : type
+              }
+              name={name}
+              value={value}
+              placeholder={placeholder}
+              onChange={onChange}
+              onKeyPress={onKeyPressHandler}
+              autoComplete={autoComplete}
+            />
+
           {type === "password" ? (
             <span className="cursor-default" onClick={showPasswordHandler}>
               {showPassword ? <FaEye /> : <FaEyeSlash />}
@@ -69,6 +71,8 @@ const Input = ({
           ) : (
             ""
           )}
+          </div>
+
         </div>
       </div>
     </>

@@ -194,14 +194,7 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows, o
         ] : []),
 
         ...columnsView,
-        {
-            id: 'pnr',
-            Header: "PNR",
-            accessor: (row, i) => i + 1, // Row index starting from 1
-            Cell: ({ row }) => (
-                <span className="text-sm text-text">active</span>
-            )
-        },
+      
         // ...(tableData.some(item => 'role' in item || 'company_id' in item) ? [
         //     {
 

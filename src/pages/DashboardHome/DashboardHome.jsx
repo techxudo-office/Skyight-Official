@@ -5,6 +5,7 @@ import {
   SecondaryButton,
   ConfirmModal,
   TableNew,
+  Searchbar,
 } from "../../components/components";
 import { getRoutes, getFlightBookings } from "../../utils/api_handler";
 import { useNavigate } from "react-router-dom";
@@ -34,14 +35,14 @@ const DashboardHome = () => {
     autoplaySpeed: 2000,
     arrows: false,
     responsive: [
-      
+
       {
         breakpoint: 768, // Tablets
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
           autoplaySpeed: 2500, // Adjust speed for smaller screens
-          dots:false
+          dots: false
         },
       },
       {
@@ -50,13 +51,13 @@ const DashboardHome = () => {
           slidesToShow: 1,
           slidesToScroll: 1,
           autoplaySpeed: 3000,
-          dots:false
+          dots: false
 
         },
       },
     ],
   };
-  
+
 
   const navigate = useNavigate();
 
@@ -92,7 +93,7 @@ const DashboardHome = () => {
     const response = await getFlightBookings();
     if (response.status) {
       setBookingsData(response.data);
-      console.log('bookking',response.data)
+      console.log('bookking', response.data)
     }
   };
 
@@ -116,16 +117,16 @@ const DashboardHome = () => {
           Featured Flights
         </h2>
         <div className="w-full  overflow-x-hidden">
-          
-            <Slider {...settings}
-              className=" flex gap-3 "
-            >
-              {flightsData.length > 0 &&
-                flightsData.map((item, index) => (
-                  <DashboardCards key={index} index={index} data={item} />
-                ))}
-            </Slider>
-          
+
+          <Slider {...settings}
+            className=" flex gap-3 "
+          >
+            {flightsData.length > 0 &&
+              flightsData.map((item, index) => (
+                <DashboardCards key={index} index={index} data={item} />
+              ))}
+          </Slider>
+
         </div>
 
 
@@ -143,21 +144,23 @@ const DashboardHome = () => {
             columns={columnsData}
             data={bookingsData}
           /> */}
-         { <TableNew
+          <Searchbar className={'mb-7'} />
+
+          <TableNew
             columnsToView={columnsData}
             tableData={bookingsData}
-          />}
+          />
         </CardLayoutBody>
         <CardLayoutFooter></CardLayoutFooter>
       </CardLayoutContainer>
       <div
-            id="footer-container"
-            className="flex bg-white p-3 pb-0 w-full justify-center items-center"
-          >
-            <h2 className="text-text text-md font-semibold mt-2 text-center">
-              © 2024 All rights reserved by SKYIGHT AIR & BOOKING SYSTEM
-            </h2>
-          </div>
+        id="footer-container"
+        className="flex bg-white p-3 pb-0 w-full justify-center items-center"
+      >
+        <h2 className="text-text text-md font-semibold mt-2 text-center">
+          © 2024 All rights reserved by SKYIGHT AIR & BOOKING SYSTEM
+        </h2>
+      </div>
     </div>
   );
 };

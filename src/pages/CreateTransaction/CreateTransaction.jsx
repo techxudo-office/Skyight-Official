@@ -16,6 +16,7 @@ import {
   SecondaryButton,
   Select,
   CustomDate,
+  TextArea,
 } from "../../components/components";
 
 import { createTransaction, getBanks } from "../../utils/api_handler";
@@ -39,7 +40,7 @@ const CreateTransaction = () => {
       const response = await getBanks();
       if (response.status) {
         setBanksData(response.data);
-        console.log('bank',response.data)
+        console.log('bank', response.data)
       }
     };
 
@@ -271,24 +272,7 @@ const CreateTransaction = () => {
                         </div>
                       )}
                     </div>
-                    <div className="relative mb-5">
-                      <Input
-                        id={"comment"}
-                        name={"comment"}
-                        label={"Comment"}
-                        type={"text"}
-                        value={values.comment}
-                        placeholder={"Enter Comment"}
-                        onChange={(e) =>
-                          setFieldValue("comment", e.target.value)
-                        }
-                      />
-                      {touched.comment && errors.comment && (
-                        <div className="text-red-500 text-sm mt-2 absolute left-0">
-                          {errors.comment}
-                        </div>
-                      )}
-                    </div>
+
                     <div className="relative mb-5">
                       {/* <Input
                         id={"payment_date"}
@@ -302,12 +286,12 @@ const CreateTransaction = () => {
                         }
                       /> */}
                       <CustomDate
-                      label={'Transaction Date'}
-                      isTimePicker={true}
-                      value={values.payment_date}
-                      onChange={(e) =>
-                        setFieldValue("payment_date", e.target.value)
-                      }
+                        label={'Transaction Date'}
+                        isTimePicker={true}
+                        value={values.payment_date}
+                        onChange={(e) =>
+                          setFieldValue("payment_date", e.target.value)
+                        }
 
                       />
                       {touched.payment_date && errors.payment_date && (
@@ -316,6 +300,24 @@ const CreateTransaction = () => {
                         </div>
                       )}
                     </div>
+
+                  </div>
+                  <div className="relative mb-5">
+                    <TextArea
+                      id={"comment"}
+                      name={"comment"}
+                      label={"Comment"}
+                      value={values.comment}
+                      placeholder={"Enter Comment"}
+                      onChange={(e) =>
+                        setFieldValue("comment", e.target.value)
+                      }
+                    />
+                    {touched.comment && errors.comment && (
+                      <div className="text-red-500 text-sm mt-2 absolute left-0">
+                        {errors.comment}
+                      </div>
+                    )}
                   </div>
                 </CardLayoutBody>
                 <CardLayoutFooter className={"gap-1"}>

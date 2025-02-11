@@ -5,7 +5,7 @@ import {
   CardLayoutBody,
   CardLayoutFooter,
 } from "../../components/CardLayout/CardLayout";
-import { Input, Button, Switch, Spinner } from "../../components/components";
+import { Input, Button, Switch, Spinner, TextArea } from "../../components/components";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
@@ -75,7 +75,7 @@ const CreateTicket = () => {
         <form onSubmit={handleFormSubmit} noValidate>
           <CardLayoutBody>
             <div>
-              <div className="grid grid-cols-1 md:grid-cols-2  gap-3 md:gap-5 mb-7">
+              <div className="flex flex-col gap-5 md:gap-9 mb-7">
                 <div
                   className={`relative ${formik.touched.title && formik.errors.title ? "mb-5" : ""
                     }`}
@@ -103,12 +103,11 @@ const CreateTicket = () => {
                       : ""
                     }`}
                 >
-                  <Input
+                  <TextArea
                     placeholder={"Enter Ticket Description"}
                     id={"description"}
                     name={"description"}
                     label={"Ticket Description*"}
-                    type={"text"}
                     value={formik.values.description}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}

@@ -223,7 +223,7 @@ const CreateUser = () => {
                   label={'Role'}
                   options={roleData}
                   value={role}
-                  onChange={(option)=>setRole(option.value)}
+                  onChange={(option)=>setRole(option.label)}
                   />
                   {formik.touched.role_id && formik.errors.role_id && (
                     <div className="text-red-500 text-sm mt-2 absolute left-0">
