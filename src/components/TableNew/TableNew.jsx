@@ -5,12 +5,16 @@ import { format } from 'date-fns';
 import { TbCheck, TbChevronLeft, TbChevronLeftPipe, TbChevronRight, TbChevronRightPipe } from "react-icons/tb";
 import { object } from 'yup';
 import dayjs from 'dayjs';
-import { CustomTooltip, Spinner } from '../components';
+import { CustomTooltip, Input, Spinner } from '../components';
 import { BsThreeDots } from 'react-icons/bs';
 import { IoIosAirplane } from 'react-icons/io';
+import { FaEdit, FaEye } from 'react-icons/fa';
+import { Modal } from '../components'
+import { logo } from '../../assets/Index';
+import { MdDelete } from 'react-icons/md';
 // import {Cell}  from "@table-library/react-table-library/table";
 
-const TableNew = ({ columnsToView, tableData, actions, activeIndex }) => {
+const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows, onDeleteUser }) => {
     // const data = React.useMemo(() => tableData, []);
     const data = tableData;
     const [rowsPerPage, setRowsPerPage] = useState(15);
@@ -18,15 +22,18 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex }) => {
     const [loader, setLoader] = useState(true);
     const [extraRow, setExtraRow] = useState(null);
     const [toggle, setToggle] = useState(false);
+    const [modal, setModal] = useState(false);
     const [maxLength, setmaxLength] = useState(null);
+    const [editIdx, setEditIdx] = useState(null);
 
-    // console.log('tableData', tableData)
+
+    console.log('tableData', tableData)
     // console.log('active in/dex', activeIndex)
     // console.log('columns', columnsToView)
     // console.log(extraRow);
 
 
-    const fieldNames = columnsToView.map(item => item.fieldName)
+
 
     useEffect(() => {
         if (toggle) {
@@ -43,13 +50,13 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex }) => {
     }, [])
 
 
-
+    console.log('filednames', extraRows)
     useEffect(() => {
-        // it is to get the field names from tableData which are not present in columnsToView an and show them when click on viw button action
-        if (activeIndex != null) {
+        // it is to get the field names from tableData which are  present in extraRows an and show them when click on viw button action
+        if (activeIndex != null & extraRows != undefined) {
 
             setExtraRow(Object.entries(tableData[activeIndex])
-                .filter(([key]) => !fieldNames.includes(key))) // Compare key with fieldName values
+                .filter(([key]) => extraRows.includes(key))) // Compare key with fieldName values
 
         }
     }, [activeIndex]);
@@ -85,6 +92,22 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex }) => {
                         )
                     }
                 }
+                else if (item.type == 'text') {
+
+                    return {
+                        Header: item.columnName,
+                        accessor: item.fieldName,
+                        Cell: ({ value }) => {
+                            const text = String(value)
+                            return <span>
+                                <p className={`text-xs md:text-sm `}>
+                                    {text.length > 15 ? <span>{text.slice(0, 15)}...</span> : text}
+                                </p>
+                            </span>
+                        }
+                    }
+
+                }
                 if (item.columnName == 'Status') {
                     return {
                         Header: item.columnName,
@@ -98,22 +121,11 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex }) => {
                         )
                     }
                 }
-                if (item.columnName == 'Description') {
-                    return {
-                        Header: item.columnName,
-                        accessor: item.fieldName,
-                        Cell: ({ value }) => (
-                            <p className={`text-text text-sm flex items-center gap-2 justify-center`}>
-                                {value.length > 30 ? `${value.substring(0, 10)}...` : value}
-                            </p>
-                        )
-                    }
-                }
                 if (item.columnName === "Role") {
                     return {
                         Header: item.columnName,
                         accessor: item.fieldName,
-                        Cell: ({ value }) => {
+                        Cell: ({ value, row }) => {
                             // Define role mappings
                             const roleMappings = {
                                 super_admin: "Super Admin",
@@ -151,21 +163,6 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex }) => {
             }
             )
 
-    columnsView.unshift({
-        Header: "Route",
-        Cell: ({ row }) => (
-            <span className="text-text text-sm flex items-center gap-2 justify-center">
-                {row.original.origin}
-                <div className='flex items-center gap-1'>
-                    <span className="h-0.5 w-3 bg-primary"></span>
-                    <IoIosAirplane className="text-lg text-primary" />
-                    <span className="h-0.5 w-3 bg-primary"></span>
-                </div>
-
-                {row.original.destination}
-            </span>
-        )
-    });
 
     const columns = React.useMemo(() => [
         {
@@ -176,6 +173,26 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex }) => {
                 <span className="text-sm text-text">{row.index + 1}</span>
             )
         },
+        ...(tableData.some(item => 'origin' in item || 'destination' in item) ? [
+            {
+
+                Header: "Route",
+                Cell: ({ row }) => (
+                    <span className="text-text text-sm flex items-center gap-2 justify-center">
+                        {row.original.origin}
+                        <div className='flex items-center gap-1'>
+                            <span className="h-0.5 w-3 bg-primary"></span>
+                            <IoIosAirplane className="text-lg text-primary" />
+                            <span className="h-0.5 w-3 bg-primary"></span>
+                        </div>
+                        {row.original.destination}
+                    </span>
+                )
+
+            }
+
+        ] : []),
+
         ...columnsView,
         {
             id: 'pnr',
@@ -185,12 +202,33 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex }) => {
                 <span className="text-sm text-text">active</span>
             )
         },
+        // ...(tableData.some(item => 'role' in item || 'company_id' in item) ? [
+        //     {
+
+        //         Header: "Actions",
+        //         id: 'actions2',
+        //         Cell: ({ row }) => (
+        //             <span className="text-text text-sm flex items-center gap-2 justify-center">
+        //                 {row.original.role == "super_admin" &&
+        //                     <div>
+        //                         <FaEdit className='text-primary' onClick={() => setModal((prev) => !prev) & setEditIdx(row.index)} />
+        //                         <MdDelete className='text-redColor' onClick={() => setModal(true)} />
+        //                     </div>
+        //                 }
+
+        //             </span>
+        //         )
+
+        //     }
+
+        // ] : []),
         ...(actions ? [{
             Header: 'Actions',
-            id: 'actions',
+            // id: 'actions',
             Cell: ({ row }) => (
                 <span className="text-text text-lg flex gap-2 items-center relative">
-                    {actions.map((action, idx) => (
+                    {
+                    row.original.role ? row.original.role=='Admin'&& actions.map((action, idx) => (
                         <CustomTooltip key={idx} content={action.name}>
                             <div
                                 className="cursor-pointer "
@@ -204,15 +242,30 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex }) => {
 
                             </div>
                         </CustomTooltip>
-                    ))}
+                    )) : 
+                    actions.map((action, idx) => (
+                        <CustomTooltip key={idx} content={action.name}>
+                            <div
+                                className="cursor-pointer "
+                                onClick={() => action.handler(row.index, tableData[row.index])}
+                            >
+                                <div className=''>
+                                    {action.icon}
+
+                                </div>
+
+
+                            </div>
+                        </CustomTooltip>))}
                     {/* {activeIndex != null & activeIndex === row.index ?
                         <p className='absolute z-10 right-0 text-sm top-6 w-56 bg-white border-gray border-[1px] rounded-lg text-text px-3 py-1 shadow-lg font-semibold'>
                             {tableData[activeIndex].roleRights}
                         </p> : ''} */}
                 </span>
             )
+
         }] : [])
-    ], [activeIndex]);
+    ], [activeIndex, tableData]);
 
     // [
     //     {
@@ -378,38 +431,60 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex }) => {
                                             ))}
                                         </tr>
                                         {activeIndex !== null && extraRow != null && activeIndex === row.index ? (
-                                            <tr className="h-10 bg-slate-200 w-full transition-colors  text-text ">
-                                                <td colSpan={columns.length} className="w-full pl-5 ">
-                                                    <button className='border-[1px] border-primary text-primary capitalize bg-bluebg hover:text-secondary px-3 py-1 my-4 rounded-lg cursor-pointer' onClick={() => setToggle((prev) => !prev)}>view Full Info</button>
-                                                    {extraRow.length > 1 ?
-                                                        extraRow.map((item, i) => (
-                                                            <div key={i} className='flex gap-2'>
-                                                                <span className='capitalize font-semibold'>
-                                                                    {item[0].replaceAll('_', ' ')}:
-                                                                </span>
-                                                                <span>{
-                                                                    item[1] && item[1].length > maxLength ?
-                                                                        <span className='flex gap-1 items-end'>
-                                                                            {item[1].slice(0, maxLength)}<BsThreeDots />
-                                                                        </span> :
-                                                                        item[1]}
-                                                                </span>
-                                                            </div>
-                                                        )) :
-                                                        <div className='flex gap-2'>
-                                                            <span className='capitalize font-semibold'>
-                                                                {extraRow[0][0].replaceAll('_', ' ')}:
-                                                            </span>
-                                                            <span>{
-                                                                extraRow && extraRow[0][1].length > maxLength ?
-                                                                    <span className='flex gap-1 items-end'>
-                                                                        {extraRow[0][1].slice(0, maxLength)}<BsThreeDots />
+                                            <tr className="h-10 bg-slate-200 w-full  transition-colors  text-text ">
+                                                <td colSpan={columns.length} className="w-full p-10">
+                                                    <div className='flex lg:justify-between lg:flex-row flex-col max-lg:items-center'>
+                                                        <div className='lg:w-1/2'>
+                                                            {extraRow.length > 1 ?
+                                                                extraRow.map(([key, value], i) => (
+                                                                    key == 'document_url' ?
+                                                                        ''
+                                                                        :
+                                                                        <div key={i} className='flex gap-2 text-sm pb-2'>
+                                                                            <span className='capitalize font-semibold w-44 text-primary underline'>
+                                                                                {key.replaceAll('_', ' ')}:
+                                                                            </span>
+                                                                            <span>{
+                                                                                value && value.length > maxLength ?
+                                                                                    <span className='flex gap-1 items-end font-semibold'>
+                                                                                        <span className='font-semibold'>{value.slice(0, maxLength)}</span>
+                                                                                        <BsThreeDots />
+                                                                                    </span> :
+                                                                                    value}
+                                                                            </span>
+                                                                        </div>
+                                                                )) :
+                                                                <div className='flex gap-3'>
+                                                                    <span className='capitalize font-semibold text-primary underline'>
+                                                                        {extraRow[0][0].replaceAll('_', ' ')}:
                                                                     </span>
-                                                                    :
-                                                                    extraRow[0][1]}
-                                                            </span>
+                                                                    <span>{
+                                                                        extraRow && extraRow[0][1].length > maxLength ?
+                                                                            <span className='flex gap-1 items-end  font-semibold'>
+                                                                                <span className='font-semibold'>{extraRow[0][1].slice(0, maxLength)}</span><BsThreeDots />
+                                                                            </span>
+                                                                            :
+                                                                            extraRow[0][1]}
+                                                                    </span>
+                                                                </div>
+                                                            }
                                                         </div>
-                                                    }
+                                                        <div className='lg:w-1/2 flex flex-col items-center lg:items-end px-10'>
+                                                            <button className='border-[1px] border-primary text-primary capitalize bg-bluebg hover:text-secondary px-3 py-1  rounded-lg cursor-pointer w-fit max-lg:mt-4' onClick={() => setToggle((prev) => !prev)}>view Full Info</button>
+                                                            {extraRow.filter(([key, value]) => (
+                                                                key == 'document_url'
+                                                            )).map(([key, value]) => (
+                                                                <div className='flex items-center justify-center  my-4 w-full lg:self-end '>
+                                                                    <img className='lg:w-60 w-52  ' src={value} alt="" />
+                                                                </div>
+                                                            ))
+
+                                                            }
+                                                        </div>
+
+                                                    </div>
+
+
                                                 </td>
                                             </tr>
                                         ) : ''}
@@ -490,6 +565,9 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex }) => {
                     </button>
                 </div>
             </div>
+            <Modal active={modal} imgsrc={logo} title={'Edit'} Message={
+                <Input label={'Role'} name={'Role'} value={editIdx != null && tableData[editIdx].role} />
+            } toggle={true} btnText={'update'} onClose={() => setModal(false)} />
         </div>
     );
 };

@@ -12,6 +12,7 @@ export default function Modal({
     onClose // Handle closing from parent
 }) {
     if (!active) return null; // Hide modal when inactive
+    
 
     return (
         <div className="fixed inset-0 flex items-center justify-center max-md:px-5 bg-black backdrop-blur-sm z-[999] bg-opacity-50">

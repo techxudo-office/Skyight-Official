@@ -243,7 +243,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                         id="departure"
                         label="Departure From"
                         name="departure"
-                        options={iranianCities}
+                        options={iranianCities.filter((item) => item.value != values.arrival)}
                         value={values.departure}
                         placeholder="Select Departure"
                         onChange={(option) => {
@@ -273,7 +273,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                         id="arrival"
                         label="Arrival To"
                         name="arrival"
-                        options={iranianCities}
+                        options={iranianCities.filter((item) => item.value != values.departure)}
                         value={values.arrival}
                         placeholder="Select Arrival"
                         onChange={(option) => {

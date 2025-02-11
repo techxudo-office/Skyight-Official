@@ -5,7 +5,7 @@ import {
   CardLayoutBody,
   CardLayoutFooter,
 } from "../../components/CardLayout/CardLayout";
-import { Input, Button, Switch, Spinner } from "../../components/components";
+import { Input, Button, Switch, Spinner, Select } from "../../components/components";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
@@ -18,6 +18,12 @@ const CreateUser = () => {
 
   const [isActive, setIsActive] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [role, setRole] = useState(null);
+  const roleData=[
+    {value:'super_admin',label:'Super Admin'},
+    {value:'admin',label:'Admin'},
+    {value:'manager',label:'Manager'},
+  ]
 
   const createUserHandler = async (payload, resetForm) => {
     console.log(payload)
@@ -199,7 +205,7 @@ const CreateUser = () => {
                   className={`relative ${formik.touched.role && formik.errors.role ? "mb-5" : ""
                     }`}
                 >
-                  <Input
+                  {/* <Input
                     placeholder={"Enter Role of User"}
                     id={"role_id"}
                     name={"role_id"}
@@ -211,6 +217,13 @@ const CreateUser = () => {
                       formik.setFieldValue("role_id", value === "" ? "" : Number(value)); // Allow empty string
                     }}
                     onBlur={formik.handleBlur}
+                  /> */}
+                  <Select
+                  name={'role'}
+                  label={'Role'}
+                  options={roleData}
+                  value={role}
+                  onChange={(option)=>setRole(option.value)}
                   />
                   {formik.touched.role_id && formik.errors.role_id && (
                     <div className="text-red-500 text-sm mt-2 absolute left-0">

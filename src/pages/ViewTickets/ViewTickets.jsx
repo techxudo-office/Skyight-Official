@@ -108,6 +108,7 @@ const ViewTickets = () => {
             tableData={ticketsData}
             actions={actionsData}
             activeIndex={activeIndex}
+            extraRows={['title','description']}
           />
         </CardLayoutBody>
         <CardLayoutFooter></CardLayoutFooter>

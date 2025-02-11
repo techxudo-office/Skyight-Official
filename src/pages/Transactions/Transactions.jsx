@@ -73,10 +73,12 @@ const Transactions = () => {
         </CardLayoutHeader>
         <CardLayoutBody removeBorder={true}>
           <TableNew
-          columnsToView={transactionColumns}
-          tableData={transactionsData}
-          actions={actionsData}
-          activeIndex={activeIndex}
+            columnsToView={transactionColumns}
+            tableData={transactionsData}
+            actions={actionsData}
+            activeIndex={activeIndex}
+            extraRows={['comment', 'account_holder_name','document_url']}
+
 
           />
         </CardLayoutBody>

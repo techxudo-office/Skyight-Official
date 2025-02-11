@@ -28,6 +28,7 @@ export const login = async (payload) => {
   } catch (error) {
     console.log("Failed while trying to login account: ", error);
     if (error.response) {
+      console.log(error.response)
       if (error.response.data.data.errors) {
         const errors = Object.keys(error.response.data.data.errors);
         const errorMessages = [];

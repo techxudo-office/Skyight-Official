@@ -165,6 +165,7 @@ const Roles = () => {
             columnsToView={columnsData}
             tableData={data}
             actions={actionsData}
+            extraRows={["roleRights"]}
             activeIndex={activeIndex}
             // activeField={["roleRights"]}
           />

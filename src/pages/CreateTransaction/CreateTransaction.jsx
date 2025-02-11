@@ -15,6 +15,7 @@ import {
   Button,
   SecondaryButton,
   Select,
+  CustomDate,
 } from "../../components/components";
 
 import { createTransaction, getBanks } from "../../utils/api_handler";
@@ -38,6 +39,7 @@ const CreateTransaction = () => {
       const response = await getBanks();
       if (response.status) {
         setBanksData(response.data);
+        console.log('bank',response.data)
       }
     };
 
@@ -168,7 +170,7 @@ const CreateTransaction = () => {
                         value={values.bank_name}
                         placeholder="Select Bank"
                         onChange={(option) =>
-                          setFieldValue("bank_name", option.value)
+                          setFieldValue("bank_name", option.label)
                         }
                         optionIcons={<PiBankBold />}
                       />
@@ -288,7 +290,7 @@ const CreateTransaction = () => {
                       )}
                     </div>
                     <div className="relative mb-5">
-                      <Input
+                      {/* <Input
                         id={"payment_date"}
                         name={"payment_date"}
                         label={"Transaction Date"}
@@ -298,6 +300,15 @@ const CreateTransaction = () => {
                         onChange={(e) =>
                           setFieldValue("payment_date", e.target.value)
                         }
+                      /> */}
+                      <CustomDate
+                      label={'Transaction Date'}
+                      isTimePicker={true}
+                      value={values.payment_date}
+                      onChange={(e) =>
+                        setFieldValue("payment_date", e.target.value)
+                      }
+
                       />
                       {touched.payment_date && errors.payment_date && (
                         <div className="text-red-500 text-sm mt-2 absolute left-0">

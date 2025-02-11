@@ -36,6 +36,7 @@ const Users = () => {
       name: "Edit",
       icon: <MdEditSquare title="Edit" className="text-blue-500" />,
       handler: (index, item) => {
+        console.log('item',item)
         navigate("/dashboard/update-reason", { state: item });
       },
     },
@@ -54,14 +55,14 @@ const Users = () => {
     setUsersData(response[0])
   };
 
-  const deleteUserHandler = async () => {
-    if (!deleteId) {
+  const deleteUserHandler = async (idx) => {
+    if (!idx) {
       errorToastify("Failed to delete this user");
       setModalStatus(false);
     } else {
-      const response = await deleteUser(deleteId);
+      const response = await deleteUser(idx);
       if (response.status) {
-        setUsersData(usersData.filter(({ id }) => id !== deleteId));
+        setUsersData(usersData.filter(({ id }) => id !== idx));
         setModalStatus(false);
         setDeleteId(null);
         successToastify(response.message);
@@ -104,6 +105,7 @@ const Users = () => {
           <TableNew
             columnsToView={userColumns}
             tableData={usersData}
+            // onDeleteUser={deleteUserHandler}
             actions={actionsData}
 
           />
