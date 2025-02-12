@@ -2,6 +2,7 @@ import React from "react";
 import airlineImg from "../../assets/images/airline.png";
 import { Button } from "../components";
 import { useNavigate } from "react-router-dom";
+import { MdBookmark } from "react-icons/md";
 
 const DashboardCards = ({ index, data }) => {
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ const DashboardCards = ({ index, data }) => {
         <div className="flex items-center justify-start pb-2">
           <div>
             <Button
+            icon={<MdBookmark/>}
               onClick={() => {
                 navigate("/dashboard/search-flights");
               }}

@@ -1,5 +1,6 @@
 import React from 'react'
 import { Button } from '../components'
+import { MdSearch } from 'react-icons/md'
 
 
 export default function ChangeSearch({onclick,flights}) {
@@ -9,7 +10,7 @@ export default function ChangeSearch({onclick,flights}) {
         <div>
             <div className='flex flex-1 gap-3'>
             
-                 <Button onClick={onclick} text={'Change Search'}/>
+                 <Button icon={<MdSearch/>} onClick={onclick} text={'Change Search'}/>
             </div>
         </div>
     </div>

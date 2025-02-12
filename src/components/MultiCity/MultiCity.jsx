@@ -188,11 +188,12 @@ const MultiCity = ({ OnlySearch, onSearch }) => {
 
     const handleSubmit = (values) => {
         // console.log("handleSubmit");
+        console.log('Submitted values', values)
         // localStorage.setItem("flightSearchForm", JSON.stringify(values));
-        setFormData(values)
+        // setFormData(values)
         // console.log("Form Values: ", values);
 
-        searchFlightHandler(values)
+        // searchFlightHandler(values)
 
     };
 
@@ -241,9 +242,9 @@ const MultiCity = ({ OnlySearch, onSearch }) => {
     const handleDeleteFlight = (setValues, idx) => {
         setValues((prev) => ({
             ...prev,
-            flights: prev.flights.filter((item,i) => i != idx)
+            flights: prev.flights.filter((item, i) => i != idx)
         }))
-        setNoOfFlights((prev) => prev -1)
+        setNoOfFlights((prev) => prev - 1)
 
     }
     return (
@@ -252,11 +253,10 @@ const MultiCity = ({ OnlySearch, onSearch }) => {
             <Formik
                 initialValues={initialValues}
                 validationSchema={validationSchema}
-                onSubmit={handleSubmit}
             >
 
                 {({ values, setValues, errors, touched, setFieldValue, isSubmitting }) => {
-                    console.log(values)
+                    
                     return (
                         <Form>
                             <CardLayoutBody>
@@ -343,7 +343,7 @@ const MultiCity = ({ OnlySearch, onSearch }) => {
                                                 )}
                                                 {
                                                     i > 1 &&
-                                                    <div onClick={() => handleDeleteFlight(setValues,i)}>
+                                                    <div onClick={() => handleDeleteFlight(setValues, i)}>
                                                         <MdCancel className="text-gray hover:text-text text-xl" />
                                                     </div>
                                                 }
@@ -446,7 +446,7 @@ const MultiCity = ({ OnlySearch, onSearch }) => {
                             <CardLayoutFooter>
                                 <div onClick={onSearch}>
                                     <Button
-
+                                        onClick={() => handleSubmit(values)}
                                         text={loading ? <Spinner /> : "Search Flight"}
                                         type="submit"
                                         disabled={loading}

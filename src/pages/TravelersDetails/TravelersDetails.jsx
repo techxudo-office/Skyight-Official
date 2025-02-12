@@ -28,6 +28,7 @@ import {
   FlightInfoCard,
   PriceSummary,
   Dropdown,
+  ConfirmModal,
 } from "../../components/components";
 import toast, { Toaster } from "react-hot-toast";
 import { MdCalendarMonth, MdCalendarToday, MdCalendarViewMonth, MdCalendarViewWeek, MdCancel, MdChildCare, MdChildFriendly, MdOutlineCalendarMonth, MdPerson } from "react-icons/md";
@@ -58,7 +59,9 @@ const validationSchema = Yup.object().shape({
   last_name: Yup.string().required("Please enter last name"),
   email: Yup.string().required("Please enter email"),
   telephone: Yup.string().required("Please enter phone number"),
-  mobile: Yup.string().required("Please enter mobile number"),
+  mobile: Yup.string()
+    .matches(/^(\+92|0)?[0-9]{10,11}$/, "Invalid phone number")
+    .required("Phone number is required"),
   country: Yup.string().required("Please select country"),
   city: Yup.string().required("Please select city"),
   date_of_birth: Yup.string().required("Please select date of birth"),
@@ -82,6 +85,8 @@ const TravelersDetails = () => {
   const [pricingInfo, setPricingInfo] = useState();
   const [toogleForm, setToogleForm] = useState(0);
   const [passenger, setPassenger] = useState(0);
+  const [confirmStatus, setConfirmStatus] = useState(false);
+  const [disableAddTraveler, setDisableAddTraveler] = useState(null);
   const [travelersQuantity, setTravelersQuantity] = useState(0);
   // const [Value, setValue] = useState(null);
 
@@ -114,6 +119,7 @@ const TravelersDetails = () => {
   const [allTravelersData, setAllTravelersData] = useState([]);
 
   const handleSubmit = (travelerIndex, values) => {
+    setConfirmStatus(false)
     const payload = {
       city: values.city,
       country: values.country,
@@ -123,24 +129,25 @@ const TravelersDetails = () => {
       gender: values.gender,
       last_name: values.last_name,
       mobile: {
-        area_code: "912",
-        country_code: "98",
-        number: "2569355",
+        area_code: String(values.mobile).slice(0, 3),
+        country_code: String(values.mobile).slice(3, 5),
+        number: String(values.mobile).slice(5, 12),
       },
       passenger_type: result[travelerIndex],
       passport_expiry_date: values.passport_expiry_date,
       passport_number: values.passport_number,
       telephone: {
-        area_code: "21",
-        country_code: "98",
-        number: "12345678",
+        area_code: String(values.telephone).slice(0, 3),
+        country_code: String(values.telephone).slice(3, 5),
+        number: String(values.telephone).slice(5, 12),
       },
       title: values.title,
     };
     console.log(payload);
+    setDisableAddTraveler(travelerIndex)
     setAllTravelersData((prevData) => [...prevData, payload]);
-    console.log('alltravelersdata', allTravelersData)
   };
+  console.log('alltravelersdata', allTravelersData)
 
   const addAllTravelers = () => {
     console.log(allTravelersData);
@@ -158,31 +165,31 @@ const TravelersDetails = () => {
       console.log('data', location.state)
       console.log('travelersdata', location.state.travelers)
       setTravelersQuantity(Object.entries(location.state.travelers)
-      .filter(([key, value]) => value > 0)
-      .map(([key, value]) => {
-        if (key == 'adults') {
-          return {
-            icon: <MdPerson />,
-            name: 'Adult',
-            value: value
+        .filter(([key, value]) => value > 0)
+        .map(([key, value]) => {
+          if (key == 'adults') {
+            return {
+              icon: <MdPerson />,
+              name: 'Adult',
+              value: value
+            }
+          } else if (key == 'childs') {
+            return {
+              icon: <MdChildCare />,
+              name: 'Child',
+              value: value
+            }
+          } else {
+            return {
+              icon: < MdChildFriendly />,
+              name: 'Infant',
+              value: value
+            }
           }
-        } else if (key == 'childs') {
-          return {
-            icon: <MdChildCare />,
-            name: 'Child',
-            value: value
-          }
-        } else {
-          return {
-            icon: < MdChildFriendly />,
-            name: 'Infant',
-            value: value
-          }
-        }
-      }))
+        }))
     }
-  
-    
+
+
   }, [location.state]);
 
 
@@ -212,7 +219,25 @@ const TravelersDetails = () => {
     { value: 'Hashamuddin', label: 'Hashamuddin' },
     { value: 'Umer Khalid', label: 'Umer Khalid' }
   ]
-
+const handleClearData=(setValues,travelerIndex)=>{
+  setValues({
+    title: titleOptions[0].value,
+    previousPassenger: '',
+    first_name: "",
+    last_name: "",
+    email: "",
+    telephone: "",
+    mobile: "",
+    country: "",
+    city: "",
+    date_of_birth: "",
+    passenger_type: passengerOptions[0].value,
+    gender: genderOptions[0].value,
+    passport_number: "",
+    passport_expiry_date: "",
+  })
+  setAllTravelersData((prev)=>prev.filter((item,i)=>i!=travelerIndex))
+}
   return (
     <>
       <Toaster />
@@ -241,7 +266,7 @@ const TravelersDetails = () => {
                   <div key={i} className="flex gap-1 text-xl text-text font-semibold items-start">
                     {traveler.icon}
 
-                    <span className="text-base"> {traveler.value} {traveler.name}{traveler.value > 1 &&( traveler.name == 'Child'?'ren' : 's')}</span>
+                    <span className="text-base"> {traveler.value} {traveler.name}{traveler.value > 1 && (traveler.name == 'Child' ? 'ren' : 's')}</span>
 
 
                   </div>
@@ -315,13 +340,14 @@ const TravelersDetails = () => {
 
                     <Formik
                       initialValues={initialValues}
-                      // validationSchema={validationSchema}
+                      validationSchema={validationSchema}
                       onSubmit={(values) => handleSubmit(index, values)}
                       enableReinitialize
 
                     >
                       {({
                         values,
+                        setValues,
                         errors,
                         touched,
                         setFieldValue,
@@ -633,6 +659,8 @@ const TravelersDetails = () => {
                                     </div>
                                   </CardLayoutBody>
                                   <div className="px-4 w-1/2 filledfields">
+                                  <p onClick={()=>handleClearData(setValues,index)} className="text-primary cursor-pointer hover:text-secondary underline text-end w-full">
+                                    Clear Data</p>
                                     <div className=" mt-5 rounded-xl p-7 bg-bluebg shadow-lg border-primary border-[1px] h-fit">
                                       <h1 className="text-text font-semibold text-2xl pb-3">Travelers Detail</h1>
                                       <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-text ">title <span>{values.title}</span></p>
@@ -651,9 +679,11 @@ const TravelersDetails = () => {
                               <div className="flex items-center justify-end p-3">
                                 <div>
                                   <SecondaryButton
-                                    text="Add Traveler"
-                                    onClick={handleSubmit}
+                                    text={disableAddTraveler==index?"Traveller Added":"Add Traveler"}
+                                    onClick={()=>setConfirmStatus(true)}
+                                    disabled={disableAddTraveler==index}
                                   />
+                                  <ConfirmModal status={confirmStatus} onAbort={()=>setConfirmStatus(false)} onConfirm={handleSubmit} text={"Is the traveler data you provided is correct"}/>
                                 </div>
                               </div>
                             </>}

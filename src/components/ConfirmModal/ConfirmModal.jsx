@@ -7,7 +7,7 @@ import {
 } from "../../components/CardLayout/CardLayout";
 import { Button, SecondaryButton } from "../components";
 
-const ConfirmModal = ({ status, abortDelete, deleteHandler }) => {
+const ConfirmModal = ({ status, onAbort, onConfirm,text }) => {
   const modalRef = useRef();
 
   useEffect(() => {
@@ -37,18 +37,18 @@ const ConfirmModal = ({ status, abortDelete, deleteHandler }) => {
           </CardLayoutHeader>
           <CardLayoutBody>
             <h2 className="text-xl text-text">
-              Are you sure you want to delete this record?
+              {text}
             </h2>
           </CardLayoutBody>
           <CardLayoutFooter className={"gap-1"}>
             <div>
-              <SecondaryButton text="Cancel" onClick={abortDelete} />
+              <SecondaryButton text="Cancel" onClick={onAbort} />
             </div>
             <div>
               <Button
-                text="Delete"
+                text="Confirm"
                 className="bg-red-500 hover:bg-red-700"
-                onClick={deleteHandler}
+                onClick={onConfirm}
               />
             </div>
           </CardLayoutFooter>

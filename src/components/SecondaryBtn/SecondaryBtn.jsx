@@ -16,7 +16,7 @@ const SecondaryButton = ({
         type={type}
         onClick={onClick}
         disabled={disabled}
-        className={`w-full py-3 px-6 bg-blue-100 hover:text-black text-primary font-semibold rounded-full transition duration-300 ease-in-out transform focus:outline-none ${className}`}
+        className={`w-full py-3 px-6 ${disabled?'bg-lightgray text-text':'bg-blue-100 hover:text-secondary text-primary'}   font-semibold rounded-md transition duration-300 ease-in-out transform focus:outline-none ${className}`}
         style={styles}
       >
         {text}

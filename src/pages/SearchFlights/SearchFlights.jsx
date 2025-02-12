@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import plane from "../../assets/images/plane.webp";
 // icons
 import { FaPlaneArrival } from "react-icons/fa";
-import { MdChildFriendly } from "react-icons/md";
+import { MdChildFriendly, MdSearch } from "react-icons/md";
 import { FaChild } from "react-icons/fa6";
 import { IoIosMan } from "react-icons/io";
 
@@ -411,10 +411,11 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                   <CardLayoutFooter>
                     <div onClick={onSearch}>
                       <Button
-
-                        text={loading ? <Spinner /> : "Search Flight"}
+                        icon={<MdSearch />}
+                        text={ "Search Flight"}
                         type="submit"
                         disabled={loading}
+                        loading={loading}
                       />
                     </div>
                   </CardLayoutFooter>

@@ -12,6 +12,7 @@ import { FaPlane } from "react-icons/fa";
 import { FaUser } from "react-icons/fa";
 import { FaSuitcase } from "react-icons/fa";
 import { FaMoneyBillAlt } from "react-icons/fa";
+import { IoMdEye } from "react-icons/io";
 
 const FlightCard = ({ data, travelers,pricingInfo}) => {
   const navigate = useNavigate();
@@ -115,7 +116,7 @@ const FlightCard = ({ data, travelers,pricingInfo}) => {
         </CardLayoutBody>
         <CardLayoutFooter>
           <div>
-            <Button onClick={viewDetails} text={"View Details"} />
+            <Button icon={<IoMdEye/>} onClick={viewDetails} text={"View Details"} />
           </div>
         </CardLayoutFooter>
       </CardLayoutContainer>
