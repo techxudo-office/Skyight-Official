@@ -18,6 +18,7 @@ import {
 import { FaEye } from "react-icons/fa";
 import { ticketColumns } from "../../data/columns";
 import { successToastify, errorToastify } from "../../helper/toast"
+import { MdAdd } from "react-icons/md";
 
 const ViewTickets = () => {
   const navigate = useNavigate();
@@ -97,6 +98,7 @@ const ViewTickets = () => {
         >
           <div className="relative">
             <SecondaryButton
+            icon={<MdAdd/>}
               text={"Create New Ticket"}
               onClick={navigationHandler}
             />

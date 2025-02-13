@@ -6,7 +6,7 @@ import {
   TableNew,
 } from "../../components/components";
 import { getUsers, deleteUser } from "../../utils/api_handler";
-import { MdEditSquare } from "react-icons/md";
+import { MdAdd, MdEditSquare } from "react-icons/md";
 import { MdAutoDelete } from "react-icons/md";
 
 import { useNavigate } from "react-router-dom";
@@ -96,6 +96,7 @@ const Users = () => {
         >
           <div className="relative">
             <SecondaryButton
+            icon={<MdAdd/>}
               text={"Create New User"}
               onClick={navigationHandler}
             />

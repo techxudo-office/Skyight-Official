@@ -45,3 +45,22 @@ export const userInitialValues = {
     password: "",
     role: "",
 }
+export const travelerDetailScehma= Yup.object().shape({
+  title: Yup.string().required("Please select title"),
+  first_name: Yup.string().required("Please enter first name"),
+  last_name: Yup.string().required("Please enter last name"),
+  email: Yup.string().required("Please enter email"),
+  telephone: Yup.string().required("Please enter phone number"),
+  mobile: Yup.string()
+    .matches(/^(\+92|0)?[0-9]{10,11}$/, "Invalid phone number")
+    .required("Phone number is required"),
+  country: Yup.string().required("Please select country"),
+  city: Yup.string().required("Please select city"),
+  date_of_birth: Yup.string().required("Please select date of birth"),
+  passenger_type: Yup.string().required("Please select passenger type"),
+  gender: Yup.string().required("Please select gender"),
+  passport_number: Yup.string().required("Please enter valid passport number"),
+  passport_expiry_date: Yup.string().required(
+    "Please select exp data of passport"
+  ),
+});

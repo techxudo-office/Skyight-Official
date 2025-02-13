@@ -13,7 +13,7 @@ const ConfirmModal = ({ status, onAbort, onConfirm,text }) => {
   useEffect(() => {
     const outsideClickHandler = (e) => {
       if (modalRef.current && !modalRef.current.contains(e.target)) {
-        abortDelete();
+        onAbort();
       }
     };
 

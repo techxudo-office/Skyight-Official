@@ -6,6 +6,7 @@ import {
   ConfirmModal,
   TableNew,
   Searchbar,
+  DownloadButton,
 } from "../../components/components";
 import { getRoutes, getFlightBookings } from "../../utils/api_handler";
 import { useNavigate } from "react-router-dom";
@@ -83,6 +84,7 @@ const DashboardHome = () => {
     // { columnName: "No.", fieldName: "no.", type: "no." },
     { columnName: "Origin", fieldName: "origin", type: "text" },
     { columnName: "Destination", fieldName: "destination", type: "text" },
+    { columnName: "PNR", fieldName: "booking_reference_id", type: "text" },
     { columnName: "Total Fare", fieldName: "total_fare", type: "number" },
     // { columnName: "Currency", fieldName: "currency", type: "text" },
     { columnName: "Status", fieldName: "booking_status", type: "status" },
@@ -112,6 +114,7 @@ const DashboardHome = () => {
       </div> */}
 
       {/* Cards */}
+
       <div className="w-full p-3">
         <h2 className="text-3xl font-semibold text-text mb-7">
           Featured Flights
@@ -149,6 +152,7 @@ const DashboardHome = () => {
           <TableNew
             columnsToView={columnsData}
             tableData={bookingsData}
+            downloadBtn={true}
           />
         </CardLayoutBody>
         <CardLayoutFooter></CardLayoutFooter>

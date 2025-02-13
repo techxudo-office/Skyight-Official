@@ -12,9 +12,10 @@ import {
   CardLayoutBody,
 } from "../../components/CardLayout/CardLayout";
 
-import { Button, SecondaryButton, Spinner } from "../../components/components";
+import { Button, FlightDetailCard, PassengerDetail, SecondaryButton, Spinner } from "../../components/components";
 import toast, { Toaster } from "react-hot-toast";
 import { confirmBooking } from "../../utils/api_handler";
+import { IoIosAirplane } from "react-icons/io";
 
 const FlightDetails = () => {
   const location = useLocation();
@@ -222,6 +223,8 @@ const FlightDetails = () => {
     <>
       <Toaster />
       <div className="w-full flex flex-col">
+        <FlightDetailCard/>
+        <PassengerDetail/>
         <CardLayoutContainer className={"mb-5"}>
           <CardLayoutHeader
             heading={"Flight Details"}
@@ -233,9 +236,11 @@ const FlightDetails = () => {
                   {flightSegment.DepartureAirport.Terminal} (
                   {flightSegment.DepartureAirport.LocationCode})
                 </h2>
-                <div className="w-[24px] bg-primary rounded-full h-[2px]"></div>
-                <FaPlane className="text-primary" />
-                <div className="w-[24px] bg-primary rounded-full h-[2px]"></div>
+                 <div className="flex gap-3 items-center text-primary">
+                  <span className="h-0.5 w-8 bg-primary"></span>
+                  <IoIosAirplane className="text-2xl" />
+                  <span className="h-0.5 w-8 bg-primary"></span>
+                </div>
                 <h2 className="text-xl font-semibold text-text">
                   {flightSegment.ArrivalAirport.Terminal} (
                   {flightSegment.ArrivalAirport.LocationCode})
@@ -300,20 +305,20 @@ const FlightDetails = () => {
             heading={"Travelers Details"}
             className={"flex items-center flex-wrap gap-5 justify-between"}
           />
-          <CardLayoutBody removeBorder={true}>
+          <CardLayoutBody removeBorder={true} >
             {
-              allTravelersData.map((item,i) => (
-                <div key={i} className="px-4 w-1/2 filledfields">
-                  <div className=" mt-5 rounded-xl p-7 bg-bluebg shadow-lg border-primary border-[1px] h-fit">
-                    <h1 className="text-text font-semibold text-2xl pb-3">{item.first_name}'s Details</h1>
-                    <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-text ">title <span>{item.title}</span></p>
-                    <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-text ">First name <span>{item.first_name}</span></p>
-                    <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-text ">last name <span>{item.last_name}</span></p>
-                    <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-text ">date of birth <span>{item.date_of_birth}</span></p>
-                    <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-text ">gender <span>{item.gender}</span></p>
-                    <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-text ">nationality <span>{item.country}</span></p>
-                    <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-text ">nationality <span>{Object.values(item.mobile).map((values)=>(values))}</span></p>
-                    <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold  text-text">Passport no. <span>{item.passport_number}</span></p>
+              allTravelersData.map((item, i) => (
+                <div key={i} className="px-4 w-full lg:w-1/2 filledfields mx-auto pb-4">
+                  <div className=" mt-5 rounded-xl p-7 bg-secondary shadow-lg border-gray border-[1px] h-fit">
+                    <h1 className="text-white font-semibold text-2xl pb-3">{item.first_name}'s Details</h1>
+                    <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-white ">title <span>{item.title}</span></p>
+                    <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-white ">First name <span>{item.first_name}</span></p>
+                    <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-white ">last name <span>{item.last_name}</span></p>
+                    <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-white ">date of birth <span>{item.date_of_birth}</span></p>
+                    <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-white ">gender <span>{item.gender}</span></p>
+                    <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-white ">nationality <span>{item.country}</span></p>
+                    <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-white ">Mobile <span>{Object.values(item.mobile).map((values) => (values))}</span></p>
+                    <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold  text-white">Passport no. <span>{item.passport_number}</span></p>
                   </div>
                 </div>
               ))

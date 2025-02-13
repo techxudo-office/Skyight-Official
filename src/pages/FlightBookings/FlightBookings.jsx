@@ -23,7 +23,7 @@ import toast from "react-hot-toast";
 
 import { FaEye } from "react-icons/fa";
 import { HiReceiptRefund } from "react-icons/hi";
-import { MdCancel } from "react-icons/md";
+import { MdAdd, MdCancel } from "react-icons/md";
 
 const FlightBookings = () => {
   const navigate = useNavigate();
@@ -41,6 +41,7 @@ const FlightBookings = () => {
     // { columnName: "No.", fieldName: "no.", type: "no." },
     { columnName: "Origin", fieldName: "origin", type: "text" },
     { columnName: "Destination", fieldName: "destination", type: "text" },
+    { columnName: "PNR", fieldName: "booking_reference_id", type: "text" },
     { columnName: "Total Fare", fieldName: "total_fare", type: "number" },
     // { columnName: "Currency", fieldName: "currency", type: "text" },
     { columnName: "Status", fieldName: "booking_status", type: "status" },
@@ -169,6 +170,7 @@ const FlightBookings = () => {
           <div className="relative">
             <SecondaryButton
               text={"Create New Booking"}
+              icon={<MdAdd/>}
               onClick={navigationHandler}
             />
           </div>

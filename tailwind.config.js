@@ -5,8 +5,10 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: '#3B82F7', // Matches --primary-color
-        secondary: '#1D4ED8', // Matches --secondary-color
+        // primary: '#3B82F7', // Matches --primary-color
+        primary:'#63C7C5',
+        // secondary: '#1D4ED8', // Matches --secondary-color
+        secondary: '#4FA9A8', // Matches --secondary-color
         // primary: '#EF4444', // Matches --primary-color
         // secondary: '#B91C1C', // Matches --secondary-color
         text: '#49454f', // Matches --text-color

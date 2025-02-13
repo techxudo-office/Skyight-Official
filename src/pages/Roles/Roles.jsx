@@ -7,7 +7,7 @@ import {
 } from "../../components/CardLayout/CardLayout";
 
 import { FaCross, FaEye } from "react-icons/fa";
-import { MdEditSquare } from "react-icons/md";
+import { MdEditSquare, MdFilter, MdFilterList } from "react-icons/md";
 import { FaRegCircleCheck } from "react-icons/fa6";
 import { MdAutoDelete } from "react-icons/md";
 
@@ -141,6 +141,7 @@ const Roles = () => {
           <div className="relative">
             <SecondaryButton
               text={"Filters"}
+              icon={<MdFilterList/>}
               onClick={() => {
                 setDropdownStatus(!dropdownStatus);
               }}

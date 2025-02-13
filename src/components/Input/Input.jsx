@@ -49,6 +49,7 @@ const Input = ({
                 type === "password" ? (showPassword ? "text" : "password") : type
               }
               name={name}
+              disabled={disabled}
               value={value}
               placeholder={placeholder}
               onChange={onChange}

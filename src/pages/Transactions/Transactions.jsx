@@ -6,7 +6,7 @@ import {
   TableNew,
 } from "../../components/components";
 import { FaEye } from "react-icons/fa";
-import { MdEditSquare } from "react-icons/md";
+import { MdAdd, MdEditSquare } from "react-icons/md";
 import { MdAutoDelete } from "react-icons/md";
 import { FaRegCircleCheck } from "react-icons/fa6";
 
@@ -67,6 +67,7 @@ const Transactions = () => {
           <div className="relative">
             <SecondaryButton
               text={"Create New Transaction"}
+              icon={<MdAdd/>}
               onClick={navigationHandler}
             />
           </div>

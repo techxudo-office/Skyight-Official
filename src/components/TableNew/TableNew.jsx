@@ -5,7 +5,7 @@ import { format } from 'date-fns';
 import { TbCheck, TbChevronLeft, TbChevronLeftPipe, TbChevronRight, TbChevronRightPipe } from "react-icons/tb";
 import { object } from 'yup';
 import dayjs from 'dayjs';
-import { CustomTooltip, Input, Spinner } from '../components';
+import { CustomTooltip, DownloadButton, Input, Spinner } from '../components';
 import { BsThreeDots } from 'react-icons/bs';
 import { IoIosAirplane } from 'react-icons/io';
 import { FaEdit, FaEye } from 'react-icons/fa';
@@ -14,7 +14,7 @@ import { logo } from '../../assets/Index';
 import { MdDelete } from 'react-icons/md';
 // import {Cell}  from "@table-library/react-table-library/table";
 
-const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows, onDeleteUser }) => {
+const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows, onDeleteUser,downloadBtn }) => {
     // const data = React.useMemo(() => tableData, []);
     const data = tableData;
     const [rowsPerPage, setRowsPerPage] = useState(15);
@@ -194,7 +194,7 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows, o
         ] : []),
 
         ...columnsView,
-      
+
         // ...(tableData.some(item => 'role' in item || 'company_id' in item) ? [
         //     {
 
@@ -215,41 +215,57 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows, o
         //     }
 
         // ] : []),
+        ...(downloadBtn && [{
+            Header: "Download Ticket",
+            id: "Download",
+            Cell: ({ row }) => (
+                <span className="text-text text-sm flex items-center gap-2 justify-center">
+                        <div>
+                            <DownloadButton/>
+                        </div>
+                    
+
+                </span>
+            )
+
+        }]
+
+        ),
         ...(actions ? [{
             Header: 'Actions',
             // id: 'actions',
             Cell: ({ row }) => (
                 <span className="text-text text-lg flex gap-2 items-center relative">
                     {
-                    row.original.role ? row.original.role=='Admin'&& actions.map((action, idx) => (
-                        <CustomTooltip key={idx} content={action.name}>
-                            <div
-                                className="cursor-pointer "
-                                onClick={() => action.handler(row.index, tableData[row.index])}
-                            >
-                                <div className=''>
-                                    {action.icon}
+                        row.original.role ? row.original.role == 'Admin' && actions.map((action, idx) => (
+                            <CustomTooltip key={idx} content={action.name}>
+                                <div
+                                    className="cursor-pointer "
+                                    onClick={() => action.handler(row.index, tableData[row.index])}
+                                >
+                                    <div className=''>
+                                        {action.icon}
+
+                                    </div>
+
 
                                 </div>
+                            </CustomTooltip>
+                        )) :
+                            actions.map((action, idx) => (
+                                <CustomTooltip key={idx} content={action.name}>
+                                    <div
+                                        className="cursor-pointer "
+                                        onClick={() => action.handler(row.index, tableData[row.index])}
+                                    >
+                                        <div className=''>
+                                            {action.icon}
+
+                                        </div>
 
 
-                            </div>
-                        </CustomTooltip>
-                    )) : 
-                    actions.map((action, idx) => (
-                        <CustomTooltip key={idx} content={action.name}>
-                            <div
-                                className="cursor-pointer "
-                                onClick={() => action.handler(row.index, tableData[row.index])}
-                            >
-                                <div className=''>
-                                    {action.icon}
-
-                                </div>
-
-
-                            </div>
-                        </CustomTooltip>))}
+                                    </div>
+                                </CustomTooltip>))}
                     {/* {activeIndex != null & activeIndex === row.index ?
                         <p className='absolute z-10 right-0 text-sm top-6 w-56 bg-white border-gray border-[1px] rounded-lg text-text px-3 py-1 shadow-lg font-semibold'>
                             {tableData[activeIndex].roleRights}
