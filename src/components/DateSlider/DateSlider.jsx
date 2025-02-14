@@ -41,7 +41,7 @@ export default function DateSlider({className,ref,selectedDate,handleDateSelect,
       <div key={index} className="px-2">
         <button
           onClick={() => handleDateSelect(date, index)}
-          className={`py-2 px-4 rounded-lg text-center ${selectedDate === date
+          className={`py-2 px-4 rounded-lg text-center w-32 ${selectedDate === date
             ? "bg-primary text-white"
             : "bg-gray-200 text-text"
             }`}

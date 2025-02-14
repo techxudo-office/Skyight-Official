@@ -7,7 +7,7 @@ import { IoIosSettings } from "react-icons/io";
 import { FaBell } from "react-icons/fa6";
 import { FiLogOut } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
-import { CustomTooltip, Dropdown, SecondaryButton, Spinner } from "../components";
+import { CreditsDropdown, CustomTooltip, Dropdown, SecondaryButton, Spinner } from "../components";
 import { HiOutlineRefresh } from "react-icons/hi";
 import { PiCoinsFill } from "react-icons/pi";
 import { PiHandCoinsFill } from "react-icons/pi";
@@ -16,7 +16,7 @@ import { IoHome } from "react-icons/io5";
 import { AuthContext } from "../../context/AuthContext";
 import { logo, skyightLogo } from "../../assets/Index";
 import { GiHamburgerMenu } from "react-icons/gi";
-import { MdNotificationsNone, MdLogout, MdPerson, MdPersonPinCircle, MdOutlinePersonPinCircle, MdPersonPin } from "react-icons/md";
+import { MdNotificationsNone, MdLogout, MdPerson, MdPersonPinCircle, MdOutlinePersonPinCircle, MdPersonPin, MdArrowDropDown } from "react-icons/md";
 import { SlSettings } from "react-icons/sl";
 import { TfiEmail } from "react-icons/tfi";
 
@@ -28,6 +28,7 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
 
   const [dropdownStatus, setDropDownStatus] = useState(false);
   const [isActive, setIsActive] = useState(false);
+  const [CreditsDropdownOpen, setCreditsDropdownOpen] = useState(false);
   const [credits, setCredits] = useState("");
 
   const dropdownHandler = () => {
@@ -130,11 +131,11 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
             <div className="flex items-end gap-3">
               {/* Left Section: Hamburger Menu */}
               <CustomTooltip content={'Open / close'}>
-              <button className="text-gray-700 hover:text-gray-900 transition" onClick={sidebarHandler}>
-                <GiHamburgerMenu size={22} /> {/* Consistent size for mobile and desktop */}
-              </button>
+                <button className="text-gray-700 hover:text-gray-900 transition" onClick={sidebarHandler}>
+                  <GiHamburgerMenu size={22} /> {/* Consistent size for mobile and desktop */}
+                </button>
               </CustomTooltip>
-             
+
 
               {/* Center Section: Logo */}
               <div className="flex items-center ">
@@ -166,51 +167,64 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
               </CustomTooltip>
               <div className="relative">
                 <CustomTooltip content={'credits'}>
-                <div
-                  className={`w-full flex items-center justify-center gap-3 cursor-pointer py-3 border-primary border-[1px] px-6 bg-blue-100 hover:text-text hover:border-text  text-primary font-semibold rounded-xl transition duration-300 ease-in-out transform focus:outline-none`}
-                // onClick={() => {
-                //   setIsActive(!isActive);
-                // }}
-                >
-                  {credits ? (
-                    <span
-                      onClick={refreshCredits}
-                      className="flex items-center gap-2"
-                    >
-                      <HiOutlineRefresh />
-                      <span>PKR {credits?.toLocaleString("en-US")}</span>
-                    </span>
-                  ) : (
-                    <span className="flex items-center gap-2">
-                      <HiOutlineRefresh
-                        className={`transition-all ${!credits ? "rotate-180" : "rotate-0"
-                          }`}
-                      />
-                      <span>Refreshing...</span>
-                    </span>
-                  )}
-                </div>
+                  <button
+                    className={`w-full text-base relative flex items-center justify-center gap-2 cursor-pointer py-2 border-primary border-[1px] px-4 bg-blue-100 hover:text-secondary  text-primary font-semibold rounded-xl transition duration-300 ease-in-out transform focus:outline-none`}
+                  // onClick={() => {
+                  //   setIsActive(!isActive);
+                  // }}
+                  >
+
+                    {credits ? (
+                      <span
+                        onClick={refreshCredits}
+                        className="flex items-center gap-2"
+                      >
+                        <HiOutlineRefresh />
+                        <span>PKR {credits?.toLocaleString("en-US")}</span>
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-2">
+                        <HiOutlineRefresh
+                          className={`transition-all ${!credits ? "rotate-180" : "rotate-0"
+                            }`}
+                        />
+                        <span>Refreshing...</span>
+                      </span>
+                    )}
+                    
+                    <MdArrowDropDown className={`text-xl ${CreditsDropdownOpen?'rotate-180':''} transition-all duration-300`} onClick={() => setCreditsDropdownOpen((prev) => !prev)}/>
+                    <div className="absolute top-14 right-0">
+                      {CreditsDropdownOpen&&<CreditsDropdown onClose={()=>setCreditsDropdownOpen(false)} />}
+
+                    </div>
+
+                  </button>
+
                 </CustomTooltip>
-                
+
+
               </div>
+
               <CustomTooltip content={'profile'}>
-              <div className="px-3">
-                <FaUserCircle
-                  onClick={dropdownHandler}
-                  className="text-primary hover:text-secondary transition-all text-4xl cursor-pointer"
-                />
-                <Dropdown
-                  status={dropdownStatus}
-                  changeStatus={setDropDownStatus}
-                  options={dropdownOptions}
-                />
-              </div>
+                <div className="px-3">
+                  <FaUserCircle
+                    onClick={dropdownHandler}
+                    className="text-primary hover:text-secondary transition-all text-4xl cursor-pointer"
+                  />
+                  <Dropdown
+                    status={dropdownStatus}
+                    changeStatus={setDropDownStatus}
+                    options={dropdownOptions}
+                  />
+                </div>
               </CustomTooltip>
-             
+
 
             </div>
 
           </div>
+
+
         </div>
       </nav>
     </>

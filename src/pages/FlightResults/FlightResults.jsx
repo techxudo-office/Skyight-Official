@@ -3,7 +3,7 @@
 
 
 import React, { useState, useEffect, useRef } from "react";
-import { Button, ChangeSearch, DateSlider, FlightCard, Spinner } from "../../components/components";
+import { AvailableFlights, Button, ChangeSearch, DateSlider, FlightCard, Spinner } from "../../components/components";
 import { useLocation, useNavigate } from "react-router-dom";
 import Slider from "react-slick";
 import toast, { Toaster } from "react-hot-toast";
@@ -29,6 +29,7 @@ const FlightResults = () => {
   const [noFlight, setNoFlight] = useState(false);
   const [filteredFlightsData, setFilteredFlightsData] = useState([]);
   const [pricingInfo, setPricingInfo] = useState()
+  const [TripDetail, setTripDetail] = useState({})
 
   const navigate = useNavigate()
   useEffect(() => {
@@ -42,6 +43,7 @@ const FlightResults = () => {
       setPricingInfo(location.state.flightsData.PricedItineraries.PricedItinerary[0].AirItineraryPricingInfo)
       setFlightsData(flights);
       setTravelersData(travelers);
+      setTripDetail(location.state.payload)
 
       if (flights.length > 0) {
         const departureDate = flights[0].AirItinerary.OriginDestinationOptions[0].FlightSegment[0].DepartureDate;
@@ -67,7 +69,7 @@ const FlightResults = () => {
           navigate("/dashboard/flight-results", {
             state: {
               payload: payload,
-              pricingData:pricingInfo,
+              pricingData: pricingInfo,
               flightsData: response.data,
               travelersData: {
                 adults: payload.adult,
@@ -156,8 +158,8 @@ const FlightResults = () => {
         : ''}
 
       {/* flight info  */}
-      <ChangeSearch flights={filteredFlightsData.length} onclick={onChangeSearch} />
-
+      <ChangeSearch tripDetail={TripDetail} flights={filteredFlightsData.length} onclick={onChangeSearch} />
+      <AvailableFlights flights={flightsData} />
       {/* Date Slider */}
       <DateSlider ref={sliderRef} selectedDate={selectedDate} handleDateSelect={handleDateSelect}
         dateOptions={dateOptions} />

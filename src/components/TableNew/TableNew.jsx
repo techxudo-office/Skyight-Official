@@ -215,7 +215,8 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows, o
         //     }
 
         // ] : []),
-        ...(downloadBtn && [{
+
+        ...(downloadBtn ? [{
             Header: "Download Ticket",
             id: "Download",
             Cell: ({ row }) => (
@@ -228,9 +229,10 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows, o
                 </span>
             )
 
-        }]
+        }]:[]
 
-        ),
+        )
+        ,
         ...(actions ? [{
             Header: 'Actions',
             // id: 'actions',

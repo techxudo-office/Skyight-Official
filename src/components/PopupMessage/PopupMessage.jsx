@@ -1,16 +1,15 @@
 import { useEffect, useState } from "react";
 
-const PopupMessage = ({active, message, icon }) => {
-  const [status,setStatus] = useState()
+const PopupMessage = ({active=false, message, icon }) => {
+  const [status,setStatus] = useState(true)
   useEffect(() => {
     if (active) {
-        setStatus(true)
       const timer = setTimeout(() => setStatus(false), 3000);
       return () => clearTimeout(timer);
     }
   }, [active]);
 
-  if (!status) return null;
+  if (!status || !active) return null;
 
   return (
     <div className="fixed inset-0 flex z-[999] items-center justify-center ">

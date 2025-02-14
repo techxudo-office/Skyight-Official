@@ -271,7 +271,7 @@ const MultiCity = ({ OnlySearch, onSearch }) => {
                                                     label="Departure From"
                                                     name="departure"
                                                     options={iranianCities
-                                                        // .filter((item) => item.value != values.flights[i].arrival || null)
+                                                        .filter((item) => item.value != values.flights[i].arrival || null)
                                                     }
                                                     value={values.flights[i].departure}
                                                     placeholder="Select Departure"
@@ -303,7 +303,7 @@ const MultiCity = ({ OnlySearch, onSearch }) => {
                                                     label="Arrival To"
                                                     name="arrival"
                                                     options={iranianCities
-                                                        // .filter((item) => item.value != values.flights[i].departure || null)
+                                                        .filter((item) => item.value != values.flights[i].departure || null)
                                                     }
                                                     value={values.flights[i].arrival}
                                                     placeholder="Select Arrival"

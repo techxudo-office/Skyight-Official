@@ -16,6 +16,7 @@ import { Button, FlightDetailCard, PassengerDetail, SecondaryButton, Spinner } f
 import toast, { Toaster } from "react-hot-toast";
 import { confirmBooking } from "../../utils/api_handler";
 import { IoIosAirplane } from "react-icons/io";
+import { MdArrowBack, MdBookmark } from "react-icons/md";
 
 const FlightDetails = () => {
   const location = useLocation();
@@ -158,7 +159,7 @@ const FlightDetails = () => {
     }
   };
 
-  useEffect(() => {
+  useEffect(() => { 
     if (location.state) {
       console.log(location.state);
 
@@ -178,76 +179,57 @@ const FlightDetails = () => {
     Currency,
   } = flightData;
   console.log('travelersdetail', location.state)
-  const renderPassengerDetails = () => {
-    return (
-      <>
-        {PTC_FareBreakdowns.map((passenger, index) => (
-          <div
-            key={index}
-            className="flex flex-wrap gap-3 py-3 border-b border-slate-200 items-center justify-between"
-          >
-            <h2 className="text-sm font-semibold text-slate-600 flex items-center justify-center gap-1">
-              <span className="text-primary">
-                <FaUser />
-              </span>
-              <span>
-                {passenger.PassengerTypeQuantity.Quantity}{" "}
-                {passenger.PassengerTypeQuantity.Code}
-              </span>
-            </h2>
-            <h2 className="text-sm font-semibold text-slate-500 flex items-center justify-center gap-1">
-              <span className="text-primary">
-                <FaMoneyBillAlt />
-              </span>
-              <span>Base Fare: {passenger.PassengerFare.BaseFare.Amount}</span>
-            </h2>
-            <h2 className="text-sm font-semibold text-slate-500 flex items-center justify-center gap-1">
-              <span className="text-primary">
-                <FaMoneyBillAlt />
-              </span>
-              <span>
-                Taxes:{" "}
-                {passenger.PassengerFare.Taxes.Tax.reduce(
-                  (total, tax) => total + tax.Amount,
-                  0
-                )}
-              </span>
-            </h2>
-          </div>
-        ))}
-      </>
-    );
-  };
+
+  // const renderPassengerDetails = () => {
+  //   return (
+  //     <>
+  //       {PTC_FareBreakdowns.map((passenger, index) => (
+  //         <div
+  //           key={index}
+  //           className="flex flex-wrap gap-3 py-3 border-b border-slate-200 items-center justify-between"
+  //         >
+  //           <h2 className="text-sm font-semibold text-slate-600 flex items-center justify-center gap-1">
+  //             <span className="text-primary">
+  //               <FaUser />
+  //             </span>
+  //             <span>
+  //               {passenger.PassengerTypeQuantity.Quantity}{" "}
+  //               {passenger.PassengerTypeQuantity.Code}
+  //             </span>
+  //           </h2>
+  //           <h2 className="text-sm font-semibold text-slate-500 flex items-center justify-center gap-1">
+  //             <span className="text-primary">
+  //               <FaMoneyBillAlt />
+  //             </span>
+  //             <span>Base Fare: {passenger.PassengerFare.BaseFare.Amount}</span>
+  //           </h2>
+  //           <h2 className="text-sm font-semibold text-slate-500 flex items-center justify-center gap-1">
+  //             <span className="text-primary">
+  //               <FaMoneyBillAlt />
+  //             </span>
+  //             <span>
+  //               Taxes:{" "}
+  //               {passenger.PassengerFare.Taxes.Tax.reduce(
+  //                 (total, tax) => total + tax.Amount,
+  //                 0
+  //               )}
+  //             </span>
+  //           </h2>
+  //         </div>
+  //       ))}
+  //     </>
+  //   );
+  // };
 
   return (
     <>
       <Toaster />
       <div className="w-full flex flex-col">
-        <FlightDetailCard/>
-        <PassengerDetail/>
-        <CardLayoutContainer className={"mb-5"}>
-          <CardLayoutHeader
-            heading={"Flight Details"}
-            className={"flex items-center flex-wrap gap-5 justify-between"}
-          >
-            <div>
-              <div className="flex items-center justify-center gap-5">
-                <h2 className="text-xl font-semibold text-text">
-                  {flightSegment.DepartureAirport.Terminal} (
-                  {flightSegment.DepartureAirport.LocationCode})
-                </h2>
-                 <div className="flex gap-3 items-center text-primary">
-                  <span className="h-0.5 w-8 bg-primary"></span>
-                  <IoIosAirplane className="text-2xl" />
-                  <span className="h-0.5 w-8 bg-primary"></span>
-                </div>
-                <h2 className="text-xl font-semibold text-text">
-                  {flightSegment.ArrivalAirport.Terminal} (
-                  {flightSegment.ArrivalAirport.LocationCode})
-                </h2>
-              </div>
-            </div>
-          </CardLayoutHeader>
+
+       { <FlightDetailCard flights={flightData} />}
+        <PassengerDetail travelersData={allTravelersData}/>
+        {/* <CardLayoutContainer className={"mb-5"}>
+         
           <CardLayoutBody>
             <div className="flex flex-wrap gap-5 justify-between items-center">
               <div>
@@ -298,70 +280,19 @@ const FlightDetails = () => {
               </div>
             </div>
           </CardLayoutBody>
-        </CardLayoutContainer>
+        </CardLayoutContainer> */}
 
-        <CardLayoutContainer className={"mb-5"}>
-          <CardLayoutHeader
-            heading={"Travelers Details"}
-            className={"flex items-center flex-wrap gap-5 justify-between"}
-          />
-          <CardLayoutBody removeBorder={true} >
-            {
-              allTravelersData.map((item, i) => (
-                <div key={i} className="px-4 w-full lg:w-1/2 filledfields mx-auto pb-4">
-                  <div className=" mt-5 rounded-xl p-7 bg-secondary shadow-lg border-gray border-[1px] h-fit">
-                    <h1 className="text-white font-semibold text-2xl pb-3">{item.first_name}'s Details</h1>
-                    <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-white ">title <span>{item.title}</span></p>
-                    <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-white ">First name <span>{item.first_name}</span></p>
-                    <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-white ">last name <span>{item.last_name}</span></p>
-                    <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-white ">date of birth <span>{item.date_of_birth}</span></p>
-                    <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-white ">gender <span>{item.gender}</span></p>
-                    <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-white ">nationality <span>{item.country}</span></p>
-                    <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-white ">Mobile <span>{Object.values(item.mobile).map((values) => (values))}</span></p>
-                    <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold  text-white">Passport no. <span>{item.passport_number}</span></p>
-                  </div>
-                </div>
-              ))
-            }
-            <div className="flex flex-wrap gap-5 justify-between items-center">
-              <div>
-                <h2 className="text-xl font-semibold text-primary mb-2">
-                  Adults
-                </h2>
-                <h2 className="text-4xl text-text font-semibold">
-                  {travelers.adults}
-                </h2>
-              </div>
-              <div>
-                <h2 className="text-xl font-semibold text-primary mb-2">
-                  Childs
-                </h2>
-                <h2 className="text-4xl text-text font-semibold">
-                  {travelers.childs}
-                </h2>
-              </div>
-              <div>
-                <h2 className="text-xl font-semibold text-primary mb-2">
-                  Infants
-                </h2>
-                <h2 className="text-4xl text-text font-semibold">
-                  {travelers.infants}
-                </h2>
-              </div>
-            </div>
-          </CardLayoutBody>
-        </CardLayoutContainer>
 
-        <CardLayoutContainer className={"flex  flex-col mb-5"}>
+        {/* <CardLayoutContainer className={"flex  flex-col mb-5"}>
           <CardLayoutHeader heading={"Pricing Details"} />
           <CardLayoutBody removeBorder={true}>
             <div className="w-full flex flex-col">
               {renderPassengerDetails()}
             </div>
           </CardLayoutBody>
-        </CardLayoutContainer>
+        </CardLayoutContainer> */}
 
-        <CardLayoutContainer className={"flex  flex-col mb-5"}>
+        {/* <CardLayoutContainer className={"flex  flex-col mb-5"}>
           <CardLayoutHeader heading={"Baggage"} />
           <CardLayoutBody removeBorder={true}>
             <div className="flex flex-col">
@@ -391,19 +322,20 @@ const FlightDetails = () => {
                 })}
             </div>
           </CardLayoutBody>
-        </CardLayoutContainer>
+        </CardLayoutContainer> */}
 
-        <div className="flex items-center justify-end gap-3">
+        <div className="flex items-center justify-end gap-3 my-4">
           <div>
             <SecondaryButton
-              text="Cancel Booking"
+            icon={<MdArrowBack/>}
+              text="Back"
               onClick={() => {
                 navigate("/dashboard");
               }}
             />
           </div>
           <div>
-            <Button text="Confirm Booking" onClick={confirmBookingHandler} />
+            <Button icon={<MdBookmark/>} text="Confirm Booking" onClick={confirmBookingHandler} />
           </div>
         </div>
       </div>

@@ -159,6 +159,10 @@ const TravelersDetails = () => {
         state: { flightData, travelersData, allTravelersData },
       });
     }
+    setSuccessPopup({
+      message:"Please fill all the travellers first",
+      status:true
+    })
     console.log(allTravelersData);
 
   };
@@ -301,19 +305,19 @@ const TravelersDetails = () => {
                               <p className="text-2xl w-1/5 text-center" >OR</p>
                               <span className="h-0.5 w-2/5 bg-primary"></span>
                             </div>
-                            <h1 onClick={() => toogleFormHandler(index)} className="capitalize text-text text-center font-semibold text-xl">Add a new traveler</h1>
+                            <h1 onClick={() => toogleFormHandler(index)} className="capitalize text-text text-center font-semibold text-xl cursor-pointer hover:underline">Add a new traveler</h1>
                           </div>
                           {toogleForm === index &&
                             <>
                               <Form>
-                                <div className="flex ">
+                                <div className="flex items-center ">
                                   <CardLayoutBody
                                     className={
                                       `w-1/2 }`
                                     }
                                     removeBorder={true}
                                   >
-                                    <div className="flex flex-col gap-3 md:gap-5 mb-7">
+                                    <div className="flex flex-col gap-2 ">
                                       {/* Title */}
                                       {travelersDetailsInputs.map((input) => (
                                         <div key={input.id} className="relative mb-5">
@@ -401,8 +405,6 @@ const TravelersDetails = () => {
                 )
               })
             }
-              <FlightDetailCard/>
-              <PassengerDetail/>
           </div>
 
           <div className="px-3 w-1/3 flex flex-col gap-3 ">
@@ -427,7 +429,7 @@ const TravelersDetails = () => {
             />
           </div>
           <div>
-            <Button icon={<MdArrowForward/>} text="Next Step" onClick={addAllTravelers} />
+            <Button icon={<MdArrowForward/>} text="Next Step"  onClick={addAllTravelers} />
           </div>
           
         </div>

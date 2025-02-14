@@ -12,16 +12,16 @@ import { FaPlane } from "react-icons/fa";
 import { FaUser } from "react-icons/fa";
 import { FaSuitcase } from "react-icons/fa";
 import { FaMoneyBillAlt } from "react-icons/fa";
-import { IoMdEye } from "react-icons/io";
+import { IoIosAirplane, IoMdEye } from "react-icons/io";
 
-const FlightCard = ({ data, travelers,pricingInfo}) => {
+const FlightCard = ({ data, travelers, pricingInfo }) => {
   const navigate = useNavigate();
 
   const flightSegment =
     data.AirItinerary.OriginDestinationOptions[0].FlightSegment[0];
 
   const viewDetails = () => {
-    navigate("/dashboard/travelers-details", { state: { data, travelers,pricingInfo } });
+    navigate("/dashboard/travelers-details", { state: { data, travelers, pricingInfo } });
   };
 
   return (
@@ -33,16 +33,16 @@ const FlightCard = ({ data, travelers,pricingInfo}) => {
               <h2 className="text-xl font-semibold text-text">
                 {flightSegment.OperatingAirline.Code}
               </h2>
-              <h2 className="text-sm font-semibold text-slate-400">
+              <h2 className="text-sm font-semibold text-gray">
                 {flightSegment.FlightNumber}
               </h2>
-              <h2 className="text-sm font-semibold text-slate-400">
+              <h2 className="text-sm font-semibold text-gray">
                 {flightSegment.DepartureDate}
               </h2>
             </div>
             <div className="flex flex-col items-center justify-center">
               <div>
-                <h2 className="text-sm font-semibold text-slate-400">
+                <h2 className="text-sm font-semibold text-text">
                   {flightSegment.FlightDuration}
                 </h2>
               </div>
@@ -55,10 +55,10 @@ const FlightCard = ({ data, travelers,pricingInfo}) => {
                     {flightSegment.DepartureTime}
                   </h2>
                 </div>
-                <div className="flex items-center justify-center gap-5">
-                  <div className="w-28 bg-primary rounded-full h-[2px]"></div>
-                  <FaPlane className="text-primary" />
-                  <div className="w-28 bg-primary rounded-full h-[2px]"></div>
+                <div className="flex gap-3 items-center text-primary">
+                  <span className="h-0.5 w-8 bg-primary"></span>
+                  <IoIosAirplane className="text-2xl" />
+                  <span className="h-0.5 w-8 bg-primary"></span>
                 </div>
                 <div className="flex flex-col items-center justify-center">
                   <h2 className="text-md font-semibold text-text">
@@ -89,13 +89,13 @@ const FlightCard = ({ data, travelers,pricingInfo}) => {
                     key={index}
                     className="flex py-3 border-b border-slate-200 items-center justify-between"
                   >
-                    <h2 className="text-sm font-semibold text-slate-600 flex  items-center justify-center gap-1">
+                    <h2 className="text-sm font-semibold text-text flex  items-center justify-center gap-1">
                       <span>
                         <FaUser />
                       </span>
                       <span>Type:{item.PassengerType}</span>
                     </h2>
-                    <h2 className="text-sm font-semibold text-slate-500 flex  items-center justify-center gap-1">
+                    <h2 className="text-sm font-semibold text-text flex  items-center justify-center gap-1">
                       <span>
                         <FaSuitcase />
                       </span>
@@ -103,7 +103,7 @@ const FlightCard = ({ data, travelers,pricingInfo}) => {
                         Baggage {item.Quantity} {item.Unit}
                       </span>
                     </h2>
-                    <h2 className="text-sm font-semibold text-slate-500 flex  items-center justify-center gap-1">
+                    <h2 className="text-sm font-semibold text-text flex  items-center justify-center gap-1">
                       <span>
                         <FaMoneyBillAlt />
                       </span>
@@ -116,7 +116,7 @@ const FlightCard = ({ data, travelers,pricingInfo}) => {
         </CardLayoutBody>
         <CardLayoutFooter>
           <div>
-            <Button icon={<IoMdEye/>} onClick={viewDetails} text={"View Details"} />
+            <Button icon={<IoMdEye />} onClick={viewDetails} text={"View Details"} />
           </div>
         </CardLayoutFooter>
       </CardLayoutContainer>
