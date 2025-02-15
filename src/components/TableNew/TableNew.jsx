@@ -413,7 +413,7 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows, o
 
                                     return <th
                                         {...column.getHeaderProps()}
-                                        className="px-7 py-4 text-center  text-sm font-bold text-white uppercase tracking-wider"
+                                        className="px-4 mx-5 py-5 text-center  text-sm font-bold text-white uppercase tracking-wider"
                                     >
                                         {column.render("Header")}
                                     </th>
@@ -433,7 +433,7 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows, o
                                                 <>
                                                     <td
                                                         {...cell.getCellProps()}
-                                                        className="px-4 lg:px-6 py-3 text-center text-lg text-text border-t border-slate-100 "
+                                                        className="px-4 lg:px-6 py-5 text-center text-lg text-text border-t border-slate-100 "
                                                     >
                                                         {cell.render("Cell")}
                                                     </td>

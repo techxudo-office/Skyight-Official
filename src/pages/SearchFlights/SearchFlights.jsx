@@ -72,7 +72,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState()
   const [loading, setLoading] = useState(false);
-  const [Triptype, setTriptype] = useState(false);
+  const [Triptype, setTriptype] = useState("One-Way");
   const [activeField, setActiveField] = useState({
     departure: false,
     arrival: false,

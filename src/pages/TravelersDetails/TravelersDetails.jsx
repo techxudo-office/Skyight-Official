@@ -14,7 +14,7 @@ import {
   CardLayoutBody,
 } from "../../components/CardLayout/CardLayout";
 
-import { Formik, Form } from "formik";
+import { Formik, Form, useFormik } from "formik";
 import * as Yup from "yup";
 
 import {
@@ -65,6 +65,16 @@ const TravelersDetails = () => {
   const navigate = useNavigate();
 
   const [value, setValue] = useState();
+  const [allTravelersData, setAllTravelersData] = useState([])
+  useEffect(() => {
+    const allFormData = localStorage.getItem("allFormData")
+    console.log(allFormData)
+    if (allFormData) {
+      setAllTravelersData(JSON.parse(allFormData));
+    }
+
+  },[])
+
 
   const [flightData, setFlightData] = useState(null);
   const [travelersData, setTravelersData] = useState(null);
@@ -72,13 +82,14 @@ const TravelersDetails = () => {
   const [pricingInfo, setPricingInfo] = useState();
   const [toogleForm, setToogleForm] = useState(null);
   const [confirmStatus, setConfirmStatus] = useState(false);
+  const [isFormValid, setIsFormValid] = useState(false);
   const [disableAddTraveler, setDisableAddTraveler] = useState([]);
   const [successPopup, setSuccessPopup] = useState({
     status: false,
     message: '',
     icon: ''
   });
-  // const [Value, setValue] = useState(null);
+
 
 
   const toogleFormHandler = (index) => {
@@ -105,8 +116,6 @@ const TravelersDetails = () => {
     passport_number: "",
     passport_expiry_date: "",
   };
-
-  const [allTravelersData, setAllTravelersData] = useState([]);
 
   const handleSubmit = (travelerIndex, values) => {
     setConfirmStatus(false)
@@ -137,18 +146,21 @@ const TravelersDetails = () => {
     setDisableAddTraveler((prev) => ([...prev, travelerIndex]))
     setAllTravelersData((prevData) => [...prevData, payload]);
 
+
   };
+
   useEffect(() => {
-    if (allTravelersData.length) {
+    if (allTravelersData.length > 0) {
       setSuccessPopup({
         status: true,
         message: 'Traveler Added',
         icon: <MdCheck className="text-greenColor" />
       })
     }
+    console.log('alltravelersdata', allTravelersData)
 
+    localStorage.setItem('allFormData', JSON.stringify(allTravelersData))
   }, [allTravelersData])
-  console.log('alltravelersdata', allTravelersData)
 
   const addAllTravelers = () => {
     const totalTraveler = Object.values(travelersData).reduce((a, b) => Number(a) + Number(b), 0);
@@ -160,8 +172,8 @@ const TravelersDetails = () => {
       });
     }
     setSuccessPopup({
-      message:"Please fill all the travellers first",
-      status:true
+      message: "Please fill all the travellers first",
+      status: true
     })
     console.log(allTravelersData);
 
@@ -206,7 +218,7 @@ const TravelersDetails = () => {
   ]
   const handleClearData = (setValues, travelerIndex) => {
     setValues({
-      title: titleOptions[0].value,
+      title: "",
       previousPassenger: '',
       first_name: "",
       last_name: "",
@@ -216,24 +228,32 @@ const TravelersDetails = () => {
       country: "",
       city: "",
       date_of_birth: "",
-      passenger_type: passengerOptions[0].value,
-      gender: genderOptions[0].value,
+      passenger_type: "",
+      gender: "",
       passport_number: "",
       passport_expiry_date: "",
     })
     setAllTravelersData((prev) => prev.filter((item, i) => i != travelerIndex))
     setDisableAddTraveler((...prev) => prev.filter((item, i) => i != travelerIndex))
   }
+  const handleEditData = (travelerIndex) => {
+    if (allTravelersData.length) {
+      setAllTravelersData((...prev) => prev.filter((item, i) => i != travelerIndex))
+      setDisableAddTraveler((...prev) => prev.filter((item, i) => i != travelerIndex))
+    }
+
+  }
+  console.log('valid', isFormValid)
 
   return (
     <>
       <Toaster />
-      <PopupMessage icon={successPopup.icon} active={successPopup.status} message={successPopup.message} />
+      <PopupMessage icon={successPopup.icon} onClose={() => setSuccessPopup((prev) => ({ ...prev, status: false }))} active={successPopup.status} message={successPopup.message} />
       <div className="w-full flex flex-col">
         <TravelersQuantity flightSegments={flightSegments} travelers={travelersData} />
 
-        <div className="flex w-full">
-          <div className="flex flex-wrap w-2/3">
+        <div className="flex flex-col lg:flex-row w-full">
+          <div className="flex flex-wrap w-full lg:w-2/3">
 
             {
               result.map((travelertype, index) => {
@@ -269,10 +289,19 @@ const TravelersDetails = () => {
 
                     </CardLayoutHeader>
                     <Formik
-                      initialValues={initialValues}
+                      initialValues={allTravelersData[index]||initialValues}
                       validationSchema={travelerDetailScehma}
                       onSubmit={(values) => handleSubmit(index, values)}
                       enableReinitialize
+                      validateOnChange={true}
+                      validate={(values) => {
+                        try {
+                          travelerDetailScehma.validateSync(values, { abortEarly: false });
+                          setIsFormValid(true); // If no errors, form is valid
+                        } catch (error) {
+                          setIsFormValid(false); // If errors exist, form is invalid
+                        }
+                      }}
 
                     >
                       {({
@@ -282,10 +311,12 @@ const TravelersDetails = () => {
                         touched,
                         setFieldValue,
                         handleSubmit,
+                        
+
                       }) => (
 
                         <>
-                          <div className="w-80 mx-auto  py-10 flex flex-col gap-6">
+                          <div className="  max-w-full md:w-80 mx-3 lg:mx-auto  py-10 flex flex-col gap-6">
                             <div className=" flex items-center gap-2">
                               <Select
                                 id={'passengers'}
@@ -307,17 +338,19 @@ const TravelersDetails = () => {
                             </div>
                             <h1 onClick={() => toogleFormHandler(index)} className="capitalize text-text text-center font-semibold text-xl cursor-pointer hover:underline">Add a new traveler</h1>
                           </div>
-                          {toogleForm === index &&
+                          {
+                          
+                          toogleForm === index &&
                             <>
                               <Form>
-                                <div className="flex items-center ">
+                                <div className="flex flex-col md:flex-row items-center ">
                                   <CardLayoutBody
                                     className={
-                                      `w-1/2 }`
+                                      `w-full md:w-1/2 }`
                                     }
                                     removeBorder={true}
                                   >
-                                    <div className="flex flex-col gap-2 ">
+                                    <div className="flex flex-col gap-5 ">
                                       {/* Title */}
                                       {travelersDetailsInputs.map((input) => (
                                         <div key={input.id} className="relative mb-5">
@@ -366,11 +399,17 @@ const TravelersDetails = () => {
 
 
                                     </div>
-                                  
+
                                   </CardLayoutBody>
-                                  <div className="px-4 w-1/2 filledfields">
-                                    <p onClick={() => handleClearData(setValues, index)} className="text-primary cursor-pointer hover:text-secondary underline text-end w-full">
-                                      Clear Data</p>
+                                  <div className="px-4 w-full md:w-1/2 filledfields">
+                                    <div className="flex gap-6 justify-end items-center">
+                                      <p onClick={() => handleEditData(index)} className="text-primary cursor-pointer hover:text-secondary underline ">
+                                        Edit Data</p>
+                                      <p onClick={() => handleClearData(setValues, index)} className="text-primary cursor-pointer hover:text-secondary underline ">
+                                        Clear Data</p>
+
+                                    </div>
+
                                     <div className=" mt-5 rounded-xl p-7 bg-bluebg shadow-lg border-primary border-[1px] h-fit">
                                       <h1 className="text-text font-semibold text-2xl pb-3">Travelers Detail</h1>
                                       <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-text ">title <span>{values.title}</span></p>
@@ -379,7 +418,10 @@ const TravelersDetails = () => {
                                       <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-text ">date of birth <span>{values.date_of_birth}</span></p>
                                       <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-text ">gender <span>{values.gender}</span></p>
                                       <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-text ">nationality <span>{values.country}</span></p>
-                                      <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold  text-text">Passport no. <span>{values.passport_number}</span></p>
+                                      <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold  text-text">Passport no. <span>{values.passport_number}</span>
+                                      </p>
+                                      <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold  text-text">Passport Expiry <span>{values.passport_expiry_date}</span>
+                                      </p>
                                     </div>
                                   </div>
 
@@ -391,8 +433,8 @@ const TravelersDetails = () => {
                                   <SecondaryButton
                                     text={disableAddTraveler.includes(index) ? "Traveler Added" : "Add Traveler"}
                                     onClick={() => setConfirmStatus(true)}
-                                    disabled={disableAddTraveler.includes(index)}
-                                    icon={disableAddTraveler.includes(index) ?'':<MdAdd/>}
+                                    disabled={disableAddTraveler.includes(index) || !isFormValid}
+                                    icon={disableAddTraveler.includes(index) ? '' : <MdAdd />}
                                   />
                                   <ConfirmModal status={confirmStatus} onAbort={() => setConfirmStatus(false)} onConfirm={handleSubmit} text={"Is the traveler data you provided is correct"} />
                                 </div>
@@ -407,14 +449,14 @@ const TravelersDetails = () => {
             }
           </div>
 
-          <div className="px-3 w-1/3 flex flex-col gap-3 ">
+          <div className="px-3 w-full lg:w-1/3 flex flex-col gap-3 ">
             <PriceSummary pricingInfo={pricingInfo} travelers={travelersData} totalTravelers={result} />
             <h2 className="text-2xl font-semibold text-text pl-1 pt-4">Trip Summary</h2>
 
             <FlightInfoCard flights={flightSegments} />
           </div>
         </div>
-       
+
 
         {/* Final Button to console all travelers data */}
         <div className="flex items-center justify-end gap-3 my-5">
@@ -422,16 +464,17 @@ const TravelersDetails = () => {
             <SecondaryButton
               text="Back"
               onClick={() => {
-                navigate("/dashboard");
+                localStorage.removeItem("allFormData")
+                navigate(-1);
               }}
-              icon={<MdArrowBack/>}
-              
+              icon={<MdArrowBack />}
+
             />
           </div>
           <div>
-            <Button icon={<MdArrowForward/>} text="Next Step"  onClick={addAllTravelers} />
+            <Button icon={<MdArrowForward />} text="Next Step" onClick={addAllTravelers} />
           </div>
-          
+
         </div>
 
       </div>

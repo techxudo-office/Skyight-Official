@@ -251,7 +251,7 @@ export const getCredits = async () => {
     if (response.status === 200) {
       return {
         status: true,
-        data: response.data.data.Balence,
+        data: response.data.data,
       };
     }
   } catch (error) {
@@ -827,3 +827,24 @@ export const getNotifications = async () => {
     console.log("Failed while getting notifications: ", error);
   }
 };
+export const getAnnouncements=async ()=>{
+  try {
+    let response= await axios({
+      method:'GET',
+      url:`${baseUrl}/api/getAnnouncements`,
+      headers: {
+        Authorization: getToken(),
+      },
+    })
+    console.log('annoncement',response)
+    if (response.status === 200) {
+      return {
+        status: true,
+        data: response.data.data
+      }
+    }
+  } catch (error) {
+    console.log("Failed while getting Announcements: ", error);
+    
+  }
+}

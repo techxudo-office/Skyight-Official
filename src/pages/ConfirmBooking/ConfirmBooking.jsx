@@ -330,7 +330,7 @@ const FlightDetails = () => {
             icon={<MdArrowBack/>}
               text="Back"
               onClick={() => {
-                navigate("/dashboard");
+                navigate(-1);
               }}
             />
           </div>

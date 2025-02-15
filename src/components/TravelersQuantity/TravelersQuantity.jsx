@@ -36,7 +36,7 @@ export default function TravelersQuantity({ flightSegments, travelers }) {
     const [flightHrs, flightMins] = flightSegments[0].FlightDuration.split(":")
     return (
         <CardLayoutContainer className={'mb-5'}>
-            <div className="flex justify-between px-6 items-end py-9 text-text">
+            <div className="flex md:flex-row flex-col justify-between px-6 gap-3 md:items-end py-9 text-text">
                 <div className='flex flex-col gap-2'>
                     <p className="text-text text-xl items-center font-bold uppercase flex gap-2 pb-3">
                         <span>{flightSegments[0].DepartureAirport.LocationCode}</span>
@@ -48,16 +48,16 @@ export default function TravelersQuantity({ flightSegments, travelers }) {
                         <span>{flightSegments[0].ArrivalAirport.LocationCode}</span>
 
                     </p>
-                    <div className="flex gap-4 flex-wrap items-center ">
-                        <div className="flex gap-1 text-base text-text font-semibold items-start">
-                            <MdCalendarMonth className="text-xl" />
+                    <div className="flex gap-2 md:gap-4  flex-wrap items-center ">
+                        <div className="flex gap-1 text-sm md:text-base text-text font-semibold items-start">
+                            <MdCalendarMonth className="text-base md:text-xl" />
                             <span>Feb 12</span>
                         </div>
                         {travelersQuantity.map((traveler, i) => (
-                            <div key={i} className="flex gap-1 text-xl text-text font-semibold items-start">
+                            <div key={i} className="flex gap-1  text-xl text-text font-semibold items-start">
                                 {traveler.icon}
 
-                                <span className="text-base"> {traveler.value} {traveler.name}{traveler.value > 1 && (traveler.name == 'Child' ? 'ren' : 's')}</span>
+                                <span className="text-base "> {traveler.value} {traveler.name}{traveler.value > 1 && (traveler.name == 'Child' ? 'ren' : 's')}</span>
 
 
                             </div>

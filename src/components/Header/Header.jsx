@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState, useCallback } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { HiOutlineMenuAlt1 } from "react-icons/hi";
+import { HiOutlineMenuAlt1, HiOutlineSpeakerphone } from "react-icons/hi";
 import { FaCircleUser } from "react-icons/fa6";
 import { FaUser, FaUserCircle } from "react-icons/fa";
 import { IoIosSettings } from "react-icons/io";
@@ -16,7 +16,7 @@ import { IoHome } from "react-icons/io5";
 import { AuthContext } from "../../context/AuthContext";
 import { logo, skyightLogo } from "../../assets/Index";
 import { GiHamburgerMenu } from "react-icons/gi";
-import { MdNotificationsNone, MdLogout, MdPerson, MdPersonPinCircle, MdOutlinePersonPinCircle, MdPersonPin, MdArrowDropDown } from "react-icons/md";
+import { MdNotificationsNone, MdLogout, MdPerson, MdPersonPinCircle, MdOutlinePersonPinCircle, MdPersonPin, MdArrowDropDown, MdEmail, MdSettings } from "react-icons/md";
 import { SlSettings } from "react-icons/sl";
 import { TfiEmail } from "react-icons/tfi";
 
@@ -30,12 +30,28 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
   const [isActive, setIsActive] = useState(false);
   const [CreditsDropdownOpen, setCreditsDropdownOpen] = useState(false);
   const [credits, setCredits] = useState("");
+  // const [credits, setCredits] = useState("");
 
   const dropdownHandler = () => {
     setDropDownStatus(!dropdownStatus);
   };
-
   const dropdownOptions = [
+    {
+      name: "Home",
+      icon: <IoHome />,
+      handler: () => {
+        navigationHandler("/");
+      },
+    },
+    {
+      name: "Logout",
+      icon: <FiLogOut />,
+      handler: () => {
+        logoutHandler();
+      },
+    },
+  ]
+  const mobileDropdownOptions = [
     // {
     //   name: "Profile",
     //   icon: <FaUser />,
@@ -56,6 +72,24 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
       handler: () => {
         navigationHandler("/");
       },
+    },
+    {
+      name: 'Notification',
+      icon: <MdNotificationsNone />,
+      handler: () => {
+        navigationHandler("/dashboard/notifications")
+      }
+    },
+    {
+      name: 'Announcement',
+      icon: <HiOutlineSpeakerphone />,
+      handler: () => {
+        navigationHandler("/dashboard/announcement");
+      },
+    },
+    {
+      name: 'Setting',
+      icon: <SlSettings />
     },
     {
       name: "Logout",
@@ -104,11 +138,12 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
     if (!credits) {
       let response = await getCredits();
       if (response?.status) {
-        setCredits(response.data);
+        setCredits(response.data.Balence);
+        // console.log('credits', response)
+
       }
     }
   }, [credits]);
-
   const refreshCredits = () => {
     setCredits("");
     setTimeout(() => {
@@ -139,36 +174,37 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
 
               {/* Center Section: Logo */}
               <div className="flex items-center ">
-                <img src={skyightLogo} className="w-24 translate-x-3" alt="" />
+                <img src={skyightLogo} className="w-16 md:w-24 translate-x-3" alt="" />
               </div>
             </div>
 
             {/* Right Section: Icons & User */}
-            <div className="flex items-center gap-2 sm:gap-3">
-              <CustomTooltip content={'Email'}>
-                <div>
-                  <TfiEmail className="text-text text-xl cursor-pointer" />
+            <div className="flex items-center  sm:gap-3">
+              <CustomTooltip content={'Announcement'}>
+                <div className="max-md:hidden">
+                  <HiOutlineSpeakerphone className=" text-text text-2xl cursor-pointer"
+                    onClick={() => navigationHandler("/dashboard/announcement")} />
 
                 </div>
               </CustomTooltip>
               <CustomTooltip content={'Notifications'}>
-                <div>
-                  <MdNotificationsNone className="text-text text-xl cursor-pointer"
+                <div className="max-md:hidden">
+                  <MdNotificationsNone className="text-text text-2xl cursor-pointer"
                     onClick={() => navigationHandler("/dashboard/notifications")}
                   /> {/* Consistent size for all icons */}
                 </div>
 
               </CustomTooltip>
               <CustomTooltip content={'Settings'}>
-                <div>
-                  <SlSettings className="text-text text-xl cursor-pointer" /> {/* Consistent size for all icons */}
+                <div className="max-md:hidden">
+                  <MdSettings className="text-text text-2xl cursor-pointer" /> {/* Consistent size for all icons */}
 
                 </div>
               </CustomTooltip>
               <div className="relative">
                 <CustomTooltip content={'credits'}>
                   <button
-                    className={`w-full text-base relative flex items-center justify-center gap-2 cursor-pointer py-2 border-primary border-[1px] px-4 bg-blue-100 hover:text-secondary  text-primary font-semibold rounded-xl transition duration-300 ease-in-out transform focus:outline-none`}
+                    className={`w-full text-sm md:text-base relative flex items-center justify-center gap-1 md:gap-2 cursor-pointer p-1 px-2 md:py-2 md:px-4 border-primary border-[1px]  bg-blue-100 hover:text-secondary  text-primary font-semibold rounded-xl transition duration-300 ease-in-out transform focus:outline-none`}
                   // onClick={() => {
                   //   setIsActive(!isActive);
                   // }}
@@ -179,22 +215,22 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
                         onClick={refreshCredits}
                         className="flex items-center gap-2"
                       >
-                        <HiOutlineRefresh />
+                        <HiOutlineRefresh className="max-sm:hidden" />
                         <span>PKR {credits?.toLocaleString("en-US")}</span>
                       </span>
                     ) : (
                       <span className="flex items-center gap-2">
                         <HiOutlineRefresh
-                          className={`transition-all ${!credits ? "rotate-180" : "rotate-0"
+                          className={`transition-all max-sm:hidden ${!credits ? "rotate-180" : "rotate-0"
                             }`}
                         />
                         <span>Refreshing...</span>
                       </span>
                     )}
-                    
-                    <MdArrowDropDown className={`text-xl ${CreditsDropdownOpen?'rotate-180':''} transition-all duration-300`} onClick={() => setCreditsDropdownOpen((prev) => !prev)}/>
+
+                    <MdArrowDropDown className={`text-xl ${CreditsDropdownOpen ? 'rotate-180' : ''} transition-all duration-300`} onClick={() => setCreditsDropdownOpen((prev) => !prev)} />
                     <div className="absolute top-14 right-0">
-                      {CreditsDropdownOpen&&<CreditsDropdown onClose={()=>setCreditsDropdownOpen(false)} />}
+                      {CreditsDropdownOpen && <CreditsDropdown credits={credits} onClose={() => setCreditsDropdownOpen(false)} />}
 
                     </div>
 
@@ -215,7 +251,16 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
                     status={dropdownStatus}
                     changeStatus={setDropDownStatus}
                     options={dropdownOptions}
+                    className={'max-md:hidden'}
                   />
+
+                  <Dropdown
+                    status={dropdownStatus}
+                    changeStatus={setDropDownStatus}
+                    options={mobileDropdownOptions}
+                    className={'md:hidden'}
+                  />
+
                 </div>
               </CustomTooltip>
 

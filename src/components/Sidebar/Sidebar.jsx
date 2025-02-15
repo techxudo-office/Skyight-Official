@@ -18,12 +18,14 @@ const Sidebar = ({ status, updateStatus }) => {
     navigate(path);
   };
   useEffect(() => {
-    if (!status) {
+    if (!status ) {
       setActiveMenu(null)
     }
-    if (activeMenu != null || status) {
+    if ((activeMenu != null || status)) {
+      
+        updateStatus(true)
 
-      updateStatus(true)
+      
     }
 
   }, [activeMenu, status])
@@ -81,26 +83,26 @@ const Sidebar = ({ status, updateStatus }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, [updateStatus]);
 
-  useEffect(() => {
-    if (mobileView) {
-      const handleClickOutside = (e) => {
-        if (sidebarRef.current && !sidebarRef.current.contains(e.target)) {
-          updateStatus(false);
-        }
-      };
+  // useEffect(() => {
+  //   if (mobileView) {
+  //     const handleClickOutside = (e) => {
+  //       if (sidebarRef.current && !sidebarRef.current.contains(e.target)) {
+  //         updateStatus(false);
+  //       }
+  //     };
 
-      document.addEventListener("mousedown", handleClickOutside);
-      return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
-      };
-    }
-  }, [sidebarRef, mobileView]);
+  //     document.addEventListener("mousedown", handleClickOutside);
+  //     return () => {
+  //       document.removeEventListener("mousedown", handleClickOutside);
+  //     };
+  //   }
+  // }, [sidebarRef, mobileView]);
 
   return (
     <div
       id="sidebar-container"
       ref={sidebarRef}
-      className={`transition-all z-10  bg-white pt-20  shadow-md ${!mobileView ? status ? "w-1/5 pt-20 " : "w-28  items-center pt-20" : status ? 'w-60 shadow-md fixed left-0 h-screen' : 'w-0 p-0'} flex flex-col justify-between  transition-all duration-300 overflow-auto overflow-x-hidden`}
+      className={`transition-all z-10  bg-white   shadow-md ${!mobileView ? (status ? "w-1/5 pt-20 " : "w-28  items-center pt-20") : (status ? 'w-60 shadow-md fixed left-0 h-screen' : 'w-0 p-0')} flex flex-col justify-between  transition-all duration-300 overflow-auto overflow-x-hidden`}
     >
       <div>
         {/* <div className={`py-3 items-center  flex ${status ? 'px-5' : 'justify-center'} `}>
@@ -119,7 +121,7 @@ const Sidebar = ({ status, updateStatus }) => {
               <div key={linkIndex} className={`flex flex-col    ${status ? 'w-full' : 'items-center'}`}>
                 <li
                   onClick={() => menuItemHandler(linkIndex, link)}
-                  className={`mb-2 flex items-center  gap-4 ${status ? 'px-4' : ''}  py-4 cursor-pointer transition-all hover:text-primary text-text rounded-full   text-base `}
+                  className={`mb-2 flex items-center  gap-4 ${status ? 'px-4' : ''}  py-4 cursor-pointer transition-all hover:text-primary hover:bg-background text-text rounded-full   text-base `}
                 >
                   {link.sublinks && status && (
                     <IoIosArrowForward
@@ -127,7 +129,7 @@ const Sidebar = ({ status, updateStatus }) => {
                         }`}
                     />
                   )}
-                  <span className={`flex ${status ? 'flex-row' : 'flex-col'}  items-center gap-3`}>
+                  <span className={`flex ${status ? 'flex-row' : 'flex-col'} font-semibold  items-center gap-3`}>
                     {link.title == 'Dashboard' && status ? <span className="text-2xl">{link.icon}</span> : ''}
                     <span className={`${status ? 'hidden' : 'text-3xl'}`}>{link.icon}</span>
                     <span className={`${status ? 'text-base' : 'text-sm'}`}>{link.title}</span>

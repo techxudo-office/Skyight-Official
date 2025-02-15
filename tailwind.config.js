@@ -6,13 +6,18 @@ module.exports = {
     extend: {
       colors: {
         // primary: '#3B82F7', // Matches --primary-color
-        primary:'#63C7C5',
+        // primary:'#63C7C5',
+        // primary:'#00175f',
+        // primary:'#0e7ba5',
+        // primary:'#63a6c7',
+        // primary:'#637cc7',
+        primary:'#008585',
         // secondary: '#1D4ED8', // Matches --secondary-color
         secondary: '#4FA9A8', // Matches --secondary-color
         // primary: '#EF4444', // Matches --primary-color
         // secondary: '#B91C1C', // Matches --secondary-color
         text: '#49454f', // Matches --text-color
-        background: '#F9FAFB', // Matches --background-color
+        background: '#bfdad9', // Matches --background-color
         lightgray: '#D3D3D3', // Add custom color
         gray: '#6B7280',
         grayBg:'#f1f5f9 ',

@@ -34,7 +34,8 @@ import {
   Login,
   Registration,
   Verification,
-  ForgetPassword
+  ForgetPassword,
+  Anouncement
 } from "../pages/pages";
 
 export const routesData = [
@@ -77,6 +78,7 @@ export const routesData = [
       { path: "flight-details", element: <FlightDetails />, protected: true },
       { path: "travelers-details", element: <TravelersDetails />, protected: true },
       { path: "confirm-booking", element: <ConfirmBooking />, protected: true },
+      { path: "announcement", element: <Anouncement/>, protected: true },
     ],
   },
   { path: "*", element: <NotFound /> },

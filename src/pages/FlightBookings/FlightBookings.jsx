@@ -186,6 +186,7 @@ const FlightBookings = () => {
             <TableNew
               columnsToView={columnsData}
               tableData={bookingsData}
+              downloadBtn={true}
               // actions={actionsData}
             />
         </CardLayoutBody>

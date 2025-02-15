@@ -3,7 +3,7 @@ import { FaTimes, FaCreditCard, FaFileInvoice, FaRegCheckCircle } from "react-ic
 import { IoMdWallet } from "react-icons/io";
 import { MdAirplaneTicket, MdCreditCard, MdCreditScore, MdCurrencyExchange } from "react-icons/md";
 
-const CreditsDropdown = ({onClose}) => {
+const CreditsDropdown = ({onClose,credits}) => {
     return (
         <div className="w-72 bg-neutral-100 shadow-xl text-text rounded-2xl p-4 relative">
             {/* Header */}
@@ -11,7 +11,7 @@ const CreditsDropdown = ({onClose}) => {
                 <FaTimes size={18} />
             </button>
 
-            <h2 className="text-sm font-semibold text-center  text-gray-700">PKR 40,636.53</h2>
+            <h2 className="text-sm font-semibold text-center  text-gray-700">PKR {credits&&credits.toLocaleString()}</h2>
 
 
             <p className="text-xs text-gray-500">Net Available Limit</p>
@@ -29,7 +29,7 @@ const CreditsDropdown = ({onClose}) => {
                     <MdCreditScore className="text-gray-600 text-2xl " />
                    
                     <div className="flex flex-col items-start text-sm leading-4">
-                        <span className="text-gray-900 font-semibold text-xs ">PKR 40,636.53</span>
+                        <span className="text-gray-900 font-semibold text-xs ">PKR {credits&&credits.toLocaleString()}</span>
                         <span className="text-[10px] font-light text-gray-700">Available Limit</span>
                     </div>
 
@@ -38,7 +38,7 @@ const CreditsDropdown = ({onClose}) => {
                     <IoMdWallet className="text-gray-600 text-2xl " />
                    
                     <div className="flex flex-col items-start text-sm leading-4">
-                        <span className="text-gray-900 font-semibold text-xs ">PKR -40,636.53</span>
+                        <span className="text-gray-900 font-semibold text-xs ">PKR -{credits&&credits.toLocaleString()}</span>
                         <span className="text-[10px] font-light text-gray-700">Total Payable Amount</span>
                     </div>
 
@@ -65,7 +65,7 @@ const CreditsDropdown = ({onClose}) => {
                     <MdAirplaneTicket className="text-gray-600 text-2xl " />
                    
                     <div className="flex flex-col items-start text-sm leading-4">
-                        <span className="text-gray-900 font-semibold text-xs ">PKR 40,636.53</span>
+                        <span className="text-gray-900 font-semibold text-xs ">PKR {credits&&credits.toLocaleString()}</span>
                         <span className="text-[10px] font-light text-gray-700">Total not Invoiced Ticket</span>
                     </div>
 

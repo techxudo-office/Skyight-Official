@@ -13,10 +13,18 @@ import { FaUser } from "react-icons/fa";
 import { FaSuitcase } from "react-icons/fa";
 import { FaMoneyBillAlt } from "react-icons/fa";
 import { IoIosAirplane, IoMdEye } from "react-icons/io";
+import { MdChildCare, MdChildFriendly, MdPerson } from "react-icons/md";
 
 const FlightCard = ({ data, travelers, pricingInfo }) => {
   const navigate = useNavigate();
-
+  const totalTravelers = [];
+  Object.entries(travelers).forEach(([key, value]) => {
+    if (value>0) {
+      totalTravelers.push(key.replace('s',''))
+    }
+  })
+  console.log('totaltravelrs',totalTravelers)
+  console.log(travelers)
   const flightSegment =
     data.AirItinerary.OriginDestinationOptions[0].FlightSegment[0];
 
@@ -82,25 +90,25 @@ const FlightCard = ({ data, travelers, pricingInfo }) => {
         </CardLayoutHeader>
         <CardLayoutBody>
           <div className="flex flex-col">
-            {flightSegment.FreeBaggages &&
-              flightSegment.FreeBaggages.map((item, index) => {
+            {totalTravelers.length &&
+              totalTravelers.map((item, index) => {
                 return (
                   <div
                     key={index}
-                    className="flex py-3 border-b border-slate-200 items-center justify-between"
+                    className={`flex py-3 ${index==totalTravelers.length-1?'':'border-b'}  border-slate-200 items-center justify-between`}
                   >
                     <h2 className="text-sm font-semibold text-text flex  items-center justify-center gap-1">
-                      <span>
-                        <FaUser />
+                      <span className="text-lg">
+                      {item=='adult'?<MdPerson/>:item=='child'?<MdChildCare/>:<MdChildFriendly/>}
                       </span>
-                      <span>Type:{item.PassengerType}</span>
+                      <span className="capitalize"> {item}</span>
                     </h2>
                     <h2 className="text-sm font-semibold text-text flex  items-center justify-center gap-1">
                       <span>
                         <FaSuitcase />
                       </span>
                       <span>
-                        Baggage {item.Quantity} {item.Unit}
+                        Baggage {flightSegment.FreeBaggages[index].Quantity} {flightSegment.FreeBaggages[index].Unit}
                       </span>
                     </h2>
                     <h2 className="text-sm font-semibold text-text flex  items-center justify-center gap-1">
