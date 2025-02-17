@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { CardLayoutContainer } from '../CardLayout/CardLayout'
-import { IoIosAirplane } from 'react-icons/io'
+import { IoIosAirplane, IoMdClock } from 'react-icons/io'
 import { IoTimer } from 'react-icons/io5'
 import { MdCalendarMonth, MdChildCare, MdChildFriendly, MdPerson } from 'react-icons/md'
 
@@ -65,19 +65,20 @@ export default function TravelersQuantity({ flightSegments, travelers }) {
                     </div>
                     <div className="text-sm flex gap-2 font-semibold  h-fit pt-1  rounded-lg  text">
                         {/* <IoTimer className="mb-[3px] text-base" /> */}
-                        <span className=''>Duration:</span>
-                        <span className='lowercase'>{flightHrs.replace('0', '')} hrs {flightMins} mins</span>
+                        <span className='flex items-center  gap-1'><IoMdClock />Duration:</span>
+                        <span className='lowercase  text-primary'>{flightHrs.replace('0', '')} hrs {flightMins} mins</span>
 
                     </div>
                 </div>
                 <div className=''>
                     <p className="text-base text-primary font-semibold pb-2">Free Baggages</p>
-                    {flightSegments[0].FreeBaggages.map((passenger, idx) => (
+                    {travelersQuantity.map((passenger, idx) => (
                         <div key={idx} className=" font-semibold flex gap-2">
-                            <p>{passenger.PassengerType.replace(/ADL/g, 'Adult')
-                                .replace(/CHD/g, 'Child')
-                                .replace(/INF/g, 'Infant')}</p>
-                            <p>{passenger.Quantity}{passenger.Unit}</p>
+                            <p>{passenger.name}</p>
+                            <p>
+                                {flightSegments[0].FreeBaggages[idx].Quantity}
+                                {flightSegments[0].FreeBaggages[idx].Unit}
+                            </p>
                         </div>
 
                     ))}

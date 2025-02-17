@@ -336,7 +336,7 @@ const TravelersDetails = () => {
                               <p className="text-2xl w-1/5 text-center" >OR</p>
                               <span className="h-0.5 w-2/5 bg-primary"></span>
                             </div>
-                            <h1 onClick={() => toogleFormHandler(index)} className="capitalize text-text text-center font-semibold text-xl cursor-pointer hover:underline">Add a new traveler</h1>
+                            <h1 onClick={() => toogleFormHandler(index)} className="capitalize text-text text-center font-semibold text-xl cursor-pointer hover:underline hover:text-primary">Add a new traveler</h1>
                           </div>
                           {
                           

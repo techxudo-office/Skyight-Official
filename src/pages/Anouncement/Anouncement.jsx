@@ -9,7 +9,7 @@ import { Spinner, BellIcon } from "../../components/components";
 import { HiOutlineSpeakerphone } from "react-icons/hi";
 
 
-const Notifications = () => {
+const Announcement= () => {
   const [AnnouncementData, setAnnouncementData] = useState([]);
   const [loading, setLoading] = useState(false)
 
@@ -75,4 +75,4 @@ const Notifications = () => {
   );
 };
 
-export default Notifications;
+export default Announcement;

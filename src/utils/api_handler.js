@@ -596,6 +596,7 @@ export const deleteTicket = async (id) => {
 
 //! Bookings
 export const getFlightBookings = async () => {
+  console.log(getToken(),"token")
   try {
     let response = await axios({
       method: "GET",

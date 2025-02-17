@@ -1,5 +1,5 @@
 import { GoDotFill } from "react-icons/go";
-import { MdFlight } from "react-icons/md";
+import { MdFlight, MdOutlineReadMore, MdSearch } from "react-icons/md";
 import { RiDashboardFill } from "react-icons/ri";
 import { MdContentPasteSearch } from "react-icons/md";
 import { FaBusinessTime } from "react-icons/fa6";
@@ -139,6 +139,28 @@ export const sidebarLinks = [
       //   path: "/dashboard/create-ticket",
       //   icon: < MdAirplaneTicket />,
       // },
+    ],
+  },
+  {
+    title: "History",
+    icon: <IoTicket />,
+    sublinks: [
+      {
+        title: "Search",
+        path: "/dashboard/search-history",
+        icon: <MdSearch />,
+      },
+      {
+        title: "Booking",
+        path: "/dashboard/booking-history",
+        icon: <IoTicket />,
+      },
+      
+      {
+        title: "Order",
+        path: "/dashboard/order-history",
+        icon: < MdOutlineReadMore />,
+      },
     ],
   },
   // {

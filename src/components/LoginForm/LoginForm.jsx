@@ -36,11 +36,11 @@ const LoginForm = () => {
     if (response.status) {
       updateAuthToken(response.token);
       toast.success(response.message);
-      setLoading(false);
       resetForm();
+      setLoading(false);
       setTimeout(() => {
         navigate("/dashboard");
-      }, 3000);
+        }, 3000);
     } else {
       toast.error(response.message);
       setLoading(false);
@@ -69,7 +69,7 @@ const LoginForm = () => {
         <CardLayoutBody removeBorder padding="p-0" className="flex">
           {/* Login Form */}
           <div className="flex-1 p-16">
-            <h3 className="text-4xl font-extrabold text-center mb-10">Login</h3>
+            <h3 className="mb-10 text-4xl font-extrabold text-center">Login</h3>
             <form
               onSubmit={formik.handleSubmit}
               className="flex flex-col gap-5"
@@ -90,7 +90,7 @@ const LoginForm = () => {
                   onBlur={formik.handleBlur}
                 />
                 {formik.touched.email && formik.errors.email && (
-                  <div className="text-red-500 text-sm mt-2 absolute left-0">
+                  <div className="absolute left-0 mt-2 text-sm text-red-500">
                     {formik.errors.email}
                   </div>
                 )}
@@ -114,14 +114,14 @@ const LoginForm = () => {
                   onBlur={formik.handleBlur}
                 />
                 {formik.touched.password && formik.errors.password && (
-                  <div className="text-red-500 text-sm mt-2 absolute left-0">
+                  <div className="absolute left-0 mt-2 text-sm text-red-500">
                     {formik.errors.password}
                   </div>
                 )}
               </div>
 
               <Link
-                className="text-center hover:text-primary transition-all"
+                className="text-center transition-all hover:text-primary"
                 to="/forget-password"
               >
                 Forget your password?
@@ -137,21 +137,21 @@ const LoginForm = () => {
 
           {/* Register Section */}
           <div className="flex-1 p-16 register-component-bg rounded-r-3xl">
-            <h3 className="text-4xl font-extrabold text-center mb-10">
+            <h3 className="mb-10 text-4xl font-extrabold text-center">
               Registration
             </h3>
             <div className="flex flex-col gap-5">
               <div className="flex flex-col">
                 <h4 className="flex items-center gap-3 mb-6 text-lg">
-                  <FaCheck className="bg-blue-100 text-primary p-1 rounded-full text-2xl" />
+                  <FaCheck className="p-1 text-2xl bg-blue-100 rounded-full text-primary" />
                   Save time when booking
                 </h4>
                 <h4 className="flex items-center gap-3 my-6 text-lg">
-                  <FaCheck className="bg-blue-100 text-primary p-1 rounded-full text-2xl" />
+                  <FaCheck className="p-1 text-2xl bg-blue-100 rounded-full text-primary" />
                   Save your favourites easily
                 </h4>
                 <h4 className="flex items-center gap-3 my-6 text-lg">
-                  <FaCheck className="bg-blue-100 text-primary p-1 rounded-full text-2xl" />
+                  <FaCheck className="p-1 text-2xl bg-blue-100 rounded-full text-primary" />
                   View your reservations and history
                 </h4>
               </div>

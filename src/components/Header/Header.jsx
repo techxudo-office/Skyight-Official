@@ -7,7 +7,13 @@ import { IoIosSettings } from "react-icons/io";
 import { FaBell } from "react-icons/fa6";
 import { FiLogOut } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
-import { CreditsDropdown, CustomTooltip, Dropdown, SecondaryButton, Spinner } from "../components";
+import {
+  CreditsDropdown,
+  CustomTooltip,
+  Dropdown,
+  SecondaryButton,
+  Spinner,
+} from "../components";
 import { HiOutlineRefresh } from "react-icons/hi";
 import { PiCoinsFill } from "react-icons/pi";
 import { PiHandCoinsFill } from "react-icons/pi";
@@ -16,20 +22,33 @@ import { IoHome } from "react-icons/io5";
 import { AuthContext } from "../../context/AuthContext";
 import { logo, skyightLogo } from "../../assets/Index";
 import { GiHamburgerMenu } from "react-icons/gi";
-import { MdNotificationsNone, MdLogout, MdPerson, MdPersonPinCircle, MdOutlinePersonPinCircle, MdPersonPin, MdArrowDropDown, MdEmail, MdSettings } from "react-icons/md";
+import {
+  MdNotificationsNone,
+  MdLogout,
+  MdPerson,
+  MdPersonPinCircle,
+  MdOutlinePersonPinCircle,
+  MdPersonPin,
+  MdArrowDropDown,
+  MdEmail,
+  MdSettings,
+} from "react-icons/md";
 import { SlSettings } from "react-icons/sl";
 import { TfiEmail } from "react-icons/tfi";
-
+import Notifications from "../../pages/Notifications/Notifications";
+import { motion } from "framer-motion";
+import Announcement from "../../pages/Anouncement/Anouncement";
 
 const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
-
   const navigate = useNavigate();
   const { updateAuthToken } = useContext(AuthContext);
 
   const [dropdownStatus, setDropDownStatus] = useState(false);
   const [isActive, setIsActive] = useState(false);
-  const [CreditsDropdownOpen, setCreditsDropdownOpen] = useState(false);
   const [credits, setCredits] = useState("");
+  const [CreditsDropdownOpen, setCreditsDropdownOpen] = useState(false);
+  const [isAnnHovered, setIsAnnHovered] = useState(false);
+  const [isNotiHovered, setIsNotiHovered] = useState(false);
   // const [credits, setCredits] = useState("");
 
   const dropdownHandler = () => {
@@ -50,7 +69,7 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
         logoutHandler();
       },
     },
-  ]
+  ];
   const mobileDropdownOptions = [
     // {
     //   name: "Profile",
@@ -74,22 +93,22 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
       },
     },
     {
-      name: 'Notification',
+      name: "Notification",
       icon: <MdNotificationsNone />,
       handler: () => {
-        navigationHandler("/dashboard/notifications")
-      }
+        navigationHandler("/dashboard/notifications");
+      },
     },
     {
-      name: 'Announcement',
+      name: "Announcement",
       icon: <HiOutlineSpeakerphone />,
       handler: () => {
         navigationHandler("/dashboard/announcement");
       },
     },
     {
-      name: 'Setting',
-      icon: <SlSettings />
+      name: "Setting",
+      icon: <SlSettings />,
     },
     {
       name: "Logout",
@@ -118,6 +137,7 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
   ];
 
   const logoutHandler = () => {
+    console.log("Logout Handler")
     dropdownHandler();
     toast.success("Logout Successfully");
     setTimeout(() => {
@@ -140,7 +160,6 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
       if (response?.status) {
         setCredits(response.data.Balence);
         // console.log('credits', response)
-
       }
     }
   }, [credits]);
@@ -159,57 +178,94 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
     <>
       <Toaster />
 
-
       <nav className="w-full fixed z-[999] bg-white shadow-md border-b-[1px] border-grayBg ">
-        <div className="mx-auto px-2">
-          <div className="flex items-center justify-between p-2 sm:p-4"> {/* Adjust padding for mobile and desktop */}
+        <div className="px-2 mx-auto">
+          <div className="flex items-center justify-between p-2 sm:p-4">
+            {" "}
+            {/* Adjust padding for mobile and desktop */}
             <div className="flex items-end gap-3">
               {/* Left Section: Hamburger Menu */}
-              <CustomTooltip content={'Open / close'}>
-                <button className="text-gray-700 hover:text-gray-900 transition" onClick={sidebarHandler}>
-                  <GiHamburgerMenu size={22} /> {/* Consistent size for mobile and desktop */}
+              <CustomTooltip content={"Open / close"}>
+                <button
+                  className="text-gray-700 transition hover:text-gray-900"
+                  onClick={sidebarHandler}
+                >
+                  <GiHamburgerMenu size={22} />{" "}
+                  {/* Consistent size for mobile and desktop */}
                 </button>
               </CustomTooltip>
 
-
               {/* Center Section: Logo */}
               <div className="flex items-center ">
-                <img src={skyightLogo} className="w-16 md:w-24 translate-x-3" alt="" />
+                <img
+                  src={skyightLogo}
+                  className="w-16 translate-x-3 md:w-24"
+                  alt=""
+                />
               </div>
             </div>
-
             {/* Right Section: Icons & User */}
-            <div className="flex items-center  sm:gap-3">
-              <CustomTooltip content={'Announcement'}>
-                <div className="max-md:hidden">
-                  <HiOutlineSpeakerphone className=" text-text text-2xl cursor-pointer"
-                    onClick={() => navigationHandler("/dashboard/announcement")} />
+            <div className="flex items-center sm:gap-3">
+              <div
+                className="relative py-2"
+                onMouseEnter={() => setIsAnnHovered(true)}
+                onMouseLeave={() => setIsAnnHovered(false)}
+              >
+                {" "}
+                <CustomTooltip content={"Announcement"}>
+                  <div className="max-md:hidden">
+                    <HiOutlineSpeakerphone className="text-2xl cursor-pointer text-text" />
+                  </div>
+                </CustomTooltip>
+                {isAnnHovered && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.3 }}
+                    className="absolute top-10 right-0 w-[300px] bg-white shadow-lg rounded-lg p-3 z-50"
+                  >
+                    <Announcement />
+                  </motion.div>
+                )}
+              </div>
+              <div
+                className="relative py-2"
+                onMouseEnter={() => setIsNotiHovered(true)}
+                onMouseLeave={() => setIsNotiHovered(false)}
+              >
+                <CustomTooltip content={"Notifications"}>
+                  <div className="max-md:hidden">
+                    <MdNotificationsNone className="text-2xl cursor-pointer text-text" />
+                  </div>
+                </CustomTooltip>
 
-                </div>
-              </CustomTooltip>
-              <CustomTooltip content={'Notifications'}>
+                {isNotiHovered && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.3 }}
+                    className="absolute top-10 right-0 w-[500px] bg-white shadow-lg rounded-lg p-3 z-50"
+                  >
+                    <Notifications />
+                  </motion.div>
+                )}
+              </div>
+              <CustomTooltip content={"Settings"}>
                 <div className="max-md:hidden">
-                  <MdNotificationsNone className="text-text text-2xl cursor-pointer"
-                    onClick={() => navigationHandler("/dashboard/notifications")}
-                  /> {/* Consistent size for all icons */}
-                </div>
-
-              </CustomTooltip>
-              <CustomTooltip content={'Settings'}>
-                <div className="max-md:hidden">
-                  <MdSettings className="text-text text-2xl cursor-pointer" /> {/* Consistent size for all icons */}
-
+                  <MdSettings className="text-2xl cursor-pointer text-text" />{" "}
+                  {/* Consistent size for all icons */}
                 </div>
               </CustomTooltip>
               <div className="relative">
-                <CustomTooltip content={'credits'}>
+                <CustomTooltip content={"credits"}>
                   <button
                     className={`w-full text-sm md:text-base relative flex items-center justify-center gap-1 md:gap-2 cursor-pointer p-1 px-2 md:py-2 md:px-4 border-primary border-[1px]  bg-blue-100 hover:text-secondary  text-primary font-semibold rounded-xl transition duration-300 ease-in-out transform focus:outline-none`}
-                  // onClick={() => {
-                  //   setIsActive(!isActive);
-                  // }}
+                    // onClick={() => {
+                    //   setIsActive(!isActive);
+                    // }}
                   >
-
                     {credits ? (
                       <span
                         onClick={refreshCredits}
@@ -221,58 +277,57 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
                     ) : (
                       <span className="flex items-center gap-2">
                         <HiOutlineRefresh
-                          className={`transition-all max-sm:hidden ${!credits ? "rotate-180" : "rotate-0"
-                            }`}
+                          className={`transition-all max-sm:hidden ${
+                            !credits ? "rotate-180" : "rotate-0"
+                          }`}
                         />
                         <span>Refreshing...</span>
                       </span>
                     )}
 
-                    <MdArrowDropDown className={`text-xl ${CreditsDropdownOpen ? 'rotate-180' : ''} transition-all duration-300`} onClick={() => setCreditsDropdownOpen((prev) => !prev)} />
-                    <div className="absolute top-14 right-0">
-                      {CreditsDropdownOpen && <CreditsDropdown credits={credits} onClose={() => setCreditsDropdownOpen(false)} />}
-
+                    <MdArrowDropDown
+                      className={`text-xl ${
+                        CreditsDropdownOpen ? "rotate-180" : ""
+                      } transition-all duration-300`}
+                      onClick={() => setCreditsDropdownOpen((prev) => !prev)}
+                    />
+                    <div className="absolute right-0 top-14">
+                      {CreditsDropdownOpen && (
+                        <CreditsDropdown
+                          credits={credits}
+                          onClose={() => setCreditsDropdownOpen(false)}
+                        />
+                      )}
                     </div>
-
                   </button>
-
                 </CustomTooltip>
-
-
               </div>
 
-              <CustomTooltip content={'profile'}>
+              <CustomTooltip content={"profile"}>
                 <div className="px-3">
                   <FaUserCircle
                     onClick={dropdownHandler}
-                    className="text-primary hover:text-secondary transition-all text-4xl cursor-pointer"
+                    className="text-4xl transition-all cursor-pointer text-primary hover:text-secondary"
                   />
                   <Dropdown
                     status={dropdownStatus}
                     changeStatus={setDropDownStatus}
                     options={dropdownOptions}
-                    className={'max-md:hidden'}
+                    className={"max-md:hidden"}
                   />
-
                   <Dropdown
                     status={dropdownStatus}
                     changeStatus={setDropDownStatus}
                     options={mobileDropdownOptions}
-                    className={'md:hidden'}
+                    className={"md:hidden"}
                   />
-
                 </div>
               </CustomTooltip>
-
-
             </div>
-
           </div>
-
-
         </div>
       </nav>
     </>
   );
 };
-export default Header
+export default Header;

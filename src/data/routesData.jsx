@@ -35,7 +35,9 @@ import {
   Registration,
   Verification,
   ForgetPassword,
-  Anouncement
+  Anouncement,
+  BookingHistory,
+  OrderHistory
 } from "../pages/pages";
 
 export const routesData = [
@@ -65,6 +67,8 @@ export const routesData = [
       { path: "create-transaction", element: <CreateTransaction />, protected: true },
       { path: "search-history", element: <SearchHistory />, protected: true },
       { path: "transactions-history", element: <TransactionHistory />, protected: true },
+      { path: "booking-history", element: <BookingHistory />, protected: true },
+      { path: "order-history", element: <OrderHistory />, protected: true },
       { path: "roles", element: <Roles />, protected: true },
       { path: "create-role", element: <CreateRole />, protected: true },
       { path: "users", element: <Users />, protected: true },
