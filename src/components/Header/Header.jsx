@@ -34,7 +34,6 @@ import {
   MdSettings,
 } from "react-icons/md";
 import { SlSettings } from "react-icons/sl";
-import { TfiEmail } from "react-icons/tfi";
 import Notifications from "../../pages/Notifications/Notifications";
 import { motion } from "framer-motion";
 import Announcement from "../../pages/Anouncement/Anouncement";
@@ -55,6 +54,13 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
     setDropDownStatus(!dropdownStatus);
   };
   const dropdownOptions = [
+    {
+      name: "Profile",
+      icon: <FaUser />,
+      handler: () => {
+        navigationHandler("/");
+      },
+    },
     {
       name: "Home",
       icon: <IoHome />,
@@ -137,7 +143,7 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
   ];
 
   const logoutHandler = () => {
-    console.log("Logout Handler")
+    console.log("Logout Handler");
     dropdownHandler();
     toast.success("Logout Successfully");
     setTimeout(() => {
