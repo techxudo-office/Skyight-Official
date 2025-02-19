@@ -17,6 +17,7 @@ import { getBookingDetails, getFlightBookings } from "../../utils/api_handler";
 const TicketDetails = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [bookingDetails, setBookingDetails] = useState({});
 
   const printRef = useRef();
 
@@ -49,18 +50,32 @@ const TicketDetails = () => {
   //     setTicketData(response.data);
   //   }
   // };
-console.log("booking details",location.state)
+  const getBookingDetailsHandler = async (refid) => {
+    const response = await getBookingDetails(refid);
+    console.log("booking-details", response);
+    setBookingDetails(response.data);
+  };
+  // console.log("booking details", location.state);
+  // console.log("Testing", bookingDetails.flightSegment);
+  console.log(location.state, "Ref iD");
+
   useEffect(() => {
     if (location.state) {
       const refId = location.state;
       getBookingDetailsHandler(refId);
-      console.log('refid',refId)
+      console.log("refid", refId);
     }
+  }, [location.state]);
+
+  // useEffect(() => {
+  //   // console.log(bookingDetails,"Details--->")
+  //   // console.log(bookingDetails?.flightSegments[0]?.id,"bookingDetails.flightSegments[0].departure_terminal")
+  // }, [bookingDetails]);
+
+  useEffect(() => {
+    console.log("Details--->");
   }, []);
-  const getBookingDetailsHandler=async (refid)=>{
-const response=await getBookingDetails(refid)
-console.log("booking-details",response)
-  }
+
   // const gettingFlightBookings = async () => {
   //   const response = await getFlightBookings();
   //   if (response.status) {
@@ -258,18 +273,18 @@ console.log("booking-details",response)
     PTC_FareBreakDowns.map((passenger, index) => (
       <div
         key={index}
-        className="flex flex-wrap gap-3 py-3 border-b border-slate-200 items-center justify-between"
+        className="flex flex-wrap items-center justify-between gap-3 py-3 border-b border-slate-200"
       >
-        <h2 className="text-sm font-semibold text-slate-600 flex items-center gap-1">
+        <h2 className="flex items-center gap-1 text-sm font-semibold text-slate-600">
           <FaUser className="text-primary" />
           {passenger.PassengerTypeQuantity.Quantity}{" "}
           {passenger.PassengerTypeQuantity.Code}
         </h2>
-        <h2 className="text-sm font-semibold text-slate-500 flex items-center gap-1">
+        <h2 className="flex items-center gap-1 text-sm font-semibold text-slate-500">
           <FaMoneyBillAlt className="text-primary" />
           Base Fare: {passenger.PassengerFare.BaseFare.Amount}
         </h2>
-        <h2 className="text-sm font-semibold text-slate-500 flex items-center gap-1">
+        <h2 className="flex items-center gap-1 text-sm font-semibold text-slate-500">
           <FaMoneyBillAlt className="text-primary" />
           Taxes:{" "}
           {passenger.PassengerFare.Taxes.Tax.reduce(
@@ -284,9 +299,9 @@ console.log("booking-details",response)
     TravelerInfo.map((traveler, index) => (
       <div
         key={index}
-        className="flex flex-wrap gap-3 py-3 border-b border-slate-200 items-center justify-between"
+        className="flex flex-wrap items-center justify-between gap-3 py-3 border-b border-slate-200"
       >
-        <h2 className="text-sm font-semibold text-slate-600 flex items-center gap-1">
+        <h2 className="flex items-center gap-1 text-sm font-semibold text-slate-600">
           <FaUser className="text-primary" />
           {traveler.PersonName.NameTitle} {traveler.PersonName.GivenName}{" "}
           {traveler.PersonName.Surname}
@@ -303,10 +318,10 @@ console.log("booking-details",response)
   return (
     <>
       <Toaster />
-      <div ref={printRef} className="w-full flex flex-col gap-5">
+      <div ref={printRef} className="flex flex-col w-full gap-5">
         <CardLayoutContainer>
           <CardLayoutHeader
-            heading={`Booking Reference: ${bookingReferenceID.Id}`}
+            heading={`Booking Reference: ${bookingDetails.booking_reference_id}`}
             className={"flex items-center justify-between"}
           >
             <div className="flex flex-wrap gap-2">
@@ -327,29 +342,25 @@ console.log("booking-details",response)
             </div>
           </CardLayoutHeader>
           <CardLayoutBody>
-            <div className="flex items-center justify-between flex-wrap gap-5">
-              <div>
-                <h2 className="text-xl font-semibold text-primary mb-2">
-                  Departure
-                </h2>
-                <p>
-                  {flightSegment.DepartureAirport.Terminal} (
-                  {flightSegment.DepartureAirport.LocationCode})
-                </p>
-                <p>{flightSegment.DepartureDateTime}</p>
+            {bookingDetails?.flightSegments && (
+              <div className="flex flex-wrap items-center justify-between gap-5">
+                <div>
+                  <h2 className="mb-2 text-xl font-semibold text-primary">
+                    Departure
+                  </h2>
+                  <p>{bookingDetails?.flightSegments[0]?.departure_airport}</p>
+                  <p>{bookingDetails?.flightSegments[0]?.departure_datetime}</p>
+                </div>
+                <FaPlane className="text-2xl text-primary" />
+                <div>
+                  <h2 className="mb-2 text-xl font-semibold text-primary">
+                    Arrival
+                  </h2>
+                  <p>{bookingDetails?.flightSegments[0]?.arrival_airport}</p>
+                  <p>{bookingDetails?.flightSegments[0]?.arrival_datetime}</p>
+                </div>
               </div>
-              <FaPlane className="text-primary text-2xl" />
-              <div>
-                <h2 className="text-xl font-semibold text-primary mb-2">
-                  Arrival
-                </h2>
-                <p>
-                  {flightSegment.ArrivalAirport.Terminal} (
-                  {flightSegment.ArrivalAirport.LocationCode})
-                </p>
-                <p>{flightSegment.ArrivalDateTime}</p>
-              </div>
-            </div>
+            )}
           </CardLayoutBody>
         </CardLayoutContainer>
 
