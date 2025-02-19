@@ -18,21 +18,21 @@ export const login = async (payload) => {
       url: `${baseUrl}/api/login`,
       data: payload,
     });
-    console.log(response,"Login Response");
+    console.log(response, "Login Response");
     if (response.status === 200) {
       localStorage.setItem("auth_token", response.data.data.token);
-      localStorage.setItem("userData", JSON.stringify(response.data.data.user))
+      localStorage.setItem("userData", JSON.stringify(response.data.data.user));
       return {
         status: true,
         message: "Login Successfully",
         token: response.data.data.token,
-        user: JSON.stringify(response.data.data.user)
+        user: JSON.stringify(response.data.data.user),
       };
     }
   } catch (error) {
     console.log("Failed while trying to login account: ", error);
     if (error.response) {
-      console.log(error.response)
+      console.log(error.response);
       if (error.response.data.data.errors) {
         const errors = Object.keys(error.response.data.data.errors);
         const errorMessages = [];
@@ -265,10 +265,13 @@ export const getCredits = async () => {
 
 //! Flight...
 export const searchFlight = async (payload) => {
-  const apiUrlWithPayload = `${baseUrl}/api/search?trip_type=${payload.tripType
-    }&departure_date_time=${payload.departureDate}&origin_location_code=${payload.originCode
-    }&destination_location_code=${payload.destinationCode}&adult_quantity=${payload.adult
-    }&child_quantity=${[payload.child]}&infant_quantity=${payload.infant}`;
+  const apiUrlWithPayload = `${baseUrl}/api/search?trip_type=${
+    payload.tripType
+  }&departure_date_time=${payload.departureDate}&origin_location_code=${
+    payload.originCode
+  }&destination_location_code=${payload.destinationCode}&adult_quantity=${
+    payload.adult
+  }&child_quantity=${[payload.child]}&infant_quantity=${payload.infant}`;
 
   try {
     let response = await axios({
@@ -383,7 +386,33 @@ export const getTransactions = async () => {
     if (response.status === 200) {
       if (response.data.data[0].length > 0) {
         const extractedData = response.data.data[0].map(
-          ({ id, company_id, bank_name, bank_number, account_holder_name, document_number, payment_date, amount, document_url, comment, status, reasonIds }) => ({ id, company_id, bank_name, bank_number, account_holder_name, document_number, payment_date, amount, document_url, comment, status, reasonIds })
+          ({
+            id,
+            company_id,
+            bank_name,
+            bank_number,
+            account_holder_name,
+            document_number,
+            payment_date,
+            amount,
+            document_url,
+            comment,
+            status,
+            reasonIds,
+          }) => ({
+            id,
+            company_id,
+            bank_name,
+            bank_number,
+            account_holder_name,
+            document_number,
+            payment_date,
+            amount,
+            document_url,
+            comment,
+            status,
+            reasonIds,
+          })
         );
         return { status: true, data: extractedData };
       }
@@ -445,7 +474,10 @@ export const createUser = async (payload) => {
     });
     return response.data; // Return the response data
   } catch (error) {
-    console.error("Error creating user:", error.response?.data || error.message);
+    console.error(
+      "Error creating user:",
+      error.response?.data || error.message
+    );
     throw error; // Rethrow error for handling in calling function
   }
 };
@@ -481,15 +513,14 @@ export const createUser = async (payload) => {
 //   }
 // };
 
-
 export const getUsers = async () => {
   let response = await axios.get(`${baseUrl}/api/user/company-user`, {
     headers: {
       Authorization: getToken(),
-    }
-  })
-  return response?.data?.data
-}
+    },
+  });
+  return response?.data?.data;
+};
 
 export const deleteUser = async (id) => {
   try {
@@ -601,7 +632,7 @@ export const deleteTicket = async (id) => {
 
 //! Bookings
 export const getFlightBookings = async (id) => {
-  console.log(getToken(),"token")
+  console.log(getToken(), "token");
   try {
     let response = await axios({
       method: "GET",
@@ -844,33 +875,61 @@ export const getNotifications = async () => {
     if (response.status === 200) {
       return {
         status: true,
-        data: response.data.data
-      }
+        data: response.data.data,
+      };
     }
   } catch (error) {
     console.log("Failed while getting notifications: ", error);
   }
 };
+
+export const getAnnouncements = async () => {
 export const getAnnouncements = async () => {
   try {
+    let response = await axios({
+      method: "GET",
+      url: `${baseUrl}/api/getAnnouncements`,
     let response = await axios({
       method: 'GET',
       url: `${baseUrl}/api/getAnnouncements`,
       headers: {
         Authorization: getToken(),
       },
+    });
+    console.log("annoncement", response);
     })
     console.log('annoncement', response)
     if (response.status === 200) {
       return {
         status: true,
-        data: response.data.data
-      }
+        data: response.data.data,
+      };
     }
   } catch (error) {
     console.log("Failed while getting Announcements: ", error);
+  }
+};
+
+//! Roles...
+export const createRole = async (payload) => {
+  try {
+    const response = await axios.post(`${baseUrl}/api/role`, payload, {
+      headers: {
+        Authorization: getToken(),
+        "Content-Type": "application/json",
+      },
+    });
+    console.log(response,"Create Role")
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error creating user:",
+      error.response?.data || error.message
+    );
+    throw error;
 
   }
+};
 }
 export const getTravelers = async (passengerType) => {
   try {
