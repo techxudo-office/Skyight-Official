@@ -8,12 +8,19 @@ import {
 
 import { FaCross, FaEye } from "react-icons/fa";
 import { MdEditSquare, MdFilter, MdFilterList } from "react-icons/md";
-import { FaRegCircleCheck } from "react-icons/fa6";
+import { FaRegCircleCheck,FaPlus  } from "react-icons/fa6";
 import { MdAutoDelete } from "react-icons/md";
 
-import { Table, Dropdown, SecondaryButton, TableNew } from "../../components/components";
+import {
+  Table,
+  Dropdown,
+  SecondaryButton,
+  TableNew,
+} from "../../components/components";
+import { useNavigate } from "react-router-dom";
 
 const Roles = () => {
+  const navigate = useNavigate();
   const [activeIndex, setActiveIndex] = useState(null);
   const [dropdownStatus, setDropdownStatus] = useState(false);
 
@@ -83,7 +90,7 @@ const Roles = () => {
     {
       name: "Rights",
       icon: (
-        <FaRegCircleCheck title="Rights" className="text-orange-500 text-sm" />
+        <FaRegCircleCheck title="Rights" className="text-sm text-orange-500" />
       ),
       handler: () => {
         alert("Hello Im Rights Alert !");
@@ -123,9 +130,9 @@ const Roles = () => {
     <>
       {/* {data.map((item, i) => (
 
-        i == activeIndex && <div className="fixed h-screen w-full flex justify-center items-center">
-          <div className="relative w-96  h-96 flex justify-center items-center text-text rounded-lg bg-white p-3">
-            <FaCross onClick={() => setActiveIndex(null)} className="text-redColor absolute text-4xl top-5 right-5" />
+        i == activeIndex && <div className="fixed flex items-center justify-center w-full h-screen">
+          <div className="relative flex items-center justify-center p-3 bg-white rounded-lg w-96 h-96 text-text">
+            <FaCross onClick={() => setActiveIndex(null)} className="absolute text-4xl text-redColor top-5 right-5" />
             {item.roleRights}
           </div>
         </div>
@@ -136,12 +143,20 @@ const Roles = () => {
         <CardLayoutHeader
           removeBorder={true}
           heading={"Roles"}
-          className="flex justify-between items-center"
+          className="flex items-center justify-between"
         >
           <div className="relative">
             <SecondaryButton
+              text={"Create New Role"}
+              icon={<FaPlus  />}
+              onClick={() => {
+                navigate('/dashboard/create-role')
+              }}
+              className="mb-4"
+            />
+            <SecondaryButton
               text={"Filters"}
-              icon={<MdFilterList/>}
+              icon={<MdFilterList />}
               onClick={() => {
                 setDropdownStatus(!dropdownStatus);
               }}
