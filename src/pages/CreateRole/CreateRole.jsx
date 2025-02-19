@@ -33,6 +33,11 @@ const initialRolesData = {
     write_transaction: false,
     read_role: false,
     write_role: false,
+    read_notification: false, 
+    read_flight: false,       
+    read_error_log: false,    
+    write_announcement: false,
+    read_announcement: false, 
   },
 };
 
@@ -82,7 +87,7 @@ const CreateRole = () => {
       description: rolesData.description,
       page_permission: rolesData.page_permission,
       action_permission: rolesData.action_permission,
-      status: isActive ? "active" : "inactive",
+      // status: isActive ? "active" : "inactive",
     };
 
     try {
