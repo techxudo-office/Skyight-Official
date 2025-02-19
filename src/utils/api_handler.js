@@ -10,6 +10,10 @@ export const getToken = () => {
 export const login = async (payload) => {
   try {
     let response = await axios({
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
       method: "POST",
       url: `${baseUrl}/api/login`,
       data: payload,
@@ -325,7 +329,8 @@ export const createTransaction = async (payload) => {
       url: `${baseUrl}/api/company/create-transaction`,
       data: payload,
       headers: {
-        "Content-Type": "multipart/form-data",
+        Accept: "application/json",
+        "Content-Type": "application/json",
         Authorization: getToken(),
       },
     });
@@ -651,15 +656,33 @@ export const getFlightBookings = async (id) => {
   }
 };
 
+// export const getBookingDetails = async (id) => {
+//   try {
+//     let response = await axios({
+//       method: "POST",
+//       url: `${baseUrl}/api/booking-issue`,
+//       data: {
+//         pnr: id,
+//       },
+//       headers: {
+//         Authorization: getToken(),
+//       },
+//     });
+//     console.log(response);
+//     if (response.status === 200) {
+//       return { status: true, data: response.data.data };
+//     }
+//   } catch (error) {
+//     console.log("Failed while getting bookings: ", error);
+//   }
+// };
 export const getBookingDetails = async (id) => {
   try {
     let response = await axios({
-      method: "POST",
-      url: `${baseUrl}/api/booking-issue`,
-      data: {
-        pnr: id,
-      },
+      method: "GET",
+      url: `${baseUrl}/api/booking/${id}`,
       headers: {
+        "Content-Type": "application/json",
         Authorization: getToken(),
       },
     });
@@ -828,16 +851,16 @@ export const getNotifications = async () => {
     console.log("Failed while getting notifications: ", error);
   }
 };
-export const getAnnouncements=async ()=>{
+export const getAnnouncements = async () => {
   try {
-    let response= await axios({
-      method:'GET',
-      url:`${baseUrl}/api/getAnnouncements`,
+    let response = await axios({
+      method: 'GET',
+      url: `${baseUrl}/api/getAnnouncements`,
       headers: {
         Authorization: getToken(),
       },
     })
-    console.log('annoncement',response)
+    console.log('annoncement', response)
     if (response.status === 200) {
       return {
         status: true,
@@ -846,6 +869,27 @@ export const getAnnouncements=async ()=>{
     }
   } catch (error) {
     console.log("Failed while getting Announcements: ", error);
-    
+
+  }
+}
+export const getTravelers = async (passengerType) => {
+  try {
+    let response = await axios({
+      method: 'GET',
+      url: `${baseUrl}/api/getTravellers?passenger_type=${passengerType}`,
+      headers: {
+        Authorization: getToken(),
+      },
+    })
+    console.log('travelers', response)
+    if (response.status === 200) {
+      return {
+        status: true,
+        data: response.data.data
+      }
+    }
+  } catch (error) {
+    console.log("Failed while getting travellers: ", error);
+
   }
 }

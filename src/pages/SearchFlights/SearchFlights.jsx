@@ -72,6 +72,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState()
   const [loading, setLoading] = useState(false);
+  const [flightRoute, setFlightRoute] = useState("Domestic");
   const [Triptype, setTriptype] = useState("One-Way");
   const [activeField, setActiveField] = useState({
     departure: false,
@@ -101,6 +102,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
   // console.log(activeField)
   const initialValues = loadFormData() || {
     tripType: "OneWay", // Default value
+    flightRoute:flightRoute,
     departure: "",
     arrival: "",
     departureDate: "",
@@ -116,6 +118,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
   const searchFlightHandler = async (values) => {
     const payload = {
       departureDate: values.departureDate,
+      flightRoute:flightRoute,
       tripType: "OneWay",
       originCode: values.departure,
       destinationCode: values.arrival,
@@ -157,6 +160,8 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
 
   const handleSubmit = (values) => {
     // console.log("handleSubmit");
+    localStorage.removeItem("allFormData")
+    localStorage.removeItem("disableTravelers")
     localStorage.setItem("flightSearchForm", JSON.stringify(values));
     setFormData(values)
     // console.log("Form Values: ", values);
@@ -189,7 +194,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
     };
 
   }, []);
-
+console.log("flightroute",flightRoute)
   return (
     <>
       <Toaster />
@@ -203,9 +208,13 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
             heading="Search Flight"
             className={"flex items-center justify-between "}
           />
+            <CardLayoutBody>
+            <RadioButtons options={["Domestic", "International"]} selectedOption={(option) => setFlightRoute(option)} />
+          </CardLayoutBody>
           <CardLayoutBody>
             <RadioButtons options={["One-Way", "Round-Trip", "Multi-City"]} selectedOption={(option) => setTriptype(option)} />
           </CardLayoutBody>
+        
 
           {Triptype != 'Multi-City' ?
             <Formik
@@ -412,7 +421,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                     <div onClick={onSearch}>
                       <Button
                         icon={<MdSearch />}
-                        text={ "Search Flight"}
+                        text={"Search Flight"}
                         type="submit"
                         disabled={loading}
                         loading={loading}

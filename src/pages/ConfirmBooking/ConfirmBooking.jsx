@@ -25,7 +25,18 @@ const FlightDetails = () => {
   const [flightData, setFlightData] = useState(null);
   const [travelers, setTravelers] = useState(null);
   const [allTravelersData, setAllTravelersData] = useState([]);
+  
+  useEffect(() => { 
+    if (location.state) {
+      console.log(location.state);
 
+      setFlightData(location.state.flightData);
+      setTravelers(location.state.travelersData);
+      setAllTravelersData(location.state.allTravelersData);
+    }
+  }, [location.state]);
+
+  console.log('all-travellers',allTravelersData)
   const flightSegment =
     flightData &&
     flightData.AirItinerary.OriginDestinationOptions[0].FlightSegment[0];
@@ -44,6 +55,7 @@ const FlightDetails = () => {
     flightData && flightData.AirItineraryPricingInfo;
 
   const confirmBookingHandler = async () => {
+    
     const payLoad = {
       origin_location_code: flightSegment.DepartureAirport.LocationCode,
       destination_location_code: flightSegment.ArrivalAirport.LocationCode,
@@ -67,7 +79,7 @@ const FlightDetails = () => {
       // "cabin_class": cabinClass,
       // "transaction_identifier": "TXN123456", // fix
       transaction_identifier: "", // fix
-      travellers: allTravelersData,
+      travellers:allTravelersData,
       booking_class_avails: flightSegment.BookingClassAvails.map(
         (item, index) => {
           return {
@@ -159,15 +171,7 @@ const FlightDetails = () => {
     }
   };
 
-  useEffect(() => { 
-    if (location.state) {
-      console.log(location.state);
 
-      setFlightData(location.state.flightData);
-      setTravelers(location.state.travelersData);
-      setAllTravelersData(location.state.allTravelersData);
-    }
-  }, [location.state]);
 
   if (!flightData) {
     return <Spinner className={"text-primary"} />;

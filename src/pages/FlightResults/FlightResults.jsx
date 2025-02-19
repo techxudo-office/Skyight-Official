@@ -35,7 +35,7 @@ const FlightResults = () => {
   useEffect(() => {
     if (location.state) {
       console.log("state", location.state)
-      // console.log("payload", location.state.payload)
+      console.log("payload", location.state.payload)
 
       const flights = location.state.flightsData.PricedItineraries.PricedItinerary;
       const travelers = location.state.travelersData;
@@ -166,7 +166,7 @@ const FlightResults = () => {
       {/* Filtered Flights Data */}
       {filteredFlightsData.length > 0 ? (
         filteredFlightsData.map((item, index) => (
-          <FlightCard key={index} data={item} pricingInfo={pricingInfo} travelers={travelersData} />
+          <FlightCard key={index} data={item} doc_type={TripDetail.flightRoute} pricingInfo={pricingInfo} travelers={travelersData} />
 
 
         ))

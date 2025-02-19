@@ -15,7 +15,6 @@ const Dropdown = ({ status, changeStatus, options, className, right }) => {
   //     document.removeEventListener("mousedown", handleClickOutside);
   //   };
   // }, []);
-
   return (
     <>
       {status && (

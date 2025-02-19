@@ -32,6 +32,8 @@ const FlightBookings = () => {
   const [bookingsData, setBookingsData] = useState([]);
   const [modalStatus, setModalStatus] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
+  const [confirmStatus, setConfirmStatus] = useState(false);
+  const [refundItem, setRefundItem] = useState(null);
 
   const navigationHandler = () => {
     navigate("/dashboard/search-flights");
@@ -80,24 +82,26 @@ const FlightBookings = () => {
       handler: (_, item) => {
         console.log("item", item);
         navigate("/dashboard/booking-details", {
-          state: item.booking_reference_id,
+          state: item.id,
         });
       },
     },
     {
       name: "Refund",
-      icon: <HiReceiptRefund title="Refund" className="text-blue-500" />,
-      handler: (_, item) => {
-        refundRequestHandler(item);
+      icon: <HiReceiptRefund title="Refund" className="text-blue-500 text-xl" />,
+      handler: (_,item) => {
+        setConfirmStatus(true)
+        setRefundItem(item)
+        
       },
     },
-    {
-      name: "Cancel",
-      icon: <MdCancel title="Cancel" className="text-red-500" />,
-      handler: (_, item) => {
-        cancelFlightBookingHandler(item);
-      },
-    },
+    // {
+    //   name: "Cancel",
+    //   icon: <MdCancel title="Cancel" className="text-red-500" />,
+    //   handler: (_,item) => {
+    //     cancelFlightBookingHandler(item);
+    //   },
+    // },
   ];
 
   const gettingFlightBookings = async () => {
@@ -177,6 +181,7 @@ const FlightBookings = () => {
             />
           </div>
         </CardLayoutHeader>
+          <ConfirmModal status={confirmStatus} onAbort={() => setConfirmStatus(false)} onConfirm={()=>refundRequestHandler(refundItem)} text={"Are you really want to refund the request"} />
         <CardLayoutBody removeBorder={true}>
           {/* <Table
             columns={columnsData}
@@ -184,13 +189,13 @@ const FlightBookings = () => {
             actions={actionsData}
             activeIndex={activeIndex}
           /> */}
-
-          <TableNew
-            columnsToView={columnsData}
-            tableData={bookingsData}
-            downloadBtn={true}
-            // actions={actionsData}
-          />
+         
+            <TableNew
+              columnsToView={columnsData}
+              tableData={bookingsData}
+              downloadBtn={true}
+              actions={actionsData}
+            />
         </CardLayoutBody>
         <CardLayoutFooter></CardLayoutFooter>
       </CardLayoutContainer>

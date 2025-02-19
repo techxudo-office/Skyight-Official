@@ -45,14 +45,14 @@ export const travelersDetailsInputs= [
       placeholder: "Enter Email",
     },
     {
-      type: "number",
+      type: "Number",
       id: "telephone",
       label: "Phone Number",
       name: "telephone",
       placeholder: "Enter Phone Number",
     },
     {
-      type: "number",
+      type: "Number",
       id: "mobile",
       label: "Mobile Number",
       name: "mobile",

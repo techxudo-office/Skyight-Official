@@ -15,7 +15,7 @@ import { FaMoneyBillAlt } from "react-icons/fa";
 import { IoIosAirplane, IoMdEye } from "react-icons/io";
 import { MdChildCare, MdChildFriendly, MdPerson } from "react-icons/md";
 
-const FlightCard = ({ data, travelers, pricingInfo }) => {
+const FlightCard = ({ data,doc_type ,travelers, pricingInfo }) => {
   const navigate = useNavigate();
   const totalTravelers = [];
   Object.entries(travelers).forEach(([key, value]) => {
@@ -29,7 +29,7 @@ const FlightCard = ({ data, travelers, pricingInfo }) => {
     data.AirItinerary.OriginDestinationOptions[0].FlightSegment[0];
 
   const viewDetails = () => {
-    navigate("/dashboard/travelers-details", { state: { data, travelers, pricingInfo } });
+    navigate("/dashboard/travelers-details", { state: { data,doc_type, travelers, pricingInfo } });
   };
 
   return (

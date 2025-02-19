@@ -14,7 +14,8 @@ const Select = ({
   className,
   optionIcons,
   selectIcon,
-  isSelected
+  isSelected,
+  onClick
 }) => {
   const selectRef = useRef(null);
   const [selectStatus, setSelectStatus] = useState(false);
@@ -77,7 +78,8 @@ const Select = ({
         </label>
         <div
           className="flex w-full items-center justify-between py-5 px-3  bg-transparent text-text"
-          onClick={selectHandler}
+          onClick={selectHandler }
+          onMouseEnter={onClick}
         >
 
           <span className="text-text flex gap-3 items-center"><span className="text-primary">{selectIcon}</span>{(value && value) || placeholder}</span>

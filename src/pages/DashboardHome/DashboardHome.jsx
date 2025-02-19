@@ -87,7 +87,23 @@ const DashboardHome = () => {
     { columnName: "Status", fieldName: "booking_status", type: "status" },
     { columnName: "Created At", fieldName: "created_at", type: "date" },
   ];
-
+  const actionsData = [
+    {
+      name: "View",
+      icon: <FaEye title="View" className="text-green-500 " />,
+      // handler: (index) => {
+      //   if (activeIndex === index) {
+      //     setActiveIndex(null);
+      //   } else setActiveIndex(index);
+      // },
+      handler: (_, item) => {
+        console.log('item', item)
+        navigate("/dashboard/booking-details", {
+          state: item.booking_reference_id,
+        });
+      },
+    },
+  ];
   const gettingFlightBookings = async () => {
     const userData = JSON.parse(localStorage.getItem("userData"));
     const id = userData?.company_id;
@@ -145,6 +161,7 @@ const DashboardHome = () => {
             columnsToView={columnsData}
             tableData={bookingsData}
             downloadBtn={true}
+            actions={actionsData}
           />
         </CardLayoutBody>
         <CardLayoutFooter></CardLayoutFooter>

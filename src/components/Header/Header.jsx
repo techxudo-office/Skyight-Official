@@ -72,25 +72,12 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
       name: "Logout",
       icon: <FiLogOut />,
       handler: () => {
+        console.log('logout')
         logoutHandler();
       },
     },
   ];
   const mobileDropdownOptions = [
-    // {
-    //   name: "Profile",
-    //   icon: <FaUser />,
-    //   handler: () => {
-    //     navigationHandler("/dashboard/profile");
-    //   },
-    // },
-    // {
-    //   name: "Setting",
-    //   icon: <IoIosSettings />,
-    //   handler: () => {
-    //     navigationHandler("/dashboard/setting");
-    //   },
-    // },
     {
       name: "Home",
       icon: <IoHome />,
@@ -332,6 +319,8 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
                     className={"md:hidden"}
                   />
                 </div>
+              
+
               </CustomTooltip>
             </div>
           </div>

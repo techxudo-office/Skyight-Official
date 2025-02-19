@@ -12,7 +12,7 @@ import {
 import { Button, Spinner, SecondaryButton } from "../../components/components";
 import toast, { Toaster } from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
-import { getBookingDetails } from "../../utils/api_handler";
+import { getBookingDetails, getFlightBookings } from "../../utils/api_handler";
 
 const TicketDetails = () => {
   const location = useLocation();
@@ -49,13 +49,28 @@ const TicketDetails = () => {
   //     setTicketData(response.data);
   //   }
   // };
+console.log("booking details",location.state)
+  useEffect(() => {
+    if (location.state) {
+      const refId = location.state;
+      getBookingDetailsHandler(refId);
+      console.log('refid',refId)
+    }
+  }, []);
+  const getBookingDetailsHandler=async (refid)=>{
+const response=await getBookingDetails(refid)
+console.log("booking-details",response)
+  }
+  // const gettingFlightBookings = async () => {
+  //   const response = await getFlightBookings();
+  //   if (response.status) {
+  //     setBookingsData(response.data);
 
-  // useEffect(() => {
-  //   if (location.state) {
-  //     const refId = location.state;
-  //     getBookingDetailsHandler(refId);
   //   }
-  // }, []);
+  // };
+  // useEffect(()=>{
+  // gettingFlightBookings()
+  // })
 
   const ticketData = {
     AirReservation: {

@@ -39,6 +39,8 @@ import { IoIosAirplane, IoMdTimer } from "react-icons/io";
 import { IoTimer } from "react-icons/io5";
 import { travelerDetailScehma } from "../../validations";
 import { travelersDetailsInputs } from "../../data/formInputs";
+import { getTravelers } from "../../utils/api_handler";
+import { set } from "date-fns";
 
 
 const passengerOptions = [
@@ -65,15 +67,28 @@ const TravelersDetails = () => {
   const navigate = useNavigate();
 
   const [value, setValue] = useState();
-  const [allTravelersData, setAllTravelersData] = useState([])
-  useEffect(() => {
-    const allFormData = localStorage.getItem("allFormData")
-    console.log(allFormData)
-    if (allFormData) {
-      setAllTravelersData(JSON.parse(allFormData));
-    }
+  const [allTravelersData, setAllTravelersData] = useState(JSON.parse(localStorage.getItem("allFormData"))?.map((item) => {
+    const mobile = Object.values(item.mobile).join('')
+    const telephone = Object.values(item.telephone).join('')
+    return (
+      {
+        ...item,
+        mobile: mobile,
+        telephone: telephone
 
-  },[])
+      }
+    )
+  }) || [])
+  // useEffect(() => {
+  //   const allFormData = localStorage.getItem("allFormData")
+  //   // console.log(allFormData)
+  //   if (allFormData) {
+  //     setAllTravelersData(JSON.parse(allFormData));
+  //   }
+
+  // }, [])
+
+
 
 
   const [flightData, setFlightData] = useState(null);
@@ -82,15 +97,19 @@ const TravelersDetails = () => {
   const [pricingInfo, setPricingInfo] = useState();
   const [toogleForm, setToogleForm] = useState(null);
   const [confirmStatus, setConfirmStatus] = useState(false);
-  const [isFormValid, setIsFormValid] = useState(false);
-  const [disableAddTraveler, setDisableAddTraveler] = useState([]);
+  const [isFormValid, setIsFormValid] = useState([]);
+  const [PassengersInfo, setPassengersInfo] = useState([]);
+  const [DocType, setDocType] = useState();
+  const [Passengers, setPassengers] = useState([
+    { value: '', label: '' }
+  ]);
+  const [disableAddTraveler, setDisableAddTraveler] = useState(JSON.parse(localStorage.getItem('disableTravelers')) || []);
   const [successPopup, setSuccessPopup] = useState({
     status: false,
     message: '',
     icon: ''
   });
-
-
+  console.log("disabledtraveler", disableAddTraveler)
 
   const toogleFormHandler = (index) => {
     if (index === toogleForm) {
@@ -118,6 +137,14 @@ const TravelersDetails = () => {
   };
 
   const handleSubmit = (travelerIndex, values) => {
+    console.log("formvalues", values)
+    let doc_type;
+    if(DocType=="Domestic"){
+      doc_type="N"
+    }else{
+      doc_type="S"
+    }
+    
     setConfirmStatus(false)
     const payload = {
       city: values.city,
@@ -128,21 +155,22 @@ const TravelersDetails = () => {
       gender: values.gender,
       last_name: values.last_name,
       mobile: {
-        area_code: String(values.mobile).slice(0, 3),
-        country_code: String(values.mobile).slice(3, 5),
+        area_code: String(values.mobile).slice(0, 2),
+        country_code: String(values.mobile).slice(2, 5),
         number: String(values.mobile).slice(5, 12),
       },
-      passenger_type: result[travelerIndex],
+      passenger_type: values.passenger_type,
       passport_expiry_date: values.passport_expiry_date,
       passport_number: values.passport_number,
+      doc_type: doc_type,
       telephone: {
-        area_code: String(values.telephone).slice(0, 3),
-        country_code: String(values.telephone).slice(3, 5),
+        area_code: String(values.telephone).slice(0, 2),
+        country_code: String(values.telephone).slice(2, 5),
         number: String(values.telephone).slice(5, 12),
       },
       title: values.title,
     };
-    console.log(payload);
+
     setDisableAddTraveler((prev) => ([...prev, travelerIndex]))
     setAllTravelersData((prevData) => [...prevData, payload]);
 
@@ -157,16 +185,19 @@ const TravelersDetails = () => {
         icon: <MdCheck className="text-greenColor" />
       })
     }
-    console.log('alltravelersdata', allTravelersData)
 
-    localStorage.setItem('allFormData', JSON.stringify(allTravelersData))
+
   }, [allTravelersData])
-
+  console.log('alltravelersdata', allTravelersData)
   const addAllTravelers = () => {
+
+    localStorage.setItem('disableTravelers', JSON.stringify(disableAddTraveler))
+    localStorage.setItem('allFormData', JSON.stringify(allTravelersData))
+
     const totalTraveler = Object.values(travelersData).reduce((a, b) => Number(a) + Number(b), 0);
-    console.log('totaltravelers', totalTraveler)
+    // console.log('totaltravelers', totalTraveler)
     if (allTravelersData.length == totalTraveler) {
-      console.log('navigate')
+      // console.log('navigate')
       navigate("/dashboard/confirm-booking", {
         state: { flightData, travelersData, allTravelersData },
       });
@@ -185,6 +216,8 @@ const TravelersDetails = () => {
       setTravelersData(location.state.travelers);
       setPricingInfo(location.state.pricingInfo);
       setFlightSegments(location.state.data.AirItinerary.OriginDestinationOptions[0].FlightSegment)
+      setDocType(location.state.doc_type)
+
     }
 
 
@@ -200,7 +233,7 @@ const TravelersDetails = () => {
   Object.entries(travelersData).forEach(([key, value]) => {
     for (let i = 0; i < parseInt(value, 10); i++) {
       if (key === "adults") {
-        result.push("ADL");
+        result.push("ADT");
       } else if (key === "childs") {
         result.push("CHD");
       } else if (key === "infants") {
@@ -208,6 +241,7 @@ const TravelersDetails = () => {
       }
     }
   });
+
   const passengersList = [
     { value: 'Ahsan', label: 'Ahsan' },
     { value: 'Talha', label: 'Talha' },
@@ -216,35 +250,68 @@ const TravelersDetails = () => {
     { value: 'Hashamuddin', label: 'Hashamuddin' },
     { value: 'Umer Khalid', label: 'Umer Khalid' }
   ]
-  const handleClearData = (setValues, travelerIndex) => {
-    setValues({
-      title: "",
-      previousPassenger: '',
-      first_name: "",
-      last_name: "",
-      email: "",
-      telephone: "",
-      mobile: "",
-      country: "",
-      city: "",
-      date_of_birth: "",
-      passenger_type: "",
-      gender: "",
-      passport_number: "",
-      passport_expiry_date: "",
-    })
-    setAllTravelersData((prev) => prev.filter((item, i) => i != travelerIndex))
-    setDisableAddTraveler((...prev) => prev.filter((item, i) => i != travelerIndex))
+  const handleClearData = (setValues, travelerIndex, email) => {
+    setValues(initialValues)
+    setAllTravelersData((prev) => prev.filter((item) => item.email != email))
+    setDisableAddTraveler((prev) => prev.filter((item) => item != travelerIndex))
   }
-  const handleEditData = (travelerIndex) => {
+  const handleEditData = (setValues, values, travelerIndex) => {
     if (allTravelersData.length) {
       setAllTravelersData((...prev) => prev.filter((item, i) => i != travelerIndex))
-      setDisableAddTraveler((...prev) => prev.filter((item, i) => i != travelerIndex))
+      setDisableAddTraveler((...prev) => prev.filter((item) => item != travelerIndex))
+    }
+    setValues({
+      title: values.title,
+      previousPassenger: values.previousPassenger,
+      first_name: values.first_name,
+      last_name: values.last_name,
+      email: values.name,
+      telephone: values.telephone,
+      mobile: values.mobile,
+      country: values.country,
+      city: values.city,
+      date_of_birth: values.date_of_birth,
+      gender: values.gender,
+      passport_number: values.passport_number,
+      passport_expiry_date: values.passport_expiry_date,
+    })
+
+  }
+  // console.log('valid', isFormValid)
+  const gettingTravellers = async (type) => {
+    const response = await getTravelers(type)
+    if (response.status) {
+      console.log("gettravelers", response)
+      setPassengersInfo(response.data)
+      const passengerList = response.data.map((item) => ({ value: item.email, label: item.email }))
+      setPassengers(passengerList)
+
     }
 
   }
-  console.log('valid', isFormValid)
+  const handlePassengerForm = (setValues, passenger, travelerIndex) => {
+    const formValues = PassengersInfo.filter((item, i) => item.email == passenger)
+    console.log('formvalues', formValues)
+    const phone = parseInt(formValues[0].phone_number.replace(/[\s-]/g, ""), 10)
 
+    console.log("phone", phone)
+    setValues((prev) => ({
+      ...prev,
+      previousPassenger: `${formValues[0].given_name} ${formValues[0].surname} `,
+      passenger_type: formValues[0].passenger_type_code,
+      first_name: formValues[0].given_name,
+      last_name: formValues[0].surname,
+      email: formValues[0].email,
+      telephone: phone,
+      mobile: phone,
+      country: formValues[0].nationality,
+      city: formValues[0].address.split(",")[0],
+      date_of_birth: formValues[0].birth_date,
+      // gender: formValues[0].gender,
+      passport_number: formValues[0].doc_id,
+      passport_expiry_date: formValues[0].expire_date,
+    }))
+  }
   return (
     <>
       <Toaster />
@@ -260,7 +327,7 @@ const TravelersDetails = () => {
                 return (
                   <CardLayoutContainer key={index} className={"mb-5"}>
                     <CardLayoutHeader>
-                      <h2 className="text-text capitalize text-2xl font-semibold">Travelers Detail Domestic</h2>
+                      <h2 className="text-text capitalize text-2xl font-semibold">Travelers Detail {DocType}</h2>
                     </CardLayoutHeader>
                     <CardLayoutHeader
                       className={
@@ -274,7 +341,7 @@ const TravelersDetails = () => {
                         <div>
 
                           <h2 className="text-xl font-semibold text-primary capitalize">
-                            {`Traveller ${index + 1}. ${travelertype == 'ADL' ? 'adult' : travelertype == 'CHD' ? 'child' : 'infants'}`}
+                            {`Traveller ${index + 1}. ${travelertype == 'ADT' ? 'adult' : travelertype == 'CHD' ? 'child' : 'infants'}`}
                           </h2>
                         </div>
 
@@ -289,7 +356,7 @@ const TravelersDetails = () => {
 
                     </CardLayoutHeader>
                     <Formik
-                      initialValues={allTravelersData[index]||initialValues}
+                      initialValues={allTravelersData[index] || initialValues}
                       validationSchema={travelerDetailScehma}
                       onSubmit={(values) => handleSubmit(index, values)}
                       enableReinitialize
@@ -297,9 +364,11 @@ const TravelersDetails = () => {
                       validate={(values) => {
                         try {
                           travelerDetailScehma.validateSync(values, { abortEarly: false });
-                          setIsFormValid(true); // If no errors, form is valid
+                          setIsFormValid((prev) => [...prev, index]);
+                          // If no errors, form is valid
                         } catch (error) {
-                          setIsFormValid(false); // If errors exist, form is invalid
+                          setIsFormValid(
+                            (prev) => prev.filter((item) => item != index)); // If errors exist, form is invalid
                         }
                       }}
 
@@ -311,7 +380,7 @@ const TravelersDetails = () => {
                         touched,
                         setFieldValue,
                         handleSubmit,
-                        
+
 
                       }) => (
 
@@ -319,28 +388,38 @@ const TravelersDetails = () => {
                           <div className="  max-w-full md:w-80 mx-3 lg:mx-auto  py-10 flex flex-col gap-6">
                             <div className=" flex items-center gap-2">
                               <Select
+                                onClick={() => gettingTravellers(travelertype)}
                                 id={'passengers'}
                                 disabled={disableAddTraveler.includes(index)}
                                 label={'Passengers'}
-                                onChange={(option) => setFieldValue("previousPassenger", option.value)}
-                                value={values.previousPassenger}
-                                options={passengersList}
+                                onChange={(option) => {
+                                  setFieldValue("previousPassenger", values.previousPassenger)
+                                  handlePassengerForm(setValues, option.value, index)
+                                }}
+                                value={allTravelersData[index] ? allTravelersData[index].first_name : values.previousPassenger}
+                                options={Passengers}
                               />
                               {values.previousPassenger &&
-                                <MdCancel className="text-primary text-2xl cursor-pointer" onClick={() => setFieldValue("previousPassenger", '')} />
+                                <MdCancel className="text-primary text-2xl cursor-pointer"
+                                  onClick={() => setValues(initialValues)} />
 
                               }
                             </div>
-                            <div className="flex gap-3 w-full items-center text-primary">
-                              <span className="h-0.5 w-2/5 bg-primary"></span>
-                              <p className="text-2xl w-1/5 text-center" >OR</p>
-                              <span className="h-0.5 w-2/5 bg-primary"></span>
-                            </div>
-                            <h1 onClick={() => toogleFormHandler(index)} className="capitalize text-text text-center font-semibold text-xl cursor-pointer hover:underline hover:text-primary">Add a new traveler</h1>
+                            {!values.previousPassenger &&
+                              <>
+                                <div className="flex gap-3 w-full items-center text-primary">
+                                  <span className="h-0.5 w-2/5 bg-primary"></span>
+                                  <p className="text-2xl w-1/5 text-center" >OR</p>
+                                  <span className="h-0.5 w-2/5 bg-primary"></span>
+                                </div>
+                                <h1 onClick={() => toogleFormHandler(index)} className="capitalize text-text text-center font-semibold text-xl cursor-pointer hover:underline hover:text-primary">Add a new traveler</h1>
+                              </>
+                            }
                           </div>
+                          {console.log("errors", errors)}
                           {
-                          
-                          toogleForm === index &&
+
+                            (toogleForm === index || values.previousPassenger) &&
                             <>
                               <Form>
                                 <div className="flex flex-col md:flex-row items-center ">
@@ -403,9 +482,9 @@ const TravelersDetails = () => {
                                   </CardLayoutBody>
                                   <div className="px-4 w-full md:w-1/2 filledfields">
                                     <div className="flex gap-6 justify-end items-center">
-                                      <p onClick={() => handleEditData(index)} className="text-primary cursor-pointer hover:text-secondary underline ">
+                                      <p onClick={() => handleEditData(setValues, values, index)} className="text-primary cursor-pointer hover:text-secondary underline ">
                                         Edit Data</p>
-                                      <p onClick={() => handleClearData(setValues, index)} className="text-primary cursor-pointer hover:text-secondary underline ">
+                                      <p onClick={() => handleClearData(setValues, index, values.email)} className="text-primary cursor-pointer hover:text-secondary underline ">
                                         Clear Data</p>
 
                                     </div>
@@ -432,8 +511,23 @@ const TravelersDetails = () => {
                                 <div>
                                   <SecondaryButton
                                     text={disableAddTraveler.includes(index) ? "Traveler Added" : "Add Traveler"}
-                                    onClick={() => setConfirmStatus(true)}
-                                    disabled={disableAddTraveler.includes(index) || !isFormValid}
+                                    onClick={() => {
+                                      const lastValue = disableAddTraveler.at(-1)
+                                      if (lastValue == undefined & index == 0) {
+                                        setConfirmStatus(true)
+                                      } else if (index >= lastValue) {
+                                        setConfirmStatus(true)
+                                      } else {
+                                        setSuccessPopup({
+                                          status: true,
+                                          message: 'Please add the travelers in sequence'
+                                        })
+                                      }
+
+                                    }}
+                                    disabled={disableAddTraveler.includes(index)
+                                      // || !isFormValid.includes(index)
+                                    }
                                     icon={disableAddTraveler.includes(index) ? '' : <MdAdd />}
                                   />
                                   <ConfirmModal status={confirmStatus} onAbort={() => setConfirmStatus(false)} onConfirm={handleSubmit} text={"Is the traveler data you provided is correct"} />
@@ -465,6 +559,7 @@ const TravelersDetails = () => {
               text="Back"
               onClick={() => {
                 localStorage.removeItem("allFormData")
+                localStorage.removeItem("disableTravelers")
                 navigate(-1);
               }}
               icon={<MdArrowBack />}

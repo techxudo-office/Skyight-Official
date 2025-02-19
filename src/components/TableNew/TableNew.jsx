@@ -216,28 +216,28 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows, o
 
         // ] : []),
 
-        ...(downloadBtn ? [{
-            Header: "Download Ticket",
-            id: "Download",
-            Cell: ({ row }) => (
-                <span className="text-text text-sm flex items-center gap-2 justify-center">
-                        <div>
-                            <DownloadButton/>
-                        </div>
+        // ...(downloadBtn ? [{
+        //     Header: "Download Ticket",
+        //     id: "Download",
+        //     Cell: ({ row }) => (
+        //         <span className="text-text text-sm flex items-center gap-2 justify-center">
+        //                 <div>
+        //                     <DownloadButton/>
+        //                 </div>
                     
 
-                </span>
-            )
+        //         </span>
+        //     )
 
-        }]:[]
+        // }]:[]
 
-        )
+        // )
         ,
         ...(actions ? [{
             Header: 'Actions',
             // id: 'actions',
             Cell: ({ row }) => (
-                <span className="text-text text-lg flex gap-2 items-center relative">
+                <span className="text-text text-lg justify-center flex gap-2 items-center relative">
                     {
                         row.original.role ? row.original.role == 'Admin' && actions.map((action, idx) => (
                             <CustomTooltip key={idx} content={action.name}>
@@ -260,7 +260,7 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows, o
                                         className="cursor-pointer "
                                         onClick={() => action.handler(row.index, tableData[row.index])}
                                     >
-                                        <div className=''>
+                                        <div className='ml-2'>
                                             {action.icon}
 
                                         </div>

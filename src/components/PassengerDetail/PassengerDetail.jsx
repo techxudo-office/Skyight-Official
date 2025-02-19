@@ -4,12 +4,7 @@ import { CardLayoutContainer } from "../CardLayout/CardLayout";
 import { MdChildCare, MdChildFriendly } from "react-icons/md";
 import { useState } from "react";
 
-const passengers = [
-    { name: "MR MUHAMMAD NAUMAN TASHFEEN", type: "Adult" },
-    { name: "MRS AYSHA HAMEED GHAURI", type: "Adult" },
-    { name: "MS AYRA TASHFEEN", type: "Child" },
-    { name: "MS MAHASIN TASHFEEN", type: "Infant" }
-];
+
 
 const PassengerDetail = ({ travelersData }) => {
     console.log(travelersData)
@@ -44,8 +39,8 @@ const PassengerDetail = ({ travelersData }) => {
                             </div> */}
                             {/* Passenger Type (Adult/Child) */}
                             <div className="flex items-center gap-1 text-text">
-                                {passenger.passenger_type == 'ADL' ? <FaUser className="text-sm" /> : passenger.passenger_type == 'CHD' ? <MdChildCare className="text-lg" /> : <MdChildFriendly className="text-lg" />}
-                                <p className="font-semibold">{passenger.passenger_type == 'ADL' ? 'Adult' : passenger.passenger_type == 'CHD' ? 'Child' : 'Infant'}</p>
+                                {passenger.passenger_type == 'ADT' ? <FaUser className="text-sm" /> : passenger.passenger_type == 'CHD' ? <MdChildCare className="text-lg" /> : <MdChildFriendly className="text-lg" />}
+                                <p className="font-semibold">{passenger.passenger_type == 'ADT' ? 'Adult' : passenger.passenger_type == 'CHD' ? 'Child' : 'Infant'}</p>
                             </div>
                             <button onClick={() => setDropdown((prev) => !prev)} className={`${dropdown?'rotate-180':''} transition-all duration-300 h-fit bg-primary text-white text-xl p-1 rounded-full`}>
                                 <FaChevronDown />
