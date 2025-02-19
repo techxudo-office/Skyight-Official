@@ -36,14 +36,13 @@ const DashboardHome = () => {
     autoplaySpeed: 2000,
     arrows: false,
     responsive: [
-
       {
         breakpoint: 768, // Tablets
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
           autoplaySpeed: 2500, // Adjust speed for smaller screens
-          dots: false
+          dots: false,
         },
       },
       {
@@ -52,13 +51,11 @@ const DashboardHome = () => {
           slidesToShow: 1,
           slidesToScroll: 1,
           autoplaySpeed: 3000,
-          dots: false
-
+          dots: false,
         },
       },
     ],
   };
-
 
   const navigate = useNavigate();
 
@@ -92,10 +89,12 @@ const DashboardHome = () => {
   ];
 
   const gettingFlightBookings = async () => {
-    const response = await getFlightBookings();
+    const userData = JSON.parse(localStorage.getItem("userData"));
+    const id = userData?.company_id;
+    const response = await getFlightBookings(id);
     if (response.status) {
       setBookingsData(response.data);
-      console.log('bookking', response.data)
+      console.log("bookking", response.data);
     }
   };
 
@@ -119,35 +118,28 @@ const DashboardHome = () => {
         <h2 className="text-3xl font-semibold text-text mb-7">
           Featured Flights
         </h2>
-        <div className="w-full  overflow-x-hidden">
-
-          <Slider {...settings}
-            className=" flex gap-3 "
-          >
+        <div className="w-full overflow-x-hidden">
+          <Slider {...settings} className="flex gap-3 ">
             {flightsData.length > 0 &&
               flightsData.map((item, index) => (
                 <DashboardCards key={index} index={index} data={item} />
               ))}
           </Slider>
-
         </div>
-
-
       </div>
       {/* Flights */}
-      <CardLayoutContainer removeBg={true} className={'mt-5'}>
+      <CardLayoutContainer removeBg={true} className={"mt-5"}>
         <CardLayoutHeader
           removeBorder={true}
           heading={"Flight Bookings"}
-          className="flex justify-between items-center"
-        >
-        </CardLayoutHeader>
+          className="flex items-center justify-between"
+        ></CardLayoutHeader>
         <CardLayoutBody removeBorder={true}>
           {/* <Table
             columns={columnsData}
             data={bookingsData}
           /> */}
-          <Searchbar className={'mb-7'} />
+          <Searchbar className={"mb-7"} />
 
           <TableNew
             columnsToView={columnsData}
@@ -159,9 +151,9 @@ const DashboardHome = () => {
       </CardLayoutContainer>
       <div
         id="footer-container"
-        className="flex bg-white p-3 pb-0 w-full justify-center items-center"
+        className="flex items-center justify-center w-full p-3 pb-0 bg-white"
       >
-        <h2 className="text-text text-md font-semibold mt-2 text-center">
+        <h2 className="mt-2 font-semibold text-center text-text text-md">
           © 2024 All rights reserved by SKYIGHT AIR & BOOKING SYSTEM
         </h2>
       </div>

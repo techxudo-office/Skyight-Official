@@ -77,8 +77,8 @@ const FlightBookings = () => {
       //     setActiveIndex(null);
       //   } else setActiveIndex(index);
       // },
-      handler: (_,item) => {
-        console.log('item', item)
+      handler: (_, item) => {
+        console.log("item", item);
         navigate("/dashboard/booking-details", {
           state: item.booking_reference_id,
         });
@@ -87,21 +87,23 @@ const FlightBookings = () => {
     {
       name: "Refund",
       icon: <HiReceiptRefund title="Refund" className="text-blue-500" />,
-      handler: (_,item) => {
+      handler: (_, item) => {
         refundRequestHandler(item);
       },
     },
     {
       name: "Cancel",
       icon: <MdCancel title="Cancel" className="text-red-500" />,
-      handler: (_,item) => {
+      handler: (_, item) => {
         cancelFlightBookingHandler(item);
       },
     },
   ];
 
   const gettingFlightBookings = async () => {
-    const response = await getFlightBookings();
+    const userData = JSON.parse(localStorage.getItem("userData"));
+    const id = userData?.company_id;
+    const response = await getFlightBookings(id);
     if (response.status) {
       setBookingsData(response.data);
     }
@@ -165,12 +167,12 @@ const FlightBookings = () => {
         <CardLayoutHeader
           removeBorder={true}
           heading={"Flight Bookings"}
-          className="flex justify-between items-center"
+          className="flex items-center justify-between"
         >
           <div className="relative">
             <SecondaryButton
               text={"Create New Booking"}
-              icon={<MdAdd/>}
+              icon={<MdAdd />}
               onClick={navigationHandler}
             />
           </div>
@@ -182,13 +184,13 @@ const FlightBookings = () => {
             actions={actionsData}
             activeIndex={activeIndex}
           /> */}
-         
-            <TableNew
-              columnsToView={columnsData}
-              tableData={bookingsData}
-              downloadBtn={true}
-              // actions={actionsData}
-            />
+
+          <TableNew
+            columnsToView={columnsData}
+            tableData={bookingsData}
+            downloadBtn={true}
+            // actions={actionsData}
+          />
         </CardLayoutBody>
         <CardLayoutFooter></CardLayoutFooter>
       </CardLayoutContainer>

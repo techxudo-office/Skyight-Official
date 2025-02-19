@@ -14,7 +14,7 @@ export const login = async (payload) => {
       url: `${baseUrl}/api/login`,
       data: payload,
     });
-    console.log(response);
+    console.log(response,"Login Response");
     if (response.status === 200) {
       localStorage.setItem("auth_token", response.data.data.token);
       localStorage.setItem("userData", JSON.stringify(response.data.data.user))
@@ -595,12 +595,12 @@ export const deleteTicket = async (id) => {
 };
 
 //! Bookings
-export const getFlightBookings = async () => {
+export const getFlightBookings = async (id) => {
   console.log(getToken(),"token")
   try {
     let response = await axios({
       method: "GET",
-      url: `${baseUrl}/api/booking`,
+      url: `${baseUrl}/api/booking/company/${id}`,
       headers: {
         Authorization: getToken(),
       },

@@ -58,7 +58,7 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
       name: "Profile",
       icon: <FaUser />,
       handler: () => {
-        navigationHandler("/");
+        navigationHandler("/dashboard/profile");
       },
     },
     {
@@ -311,9 +311,13 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
 
               <CustomTooltip content={"profile"}>
                 <div className="px-3">
-                  <FaUserCircle
+                  {/* <FaUserCircle
                     onClick={dropdownHandler}
                     className="text-4xl transition-all cursor-pointer text-primary hover:text-secondary"
+                  /> */}
+                  <FaUserCircle
+                    onClick={dropdownHandler}
+                    className="text-4xl transition-all cursor-pointer text-text"
                   />
                   <Dropdown
                     status={dropdownStatus}
