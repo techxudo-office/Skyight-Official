@@ -884,21 +884,15 @@ export const getNotifications = async () => {
 };
 
 export const getAnnouncements = async () => {
-export const getAnnouncements = async () => {
   try {
     let response = await axios({
       method: "GET",
-      url: `${baseUrl}/api/getAnnouncements`,
-    let response = await axios({
-      method: 'GET',
       url: `${baseUrl}/api/getAnnouncements`,
       headers: {
         Authorization: getToken(),
       },
     });
     console.log("annoncement", response);
-    })
-    console.log('annoncement', response)
     if (response.status === 200) {
       return {
         status: true,
@@ -930,7 +924,7 @@ export const createRole = async (payload) => {
 
   }
 };
-}
+
 export const getTravelers = async (passengerType) => {
   try {
     let response = await axios({
