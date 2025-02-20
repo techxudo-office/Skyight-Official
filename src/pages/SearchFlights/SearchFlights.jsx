@@ -67,12 +67,13 @@ const validationSchema = Yup.object().shape({
 });
 
 
+ 
 
 const SearchFlights = ({ OnlySearch, onSearch }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState()
-  const [loading, setLoading] = useState(false);
   const [flightRoute, setFlightRoute] = useState("Domestic");
+  const [loading, setLoading] = useState(false);
   const [Triptype, setTriptype] = useState("One-Way");
   const [activeField, setActiveField] = useState({
     departure: false,
@@ -101,8 +102,8 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
   };
   // console.log(activeField)
   const initialValues = loadFormData() || {
-    tripType: "OneWay", // Default value
-    flightRoute:flightRoute,
+    tripType: "", // Default value
+    flightRoute: flightRoute,
     departure: "",
     arrival: "",
     departureDate: "",
@@ -118,8 +119,8 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
   const searchFlightHandler = async (values) => {
     const payload = {
       departureDate: values.departureDate,
-      flightRoute:flightRoute,
-      tripType: "OneWay",
+      flightRoute: flightRoute,
+      tripType: "Return",
       originCode: values.departure,
       destinationCode: values.arrival,
       adult: values.adult,
@@ -194,7 +195,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
     };
 
   }, []);
-console.log("flightroute",flightRoute)
+  console.log("flightroute", flightRoute)
   return (
     <>
       <Toaster />
@@ -208,13 +209,13 @@ console.log("flightroute",flightRoute)
             heading="Search Flight"
             className={"flex items-center justify-between "}
           />
-            <CardLayoutBody>
+          <CardLayoutBody>
             <RadioButtons options={["Domestic", "International"]} selectedOption={(option) => setFlightRoute(option)} />
           </CardLayoutBody>
           <CardLayoutBody>
-            <RadioButtons options={["One-Way", "Round-Trip", "Multi-City"]} selectedOption={(option) => setTriptype(option)} />
+            <RadioButtons disabledOptionindex={flightRoute == "Domestic"? [1,2]:[]} options={["One-Way", "Round-Trip", "Multi-City"]} selectedOption={(option) => setTriptype(option)} />
           </CardLayoutBody>
-        
+
 
           {Triptype != 'Multi-City' ?
             <Formik

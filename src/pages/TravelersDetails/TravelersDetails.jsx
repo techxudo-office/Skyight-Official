@@ -6,8 +6,8 @@ import { FaCalendar, FaChevronCircleUp, FaUser } from "react-icons/fa";
 import { FaPlaneDeparture } from "react-icons/fa6";
 import { FaChevronCircleDown } from "react-icons/fa";
 
-import PhoneInput from "react-phone-number-input";
-
+import {countries} from '../../data/countriesData'
+import { iranianCities } from "../../data/iranianCities";
 import {
   CardLayoutContainer,
   CardLayoutHeader,
@@ -34,14 +34,10 @@ import {
   PassengerDetail,
 } from "../../components/components";
 import toast, { Toaster } from "react-hot-toast";
-import { MdAdd, MdArrowBack, MdArrowForward, MdCalendarMonth, MdCalendarToday, MdCalendarViewMonth, MdCalendarViewWeek, MdCancel, MdCheck, MdChildCare, MdChildFriendly, MdOutlineCalendarMonth, MdPerson } from "react-icons/md";
-import { IoIosAirplane, IoMdTimer } from "react-icons/io";
-import { IoTimer } from "react-icons/io5";
-import { travelerDetailScehma } from "../../validations";
-import { travelersDetailsInputs } from "../../data/formInputs";
-import { getTravelers } from "../../utils/api_handler";
-import { set } from "date-fns";
+import { MdAdd, MdArrowBack, MdArrowForward, MdCalendarMonth, MdCalendarToday, MdCalendarViewMonth,  MdCancel, MdCheck, MdChildCare, MdChildFriendly, MdOutlineCalendarMonth, MdPerson } from "react-icons/md";
 
+import { travelerDetailScehma } from "../../validations";
+import { getTravelers } from "../../utils/api_handler";
 
 const passengerOptions = [
   { label: "Adult", value: "ADT" },
@@ -60,6 +56,7 @@ const genderOptions = [
   { label: "Female", value: "Female" },
   { label: "Other", value: "Other" },
 ];
+
 
 
 const TravelersDetails = () => {
@@ -99,6 +96,7 @@ const TravelersDetails = () => {
   const [confirmStatus, setConfirmStatus] = useState(false);
   const [isFormValid, setIsFormValid] = useState([]);
   const [PassengersInfo, setPassengersInfo] = useState([]);
+  const [editedValues, setEditedValues] = useState({});
   const [DocType, setDocType] = useState();
   const [Passengers, setPassengers] = useState([
     { value: '', label: '' }
@@ -110,7 +108,101 @@ const TravelersDetails = () => {
     icon: ''
   });
   console.log("disabledtraveler", disableAddTraveler)
+  const travelersDetailsInputs= [
+    {
+      type: 'select',
+      id: "title",
+      label: "Title",
+      name: "title",
+      options: titleOptions,
+      placeholder: "Select Title",
+      optionIcons: <FaPlaneDeparture />
+    },
+    {
+      type: "text",
+      id: "first_name",
+      label: "First Name",
+      name: "first_name",
+      placeholder: "Enter First Name",
+    },
+    {
+      type: "text",
+      id: "last_name",
+      label: "Last Name",
+      name: "last_name",
+      placeholder: "Enter Last Name",
+    },
+    {
+      type: "email",
+      id: "email",
+      label: "Email",
+      name: "email",
+      placeholder: "Enter Email",
+    },
+    {
+      type: "Number",
+      id: "telephone",
+      label: "Phone Number",
+      name: "telephone",
+      placeholder: "Enter Phone Number",
+    },
+    {
+      type: "Number",
+      id: "mobile",
+      label: "Mobile Number",
+      name: "mobile",
+      placeholder: "Enter Mobile Number",
+    },
+    {
+      type: "select",
+      id: "country",
+      label: "Country",
+      name: "country",
+      options: countries,
+      disabled:DocType=="Domestic"?true:false,
+      placeholder: "Select Country",
+      optionIcons: <FaPlaneDeparture />,
+    },
+    {
+      type: "select",
+      id: "city",
+      label: "City",
+      name: "city",
+      options: iranianCities,
+      placeholder: "Select City",
+      optionIcons: <FaPlaneDeparture />,
+    },
+    {
+      type: "date",
+      id: "date_of_birth",
+      label: "Date of Birth",
+      name: "date_of_birth",
+    },
+    {
+      type: "select",
+      id: "gender",
+      label: "Gender",
+      name: "gender",
+      options: genderOptions,
+      placeholder: "Select Gender",
+      optionIcons: <FaUser />,
+    },
+    {
+      type: "text",
+      id: "passport_number",
+      label: "Passport Number",
+      name: "passport_number",
+      placeholder: "Enter Passport Number",
+    },
+    {
+      type: "date",
+      id: "passport_expiry_date",
+      label: "Passport Exp Date",
+      name: "passport_expiry_date",
+    },
 
+
+  ]
   const toogleFormHandler = (index) => {
     if (index === toogleForm) {
       setToogleForm(null);
@@ -127,7 +219,7 @@ const TravelersDetails = () => {
     email: "",
     telephone: "",
     mobile: "",
-    country: "",
+    country: DocType=="Domestic"?"IRN":"",
     city: "",
     date_of_birth: "",
     passenger_type: passengerOptions[0].value,
@@ -139,16 +231,21 @@ const TravelersDetails = () => {
   const handleSubmit = (travelerIndex, values) => {
     console.log("formvalues", values)
     let doc_type;
-    if(DocType=="Domestic"){
-      doc_type="N"
-    }else{
-      doc_type="S"
+    let nationality;
+
+    if (DocType == "Domestic") {
+      doc_type = "N"
+      nationality = "IRN"
+    } else {
+      doc_type = "P"
+      nationality = null
     }
-    
+
+
     setConfirmStatus(false)
     const payload = {
       city: values.city,
-      country: values.country,
+      country: nationality || values.country,
       date_of_birth: values.date_of_birth,
       email: values.email,
       first_name: values.first_name,
@@ -255,28 +352,29 @@ const TravelersDetails = () => {
     setAllTravelersData((prev) => prev.filter((item) => item.email != email))
     setDisableAddTraveler((prev) => prev.filter((item) => item != travelerIndex))
   }
-  const handleEditData = (setValues, values, travelerIndex) => {
-    if (allTravelersData.length) {
-      setAllTravelersData((...prev) => prev.filter((item, i) => i != travelerIndex))
-      setDisableAddTraveler((...prev) => prev.filter((item) => item != travelerIndex))
-    }
-    setValues({
-      title: values.title,
-      previousPassenger: values.previousPassenger,
-      first_name: values.first_name,
-      last_name: values.last_name,
-      email: values.name,
-      telephone: values.telephone,
-      mobile: values.mobile,
-      country: values.country,
-      city: values.city,
-      date_of_birth: values.date_of_birth,
-      gender: values.gender,
-      passport_number: values.passport_number,
-      passport_expiry_date: values.passport_expiry_date,
-    })
+  // const handleEditData = (setValues, values, travelerIndex) => {
+  //   setAllTravelersData((prev) => prev.filter((item) => item.email != values.email))
+  //   setDisableAddTraveler((prev) => prev.filter((item) => item != travelerIndex))
+  //   setEditedValues(allTravelersData.filter((item) => item.email == values.email))
 
-  }
+  //   console.log(" edit", editedValues)
+  //   setValues({
+  //     title: travelerValues.title,
+  //     // previousPassenger: travelerValues.previousPassenger,
+  //     first_name: travelerValues.first_name,
+  //     last_name: travelerValues.last_name,
+  //     email: travelerValues.name,
+  //     telephone: travelerValues.telephone,
+  //     mobile: travelerValues.mobile,
+  //     country: travelerValues.country,
+  //     city: travelerValues.city,
+  //     date_of_birth: travelerValues.date_of_birth,
+  //     gender: travelerValues.gender,
+  //     passport_number: travelerValues.passport_number,
+  //     passport_expiry_date: travelerValues.passport_expiry_date,
+  //   })
+
+  // }
   // console.log('valid', isFormValid)
   const gettingTravellers = async (type) => {
     const response = await getTravelers(type)
@@ -405,7 +503,7 @@ const TravelersDetails = () => {
 
                               }
                             </div>
-                            {!values.previousPassenger &&
+                            {!values.previousPassenger && !allTravelersData[index]?.first_name &&
                               <>
                                 <div className="flex gap-3 w-full items-center text-primary">
                                   <span className="h-0.5 w-2/5 bg-primary"></span>
@@ -419,7 +517,7 @@ const TravelersDetails = () => {
                           {console.log("errors", errors)}
                           {
 
-                            (toogleForm === index || values.previousPassenger) &&
+                            (toogleForm === index || values.previousPassenger || allTravelersData[index]?.first_name) &&
                             <>
                               <Form>
                                 <div className="flex flex-col md:flex-row items-center ">
@@ -439,7 +537,7 @@ const TravelersDetails = () => {
                                               name={input.name}
                                               label={input.label}
                                               options={input.options}
-                                              disabled={disableAddTraveler.includes(index)}
+                                              disabled={disableAddTraveler.includes(index) || input.disabled}
                                               placeholder={input.placeholder}
                                               value={values[input.name]}
                                               optionIcons={input.optionIcons}
@@ -482,10 +580,11 @@ const TravelersDetails = () => {
                                   </CardLayoutBody>
                                   <div className="px-4 w-full md:w-1/2 filledfields">
                                     <div className="flex gap-6 justify-end items-center">
-                                      <p onClick={() => handleEditData(setValues, values, index)} className="text-primary cursor-pointer hover:text-secondary underline ">
-                                        Edit Data</p>
-                                      <p onClick={() => handleClearData(setValues, index, values.email)} className="text-primary cursor-pointer hover:text-secondary underline ">
-                                        Clear Data</p>
+                                      {/* <button disabled={!disableAddTraveler.includes(index)} onClick={() => handleEditData(setValues, values, index)}
+                                        className={`${disableAddTraveler.includes(index) ? 'cursor-pointer' : 'cursor-not-allowed'} text-primary hover:text-secondary underline `}>
+                                        Edit Data</button> */}
+                                      <button onClick={() => handleClearData(setValues, index, values.email)} className="text-primary cursor-pointer hover:text-secondary underline ">
+                                        Clear Data</button>
 
                                     </div>
 

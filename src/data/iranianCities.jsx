@@ -1,5 +1,6 @@
 export const iranianCities = [
   { label: "Tehran", value: "THR" },
+  { label: "Tehran2", value: "IKA" },
   { label: "Mashhad", value: "MHD" },
   { label: "Isfahan", value: "IFN" },
   { label: "Karaj", value: "KRJ" },
@@ -19,4 +20,5 @@ export const iranianCities = [
   { label: "Sanandaj", value: "SDG" },
   { label: "Qazvin", value: "GZN" },
   { label: "Zanjan", value: "ZAN" },
+  { label: "Istanbul", value: "IST" },
 ];

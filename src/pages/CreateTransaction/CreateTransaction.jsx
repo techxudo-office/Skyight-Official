@@ -62,6 +62,7 @@ const CreateTransaction = () => {
   };
 
   const createTransactionHandler = async (payload) => {
+    console.log("payload",payload)
     setLoading(true);
     const response = await createTransaction(payload);
     console.log(response);
@@ -84,7 +85,6 @@ const CreateTransaction = () => {
   };
 
   const handleSubmit = (values) => {
-    console.log("Form Values: ", values);
 
     const formData = new FormData();
     formData.append("bank_name", values.bank_name);
@@ -94,13 +94,21 @@ const CreateTransaction = () => {
     formData.append("payment_date", values.payment_date);
     formData.append("amount", values.amount);
     formData.append("comment", values.comment);
-
+   
+   
+   
     if (!selectedFile) {
       errorToastify("Please upload transaction receipt");
     } else {
       formData.append("document", selectedFile);
       createTransactionHandler(formData);
+    //   for (let pair of formData.entries()) {
+    //     console.log(pair[0] + ": " + pair[1]);
+    // }
     }
+    // console.log("selectedfile",selectedFile)
+  //   console.log("Form Values: ", formData);
+    
   };
 
   return (

@@ -162,13 +162,23 @@ const FlightDetails = () => {
         ),
       },
     };
+    console.log('confirm-booking',payLoad)
+
+   
     let response = await confirmBooking(payLoad);
+   
     if (response.status) {
       toast.success(response.message);
       setTimeout(() => {
         navigate("/dashboard/flight-bookings");
       }, 2000);
+    }else{
+      response.message.map((message)=>{
+        toast.error(message)
+      })
+      
     }
+   
   };
 
 
