@@ -4,7 +4,6 @@ import {
   CardLayoutHeader,
   CardLayoutBody,
 } from "../../components/CardLayout/CardLayout";
-import { MdEditSquare } from "react-icons/md";
 import { Input } from "../../components/components";
 import { MdEdit } from "react-icons/md";
 
@@ -64,6 +63,34 @@ const Profile = () => {
     }
   };
 
+  const renderEditableField = (
+    label,
+    field,
+    profileData,
+    handleEdit,
+    handleChange,
+    editingField,
+    type = "text"
+  ) => {
+    return (
+      <div className="flex flex-col w-full">
+        <h4 className="mb-1 text-xs font-medium text-slate-500">{label}</h4>
+        <div className="flex items-center gap-x-2">
+          <Input
+            type={type}
+            profile={true}
+            value={profileData[field]}
+            disabled={editingField !== field}
+            setEditingField={setEditingField}
+            isSelected={editingField === field}
+            onEditClick={() => handleEdit(field)}
+            onChange={(e) => handleChange(e, field)}
+          />
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="flex flex-col items-center justify-center w-full">
       <CardLayoutContainer className="w-full mb-5">
@@ -93,9 +120,9 @@ const Profile = () => {
             />
           </div>
           <div>
-            <h3 className="text-lg font-semibold text-text">Profile Name</h3>
-            <h4 className="mb-0 text-sm text-text">Admin</h4>
-            <h4 className="mb-0 text-sm text-text">Karachi, Pakistan</h4>
+            <h3 className="text-lg font-semibold text-text">{`${profileData.firstName} ${profileData.lastName}`}</h3>
+            <h4 className="mb-0 text-sm text-text">{`${profileData.role}`}</h4>
+            <h4 className="mb-0 text-sm text-text">{`${profileData.city}, ${profileData.country}`}</h4>
           </div>
         </CardLayoutHeader>
       </CardLayoutContainer>
@@ -110,17 +137,19 @@ const Profile = () => {
         </CardLayoutHeader>
         <CardLayoutBody removeBorder={true}>
           <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3 md:gap-5 mb-7">
-            {profileFields.map(({ label, field, type }) =>
-              renderEditableField(
-                label,
-                field,
-                profileData,
-                handleEdit,
-                handleChange,
-                editingField,
-                type
-              )
-            )}
+            {profileFields.map(({ label, field, type }, index) => (
+              <div key={index}>
+                {renderEditableField(
+                  label,
+                  field,
+                  profileData,
+                  handleEdit,
+                  handleChange,
+                  editingField,
+                  type
+                )}
+              </div>
+            ))}
           </div>
         </CardLayoutBody>
         <CardLayoutHeader
@@ -131,55 +160,30 @@ const Profile = () => {
         </CardLayoutHeader>
         <CardLayoutBody>
           <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3 md:gap-5 mb-7">
-            {addressFields.map(({ label, field, type }) =>
-              renderEditableField(
-                label,
-                field,
-                profileData,
-                handleEdit,
-                handleChange,
-                editingField,
-                type
-              )
-            )}
+            {addressFields.map(({ label, field, type }, index) => (
+              <div key={index}>
+                {renderEditableField(
+                  label,
+                  field,
+                  profileData,
+                  handleEdit,
+                  handleChange,
+                  editingField,
+                  type
+                )}
+              </div>
+            ))}
           </div>
-          {editingField && (
-            <button
-              className="px-4 py-2 mt-3 font-semibold text-white rounded-md bg-primary"
-              onClick={handleSave}
-            >
-              Save Changes
-            </button>
-          )}
+          <button
+            disabled={!editingField}
+            className={`px-4 py-2 mt-3 font-semibold text-white rounded-md 
+    bg-primary ${editingField ? "cursor-pointer" : "cursor-not-allowed"}`}
+            onClick={handleSave}
+          >
+            Save Changes
+          </button>
         </CardLayoutBody>
       </CardLayoutContainer>
-    </div>
-  );
-};
-
-const renderEditableField = (
-  label,
-  field,
-  profileData,
-  handleEdit,
-  handleChange,
-  editingField,
-  type = "text"
-) => {
-  return (
-    <div className="flex flex-col w-full">
-      <h4 className="mb-1 text-xs font-medium text-slate-500">{label}</h4>
-      <div className="flex items-center gap-x-2">
-        <Input
-          type={type}
-          profile={true}
-          value={profileData[field]}
-          isSelected={editingField === field}
-          onChange={(e) => handleChange(e, field)}
-          onEditClick={() => handleEdit(field)}
-          disabled={editingField !== field}
-        />
-      </div>
     </div>
   );
 };

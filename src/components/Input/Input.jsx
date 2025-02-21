@@ -4,9 +4,9 @@ import { MdEdit } from "react-icons/md";
 
 const Input = ({
   id,
-  label,
   type,
   name,
+  label,
   value,
   profile,
   onChange,
@@ -15,8 +15,8 @@ const Input = ({
   isSelected,
   onEditClick,
   placeholder,
-  inpContClass,
   autoComplete,
+  setEditingField,
   onKeyPressHandler,
 }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -62,6 +62,7 @@ const Input = ({
           onChange={onChange}
           onKeyPress={onKeyPressHandler}
           autoComplete={autoComplete}
+          onBlur={() => setEditingField(null)}
         />
         {disabled && profile && (
           <span

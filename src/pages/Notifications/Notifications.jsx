@@ -8,18 +8,17 @@ import { getNotifications } from "../../utils/api_handler";
 import { IoNotificationsOutline } from "react-icons/io5";
 import { Spinner, BellIcon } from "../../components/components";
 
-
 const Notifications = () => {
   const [notificationsData, setNotificationsData] = useState([]);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   const getNotificationsHandler = useCallback(async () => {
-    setLoading(true)
+    setLoading(true);
     let response = await getNotifications();
     if (response.status) {
       setNotificationsData(response.data);
     }
-    setLoading(false)
+    setLoading(false);
   }, []);
 
   useEffect(() => {
@@ -33,10 +32,14 @@ const Notifications = () => {
       <div style={style} key={index}>
         <CardLayoutContainer className="w-full mb-5">
           <CardLayoutHeader
-            className="flex items-center justify-start flex-wrap gap-5 py-3"
+            className="flex flex-wrap items-center justify-start gap-5 py-3"
             removeBorder={true}
           >
-            <BellIcon icon={<IoNotificationsOutline className="text-[46px] text-[#5372D8]" />} />
+            <BellIcon
+              icon={
+                <IoNotificationsOutline className="text-[46px] text-[#5372D8]" />
+              }
+            />
             <div>
               <h3 className="text-[12px] text-[#333]">
                 {new Date(item?.created_at).toISOString().split("T")[0]}
@@ -55,8 +58,8 @@ const Notifications = () => {
   };
 
   return (
-    <div className="flex flex-col w-full items-center justify-center">
-      {loading && <Spinner className="text-primary mx-auto" />}
+    <div className="flex flex-col items-center justify-center w-full">
+      {loading && <Spinner className="mx-auto text-primary" />}
 
       {notificationsData?.length > 0 ? (
         <List
@@ -68,10 +71,15 @@ const Notifications = () => {
           {renderRow}
         </List>
       ) : (
-        <h2 className='text-text capitalize text-center'>No Notifications Found</h2>
+        <>
+          {!loading && (
+            <h2 className="text-center capitalize text-text">
+              No Notifications Found
+            </h2>
+          )}
+        </>
       )}
     </div>
-
   );
 };
 

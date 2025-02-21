@@ -8,18 +8,17 @@ import { getAnnouncements } from "../../utils/api_handler";
 import { Spinner, BellIcon } from "../../components/components";
 import { HiOutlineSpeakerphone } from "react-icons/hi";
 
-
-const Announcement= () => {
+const Announcement = () => {
   const [AnnouncementData, setAnnouncementData] = useState([]);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   const getAnnouncementHandler = useCallback(async () => {
-    setLoading(true)
+    setLoading(true);
     let response = await getAnnouncements();
     if (response.status) {
       setAnnouncementData(response.data[0]);
     }
-    setLoading(false)
+    setLoading(false);
   }, []);
 
   useEffect(() => {
@@ -33,10 +32,14 @@ const Announcement= () => {
       <div style={style} key={index}>
         <CardLayoutContainer className="w-full mb-5">
           <CardLayoutHeader
-            className="flex items-center justify-start flex-wrap gap-5 py-3"
+            className="flex flex-wrap items-center justify-start gap-5 py-3"
             removeBorder={true}
           >
-            <BellIcon icon={<HiOutlineSpeakerphone className="text-[46px] text-primary" />} />
+            <BellIcon
+              icon={
+                <HiOutlineSpeakerphone className="text-[46px] text-primary" />
+              }
+            />
             <div>
               <h3 className="text-[12px] text-[#333]">
                 {new Date(item?.created_at).toISOString().split("T")[0]}
@@ -55,8 +58,8 @@ const Announcement= () => {
   };
 
   return (
-    <div className="flex flex-col w-full items-center justify-center">
-      {loading && <Spinner className="text-primary mx-auto" />}
+    <div className="flex flex-col items-center justify-center w-full">
+      {loading && <Spinner className="mx-auto text-primary" />}
 
       {AnnouncementData?.length > 0 ? (
         <List
@@ -68,10 +71,15 @@ const Announcement= () => {
           {renderRow}
         </List>
       ) : (
-        <h2 className='text-text capitalize text-center'>No Notifications Found</h2>
+        <>
+          {!loading && (
+            <h2 className="text-center capitalize text-text">
+              No Notifications Found
+            </h2>
+          )}
+        </>
       )}
     </div>
-
   );
 };
 
