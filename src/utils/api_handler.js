@@ -265,13 +265,10 @@ export const getCredits = async () => {
 
 //! Flight...
 export const searchFlight = async (payload) => {
-  const apiUrlWithPayload = `${baseUrl}/api/search?trip_type=${
-    payload.tripType
-  }&departure_date_time=${payload.departureDate}&origin_location_code=${
-    payload.originCode
-  }&destination_location_code=${payload.destinationCode}&adult_quantity=${
-    payload.adult
-  }&child_quantity=${[payload.child]}&infant_quantity=${payload.infant}`;
+  const apiUrlWithPayload = `${baseUrl}/api/search?trip_type=${payload.tripType
+    }&departure_date_time=${payload.departureDate}&origin_location_code=${payload.originCode
+    }&destination_location_code=${payload.destinationCode}&adult_quantity=${payload.adult
+    }&child_quantity=${[payload.child]}&infant_quantity=${payload.infant}`;
 
   try {
     let response = await axios({
@@ -332,8 +329,8 @@ export const createTransaction = async (payload) => {
       url: `${baseUrl}/api/company/create-transaction`,
       data: payload,
       headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
+        Accept: "multipart/form-data",
+        "Content-Type": "multipart/form-data",
         Authorization: getToken(),
       },
     });
@@ -791,6 +788,7 @@ export const refundRequest = async (payload) => {
 };
 
 export const confirmBooking = async (payload) => {
+ 
   try {
     let response = await axios({
       method: "POST",
@@ -805,11 +803,21 @@ export const confirmBooking = async (payload) => {
     if (response.status === 200) {
       return {
         status: true,
-        message: "Booking Created",
+        message:"Booking Created",
       };
     }
+    // else{
+    //   return {
+    //     status: false,
+    //     message:response.message,
+    //   };
+    // }
   } catch (error) {
-    console.log("Failed while calling confirming booking: ", error);
+    // console.log("Failed while calling confirming booking: ", Object.values(error.response.data.data.errors));
+    return ({
+      status: false,
+      message: Object.values(error.response.data.data.errors)
+    })
   }
 };
 
@@ -913,7 +921,7 @@ export const createRole = async (payload) => {
         "Content-Type": "application/json",
       },
     });
-    console.log(response,"Create Role")
+    console.log(response, "Create Role")
     return response.data;
   } catch (error) {
     console.error(

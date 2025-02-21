@@ -13,6 +13,8 @@ import { Button, Spinner, SecondaryButton } from "../../components/components";
 import toast, { Toaster } from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getBookingDetails, getFlightBookings } from "../../utils/api_handler";
+import { IoIosAirplane, IoMdClock } from "react-icons/io";
+import dayjs from "dayjs";
 
 const TicketDetails = () => {
   const location = useLocation();
@@ -268,32 +270,64 @@ const TicketDetails = () => {
     TravelerInfo,
     bookingReferenceID,
   } = ticketData.AirReservation;
-
-  const renderPassengerDetails = () =>
-    PTC_FareBreakDowns.map((passenger, index) => (
+  console.log("passengers", bookingDetails.passengers)
+  const renderPassengerDetails = () => {
+    bookingDetails.passengers && bookingDetails.passengers.map((item, index) => (
       <div
         key={index}
         className="flex flex-wrap items-center justify-between gap-3 py-3 border-b border-slate-200"
       >
         <h2 className="flex items-center gap-1 text-sm font-semibold text-slate-600">
-          <FaUser className="text-primary" />
-          {passenger.PassengerTypeQuantity.Quantity}{" "}
-          {passenger.PassengerTypeQuantity.Code}
+
+          {item.given_name}{" "}
+          {item.surname}
+        </h2>
+        <h2 className="flex items-center gap-1 text-sm font-semibold text-slate-500">
+
+          {item.passenger_type_code}
         </h2>
         <h2 className="flex items-center gap-1 text-sm font-semibold text-slate-500">
           <FaMoneyBillAlt className="text-primary" />
-          Base Fare: {passenger.PassengerFare.BaseFare.Amount}
-        </h2>
-        <h2 className="flex items-center gap-1 text-sm font-semibold text-slate-500">
-          <FaMoneyBillAlt className="text-primary" />
-          Taxes:{" "}
-          {passenger.PassengerFare.Taxes.Tax.reduce(
-            (total, tax) => total + tax.Amount,
-            0
-          )}
+          {/* Taxes:{" "}
+        {passenger.PassengerFare.Taxes.Tax.reduce(
+          (total, tax) => total + tax.Amount,
+          0
+        )} */
+            item.doc_id
+          }
         </h2>
       </div>
-    ));
+    ))
+
+    // PTC_FareBreakDowns.map((passenger, index) => (
+    //   <div
+    //     key={index}
+    //     className="flex flex-wrap items-center justify-between gap-3 py-3 border-b border-slate-200"
+    //   >
+    //     <h2 className="flex items-center gap-1 text-sm font-semibold text-slate-600">
+    //       <FaUser className="text-primary" />
+    //       {passenger.PassengerTypeQuantity.Quantity}{" "}
+    //       {passenger.PassengerTypeQuantity.Code}
+    //     </h2>
+    //     <h2 className="flex items-center gap-1 text-sm font-semibold text-slate-500">
+    //       <FaMoneyBillAlt className="text-primary" />
+    //       Base Fare: {passenger.PassengerFare.BaseFare.Amount}
+    //     </h2>
+    //     <h2 className="flex items-center gap-1 text-sm font-semibold text-slate-500">
+    //       <FaMoneyBillAlt className="text-primary" />
+    //       Taxes:{" "}
+    //       {passenger.PassengerFare.Taxes.Tax.reduce(
+    //         (total, tax) => total + tax.Amount,
+    //         0
+    //       )}
+    //     </h2>
+    //   </div>
+    // ));
+  }
+
+
+
+
 
   const renderTravelerInfo = () =>
     TravelerInfo.map((traveler, index) => (
@@ -343,21 +377,25 @@ const TicketDetails = () => {
           </CardLayoutHeader>
           <CardLayoutBody>
             {bookingDetails?.flightSegments && (
-              <div className="flex flex-wrap items-center justify-between gap-5">
-                <div>
-                  <h2 className="mb-2 text-xl font-semibold text-primary">
+              <div className="flex flex-wrap items-center justify-between gap-5 text-text">
+                <div className="flex flex-col items-start">
+                  <h2 className="mb-2 text-2xl font-semibold text-primary">
                     Departure
                   </h2>
-                  <p>{bookingDetails?.flightSegments[0]?.departure_airport}</p>
-                  <p>{bookingDetails?.flightSegments[0]?.departure_datetime}</p>
+                  <p className="font-bold text-xl">{bookingDetails.flightSegments[0]?.departure_airport}</p>
+                  <p className="flex items-center gap-2"><IoMdClock className="text-primary text-lg"/>{dayjs(bookingDetails.flightSegments[0]?.departure_datetime).format("MMM-DD-YYYY, hh:mm")}</p>
                 </div>
-                <FaPlane className="text-2xl text-primary" />
-                <div>
-                  <h2 className="mb-2 text-xl font-semibold text-primary">
+                <div className="flex gap-3 items-center text-primary">
+                  <span className="h-0.5 rounded-full w-28 bg-primary"></span>
+                  <IoIosAirplane className="text-5xl" />
+                  <span className="h-0.5 rounded-full w-28 bg-primary"></span>
+                </div>
+                <div className="flex flex-col items-start">
+                  <h2 className="mb-2 text-2xl font-semibold text-primary">
                     Arrival
                   </h2>
-                  <p>{bookingDetails?.flightSegments[0]?.arrival_airport}</p>
-                  <p>{bookingDetails?.flightSegments[0]?.arrival_datetime}</p>
+                  <p className="font-bold text-xl">{bookingDetails.flightSegments[0]?.arrival_airport}</p>
+                  <p className="flex items-center gap-2"><IoMdClock className="text-primary text-lg"/>{dayjs(bookingDetails.flightSegments[0]?.arrival_datetime).format("MMM-DD-YYYY, hh:mm")}</p>
                 </div>
               </div>
             )}
@@ -365,11 +403,44 @@ const TicketDetails = () => {
         </CardLayoutContainer>
 
         <CardLayoutContainer>
-          <CardLayoutHeader heading="Pricing Details" />
-          <CardLayoutBody>{renderPassengerDetails()}</CardLayoutBody>
+          <CardLayoutHeader heading="Passenger Details" />
+          <CardLayoutBody>
+            {
+              bookingDetails.passengers && bookingDetails.passengers.map((item, index) => (
+                <div
+                  key={index}
+                  className="flex flex-wrap items-center justify-between gap-3 py-3 border-b border-slate-200"
+                >
+                  <h2 className="flex items-center gap-1 text-sm font-semibold text-slate-600">
+
+                    {item.given_name}{" "}
+                    {item.surname}
+                  </h2>
+                  <h2 className="flex items-center gap-1 text-sm font-semibold text-slate-500">
+
+                    {item.passenger_type_code}
+                  </h2>
+                  <h2 className="flex items-center gap-1 text-sm font-semibold text-slate-500">
+
+                    Passport No:{item.doc_id}
+                  </h2>
+                  <h2 className="flex items-center gap-1 text-sm font-semibold text-slate-500">
+                    Email:
+                    {/* Taxes:{" "}
+                {passenger.PassengerFare.Taxes.Tax.reduce(
+                  (total, tax) => total + tax.Amount,
+                  0
+                )} */
+                      item.email
+                    }
+                  </h2>
+                </div>
+              ))
+            }
+          </CardLayoutBody>
           <CardLayoutFooter>
             <h2 className="text-xl font-semibold text-slate-600">
-              Total Fare: {ItinTotalFare.TotalFare.Amount}
+              Total Fare: {bookingDetails.total_fare}
             </h2>
           </CardLayoutFooter>
         </CardLayoutContainer>

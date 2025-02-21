@@ -26,7 +26,7 @@ const Searchbar = ({ placeholder = "Search", value, onChange,className }) => {
         className="w-full p-4 outline-none rounded-md"
         placeholder={placeholder}
         value={searchTerm}
-        onChange={handleInputChange}
+      onChange={handleInputChange}
       />
         <button
           className="absolute right-3 text-text hover:text-gray-700"

@@ -87,7 +87,7 @@ const DashboardHome = () => {
     { columnName: "Status", fieldName: "booking_status", type: "status" },
     { columnName: "Created At", fieldName: "created_at", type: "date" },
   ];
-  const actionsData = [
+ const actionsData = [
     {
       name: "View",
       icon: <FaEye title="View" className="text-green-500 " />,
@@ -97,12 +97,28 @@ const DashboardHome = () => {
       //   } else setActiveIndex(index);
       // },
       handler: (_, item) => {
-        console.log('item', item)
+        console.log("item", item);
         navigate("/dashboard/booking-details", {
-          state: item.booking_reference_id,
+          state: item.id,
         });
       },
     },
+    {
+      name: "Refund",
+      icon: <HiReceiptRefund title="Refund" className="text-blue-500 text-xl" />,
+      handler: (_,item) => {
+        setConfirmStatus(true)
+        setRefundItem(item)
+        
+      },
+    },
+    // {
+    //   name: "Cancel",
+    //   icon: <MdCancel title="Cancel" className="text-red-500" />,
+    //   handler: (_,item) => {
+    //     cancelFlightBookingHandler(item);
+    //   },
+    // },
   ];
   const gettingFlightBookings = async () => {
     const userData = JSON.parse(localStorage.getItem("userData"));
