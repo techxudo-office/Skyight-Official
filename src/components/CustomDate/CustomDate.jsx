@@ -14,6 +14,7 @@ const CustomDate = ({
     disabled,
     isSelected,
     pastDate,
+    futureDate,
     isTimePicker // Toggle between DatePicker and DateTimePicker
 }) => {
     const handleDateChange = (newValue) => {
@@ -40,6 +41,7 @@ const CustomDate = ({
                     value={value ? dayjs(value) : null}
                     onChange={handleDateChange}
                     minDate={!pastDate ? dayjs() : null}
+                    maxDate={!futureDate? dayjs(): null}
                     sx={{
                         "& .MuiOutlinedInput-root": {
                             padding: "6px 12px",
@@ -63,7 +65,8 @@ const CustomDate = ({
                     label={label}
                     value={value ? dayjs(value) : null}
                     onChange={handleDateChange}
-                    minDate={!pastDate ? dayjs() : null}
+                    minDate={(pastDate  || pastDate ==null)? null : dayjs()}
+                    maxDate={(futureDate || futureDate ==null)? null: dayjs()}
                     sx={{
                         "& .MuiOutlinedInput-root": {
                             padding: "6px 12px",

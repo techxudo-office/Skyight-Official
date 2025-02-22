@@ -15,7 +15,6 @@ const FlightDetailCard = ({ flights }) => {
     }, [flights])
     console.log("flightSegments", flightSegments)
 
-
     return (
         <CardLayoutContainer className={'p-5 flightdetailpdf'}>
 
@@ -72,7 +71,7 @@ const FlightDetailCard = ({ flights }) => {
 
 
                                 {/* Dropdown Arrow */}
-                                <button onClick={() => setIsOpen(!isOpen)} className={`text-gray-500 ${isOpen ? 'rotate-180' : ''} transition-all duration-300 bg-primary text-white rounded-full p-[5px]`}>
+                                <button onClick={() => setIsOpen(!isOpen)} className={`text-gray-500 ${isOpen ? '' : 'rotate-180'} transition-all duration-300 bg-primary text-white rounded-full p-[5px]`}>
                                     <FaChevronUp size={18} />
                                 </button>
                             </div>

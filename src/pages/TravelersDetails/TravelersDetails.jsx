@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { FaCalendar, FaChevronCircleUp, FaUser } from "react-icons/fa";
@@ -6,7 +6,7 @@ import { FaCalendar, FaChevronCircleUp, FaUser } from "react-icons/fa";
 import { FaPlaneDeparture } from "react-icons/fa6";
 import { FaChevronCircleDown } from "react-icons/fa";
 
-import {countries} from '../../data/countriesData'
+import { countries } from '../../data/countriesData'
 import { iranianCities } from "../../data/iranianCities";
 import {
   CardLayoutContainer,
@@ -34,7 +34,7 @@ import {
   PassengerDetail,
 } from "../../components/components";
 import toast, { Toaster } from "react-hot-toast";
-import { MdAdd, MdArrowBack, MdArrowForward, MdCalendarMonth, MdCalendarToday, MdCalendarViewMonth,  MdCancel, MdCheck, MdChildCare, MdChildFriendly, MdOutlineCalendarMonth, MdPerson } from "react-icons/md";
+import { MdAdd, MdArrowBack, MdArrowForward, MdCalendarMonth, MdCalendarToday, MdCalendarViewMonth, MdCancel, MdCheck, MdChildCare, MdChildFriendly, MdOutlineCalendarMonth, MdPerson } from "react-icons/md";
 
 import { travelerDetailScehma } from "../../validations";
 import { getTravelers } from "../../utils/api_handler";
@@ -87,12 +87,13 @@ const TravelersDetails = () => {
 
 
 
-
+  const formikRefs = useRef([]);
   const [flightData, setFlightData] = useState(null);
   const [travelersData, setTravelersData] = useState(null);
   const [flightSegments, setFlightSegments] = useState([]);
   const [pricingInfo, setPricingInfo] = useState();
   const [toogleForm, setToogleForm] = useState(null);
+  const [clickedIndex, setClickedIndex] = useState(null);
   const [confirmStatus, setConfirmStatus] = useState(false);
   const [isFormValid, setIsFormValid] = useState([]);
   const [PassengersInfo, setPassengersInfo] = useState([]);
@@ -108,7 +109,7 @@ const TravelersDetails = () => {
     icon: ''
   });
   console.log("disabledtraveler", disableAddTraveler)
-  const travelersDetailsInputs= [
+  const travelersDetailsInputs = [
     {
       type: 'select',
       id: "title",
@@ -159,9 +160,20 @@ const TravelersDetails = () => {
       label: "Country",
       name: "country",
       options: countries,
-      disabled:DocType=="Domestic"?true:false,
+      disabled: DocType == "Domestic" ? true : false,
       placeholder: "Select Country",
       optionIcons: <FaPlaneDeparture />,
+    },
+    {
+      type: "Input",
+      id: "passenger_type",
+      className: 'hidden',
+      label: "passenger_type",
+      name: "passenger_type",
+      disabled: DocType == true,
+      value: (idx) => {
+        return result[idx]
+      }
     },
     {
       type: "select",
@@ -177,6 +189,8 @@ const TravelersDetails = () => {
       id: "date_of_birth",
       label: "Date of Birth",
       name: "date_of_birth",
+      futureDate: false,
+      pastDate: true
     },
     {
       type: "select",
@@ -199,6 +213,8 @@ const TravelersDetails = () => {
       id: "passport_expiry_date",
       label: "Passport Exp Date",
       name: "passport_expiry_date",
+      pastDate: false,
+      futureDate: true
     },
 
 
@@ -219,10 +235,10 @@ const TravelersDetails = () => {
     email: "",
     telephone: "",
     mobile: "",
-    country: DocType=="Domestic"?"IRN":"",
+    country: DocType == "Domestic" ? "IRN" : "",
     city: "",
     date_of_birth: "",
-    passenger_type: passengerOptions[0].value,
+    passenger_type: "",
     gender: genderOptions[0].value,
     passport_number: "",
     passport_expiry_date: "",
@@ -230,6 +246,7 @@ const TravelersDetails = () => {
 
   const handleSubmit = (travelerIndex, values) => {
     console.log("formvalues", values)
+    console.log("formvalues", travelerIndex)
     let doc_type;
     let nationality;
 
@@ -269,7 +286,11 @@ const TravelersDetails = () => {
     };
 
     setDisableAddTraveler((prev) => ([...prev, travelerIndex]))
-    setAllTravelersData((prevData) => [...prevData, payload]);
+    setAllTravelersData((prevData) => {
+      const updatedData = [...prevData]
+      updatedData[travelerIndex] = payload
+      return updatedData
+    });
 
 
   };
@@ -348,34 +369,50 @@ const TravelersDetails = () => {
     { value: 'Umer Khalid', label: 'Umer Khalid' }
   ]
   const handleClearData = (setValues, travelerIndex, email) => {
-    setValues(initialValues)
-    setAllTravelersData((prev) => prev.filter((item) => item.email != email))
-    setDisableAddTraveler((prev) => prev.filter((item) => item != travelerIndex))
+    console.log("index", travelerIndex)
+    const previousValues = {
+      title: titleOptions[0].value,
+      previousPassenger: '',
+      first_name: "",
+      last_name: "",
+      email: "",
+      telephone: "",
+      mobile: "",
+      country: DocType == "Domestic" ? "IRN" : "",
+      city: "",
+      date_of_birth: "",
+      gender: genderOptions[0].value,
+      passport_number: "",
+      passport_expiry_date: "",
+    }
+    setValues((prev) => ({ ...prev, ...previousValues }))
+    setAllTravelersData((prev) => prev.filter((item) => (item.email != email)))
+    setDisableAddTraveler((prev) => prev.filter((item, i) => (item != travelerIndex)))
   }
-  // const handleEditData = (setValues, values, travelerIndex) => {
-  //   setAllTravelersData((prev) => prev.filter((item) => item.email != values.email))
-  //   setDisableAddTraveler((prev) => prev.filter((item) => item != travelerIndex))
-  //   setEditedValues(allTravelersData.filter((item) => item.email == values.email))
+  const handleEditData = (setValues, values, travelerIndex) => {
+    const travelerValues=allTravelersData.filter((item) => item.email == values.email)
+    setAllTravelersData((prev) => prev.filter((item) => item.email != values.email))
+    setDisableAddTraveler((prev) => prev.filter((item) => item != travelerIndex))
 
-  //   console.log(" edit", editedValues)
-  //   setValues({
-  //     title: travelerValues.title,
-  //     // previousPassenger: travelerValues.previousPassenger,
-  //     first_name: travelerValues.first_name,
-  //     last_name: travelerValues.last_name,
-  //     email: travelerValues.name,
-  //     telephone: travelerValues.telephone,
-  //     mobile: travelerValues.mobile,
-  //     country: travelerValues.country,
-  //     city: travelerValues.city,
-  //     date_of_birth: travelerValues.date_of_birth,
-  //     gender: travelerValues.gender,
-  //     passport_number: travelerValues.passport_number,
-  //     passport_expiry_date: travelerValues.passport_expiry_date,
-  //   })
+    console.log(" edit", editedValues)
+    setValues({
+      title: travelerValues.title,
+      // previousPassenger: travelerValues.previousPassenger,
+      first_name: travelerValues.first_name,
+      last_name: travelerValues.last_name,
+      email: travelerValues.name,
+      telephone: travelerValues.telephone,
+      mobile: travelerValues.mobile,
+      country: travelerValues.country,
+      city: travelerValues.city,
+      date_of_birth: travelerValues.date_of_birth,
+      gender: travelerValues.gender,
+      passport_number: travelerValues.passport_number,
+      passport_expiry_date: travelerValues.passport_expiry_date,
+    })
 
-  // }
-  // console.log('valid', isFormValid)
+  }
+  console.log('valid', isFormValid)
   const gettingTravellers = async (type) => {
     const response = await getTravelers(type)
     if (response.status) {
@@ -396,7 +433,7 @@ const TravelersDetails = () => {
     setValues((prev) => ({
       ...prev,
       previousPassenger: `${formValues[0].given_name} ${formValues[0].surname} `,
-      passenger_type: formValues[0].passenger_type_code,
+      // passenger_type: formValues[0].passenger_type_code,
       first_name: formValues[0].given_name,
       last_name: formValues[0].surname,
       email: formValues[0].email,
@@ -453,10 +490,34 @@ const TravelersDetails = () => {
                       </div>
 
                     </CardLayoutHeader>
+
                     <Formik
-                      initialValues={allTravelersData[index] || initialValues}
+                      innerRef={(el) => (formikRefs.current[index] = el)}
+                      initialValues={
+                        allTravelersData[index] || {
+                          title: titleOptions[0].value,
+                          previousPassenger: '',
+                          first_name: "",
+                          last_name: "",
+                          email: "",
+                          telephone: "",
+                          mobile: "",
+                          country: DocType == "Domestic" ? "IRN" : "",
+                          city: "",
+                          date_of_birth: "",
+                          passenger_type: travelertype,
+                          gender: genderOptions[0].value,
+                          passport_number: "",
+                          passport_expiry_date: "",
+                        }}
                       validationSchema={travelerDetailScehma}
-                      onSubmit={(values) => handleSubmit(index, values)}
+                      onSubmit={() => {
+                        const formikInstance = formikRefs.current[clickedIndex]; // Get the correct Formik instance
+                        if (formikInstance) {
+                          const values = formikInstance.values; // Get values of the correct traveler
+                          handleSubmit(clickedIndex, values); // Pass correct index & values
+                        }
+                      }}
                       enableReinitialize
                       validateOnChange={true}
                       validate={(values) => {
@@ -499,7 +560,10 @@ const TravelersDetails = () => {
                               />
                               {values.previousPassenger &&
                                 <MdCancel className="text-primary text-2xl cursor-pointer"
-                                  onClick={() => setValues(initialValues)} />
+                                  onClick={() => {
+                                    const { passenger_type, ...rest } = initialValues;
+                                    setValues((prev) => ({ ...prev, ...rest }))
+                                  }} />
 
                               }
                             </div>
@@ -547,7 +611,8 @@ const TravelersDetails = () => {
                                             <CustomDate
                                               id={input.id}
                                               name={input.name}
-                                              pastDate={true}
+                                              pastDate={input.pastDate}
+                                              futureDate={input.futureDate}
                                               label={input.label}
                                               disabled={disableAddTraveler.includes(index)}
                                               value={values[input.name]}
@@ -555,14 +620,22 @@ const TravelersDetails = () => {
                                             />
                                           ) : (
                                             <Input
+
                                               id={input.id}
+                                              className={input.className}
                                               name={input.name}
                                               label={input.label}
                                               type={input.type}
                                               placeholder={input.placeholder}
-                                              disabled={disableAddTraveler.includes(index)}
-                                              value={values[input.name]}
-                                              onChange={(e) => setFieldValue(input.name, e.target.value)}
+                                              disabled={input.disabled != null ? input.disabled : disableAddTraveler.includes(index)}
+                                              value={
+                                                typeof values[input.name] === "object" ? 
+                                                Number(Object.values(values[input.name]).join("")) 
+                                                : values[input.name]
+                                              }
+                                              onChange={(e) => {
+                                                setFieldValue(input.name, e.target.value)
+                                              }}
                                             />
                                           )}
                                           {touched[input.name] && errors[input.name] && (
@@ -580,9 +653,9 @@ const TravelersDetails = () => {
                                   </CardLayoutBody>
                                   <div className="px-4 w-full md:w-1/2 filledfields">
                                     <div className="flex gap-6 justify-end items-center">
-                                      {/* <button disabled={!disableAddTraveler.includes(index)} onClick={() => handleEditData(setValues, values, index)}
+                                      <button disabled={!disableAddTraveler.includes(index)} onClick={() => handleEditData(setValues, values, index)}
                                         className={`${disableAddTraveler.includes(index) ? 'cursor-pointer' : 'cursor-not-allowed'} text-primary hover:text-secondary underline `}>
-                                        Edit Data</button> */}
+                                        Edit Data</button>
                                       <button onClick={() => handleClearData(setValues, index, values.email)} className="text-primary cursor-pointer hover:text-secondary underline ">
                                         Clear Data</button>
 
@@ -611,6 +684,7 @@ const TravelersDetails = () => {
                                   <SecondaryButton
                                     text={disableAddTraveler.includes(index) ? "Traveler Added" : "Add Traveler"}
                                     onClick={() => {
+                                      setClickedIndex(index)
                                       const lastValue = disableAddTraveler.at(-1)
                                       if (lastValue == undefined & index == 0) {
                                         setConfirmStatus(true)
@@ -629,7 +703,8 @@ const TravelersDetails = () => {
                                     }
                                     icon={disableAddTraveler.includes(index) ? '' : <MdAdd />}
                                   />
-                                  <ConfirmModal status={confirmStatus} onAbort={() => setConfirmStatus(false)} onConfirm={handleSubmit} text={"Is the traveler data you provided is correct"} />
+                                  <ConfirmModal status={confirmStatus} onAbort={() => setConfirmStatus(false)} onConfirm={handleSubmit}
+                                    text={"Is the traveler data you provided is correct"} />
                                 </div>
                               </div>
                             </>}

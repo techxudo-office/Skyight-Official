@@ -35,7 +35,7 @@ export default function TravelersQuantity({ flightSegments, travelers }) {
                 }))
     }, [travelers])
     const [flightHrs, flightMins] = flightSegments[0].FlightDuration.split(":")
-    return (
+    return ( 
         <CardLayoutContainer className={'mb-5'}>
             <div className="flex md:flex-row flex-col justify-between px-6 gap-3 md:items-end py-9 text-text">
                 <div className='flex flex-col gap-2 items-start'>
