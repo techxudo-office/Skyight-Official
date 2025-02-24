@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   CardLayoutContainer,
   CardLayoutHeader,
@@ -18,11 +18,41 @@ import {
   TableNew,
 } from "../../components/components";
 import { useNavigate } from "react-router-dom";
+import { getRoles } from "../../utils/api_handler";
 
 const Roles = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [rolesData, setRolesData] = useState([]);
   const [activeIndex, setActiveIndex] = useState(null);
   const [dropdownStatus, setDropdownStatus] = useState(false);
+
+  const handleGetRoles = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await getRoles();
+      if (response.status) {
+        let data = response.data.roles.map((item) => ({
+          id: item.id.toString(),
+          role: item.name || "Unknown",
+          roleRights: item.page_permission
+            ? Object.keys(item.page_permission)
+                .filter((key) => item.page_permission[key])
+                .map((key) => key.replace(/_/g, " "))
+                .join(", ")
+            : "No Permissions",
+          status: item.is_deleted ? "inactive" : "active",
+        }));
+        setRolesData(data);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    handleGetRoles();
+  }, [handleGetRoles]);
 
   const data = [
     {
@@ -179,7 +209,7 @@ const Roles = () => {
           /> */}
           <TableNew
             columnsToView={columnsData}
-            tableData={data}
+            tableData={rolesData}
             actions={actionsData}
             extraRows={["roleRights"]}
             activeIndex={activeIndex}

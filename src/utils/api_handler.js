@@ -12,7 +12,7 @@ export const login = async (payload) => {
     let response = await axios({
       headers: {
         Accept: "application/json",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       method: "POST",
       url: `${baseUrl}/api/login`,
@@ -265,10 +265,13 @@ export const getCredits = async () => {
 
 //! Flight...
 export const searchFlight = async (payload) => {
-  const apiUrlWithPayload = `${baseUrl}/api/search?trip_type=${payload.tripType
-    }&departure_date_time=${payload.departureDate}&origin_location_code=${payload.originCode
-    }&destination_location_code=${payload.destinationCode}&adult_quantity=${payload.adult
-    }&child_quantity=${[payload.child]}&infant_quantity=${payload.infant}`;
+  const apiUrlWithPayload = `${baseUrl}/api/search?trip_type=${
+    payload.tripType
+  }&departure_date_time=${payload.departureDate}&origin_location_code=${
+    payload.originCode
+  }&destination_location_code=${payload.destinationCode}&adult_quantity=${
+    payload.adult
+  }&child_quantity=${[payload.child]}&infant_quantity=${payload.infant}`;
 
   try {
     let response = await axios({
@@ -788,7 +791,6 @@ export const refundRequest = async (payload) => {
 };
 
 export const confirmBooking = async (payload) => {
- 
   try {
     let response = await axios({
       method: "POST",
@@ -803,7 +805,7 @@ export const confirmBooking = async (payload) => {
     if (response.status === 200) {
       return {
         status: true,
-        message:"Booking Created",
+        message: "Booking Created",
       };
     }
     // else{
@@ -814,10 +816,10 @@ export const confirmBooking = async (payload) => {
     // }
   } catch (error) {
     // console.log("Failed while calling confirming booking: ", Object.values(error.response.data.data.errors));
-    return ({
+    return {
       status: false,
-      message: Object.values(error.response.data.data.errors)
-    })
+      message: Object.values(error.response.data.data.errors),
+    };
   }
 };
 
@@ -921,7 +923,7 @@ export const createRole = async (payload) => {
         "Content-Type": "application/json",
       },
     });
-    console.log(response, "Create Role")
+    console.log(response, "Create Role");
     return response.data;
   } catch (error) {
     console.error(
@@ -929,28 +931,50 @@ export const createRole = async (payload) => {
       error.response?.data || error.message
     );
     throw error;
-
   }
 };
 
+export const getRoles = async (page = 0, limit = 10) => {
+  try {
+    let response = await axios({
+      method: "GET",
+      url: `${baseUrl}/api/role?is_deleted=false&page=${page}&limit=${limit}`,
+      headers: {
+        Authorization: getToken(),
+      },
+    });
+
+    if (response.status === 200) {
+      return {
+        status: true,
+        data: response.data.data,
+        totalPages: response.data.totalPages || 1,
+      };
+    }
+  } catch (error) {
+    console.error("Failed to get roles: ", error);
+    return { status: false };
+  }
+};
+
+//! Travelers...
 export const getTravelers = async (passengerType) => {
   try {
     let response = await axios({
-      method: 'GET',
+      method: "GET",
       url: `${baseUrl}/api/getTravellers?passenger_type=${passengerType}`,
       headers: {
         Authorization: getToken(),
       },
-    })
-    console.log('travelers', response)
+    });
+    console.log("travelers", response);
     if (response.status === 200) {
       return {
         status: true,
-        data: response.data.data
-      }
+        data: response.data.data,
+      };
     }
   } catch (error) {
     console.log("Failed while getting travellers: ", error);
-
   }
-}
+};

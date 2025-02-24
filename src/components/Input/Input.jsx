@@ -62,7 +62,7 @@ const Input = ({
           onChange={onChange}
           onKeyPress={onKeyPressHandler}
           autoComplete={autoComplete}
-          onBlur={() => setEditingField(null)}
+          onBlur={() => setEditingField && setEditingField(null)}
         />
         {disabled && profile && (
           <span
