@@ -265,61 +265,59 @@ export const getCredits = async () => {
 
 //! Flight...
 export const searchFlight = async (payload) => {
-  const apiUrlWithPayload = `${baseUrl}/api/search?trip_type=${payload.tripType
-    }&departure_date_time=${payload.departureDate}&origin_location_code=${payload.originCode
-    }&destination_location_code=${payload.destinationCode}&adult_quantity=${payload.adult
-    }&child_quantity=${[payload.child]}&infant_quantity=${payload.infant}`;
+  const apiUrl = `${baseUrl}/api/search`;
+
+  // Constructing the required body dynamically
+  const requestBody = {
+    trip_type: payload.tripType,
+    origin_destinations: [
+      {
+        departure_date_time: payload.departureDate,
+        origin_location_code: payload.originCode,
+        destination_location_code: payload.destinationCode,
+      },
+    ],
+    adult_quantity: payload.adult,
+    child_quantity: payload.child,
+    infant_quantity: payload.infant,
+  };
+
+  // Handle Round Trip (if applicable)
+  if (payload.tripType === "Return" && payload.returnDate) {
+    requestBody.origin_destinations.push({
+      departure_date_time: payload.returnDate,
+      origin_location_code: payload.destinationCode,
+      destination_location_code: payload.originCode,
+    });
+  }
 
   try {
-    let response = await axios({
-      method: "GET",
-      url: apiUrlWithPayload,
+    let response = await axios.post(apiUrl, requestBody, {
       headers: {
         "Content-Type": "application/json",
         Authorization: getToken(),
       },
     });
+
     console.log(response);
     if (response.status === 200) {
-      if (
-        !response.data.data.PricedItineraries ||
-        response.data.data.PricedItineraries.PricedItinerary.length === 0
-      ) {
-        return {
-          status: false,
-          message: ["No Flight Found!"],
-        };
+      if (!response.data.data || response.data.data.length === 0) {
+        return { status: false, message: ["No Flight Found!"] };
       } else {
-        return {
-          status: true,
-          message: "Flighs Data Found",
-          data: response.data.data,
-        };
+        return { status: true, message: "Flights Data Found", data: response.data.data };
       }
     }
   } catch (error) {
     console.log("Failed while searching flight: ", error);
-    if (error.response) {
-      if (error.response.data.data.errors) {
-        const errors = Object.keys(error.response.data.data.errors);
-        const errorMessages = [];
-
-        for (let i = 0; i < errors.length; i++) {
-          errorMessages.push(error.response.data.data.errors[errors[i]]);
-        }
-        return {
-          status: false,
-          message: errorMessages,
-        };
-      }
+    if (error.response && error.response.data?.data?.errors) {
+      const errors = Object.values(error.response.data.data.errors);
+      return { status: false, message: errors };
     } else {
-      return {
-        status: false,
-        message: "Server Connection Error",
-      };
+      return { status: false, message: "Server Connection Error" };
     }
   }
 };
+
 
 //! Transactions...
 export const createTransaction = async (payload) => {

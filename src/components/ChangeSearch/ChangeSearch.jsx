@@ -11,9 +11,9 @@ export default function ChangeSearch({tripDetail,onclick,flights}) {
       <div>
       <p className='text-text font-semibold pb-1'>{flights} Flights Found</p>
 
-        <p className='flex items-center gap-3 text-text text-sm'>
+        <p className='flex items-end gap-3 text-text text-sm'>
          <span>Departure Date: {dayjs(tripDetail.departureDate).format('ddd-DD-MMM-YYYY')}</span> |
-         <span>{tripDetail.tripType}</span> 
+         <span>{tripDetail.tripType=="Return"?"Round Trip":"One Way"}</span> 
         </p>
 
       </div>

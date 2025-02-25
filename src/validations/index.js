@@ -51,8 +51,24 @@ export const travelerDetailScehma = Yup.object().shape({
   first_name: Yup.string().required("Please enter first name"),
   last_name: Yup.string().required("Please enter last name"),
   email: Yup.string().required("Please enter email"),
-  telephone: Yup.number().required("Please enter phone number"),
-  mobile: Yup.number().required("Phone number is required"),
+  telephone: Yup.mixed()
+    .test(
+      "is-valid-phone",
+      "Please enter a valid telephone number",
+      (value) =>
+        typeof value === "string" ||
+        (typeof value === "object" && value !== null && "number" in value)
+    )
+    .required("Please enter phone number"),
+  mobile: Yup.mixed()
+    .test(
+      "is-valid-phone",
+      "Please enter a valid mobile number",
+      (value) =>
+        typeof value === "string" ||
+        (typeof value === "object" && value !== null && "number" in value)
+    )
+    .required("Please enter phone number"),
   country: Yup.string().required("Please select country"),
   city: Yup.string().required("Please select city"),
   date_of_birth: Yup.string()
@@ -63,10 +79,9 @@ export const travelerDetailScehma = Yup.object().shape({
 
       const birthDate = new Date(value);
       const today = new Date();
-      const age = differenceInYears(today, birthDate); // Calculate age
       const dayAge = differenceInDays(today, birthDate)
-      if (passenger_type === "ADT" && (age < 12)) return this.createError({ message: "Invalid age! Adults must be 12 years or older." }); // Adult (>=12)
-      if (passenger_type === "CHD" && (age < 2 || age > 12)) return this.createError({ message: "Invalid age! Children must be between 2 and 12 years." }); // Child (2-12)
+      if (passenger_type === "ADT" && (dayAge < (12 * 365))) return this.createError({ message: "Invalid age! Adults must be 12 years or older." }); // Adult (>=12)
+      if (passenger_type === "CHD" && (dayAge < 730 || dayAge > (12 * 365))) return this.createError({ message: "Invalid age! Children must be between 2 and 12 years." }); // Child (2-12)
       if (passenger_type === "INF" && (dayAge > 730)) return this.createError({ message: "Invalid age! Infants must be under 2 years." }); // Infant (<2)
       if (dayAge < 0) return this.createError({ message: "Invalid date of birth! " });
       return true;

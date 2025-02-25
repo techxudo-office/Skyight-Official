@@ -64,18 +64,20 @@ const TravelersDetails = () => {
   const navigate = useNavigate();
 
   const [value, setValue] = useState();
-  const [allTravelersData, setAllTravelersData] = useState(JSON.parse(localStorage.getItem("allFormData"))?.map((item) => {
-    const mobile = Object.values(item.mobile).join('')
-    const telephone = Object.values(item.telephone).join('')
-    return (
-      {
-        ...item,
-        mobile: mobile,
-        telephone: telephone
+  const [allTravelersData, setAllTravelersData] = useState(JSON.parse(localStorage.getItem("allFormData"))
+    // ?.map((item) => {
+    //   const mobile = Object.values(item.mobile).join('')
+    //   const telephone = Object.values(item.telephone).join('')
+    //   return (
+    //     {
+    //       ...item,
+    //       mobile: mobile,
+    //       telephone: telephone
 
-      }
-    )
-  }) || [])
+    //     }
+    //   )
+    // })
+    || [])
   // useEffect(() => {
   //   const allFormData = localStorage.getItem("allFormData")
   //   // console.log(allFormData)
@@ -99,6 +101,7 @@ const TravelersDetails = () => {
   const [PassengersInfo, setPassengersInfo] = useState([]);
   const [editedValues, setEditedValues] = useState({});
   const [DocType, setDocType] = useState();
+  const [clearIndex, setClearIndex] = useState(-1);
   const [Passengers, setPassengers] = useState([
     { value: '', label: '' }
   ]);
@@ -141,14 +144,14 @@ const TravelersDetails = () => {
       placeholder: "Enter Email",
     },
     {
-      type: "Number",
+      type: "number",
       id: "telephone",
       label: "Phone Number",
       name: "telephone",
       placeholder: "Enter Phone Number",
     },
     {
-      type: "Number",
+      type: "number",
       id: "mobile",
       label: "Mobile Number",
       name: "mobile",
@@ -245,7 +248,7 @@ const TravelersDetails = () => {
   };
 
   const handleSubmit = (travelerIndex, values) => {
-    console.log("formvalues", values)
+    console.log("formvalues_", values)
     console.log("formvalues", travelerIndex)
     let doc_type;
     let nationality;
@@ -314,7 +317,7 @@ const TravelersDetails = () => {
 
     const totalTraveler = Object.values(travelersData).reduce((a, b) => Number(a) + Number(b), 0);
     // console.log('totaltravelers', totalTraveler)
-    if (allTravelersData.length == totalTraveler) {
+    if (allTravelersData.length == totalTraveler & !allTravelersData.includes(null)) {
       // console.log('navigate')
       navigate("/dashboard/confirm-booking", {
         state: { flightData, travelersData, allTravelersData },
@@ -368,8 +371,17 @@ const TravelersDetails = () => {
     { value: 'Hashamuddin', label: 'Hashamuddin' },
     { value: 'Umer Khalid', label: 'Umer Khalid' }
   ]
-  const handleClearData = (setValues, travelerIndex, email) => {
-    console.log("index", travelerIndex)
+  const handleClearData = (setValues) => {
+    const formikInstance = formikRefs.current[clearIndex];
+    console.log("clearIndex:", clearIndex)
+    if (formikInstance) {
+      const values = { ...formikInstance.values };
+      console.log("index", travelerIndex)
+      executeClearData(setValues, values.email)
+    }
+
+  }
+  const executeClearData = (setValues, email) => {
     const previousValues = {
       title: titleOptions[0].value,
       previousPassenger: '',
@@ -387,10 +399,10 @@ const TravelersDetails = () => {
     }
     setValues((prev) => ({ ...prev, ...previousValues }))
     setAllTravelersData((prev) => prev.filter((item) => (item.email != email)))
-    setDisableAddTraveler((prev) => prev.filter((item, i) => (item != travelerIndex)))
+    setDisableAddTraveler((prev) => prev.filter((item, i) => (item != clearIndex)))
   }
   const handleEditData = (setValues, values, travelerIndex) => {
-    const travelerValues=allTravelersData.filter((item) => item.email == values.email)
+    const travelerValues = allTravelersData.filter((item) => item.email == values.email)
     setAllTravelersData((prev) => prev.filter((item) => item.email != values.email))
     setDisableAddTraveler((prev) => prev.filter((item) => item != travelerIndex))
 
@@ -429,7 +441,7 @@ const TravelersDetails = () => {
     console.log('formvalues', formValues)
     const phone = parseInt(formValues[0].phone_number.replace(/[\s-]/g, ""), 10)
 
-    console.log("phone", phone)
+    console.log("phone_", phone)
     setValues((prev) => ({
       ...prev,
       previousPassenger: `${formValues[0].given_name} ${formValues[0].surname} `,
@@ -452,7 +464,7 @@ const TravelersDetails = () => {
       <Toaster />
       <PopupMessage icon={successPopup.icon} onClose={() => setSuccessPopup((prev) => ({ ...prev, status: false }))} active={successPopup.status} message={successPopup.message} />
       <div className="w-full flex flex-col">
-        <TravelersQuantity flightSegments={flightSegments} travelers={travelersData} />
+        <TravelersQuantity flightSegments={location.state.data.AirItinerary.OriginDestinationOptions} travelers={travelersData} />
 
         <div className="flex flex-col lg:flex-row w-full">
           <div className="flex flex-wrap w-full lg:w-2/3">
@@ -578,7 +590,7 @@ const TravelersDetails = () => {
                               </>
                             }
                           </div>
-                          {console.log("errors", errors)}
+                          {console.log("errors", index, errors)}
                           {
 
                             (toogleForm === index || values.previousPassenger || allTravelersData[index]?.first_name) &&
@@ -629,9 +641,9 @@ const TravelersDetails = () => {
                                               placeholder={input.placeholder}
                                               disabled={input.disabled != null ? input.disabled : disableAddTraveler.includes(index)}
                                               value={
-                                                typeof values[input.name] === "object" ? 
-                                                Number(Object.values(values[input.name]).join("")) 
-                                                : values[input.name]
+                                                typeof values[input.name] === "object" ?
+                                                  Number(Object.values(values[input.name]).map(val => val.replace(/"/g, "")).join(""))
+                                                  : values[input.name]
                                               }
                                               onChange={(e) => {
                                                 setFieldValue(input.name, e.target.value)
@@ -653,11 +665,46 @@ const TravelersDetails = () => {
                                   </CardLayoutBody>
                                   <div className="px-4 w-full md:w-1/2 filledfields">
                                     <div className="flex gap-6 justify-end items-center">
-                                      <button disabled={!disableAddTraveler.includes(index)} onClick={() => handleEditData(setValues, values, index)}
+                                     { disableAddTraveler.includes(index)&&<button
+                                        // onClick={() => handleEditData(setValues, values, index)}
+                                        onClick={() => {
+                                          setValue(formikRefs.current[index]?.values)
+                                          setAllTravelersData((prev) => prev.map((item) => {
+                                            if (item) {
+                                              return ((item.email == values.email) ? null : item)
+                                            }
+
+                                          }
+                                          ))
+                                          setDisableAddTraveler((prev) => prev.map((item, i) => (item == index ? null : item)))
+
+                                        }}
                                         className={`${disableAddTraveler.includes(index) ? 'cursor-pointer' : 'cursor-not-allowed'} text-primary hover:text-secondary underline `}>
-                                        Edit Data</button>
-                                      <button onClick={() => handleClearData(setValues, index, values.email)} className="text-primary cursor-pointer hover:text-secondary underline ">
-                                        Clear Data</button>
+                                        Edit Data</button>}
+                                      <div >
+                                        <button onClick={() => {
+                                          // handleClearData((values) => {
+                                          //   setValues(values, false);
+                                          //   setTouched({}); // `false` means no validation trigger
+                                          // });
+                                          formikRefs.current[index]?.resetForm();
+                                         
+                                          
+                                            setAllTravelersData((prev) => prev.map((item) => {
+                                              if (item) {
+                                                return ((item.email == values.email) ? null : item)
+                                              }
+
+                                            }
+                                            ))
+                                            setDisableAddTraveler((prev) => prev.map((item, i) => (item == index ? null : item)))
+                                          
+
+                                        }}
+                                          className="text-primary cursor-pointer hover:text-secondary underline ">
+                                          Clear Data</button>
+                                      </div>
+
 
                                     </div>
 
@@ -685,17 +732,18 @@ const TravelersDetails = () => {
                                     text={disableAddTraveler.includes(index) ? "Traveler Added" : "Add Traveler"}
                                     onClick={() => {
                                       setClickedIndex(index)
-                                      const lastValue = disableAddTraveler.at(-1)
-                                      if (lastValue == undefined & index == 0) {
-                                        setConfirmStatus(true)
-                                      } else if (index >= lastValue) {
-                                        setConfirmStatus(true)
-                                      } else {
-                                        setSuccessPopup({
-                                          status: true,
-                                          message: 'Please add the travelers in sequence'
-                                        })
-                                      }
+                                      // const lastValue = disableAddTraveler.at(-1)
+                                      // if (lastValue == undefined & index == 0) {
+                                      //   setConfirmStatus(true)
+                                      // } else if (index >= lastValue) {
+                                      //   setConfirmStatus(true)
+                                      // } else {
+                                      //   setSuccessPopup({
+                                      //     status: true,
+                                      //     message: 'Please add the travelers in sequence'
+                                      //   })
+                                      // }
+                                      setConfirmStatus(true)
 
                                     }}
                                     disabled={disableAddTraveler.includes(index)
@@ -721,7 +769,7 @@ const TravelersDetails = () => {
             <PriceSummary pricingInfo={pricingInfo} travelers={travelersData} totalTravelers={result} />
             <h2 className="text-2xl font-semibold text-text pl-1 pt-4">Trip Summary</h2>
 
-            <FlightInfoCard flights={flightSegments} />
+            <FlightInfoCard origin_destination={location.state.data.AirItinerary.OriginDestinationOptions} />
           </div>
         </div>
 

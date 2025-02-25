@@ -29,6 +29,7 @@ const FlightResults = () => {
   const [noFlight, setNoFlight] = useState(false);
   const [filteredFlightsData, setFilteredFlightsData] = useState([]);
   const [pricingInfo, setPricingInfo] = useState()
+  const [DifferenceInDates, setDifferenceInDates] = useState()
   const [TripDetail, setTripDetail] = useState({})
 
   const navigate = useNavigate()
@@ -46,7 +47,12 @@ const FlightResults = () => {
       setTripDetail(location.state.payload)
 
       if (flights.length > 0) {
-        const departureDate = flights[0].AirItinerary.OriginDestinationOptions[0].FlightSegment[0].DepartureDate;
+        let departureDate = flights[0].AirItinerary.OriginDestinationOptions[0].FlightSegment[0].DepartureDate;
+        let returnDate = flights[0].AirItinerary.OriginDestinationOptions[1]?.FlightSegment[0].DepartureDate;
+        if (dayjs(returnDate).diff(dayjs(departureDate), "days") > 0) {
+          setDifferenceInDates(dayjs(returnDate).diff(dayjs(departureDate), "days"))
+
+        }
         generateDateOptions(departureDate, flights);
       }
     }
@@ -61,6 +67,7 @@ const FlightResults = () => {
     const payload = {
       ...location.state.payload,
       departureDate: original.format("YYYY-MM-DD"),
+      returnDate: original.add(DifferenceInDates, "day").format("YYYY-MM-DD")
     };
     const response = await searchFlight(payload);
     if (response) {
@@ -162,7 +169,7 @@ const FlightResults = () => {
       <AvailableFlights flights={flightsData} />
       {/* Date Slider */}
       <DateSlider ref={sliderRef} selectedDate={selectedDate} handleDateSelect={handleDateSelect}
-        dateOptions={dateOptions} />
+        dateOptions={dateOptions} differenceInDates={DifferenceInDates} />
       {/* Filtered Flights Data */}
       {filteredFlightsData.length > 0 ? (
         filteredFlightsData.map((item, index) => (

@@ -127,14 +127,16 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
   const searchFlightHandler = async (values) => {
     console.log("submitting", values)
     const payload = {
-      departureDate: values.departureDate,
       flightRoute: flightRoute,
-      tripType: Triptype?.replace("-", ''),
+      tripType: Triptype=="Round-Trip"?"Return":"OneWay",
       originCode: values.departure,
       destinationCode: values.arrival,
-      adult: values.adult,
-      child: values.child,
-      infant: values.infant,
+      departureDate: values.departureDate,
+      returnDate: values.returnDate,
+
+      adult: Number(values.adult),
+      child: Number(values.child),
+      infant: Number(values.infant),
     };
     console.log('values', values)
     setLoading(true);
