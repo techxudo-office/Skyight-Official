@@ -55,9 +55,9 @@ const FlightDetails = () => {
     flightData && flightData.AirItineraryPricingInfo;
 
   const confirmBookingHandler = async () => {
-    
+    const tripType=JSON.parse(localStorage.getItem("flightSearchForm")).tripType
     const payLoad = {
-      trip_type:"OneWay",
+      trip_type:tripType=="Round-Trip"?"Return":"OneWay",
       origin_location_code: flightSegment.DepartureAirport.LocationCode,
       destination_location_code: flightSegment.ArrivalAirport.LocationCode,
       // "origin_location_terminal": flightSegment.DepartureAirport.Terminal,

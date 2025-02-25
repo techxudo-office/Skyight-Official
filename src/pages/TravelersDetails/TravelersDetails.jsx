@@ -173,7 +173,7 @@ const TravelersDetails = () => {
       className: 'hidden',
       label: "passenger_type",
       name: "passenger_type",
-      disabled: DocType == true,
+      disabled:true,
       value: (idx) => {
         return result[idx]
       }
@@ -401,27 +401,8 @@ const TravelersDetails = () => {
     setAllTravelersData((prev) => prev.filter((item) => (item.email != email)))
     setDisableAddTraveler((prev) => prev.filter((item, i) => (item != clearIndex)))
   }
-  const handleEditData = (setValues, values, travelerIndex) => {
-    const travelerValues = allTravelersData.filter((item) => item.email == values.email)
-    setAllTravelersData((prev) => prev.filter((item) => item.email != values.email))
-    setDisableAddTraveler((prev) => prev.filter((item) => item != travelerIndex))
-
-    console.log(" edit", editedValues)
-    setValues({
-      title: travelerValues.title,
-      // previousPassenger: travelerValues.previousPassenger,
-      first_name: travelerValues.first_name,
-      last_name: travelerValues.last_name,
-      email: travelerValues.name,
-      telephone: travelerValues.telephone,
-      mobile: travelerValues.mobile,
-      country: travelerValues.country,
-      city: travelerValues.city,
-      date_of_birth: travelerValues.date_of_birth,
-      gender: travelerValues.gender,
-      passport_number: travelerValues.passport_number,
-      passport_expiry_date: travelerValues.passport_expiry_date,
-    })
+  const handleEditData = (setValues, newValues) => {
+    setValues(newValues)
 
   }
   console.log('valid', isFormValid)
@@ -506,7 +487,8 @@ const TravelersDetails = () => {
                     <Formik
                       innerRef={(el) => (formikRefs.current[index] = el)}
                       initialValues={
-                        allTravelersData[index] || {
+                        allTravelersData[index]
+                        || formikRefs.current[index]?.values || {
                           title: titleOptions[0].value,
                           previousPassenger: '',
                           first_name: "",
@@ -521,7 +503,8 @@ const TravelersDetails = () => {
                           gender: genderOptions[0].value,
                           passport_number: "",
                           passport_expiry_date: "",
-                        }}
+                        }
+                      }
                       validationSchema={travelerDetailScehma}
                       onSubmit={() => {
                         const formikInstance = formikRefs.current[clickedIndex]; // Get the correct Formik instance
@@ -567,7 +550,10 @@ const TravelersDetails = () => {
                                   setFieldValue("previousPassenger", values.previousPassenger)
                                   handlePassengerForm(setValues, option.value, index)
                                 }}
-                                value={allTravelersData[index] ? allTravelersData[index].first_name : values.previousPassenger}
+                                value={allTravelersData[index] ?
+                                  allTravelersData[index].first_name :
+                                  (formikRefs.current[index]?.values) ? (formikRefs.current[index]?.values.first_name)
+                                    : values.previousPassenger}
                                 options={Passengers}
                               />
                               {values.previousPassenger &&
@@ -579,7 +565,7 @@ const TravelersDetails = () => {
 
                               }
                             </div>
-                            {!values.previousPassenger && !allTravelersData[index]?.first_name &&
+                            {!values.previousPassenger && !allTravelersData[index]?.first_name && !formikRefs.current[index]?.values.first_name &&
                               <>
                                 <div className="flex gap-3 w-full items-center text-primary">
                                   <span className="h-0.5 w-2/5 bg-primary"></span>
@@ -630,26 +616,57 @@ const TravelersDetails = () => {
                                               value={values[input.name]}
                                               onChange={(e) => setFieldValue(input.name, e.target.value)}
                                             />
-                                          ) : (
-                                            <Input
+                                          ) : input.type === "number" ?
+                                            (
+                                              <Input
 
-                                              id={input.id}
-                                              className={input.className}
-                                              name={input.name}
-                                              label={input.label}
-                                              type={input.type}
-                                              placeholder={input.placeholder}
-                                              disabled={input.disabled != null ? input.disabled : disableAddTraveler.includes(index)}
-                                              value={
-                                                typeof values[input.name] === "object" ?
-                                                  Number(Object.values(values[input.name]).map(val => val.replace(/"/g, "")).join(""))
-                                                  : values[input.name]
-                                              }
-                                              onChange={(e) => {
-                                                setFieldValue(input.name, e.target.value)
-                                              }}
-                                            />
-                                          )}
+                                                id={input.id}
+                                                className={input.className}
+                                                name={input.name}
+                                                label={input.label}
+                                                type={input.type}
+                                                placeholder={input.placeholder}
+                                                disabled={input.disabled != null ? input.disabled : disableAddTraveler.includes(index)}
+                                                value={
+                                                  input.name === "mobile" || input.name == 'telephone' ? (
+                                                    typeof values[input.name] === "object" ?
+                                                      Number(
+                                                        [values[input.name].country_code, values[input.name].area_code, values[input.name].number]
+                                                          .filter(Boolean) // Empty values hata dega
+                                                          .join("")
+                                                      )
+                                                      : typeof values[input.name] === "string" ?
+                                                        Number(String(values[input.name]).replace(/\D/g, "")) :
+                                                        parseInt(String(values[input.name]).replace(/\D/g, ""), 10)
+                                                  )
+                                                    : values[input.name]
+                                                }
+                                                onChange={(e) => {
+                                                  const newValue = e.target.value.replace(/\D/g, ""); // Remove non-numeric characters
+                                                  setValues((prev) => ({
+                                                    ...prev,
+                                                    [input.name]: newValue ? Number(newValue) : "", // Convert back to number
+                                                  }));
+                                                }}
+                                              />
+                                            ) : (
+                                              <Input
+
+                                                id={input.id}
+                                                className={input.className}
+                                                name={input.name}
+                                                label={input.label}
+                                                type={input.type}
+                                                placeholder={input.placeholder}
+                                                disabled={input.disabled != null ? input.disabled : disableAddTraveler.includes(index)}
+                                                value={values[input.name]}
+                                                onChange={(e) => {
+                                                  setFieldValue(input.name, e.target.value)
+                                                }}
+                                              />
+                                            )
+
+                                          }
                                           {touched[input.name] && errors[input.name] && (
                                             <div className="text-red-500 text-sm mt-2 absolute left-0">
                                               {errors[input.name]}
@@ -665,18 +682,23 @@ const TravelersDetails = () => {
                                   </CardLayoutBody>
                                   <div className="px-4 w-full md:w-1/2 filledfields">
                                     <div className="flex gap-6 justify-end items-center">
-                                     { disableAddTraveler.includes(index)&&<button
+                                      {disableAddTraveler.includes(index) && <button
                                         // onClick={() => handleEditData(setValues, values, index)}
                                         onClick={() => {
-                                          setValue(formikRefs.current[index]?.values)
+                                          const newValues = formikRefs.current[index]?.values || {}; // Ensure it's not undefined
+                                          console.log("Setting values:", newValues);
+
+
                                           setAllTravelersData((prev) => prev.map((item) => {
                                             if (item) {
-                                              return ((item.email == values.email) ? null : item)
+                                              return ((item.email == values.email) ? false : item)
                                             }
 
                                           }
                                           ))
-                                          setDisableAddTraveler((prev) => prev.map((item, i) => (item == index ? null : item)))
+                                          setDisableAddTraveler((prev) => prev.map((item, i) => (item == index ? false : item)))
+                                          handleEditData(setValues, newValues)
+
 
                                         }}
                                         className={`${disableAddTraveler.includes(index) ? 'cursor-pointer' : 'cursor-not-allowed'} text-primary hover:text-secondary underline `}>
@@ -688,17 +710,17 @@ const TravelersDetails = () => {
                                           //   setTouched({}); // `false` means no validation trigger
                                           // });
                                           formikRefs.current[index]?.resetForm();
-                                         
-                                          
-                                            setAllTravelersData((prev) => prev.map((item) => {
-                                              if (item) {
-                                                return ((item.email == values.email) ? null : item)
-                                              }
+                                          setValues("")
 
+                                          setAllTravelersData((prev) => prev.map((item) => {
+                                            if (item) {
+                                              return ((item.email == values.email) ? null : item)
                                             }
-                                            ))
-                                            setDisableAddTraveler((prev) => prev.map((item, i) => (item == index ? null : item)))
-                                          
+
+                                          }
+                                          ))
+                                          setDisableAddTraveler((prev) => prev.map((item, i) => (item == index ? null : item)))
+
 
                                         }}
                                           className="text-primary cursor-pointer hover:text-secondary underline ">

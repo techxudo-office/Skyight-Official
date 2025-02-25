@@ -55,20 +55,25 @@ export const travelerDetailScehma = Yup.object().shape({
     .test(
       "is-valid-phone",
       "Please enter a valid telephone number",
-      (value) =>
-        typeof value === "string" ||
-        (typeof value === "object" && value !== null && "number" in value)
+      (value) => {
+        console.log("phonenumber", typeof value)
+        return (typeof value === "number" ||
+          (typeof value === "object" && value !== null in value))
+      } // Object with "number" key allowed
     )
     .required("Please enter phone number"),
+
   mobile: Yup.mixed()
     .test(
-      "is-valid-phone",
+      "is-valid-mobile",
       "Please enter a valid mobile number",
-      (value) =>
-        typeof value === "string" ||
-        (typeof value === "object" && value !== null && "number" in value)
+      (value) => {
+        console.log("phonenumber", typeof value)
+        return (typeof value === "number" ||
+          (typeof value === "object" && value !== null in value))
+      }
     )
-    .required("Please enter phone number"),
+    .required("Please enter mobile number"),
   country: Yup.string().required("Please select country"),
   city: Yup.string().required("Please select city"),
   date_of_birth: Yup.string()

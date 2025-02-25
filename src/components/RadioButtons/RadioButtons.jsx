@@ -1,10 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react'
 
-export default function RadioButtons({ options, selectedOption, disabledOptionindex }) {
+export default function RadioButtons({ options, selectedOption, disabledOptionindex ,value}) {
   const [selected, setSelected] = useState();
-  useEffect(()=>{
-    setSelected(options[0])
-  },[])
+  
   return (
     <div className="flex space-x-4">
       {options.map((option, idx) => (
@@ -14,16 +12,16 @@ export default function RadioButtons({ options, selectedOption, disabledOptionin
         >
           <div
             className={`w-4 h-4 rounded-full border-[1px] border-gray  flex items-center justify-center transition-all ${!disabledOptionindex?.includes(idx) 
-                ?(selected === option  ? "border-primary":"border-text")
+                ?((selected === option||value==option)   ? "border-primary":"border-text")
                 : "border-background"
               }`}
           >
-            {(selected === option & !disabledOptionindex?.includes(idx) )? 
+            {(((selected === option||value==option) ||value==option)  & !disabledOptionindex?.includes(idx) )? 
               <div className="w-2 h-2 bg-primary rounded-full"></div>:''
             }
           </div>
           <span
-            className={`text-sm ${!disabledOptionindex?.includes(idx)  ? (selected === option ? "text-primary font-medium" : "text-text"):'text-background'
+            className={`text-sm ${!disabledOptionindex?.includes(idx)  ? (((selected === option||value==option) ||value==option) ? "text-primary font-medium" : "text-text"):'text-background'
               }`}
           >
             {option}
@@ -32,8 +30,8 @@ export default function RadioButtons({ options, selectedOption, disabledOptionin
             disabled={disabledOptionindex?.includes(idx)}
             type="radio"
             name="trip"
-            value={option}
-            checked={selected === option}
+            value={option||value}
+            checked={(selected === option||value==option) }
             onChange={() => setSelected(option) & selectedOption(option)}
             className="hidden"
           />
