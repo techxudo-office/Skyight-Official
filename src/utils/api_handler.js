@@ -472,13 +472,13 @@ export const createUser = async (payload) => {
         "Content-Type": "application/json",
       },
     });
-    return response.data; // Return the response data
+    return response.data;
   } catch (error) {
     console.error(
       "Error creating user:",
       error.response?.data || error.message
     );
-    throw error; // Rethrow error for handling in calling function
+    throw error;
   }
 };
 

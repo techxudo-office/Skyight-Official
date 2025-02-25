@@ -1,52 +1,65 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   CardLayoutContainer,
   CardLayoutHeader,
   CardLayoutBody,
   CardLayoutFooter,
 } from "../../components/CardLayout/CardLayout";
-import { Input, Button, Switch, Spinner, Select } from "../../components/components";
+import {
+  Input,
+  Button,
+  Switch,
+  Spinner,
+  Select,
+} from "../../components/components";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
-import { createUser } from "../../utils/api_handler";
-import { userSchema } from "../../validations/index"
+import { createUser, getRoles } from "../../utils/api_handler";
+import { userSchema } from "../../validations/index";
 
 const CreateUser = () => {
   const navigate = useNavigate();
-
-  const [isActive, setIsActive] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [role, setRole] = useState(null);
-  const roleData=[
-    {value:'super_admin',label:'Super Admin'},
-    {value:'admin',label:'Admin'},
-    {value:'manager',label:'Manager'},
-  ]
-
+  const [roles, setRoles] = useState([]);
+  const [selectedRole, setSelectedRole] = useState(null);
+  
+  useEffect(() => {
+    const fetchRoles = async () => {
+      setLoading(true);
+      try {
+        const response = await getRoles();
+        if (response.status) {
+          const roleOptions = response.data.roles.map((role) => ({
+            value: role.id, // value should be role.id (not role.name)
+            label: role.name,
+          }));
+          setRoles(roleOptions);
+        }
+      } catch (error) {
+        console.error("Error fetching roles:", error);
+        toast.error("Failed to fetch roles.");
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    fetchRoles();
+  }, []);
+  
   const createUserHandler = async (payload, resetForm) => {
-    console.log(payload)
     try {
       setLoading(true);
-
       const response = await createUser(payload);
-      if (response) {
-        if (response.status) {
-          toast.success(response.message);
-          resetForm();
-          setTimeout(() => {
-            navigate("/dashboard/users");
-          }, 1000);
-        } else {
-          if (Array.isArray(response.message)) {
-            response.message.map((error) => {
-              return toast.error(error);
-            });
-          } else {
-            toast.error(response.message);
-          }
-        }
+      if (response?.status) {
+        toast.success(response.message);
+        resetForm();
+        setTimeout(() => navigate("/dashboard/users"), 1000);
+      } else {
+        Array.isArray(response.message)
+          ? response.message.forEach((error) => toast.error(error))
+          : toast.error(response.message);
       }
     } catch (error) {
       toast.error(error.message);
@@ -54,8 +67,7 @@ const CreateUser = () => {
       setLoading(false);
     }
   };
-
-
+  
   const formik = useFormik({
     initialValues: {
       first_name: "",
@@ -63,191 +75,86 @@ const CreateUser = () => {
       email: "",
       mobile_number: "",
       password: "",
-      role_id: 0,
+      role_id: "", // Ensure role_id stores the role ID
     },
-    userSchema, // Assuming userSchema is your validation schema
+    userSchema,
     onSubmit: (values, { resetForm }) => {
       createUserHandler(values, resetForm);
     },
   });
-
-
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-    if (!loading) {
-      formik.handleSubmit();
-    }
-  };
-
+  
   return (
     <>
       <Toaster />
       <CardLayoutContainer>
         <CardLayoutHeader
           heading="Create User"
-          className={"flex items-center justify-between"}
-        >
-        </CardLayoutHeader>
-        <form onSubmit={handleFormSubmit} noValidate>
+          className="flex items-center justify-between"
+        />
+        <form onSubmit={formik.handleSubmit} noValidate>
           <CardLayoutBody>
-            <div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-5 mb-7">
-                <div
-                  className={`relative ${formik.touched.first_name && formik.errors.first_name
-                    ? "mb-5"
-                    : ""
-                    }`}
-                >
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3 md:gap-5 mb-7">
+              {/* Input Fields */}
+              {[
+                { name: "first_name", label: "First Name*", type: "text", placeholder: "Enter First Name" },
+                { name: "last_name", label: "Last Name*", type: "text", placeholder: "Enter Last Name" },
+                { name: "email", label: "Email*", type: "email", placeholder: "Enter Email" },
+                { name: "mobile_number", label: "Mobile Number*", type: "text", placeholder: "Enter Mobile Number" },
+                { name: "password", label: "Password*", type: "password", placeholder: "Enter Password" },
+              ].map(({ name, label, type, placeholder }) => (
+                <div key={name} className="relative">
                   <Input
-                    placeholder={"Enter First Name"}
-                    id={"first_name"}
-                    name={"first_name"}
-                    label={"First Name*"}
-                    type={"text"}
-                    value={formik.values.first_name}
+                    id={name}
+                    name={name}
+                    label={label}
+                    type={type}
+                    placeholder={placeholder}
+                    value={formik.values[name]}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                   />
-                  {formik.touched.first_name && formik.errors.first_name && (
-                    <div className="text-red-500 text-sm mt-2 absolute left-0">
-                      {formik.errors.first_name}
+                  {formik.touched[name] && formik.errors[name] && (
+                    <div className="absolute left-0 mt-2 text-sm text-red-500">
+                      {formik.errors[name]}
                     </div>
                   )}
                 </div>
-                <div
-                  className={`relative ${formik.touched.last_name && formik.errors.last_name
-                    ? "mb-5"
-                    : ""
-                    }`}
-                >
-                  <Input
-                    placeholder={"Enter Last Name"}
-                    id={"last_name"}
-                    name={"last_name"}
-                    label={"Last Name*"}
-                    type={"text"}
-                    value={formik.values.last_name}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                  />
-                  {formik.touched.last_name && formik.errors.last_name && (
-                    <div className="text-red-500 text-sm mt-2 absolute left-0">
-                      {formik.errors.last_name}
-                    </div>
-                  )}
-                </div>
-                <div
-                  className={`relative ${formik.touched.email && formik.errors.email ? "mb-5" : ""
-                    }`}
-                >
-                  <Input
-                    placeholder={"Enter Email"}
-                    id={"email"}
-                    name={"email"}
-                    label={"Email*"}
-                    type={"email"}
-                    value={formik.values.email}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                  />
-                  {formik.touched.email && formik.errors.email && (
-                    <div className="text-red-500 text-sm mt-2 absolute left-0">
-                      {formik.errors.email}
-                    </div>
-                  )}
-                </div>
-                <div
-                  className={`relative ${formik.touched.mobile_number && formik.errors.mobile_number
-                    ? "mb-5"
-                    : ""
-                    }`}
-                >
-                  <Input
-                    placeholder={"Enter Mobile Number"}
-                    id={"mobile_number"}
-                    name={"mobile_number"}
-                    label={"Mobile Number*"}
-                    type={"mobile_number"}
-                    value={formik.values.mobile_number}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                  />
-                  {formik.touched.mobile_number &&
-                    formik.errors.mobile_number && (
-                      <div className="text-red-500 text-sm mt-2 absolute left-0">
-                        {formik.errors.mobile_number}
-                      </div>
-                    )}
-                </div>
-                <div
-                  className={`relative ${formik.touched.password && formik.errors.password
-                    ? "mb-5"
-                    : ""
-                    }`}
-                >
-                  <Input
-                    placeholder={"Enter Password"}
-                    id={"password"}
-                    name={"password"}
-                    label={"Password*"}
-                    type={"password"}
-                    value={formik.values.password}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                  />
-                  {formik.touched.password && formik.errors.password && (
-                    <div className="text-red-500 text-sm mt-2 absolute left-0">
-                      {formik.errors.password}
-                    </div>
-                  )}
-                </div>
-                <div
-                  className={`relative ${formik.touched.role && formik.errors.role ? "mb-5" : ""
-                    }`}
-                >
-                  {/* <Input
-                    placeholder={"Enter Role of User"}
-                    id={"role_id"}
-                    name={"role_id"}
-                    label={"Role*"}
-                    type={"number"}
-                    value={formik.values.role_id || ""} 
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      formik.setFieldValue("role_id", value === "" ? "" : Number(value)); // Allow empty string
-                    }}
-                    onBlur={formik.handleBlur}
-                  /> */}
-                  <Select
-                  name={'role'}
-                  label={'Role'}
-                  options={roleData}
-                  value={role}
-                  onChange={(option)=>setRole(option.label)}
-                  />
-                  {formik.touched.role_id && formik.errors.role_id && (
-                    <div className="text-red-500 text-sm mt-2 absolute left-0">
-                      {formik.errors.role_id}
-                    </div>
-                  )}
-                </div>
+              ))}
+  
+              {/* Role Dropdown */}
+              <div className="relative">
+                <Select
+                  name="role"
+                  label="Role"
+                  options={roles}
+                  value={roles.find((role) => role.value === formik.values.role_id) || null}
+                  onChange={(option) => {
+                    console.log("Selected Role:", option);
+                    setSelectedRole(option.value); // Store only role ID
+                    formik.setFieldValue("role_id", option.value); // Ensure Formik gets the role ID
+                  }}
+                  isLoading={loading}
+                />
+                {formik.touched.role_id && formik.errors.role_id && (
+                  <div className="absolute left-0 mt-2 text-sm text-red-500">
+                    {formik.errors.role_id}
+                  </div>
+                )}
               </div>
             </div>
           </CardLayoutBody>
+  
           <CardLayoutFooter>
-            <div>
-              <Button
-                text={loading ? <Spinner /> : "Create User"}
-                disabled={loading}
-                onClick={formik.handleSubmit}
-                type="submit"
-              />
-            </div>
+            <Button
+              text={loading ? <Spinner /> : "Create User"}
+              disabled={loading}
+              type="submit"
+            />
           </CardLayoutFooter>
         </form>
       </CardLayoutContainer>
     </>
-  );
+  );  
 };
 
 export default CreateUser;

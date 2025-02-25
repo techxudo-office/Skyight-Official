@@ -140,7 +140,7 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows, o
                                     .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize first letter
 
                             return (
-                                <p className="text-text text-sm flex items-center gap-2 justify-center">
+                                <p className="flex items-center justify-center gap-2 text-sm text-text">
                                     {formattedValue}
                                 </p>
                             );
@@ -152,7 +152,7 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows, o
                         Header: item.columnName,
                         accessor: item.fieldName,
                         Cell: ({ value }) => (
-                            <span className="text-text  text-sm">
+                            <span className="text-sm text-text">
                                 {value}
                             </span>
                         )
@@ -178,7 +178,7 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows, o
 
                 Header: "Route",
                 Cell: ({ row }) => (
-                    <span className="text-text text-sm flex items-center gap-2 justify-center">
+                    <span className="flex items-center justify-center gap-2 text-sm text-text">
                         {row.original.origin}
                         <div className='flex items-center gap-1'>
                             <span className="h-0.5 w-3 bg-primary"></span>
@@ -201,7 +201,7 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows, o
         //         Header: "Actions",
         //         id: 'actions2',
         //         Cell: ({ row }) => (
-        //             <span className="text-text text-sm flex items-center gap-2 justify-center">
+        //             <span className="flex items-center justify-center gap-2 text-sm text-text">
         //                 {row.original.role == "super_admin" &&
         //                     <div>
         //                         <FaEdit className='text-primary' onClick={() => setModal((prev) => !prev) & setEditIdx(row.index)} />
@@ -220,7 +220,7 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows, o
         //     Header: "Download Ticket",
         //     id: "Download",
         //     Cell: ({ row }) => (
-        //         <span className="text-text text-sm flex items-center gap-2 justify-center">
+        //         <span className="flex items-center justify-center gap-2 text-sm text-text">
         //                 <div>
         //                     <DownloadButton/>
         //                 </div>
@@ -237,7 +237,7 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows, o
             Header: 'Actions',
             // id: 'actions',
             Cell: ({ row }) => (
-                <span className="text-text text-lg justify-center flex gap-2 items-center relative">
+                <span className="relative flex items-center justify-center gap-2 text-lg text-text">
                     {
                         row.original.role ? row.original.role == 'Admin' && actions.map((action, idx) => (
                             <CustomTooltip key={idx} content={action.name}>
@@ -249,8 +249,6 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows, o
                                         {action.icon}
 
                                     </div>
-
-
                                 </div>
                             </CustomTooltip>
                         )) :
@@ -290,7 +288,7 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows, o
     //         Header: "Booking ID",
     //         accessor: "booking_reference_id",
     //         Cell: ({ value }) => (
-    //             <span className="text-primary font-semibold text-sm">
+    //             <span className="text-sm font-semibold text-primary">
     //                 {value}
     //             </span>
     //         )
@@ -395,8 +393,8 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows, o
     return (
         <div className="">
 
-            <div className="container mx-auto max-w- overflow-x-auto scrollbar-hide shadow-md">
-                <table className="min-w-full bg-white  rounded-lg overflow-hidden " {...getTableProps()}>
+            <div className="container mx-auto overflow-x-auto shadow-md max-w- scrollbar-hide">
+                <table className="min-w-full overflow-hidden bg-white rounded-lg " {...getTableProps()}>
                     {columnsToView.length > 0 && <thead className="bg-primary">
                         {headerGroups.map((headerGroup) => (
                             <tr {...headerGroup.getHeaderGroupProps()}>
@@ -405,7 +403,7 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows, o
                                     //     return <th
                                     //         colSpan={columns.length - 4}
                                     //         {...column.getHeaderProps()}
-                                    //         className="px-7 py-4 text-center  text-sm font-bold text-white uppercase tracking-wider"
+                                    //         className="py-4 text-sm font-bold tracking-wider text-center text-white uppercase px-7"
                                     //     >
                                     //         {column.render("Header")}
                                     //     </th>
@@ -413,7 +411,7 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows, o
 
                                     return <th
                                         {...column.getHeaderProps()}
-                                        className="px-4 mx-5 py-5 text-center  text-sm font-bold text-white uppercase tracking-wider"
+                                        className="px-4 py-5 mx-5 text-sm font-bold tracking-wider text-center text-white uppercase"
                                     >
                                         {column.render("Header")}
                                     </th>
@@ -428,12 +426,12 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows, o
                                 prepareRow(row);
                                 return (
                                     <>
-                                        <tr {...row.getRowProps()} className="hover:bg-slate-50 transition-colors">
+                                        <tr {...row.getRowProps()} className="transition-colors hover:bg-slate-50">
                                             {row.cells.map((cell) => (
                                                 <>
                                                     <td
                                                         {...cell.getCellProps()}
-                                                        className="px-4 lg:px-6 py-5 text-center text-lg text-text border-t border-slate-100 "
+                                                        className="px-4 py-5 text-lg text-center border-t lg:px-6 text-text border-slate-100 "
                                                     >
                                                         {cell.render("Cell")}
                                                     </td>
@@ -442,22 +440,22 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows, o
                                             ))}
                                         </tr>
                                         {activeIndex !== null && extraRow != null && activeIndex === row.index ? (
-                                            <tr className="h-10 bg-slate-200 w-full  transition-colors  text-text ">
+                                            <tr className="w-full h-10 transition-colors bg-slate-200 text-text ">
                                                 <td colSpan={columns.length} className="w-full p-10">
-                                                    <div className='flex lg:justify-between lg:flex-row flex-col max-lg:items-center'>
+                                                    <div className='flex flex-col lg:justify-between lg:flex-row max-lg:items-center'>
                                                         <div className='lg:w-1/2'>
                                                             {extraRow.length > 1 ?
                                                                 extraRow.map(([key, value], i) => (
                                                                     key == 'document_url' ?
                                                                         ''
                                                                         :
-                                                                        <div key={i} className='flex gap-2 text-sm pb-2'>
-                                                                            <span className='capitalize font-semibold w-44 text-primary underline'>
+                                                                        <div key={i} className='flex gap-2 pb-2 text-sm'>
+                                                                            <span className='font-semibold underline capitalize w-44 text-primary'>
                                                                                 {key.replaceAll('_', ' ')}:
                                                                             </span>
                                                                             <span>{
                                                                                 value && value.length > maxLength ?
-                                                                                    <span className='flex gap-1 items-end font-semibold'>
+                                                                                    <span className='flex items-end gap-1 font-semibold'>
                                                                                         <span className='font-semibold'>{value.slice(0, maxLength)}</span>
                                                                                         <BsThreeDots />
                                                                                     </span> :
@@ -466,12 +464,12 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows, o
                                                                         </div>
                                                                 )) :
                                                                 <div className='flex gap-3'>
-                                                                    <span className='capitalize font-semibold text-primary underline'>
+                                                                    <span className='font-semibold underline capitalize text-primary'>
                                                                         {extraRow[0][0].replaceAll('_', ' ')}:
                                                                     </span>
                                                                     <span>{
                                                                         extraRow && extraRow[0][1].length > maxLength ?
-                                                                            <span className='flex gap-1 items-end  font-semibold'>
+                                                                            <span className='flex items-end gap-1 font-semibold'>
                                                                                 <span className='font-semibold'>{extraRow[0][1].slice(0, maxLength)}</span><BsThreeDots />
                                                                             </span>
                                                                             :
@@ -480,13 +478,13 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows, o
                                                                 </div>
                                                             }
                                                         </div>
-                                                        <div className='lg:w-1/2 flex flex-col items-center lg:items-end px-10'>
+                                                        <div className='flex flex-col items-center px-10 lg:w-1/2 lg:items-end'>
                                                             <button className='border-[1px] border-primary text-primary capitalize bg-bluebg hover:text-secondary px-3 py-1  rounded-lg cursor-pointer w-fit max-lg:mt-4' onClick={() => setToggle((prev) => !prev)}>view Full Info</button>
                                                             {extraRow.filter(([key, value]) => (
                                                                 key == 'document_url'
                                                             )).map(([key, value]) => (
-                                                                <div className='flex items-center justify-center  my-4 w-full lg:self-end '>
-                                                                    <img className='lg:w-60 w-52  ' src={value} alt="" />
+                                                                <div className='flex items-center justify-center w-full my-4 lg:self-end '>
+                                                                    <img className='lg:w-60 w-52 ' src={value} alt="" />
                                                                 </div>
                                                             ))
 
@@ -512,7 +510,7 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows, o
 
                                         <Spinner className={'text-primary mx-auto'} />
                                         :
-                                        <h2 className='text-text capitalize text-center'>No Data Found</h2>
+                                        <h2 className='text-center capitalize text-text'>No Data Found</h2>
                                     }
                                 </td>
                             </tr>
@@ -528,12 +526,12 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows, o
             }
 
             {/* Paginaion  */}
-            <div className="flex flex-wrap items-center justify-end gap-2 my-4 mx-6">
+            <div className="flex flex-wrap items-center justify-end gap-2 mx-6 my-4">
                 <div className="flex items-center gap-2">
                     <span className="text-sm text-text">Rows per page:</span>
                     <input
                         type="number" value={rowsPerPage} onChange={(e) => setRowsPerPage(e.target.value)}
-                        className="w-12 border  h-8 flex items-center justify-center rounded-md text-sm text-text text-center border-gray  focus:border-primary focus:outline-none"
+                        className="flex items-center justify-center w-12 h-8 text-sm text-center border rounded-md text-text border-gray focus:border-primary focus:outline-none"
                     />{
                         rowsPerPage !== finalRowsPerPage &&
                         <TbCheck className='text-primary' onClick={() => setfinalRowsPerPage(rowsPerPage)} />
