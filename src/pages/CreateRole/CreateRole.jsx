@@ -109,9 +109,9 @@ const CreateRole = () => {
           heading="Create Role"
           className="flex items-center justify-between"
         >
-          <span onClick={() => setIsActive(!isActive)}>
+          {/* <span onClick={() => setIsActive(!isActive)}>
             <Switch switchStatus={isActive} />
-          </span>
+          </span> */}
         </CardLayoutHeader>
         <CardLayoutBody>
           <div className="flex mb-5 space-x-5">
