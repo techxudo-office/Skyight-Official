@@ -28,7 +28,7 @@ const FlightDetails = () => {
   
   useEffect(() => { 
     if (location.state) {
-      console.log(location.state);
+      console.log('state',location.state);
 
       setFlightData(location.state.flightData);
       setTravelers(location.state.travelersData);
@@ -57,6 +57,7 @@ const FlightDetails = () => {
   const confirmBookingHandler = async () => {
     
     const payLoad = {
+      trip_type:"OneWay",
       origin_location_code: flightSegment.DepartureAirport.LocationCode,
       destination_location_code: flightSegment.ArrivalAirport.LocationCode,
       // "origin_location_terminal": flightSegment.DepartureAirport.Terminal,

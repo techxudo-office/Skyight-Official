@@ -1,5 +1,6 @@
 import * as Yup from "yup";
-import { differenceInYears } from "date-fns";
+import { differenceInDays, differenceInMonths, differenceInYears } from "date-fns";
+import { useState } from "react";
 export const ticketSchema = Yup.object({
   title: Yup.string().required("Please enter ticket title"),
   description: Yup.string().required("Please enter description"),
@@ -50,24 +51,39 @@ export const travelerDetailScehma = Yup.object().shape({
   first_name: Yup.string().required("Please enter first name"),
   last_name: Yup.string().required("Please enter last name"),
   email: Yup.string().required("Please enter email"),
-  telephone: Yup.number().required("Please enter phone number"),
-  mobile: Yup.number().required("Phone number is required"),
+  telephone: Yup.mixed()
+    .test(
+      "is-valid-phone",
+      "Please enter a valid telephone number",
+      (value) =>
+        typeof value === "string" ||
+        (typeof value === "object" && value !== null && "number" in value)
+    )
+    .required("Please enter phone number"),
+  mobile: Yup.mixed()
+    .test(
+      "is-valid-phone",
+      "Please enter a valid mobile number",
+      (value) =>
+        typeof value === "string" ||
+        (typeof value === "object" && value !== null && "number" in value)
+    )
+    .required("Please enter phone number"),
   country: Yup.string().required("Please select country"),
   city: Yup.string().required("Please select city"),
   date_of_birth: Yup.string()
     .required("Please select date of birth")
-    .test("age-validation", "Invalid age for selected passenger type", function (value) {
+    .test("age-validation", function (value) {
       const { passenger_type } = this.parent;
       if (!value || !passenger_type) return true; // Skip validation if missing
 
       const birthDate = new Date(value);
       const today = new Date();
-      const age = differenceInYears(today, birthDate); // Calculate age
-
-      if (passenger_type === "ADT" && (age < 12)) return false; // Adult (>=12)
-      if (passenger_type === "CHD" && (age < 2 || age > 12)) return false; // Child (2-12)
-      if (passenger_type === "INF" && (age >= 2 )) return false; // Infant (<2)
-
+      const dayAge = differenceInDays(today, birthDate)
+      if (passenger_type === "ADT" && (dayAge < (12 * 365))) return this.createError({ message: "Invalid age! Adults must be 12 years or older." }); // Adult (>=12)
+      if (passenger_type === "CHD" && (dayAge < 730 || dayAge > (12 * 365))) return this.createError({ message: "Invalid age! Children must be between 2 and 12 years." }); // Child (2-12)
+      if (passenger_type === "INF" && (dayAge > 730)) return this.createError({ message: "Invalid age! Infants must be under 2 years." }); // Infant (<2)
+      if (dayAge < 0) return this.createError({ message: "Invalid date of birth! " });
       return true;
     }),
   passenger_type: Yup.string().required("Please select passenger type"),

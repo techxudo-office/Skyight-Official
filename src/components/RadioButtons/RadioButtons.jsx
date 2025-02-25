@@ -1,7 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 
 export default function RadioButtons({ options, selectedOption, disabledOptionindex }) {
-  const [selected, setSelected] = useState(options[0]);
+  const [selected, setSelected] = useState();
+  useEffect(()=>{
+    setSelected(options[0])
+  },[])
   return (
     <div className="flex space-x-4">
       {options.map((option, idx) => (
@@ -16,7 +19,7 @@ export default function RadioButtons({ options, selectedOption, disabledOptionin
               }`}
           >
             {(selected === option & !disabledOptionindex?.includes(idx) )? 
-              <div className="w-3 h-3 bg-primary rounded-full"></div>:''
+              <div className="w-2 h-2 bg-primary rounded-full"></div>:''
             }
           </div>
           <span

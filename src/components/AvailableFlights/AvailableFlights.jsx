@@ -7,7 +7,7 @@ export default function AvailableFlights({ flights }) {
     return (
         <CardLayoutContainer className={'mb-4'}>
             <div className='py-4 max-w-[1000px] overflow-x-scroll '>
-                <div className='flex justify-center items-center px-4 '>
+                <div className='flex justify-start items-center px-4  '>
 
 
                     {
