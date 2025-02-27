@@ -37,24 +37,6 @@ export default function DateSlider({ className, ref, selectedDate, handleDateSel
       },
     ],
   };
-  const dateString = "Thu,28 Feb"; // Input date
-
-  // Convert string into a Day.js date
-  const parsedDate = dayjs(dateString, "ddd,DD MMM");
-
-  // Add 1 day
-  const newDate = parsedDate.add(1, "day");
-
-  // Format the output
-  const formattedDate = newDate.format("ddd,DD MMM");
-
-  console.log("formateddat", differenceInDates); // Example: "Thu,29 Feb"
-
-  dateOptions.map((date) => {
-    console.log("date1", date)
-
-    console.log("date2", dayjs(date).add(2, "date").format('ddd,DD MMM'))
-  })
   return (
     <div ref={ref} className={`${className} date-slider flex justify-between bg-white rounded-md p-3 mb-4`}>
       {dateOptions.map((date, index) => (
@@ -78,7 +60,7 @@ export default function DateSlider({ className, ref, selectedDate, handleDateSel
                 <p>
                   {
 
-                    dayjs(date).add(differenceInDates, "day").format('ddd,DD MMM')}
+                    dayjs(date, "ddd, DD MMM", "en").add(differenceInDates, "day").format(`ddd,DD MMM`)}
                 </p>
               </>
             }

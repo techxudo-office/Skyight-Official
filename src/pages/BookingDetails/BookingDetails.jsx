@@ -9,12 +9,15 @@ import {
   CardLayoutBody,
   CardLayoutFooter,
 } from "../../components/CardLayout/CardLayout";
-import { Button, Spinner, SecondaryButton } from "../../components/components";
+import { Button, Spinner, SecondaryButton, TableNew } from "../../components/components";
 import toast, { Toaster } from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getBookingDetails, getFlightBookings } from "../../utils/api_handler";
 import { IoIosAirplane, IoMdClock } from "react-icons/io";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc"; // Import UTC plugin
+
+dayjs.extend(utc); // Extend dayjs with UTC support
 
 const TicketDetails = () => {
   const location = useLocation();
@@ -345,36 +348,46 @@ const TicketDetails = () => {
             </div>
           </CardLayoutHeader>
           <CardLayoutBody>
-            {bookingDetails?.flightSegments && (
-              <div className="flex flex-wrap items-center justify-between gap-5 text-text">
+            {bookingDetails.flightSegments && bookingDetails.flightSegments.map((item, idx) => (
+              <div key={idx} className="flex max-sm:flex-wrap items-center justify-between gap-5 text-text">
                 <div className="flex flex-col items-start">
                   <h2 className="mb-2 text-2xl font-semibold text-primary">
                     Departure
                   </h2>
-                  <p className="text-xl font-bold">{bookingDetails.flightSegments[0]?.departure_airport}</p>
-                  <p className="flex items-center gap-2"><IoMdClock className="text-lg text-primary"/>{dayjs(bookingDetails.flightSegments[0]?.departure_datetime).format("MMM-DD-YYYY, hh:mm")}</p>
+                  <p className="text-xl font-bold">{item.departure_airport}</p>
+                  <p className="flex items-center gap-2"><IoMdClock className="text-lg text-primary" />{dayjs(item.departure_datetime).format("MMM-DD-YYYY, hh:mm")}</p>
                 </div>
-                <div className="flex items-center gap-3 text-primary">
-                  <span className="h-0.5 rounded-full w-28 bg-primary"></span>
+                <div className="max-sm:hidden flex items-center gap-3 text-primary">
+                  <span className="h-0.5 rounded-full md:w-12 xl:w-28 bg-primary"></span>
                   <IoIosAirplane className="text-5xl" />
-                  <span className="h-0.5 rounded-full w-28 bg-primary"></span>
+                  <span className="h-0.5 rounded-full md:w-12 xl:w-28 bg-primary"></span>
                 </div>
                 <div className="flex flex-col items-start">
                   <h2 className="mb-2 text-2xl font-semibold text-primary">
                     Arrival
                   </h2>
-                  <p className="text-xl font-bold">{bookingDetails.flightSegments[0]?.arrival_airport}</p>
-                  <p className="flex items-center gap-2"><IoMdClock className="text-lg text-primary"/>{dayjs(bookingDetails.flightSegments[0]?.arrival_datetime).format("MMM-DD-YYYY, hh:mm")}</p>
+                  <p className="text-xl font-bold">{item.arrival_airport}</p>
+                  <p className="flex items-center gap-2"><IoMdClock className="text-lg text-primary" />{dayjs(item.arrival_datetime).format("MMM-DD-YYYY, hh:mm")}</p>
                 </div>
               </div>
-            )}
+            ))}
           </CardLayoutBody>
         </CardLayoutContainer>
-
         <CardLayoutContainer>
-          <CardLayoutHeader heading="Passenger Details" />
-          <CardLayoutBody>
-            {
+          <div className="flex justify-between p-4 text-text">
+            <div>
+              <span className="font-semibold">Booked On: </span>
+              {dayjs.utc(bookingDetails.created_at).format('DD MMM YYYY, h:mm a')}
+            </div>
+            <div>
+              <span className="font-semibold">TKT Time Limit:</span>  {dayjs(bookingDetails.Timelimit).format('DD MMM YYYY, h:mm a')}
+            </div>
+          </div>
+        </CardLayoutContainer>
+        <CardLayoutContainer>
+          <CardLayoutHeader className={'mb-2'} heading="Passenger Details" />
+          
+            {/* <CardLayoutBody>{
               bookingDetails.passengers && bookingDetails.passengers.map((item, index) => (
                 <div
                   key={index}
@@ -395,18 +408,36 @@ const TicketDetails = () => {
                   </h2>
                   <h2 className="flex items-center gap-1 text-sm font-semibold text-slate-500">
                     Email:
-                    {/* Taxes:{" "}
-                {passenger.PassengerFare.Taxes.Tax.reduce(
-                  (total, tax) => total + tax.Amount,
-                  0
-                )} */
+                    {
                       item.email
                     }
                   </h2>
                 </div>
               ))
-            }
-          </CardLayoutBody>
+            } 
+              </CardLayoutBody>
+             */}
+           {/* {bookingDetails&& <TableNew pagination={false} tableData={bookingDetails?.passengers} columnsToView={[
+              { columnName: "Name", fieldName: "given_name", type: "text" },
+              { columnName: "Birth Date", fieldName: "birth_date", type: "date" },
+              { columnName: "Passport Number", fieldName: "doc_id", type: "text" },
+              { columnName: "Expiry", fieldName: "expire_date", type: "date" },
+              { columnName: "Issuance", fieldName: "doc_issue_country", type: "text" },
+              { columnName: "Nationality", fieldName: "nationality", type: "text" },
+            ]} />} */}
+          
+
+        </CardLayoutContainer>
+        <CardLayoutContainer>
+          <CardLayoutHeader className={'mb-2'} heading={"Pricing Information"}/>
+          {/* {bookingDetails&&<TableNew pagination={false} tableData={bookingDetails?.passengers} columnsToView={[
+              { columnName: "Name", fieldName: "given_name", type: "text" },
+              { columnName: "Birth Date", fieldName: "birth_date", type: "date" },
+              { columnName: "Passport Number", fieldName: "doc_id", type: "text" },
+              { columnName: "Expiry", fieldName: "expire_date", type: "date" },
+              { columnName: "Issuance", fieldName: "doc_issue_country", type: "text" },
+              { columnName: "Nationality", fieldName: "nationality", type: "text" },
+            ]} />} */}
           <CardLayoutFooter>
             <h2 className="text-xl font-semibold text-slate-600">
               Total Fare: {bookingDetails.total_fare}

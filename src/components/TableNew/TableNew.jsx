@@ -14,7 +14,7 @@ import { logo } from '../../assets/Index';
 import { MdDelete } from 'react-icons/md';
 // import {Cell}  from "@table-library/react-table-library/table";
 
-const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows, onDeleteUser,downloadBtn }) => {
+const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows,pagination=true}) => {
     // const data = React.useMemo(() => tableData, []);
     const data = tableData;
     const [rowsPerPage, setRowsPerPage] = useState(15);
@@ -170,7 +170,7 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows, o
             Header: "No.",
             accessor: (row, i) => i + 1, // Row index starting from 1
             Cell: ({ row }) => (
-                <span className="text-sm text-text">{row.index + 1}</span>
+                <span className="text-sm text-text w-12">{row.index + 1}</span>
             )
         },
         ...(tableData.some(item => 'origin' in item || 'destination' in item) ? [
@@ -431,7 +431,7 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows, o
                                                 <>
                                                     <td
                                                         {...cell.getCellProps()}
-                                                        className="px-4 py-5 text-lg text-center border-t lg:px-6 text-text border-slate-100 "
+                                                        className="px-4 py-5 min-w-32 text-lg text-center border-t lg:px-6 text-text border-slate-100 "
                                                     >
                                                         {cell.render("Cell")}
                                                     </td>
@@ -526,7 +526,7 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows, o
             }
 
             {/* Paginaion  */}
-            <div className="flex flex-wrap items-center justify-end gap-2 mx-6 my-4">
+            {pagination&&<div className="flex flex-wrap items-center justify-end gap-2 mx-6 my-4">
                 <div className="flex items-center gap-2">
                     <span className="text-sm text-text">Rows per page:</span>
                     <input
@@ -573,7 +573,7 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows, o
                         {<TbChevronRightPipe size={20} />}
                     </button>
                 </div>
-            </div>
+            </div>}
             <Modal active={modal} imgsrc={logo} title={'Edit'} Message={
                 <Input label={'Role'} name={'Role'} value={editIdx != null && tableData[editIdx].role} />
             } toggle={true} btnText={'update'} onClose={() => setModal(false)} />

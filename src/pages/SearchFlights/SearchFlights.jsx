@@ -174,6 +174,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
     // console.log("handleSubmit");
     localStorage.removeItem("allFormData")
     localStorage.removeItem("disableTravelers")
+    localStorage.removeItem("oldTraveller")
     localStorage.setItem("flightSearchForm", JSON.stringify(values));
     setFormData(values)
     // console.log("Form Values: ", values);
