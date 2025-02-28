@@ -803,18 +803,26 @@ export const confirmBooking = async (payload) => {
         message: "Booking Created",
       };
     }
-    // else{
-    //   return {
-    //     status: false,
-    //     message:response.message,
-    //   };
-    // }
+    else{
+      return {
+        status: false,
+        message:response.message,
+      };
+    }
   } catch (error) {
-    // console.log("Failed while calling confirming booking: ", Object.values(error.response.data.data.errors));
-    return {
-      status: false,
-      message: Object.values(error.response.data.data.errors),
-    };
+    console.log("Failed while calling confirming booking: ", error);
+    if(error.response.data.data.errors){
+      return {
+        status: false,
+        message: Object.values(error.response.data.data.errors),
+      };
+    }else{
+      return{
+        status:false,
+        message:error.response.data.message
+      }
+    }
+    
   }
 };
 

@@ -11,6 +11,7 @@ const FlightDetails = () => {
   const navigate = useNavigate();
 
   const [flightData, setFlightData] = useState(null);
+  const [Loading, setLoading] = useState(null);
   const [travelers, setTravelers] = useState(null);
   const [allTravelersData, setAllTravelersData] = useState([]);
 
@@ -147,21 +148,29 @@ const FlightDetails = () => {
           res_book_desig_cabin_code: item.ResBookDesigCabinCode,
           fare_basis: item.FareBasis,
         })),
-    cabin_class_return: null,
+        cabin_class_return: null,
 
       };
     }
 
     console.log('confirm-booking', payLoad);
+    setLoading(true)
     let response = await confirmBooking(payLoad);
+    console.log("ERRors res", response)
 
     if (response.status) {
       toast.success(response.message);
       setTimeout(() => {
         navigate("/dashboard/flight-bookings");
+        setLoading(false)
       }, 2000);
     } else {
-      response.message.map(message => toast.error(message));
+      setLoading(false)
+      if (typeof response.message == 'string') {
+        toast.error(response.message)
+      }else{
+        response.message.map(message => toast.error(message));
+      }
     }
   };
 
@@ -185,7 +194,9 @@ const FlightDetails = () => {
             />
           </div>
           <div>
-            <Button icon={<MdBookmark />} text="Confirm Booking" onClick={confirmBookingHandler} />
+            <Button icon={<MdBookmark />}
+              text={Loading ? <Spinner /> : "Confirm Booking"}
+              onClick={confirmBookingHandler} />
           </div>
         </div>
       </div>

@@ -207,6 +207,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
     };
 
   }, []);
+  const isFirstRender = useRef(true); 
   return (
     <>
       <Toaster />
@@ -232,14 +233,16 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
 
             {({ values, setValues, errors, touched, setFieldValue, isSubmitting }) => {
               useEffect(() => {
-                setValues((prev) => (
-                  {
-                    ...prev,
-                    departure: "",
-                    arrival: ""
-
-                  }
-                ))
+                if (isFirstRender.current) {
+                  isFirstRender.current = false; // Mark first render as done
+                  return; // Skip effect on initial render
+                }
+            
+                setValues((prev) => ({
+                  ...prev,
+                  departure: "",
+                  arrival: "",
+                }));
               }, [values.flightRoute]);
               console.log(errors)
               return (

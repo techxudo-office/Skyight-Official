@@ -16,13 +16,14 @@ import { getBookingDetails, getFlightBookings } from "../../utils/api_handler";
 import { IoIosAirplane, IoMdClock } from "react-icons/io";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc"; // Import UTC plugin
+import { MdCheck } from "react-icons/md";
 
 dayjs.extend(utc); // Extend dayjs with UTC support
 
 const TicketDetails = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [bookingDetails, setBookingDetails] = useState({});
+  const [bookingDetails, setBookingDetails] = useState();
 
   const printRef = useRef();
 
@@ -327,7 +328,7 @@ const TicketDetails = () => {
       <div ref={printRef} className="flex flex-col w-full gap-5">
         <CardLayoutContainer>
           <CardLayoutHeader
-            heading={`Booking Reference: ${bookingDetails.booking_reference_id}`}
+            heading={`Booking Reference: ${bookingDetails?.booking_reference_id}`}
             className={"flex items-center justify-between"}
           >
             <div className="flex flex-wrap gap-2">
@@ -348,7 +349,7 @@ const TicketDetails = () => {
             </div>
           </CardLayoutHeader>
           <CardLayoutBody>
-            {bookingDetails.flightSegments && bookingDetails.flightSegments.map((item, idx) => (
+            {bookingDetails?.flightSegments && bookingDetails.flightSegments.map((item, idx) => (
               <div key={idx} className="flex max-sm:flex-wrap items-center justify-between gap-5 text-text">
                 <div className="flex flex-col items-start">
                   <h2 className="mb-2 text-2xl font-semibold text-primary">
@@ -377,10 +378,10 @@ const TicketDetails = () => {
           <div className="flex justify-between p-4 text-text">
             <div>
               <span className="font-semibold">Booked On: </span>
-              {dayjs.utc(bookingDetails.created_at).format('DD MMM YYYY, h:mm a')}
+              {dayjs.utc(bookingDetails?.created_at).format('DD MMM YYYY, h:mm a')}
             </div>
             <div>
-              <span className="font-semibold">TKT Time Limit:</span>  {dayjs(bookingDetails.Timelimit).format('DD MMM YYYY, h:mm a')}
+              <span className="font-semibold">TKT Time Limit:</span>  {dayjs(bookingDetails?.Timelimit).format('DD MMM YYYY, h:mm a')}
             </div>
           </div>
         </CardLayoutContainer>
@@ -417,30 +418,32 @@ const TicketDetails = () => {
             } 
               </CardLayoutBody>
              */}
-           {/* {bookingDetails&& <TableNew pagination={false} tableData={bookingDetails?.passengers} columnsToView={[
+           {bookingDetails&& <TableNew pagination={false} tableData={bookingDetails?.passengers} columnsToView={[
               { columnName: "Name", fieldName: "given_name", type: "text" },
+              { columnName: "Type", fieldName: "passenger_type_code", type: "text" },
               { columnName: "Birth Date", fieldName: "birth_date", type: "date" },
               { columnName: "Passport Number", fieldName: "doc_id", type: "text" },
               { columnName: "Expiry", fieldName: "expire_date", type: "date" },
               { columnName: "Issuance", fieldName: "doc_issue_country", type: "text" },
               { columnName: "Nationality", fieldName: "nationality", type: "text" },
-            ]} />} */}
+            ]} />}
           
 
         </CardLayoutContainer>
         <CardLayoutContainer>
           <CardLayoutHeader className={'mb-2'} heading={"Pricing Information"}/>
-          {/* {bookingDetails&&<TableNew pagination={false} tableData={bookingDetails?.passengers} columnsToView={[
+          {bookingDetails&&<TableNew pagination={false} tableData={bookingDetails?.passengers} columnsToView={[
               { columnName: "Name", fieldName: "given_name", type: "text" },
+              { columnName: "Type", fieldName: "passenger_type_code", type: "text" },
               { columnName: "Birth Date", fieldName: "birth_date", type: "date" },
               { columnName: "Passport Number", fieldName: "doc_id", type: "text" },
               { columnName: "Expiry", fieldName: "expire_date", type: "date" },
               { columnName: "Issuance", fieldName: "doc_issue_country", type: "text" },
               { columnName: "Nationality", fieldName: "nationality", type: "text" },
-            ]} />} */}
+            ]} />}
           <CardLayoutFooter>
             <h2 className="text-xl font-semibold text-slate-600">
-              Total Fare: {bookingDetails.total_fare}
+              Total Fare: {Number(bookingDetails?.total_fare).toLocaleString()}
             </h2>
           </CardLayoutFooter>
         </CardLayoutContainer>
@@ -455,6 +458,15 @@ const TicketDetails = () => {
             <Button
               id={"hide-buttons"}
               text="Go Back"
+              onClick={() => {
+                navigate(-1);
+              }}
+            />
+          </div>
+          <div>
+            <Button
+            icon={<MdCheck/>}
+              text="Order Ticket"
               onClick={() => {
                 navigate(-1);
               }}
