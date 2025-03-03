@@ -16,13 +16,26 @@ import { MdSupervisedUserCircle } from "react-icons/md";
 import { ImUser } from "react-icons/im";
 import { HiUsers } from "react-icons/hi";
 import { MdAirplaneTicket } from "react-icons/md";
+const pagePermissions = JSON.parse(localStorage.getItem("userData"))?.role
+  ?.page_permission || {
+  dashboard: true,
+  flights: true,
+  bookings: true,
+  credits: true,
+  transactions: true,
+  history: true,
+  administrators: true,
+  tickets: true,
+  help_and_support: true,
+};
+
 export const sidebarLinks = [
-  {
+  pagePermissions.dashboard && {
     title: "Dashboard",
     path: "/dashboard",
     icon: <RiDashboardFill />,
   },
-  {
+  pagePermissions.flights && {
     // title: "Flights & Hotels",
     title: "Search",
     icon: <MdContentPasteSearch />,
@@ -30,7 +43,7 @@ export const sidebarLinks = [
       {
         title: "Search Flights",
         path: "/dashboard/search-flights",
-        icon: <MdFlight  />,
+        icon: <MdFlight />,
       },
       // {
       //   title: "Search Hotels",
@@ -39,14 +52,14 @@ export const sidebarLinks = [
       // },
     ],
   },
-  {
+  pagePermissions.bookings && {
     title: "Bookings",
     icon: <FaBusinessTime />,
     sublinks: [
       {
         title: "Flight Bookings",
         path: "/dashboard/flight-bookings",
-        icon: <BiSolidBookmarks  />,
+        icon: <BiSolidBookmarks />,
       },
       // {
       //   title: "Hotel Bookings",
@@ -71,7 +84,7 @@ export const sidebarLinks = [
   //     },
   //   ],
   // },
-  {
+  pagePermissions.transactions && {
     // title: "Payments & Invoices",
     title: "Transactions",
     icon: <FaMoneyBill1Wave />,
@@ -93,23 +106,7 @@ export const sidebarLinks = [
       },
     ],
   },
-  // {
-  //   title: "History",
-  //   icon: <IoIosStopwatch />,
-  //   sublinks: [
-  //     {
-  //       title: "Search History",
-  //       path: "/dashboard/search-history",
-  //       icon: <GoDotFill />,
-  //     },
-  //     // {
-  //     //   title: "Transactions History",
-  //     //   path: "/dashboard/transactions-history",
-  //     //   icon: <GoDotFill />,
-  //     // },
-  //   ],
-  // },
-  {
+  pagePermissions.administrators && {
     title: "Administrator",
     icon: <MdAdminPanelSettings />,
     sublinks: [
@@ -121,11 +118,11 @@ export const sidebarLinks = [
       {
         title: "Users",
         path: "/dashboard/users",
-        icon: < HiUsers />,
+        icon: <HiUsers />,
       },
     ],
   },
-  {
+  pagePermissions.tickets && {
     title: "Support",
     icon: <IoTicket />,
     sublinks: [
@@ -141,7 +138,7 @@ export const sidebarLinks = [
       // },
     ],
   },
-  {
+  pagePermissions.history && {
     title: "History",
     icon: <IoTicket />,
     sublinks: [
@@ -155,11 +152,11 @@ export const sidebarLinks = [
         path: "/dashboard/booking-history",
         icon: <IoTicket />,
       },
-      
+
       {
         title: "Order",
         path: "/dashboard/order-history",
-        icon: < MdOutlineReadMore />,
+        icon: <MdOutlineReadMore />,
       },
     ],
   },
@@ -174,4 +171,4 @@ export const sidebarLinks = [
   //     },
   //   ],
   // },
-];
+].filter(Boolean);

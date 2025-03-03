@@ -85,14 +85,14 @@ const Users = () => {
     <>
       <ConfirmModal
         status={modalStatus}
-        abortDelete={abortDeleteHandler}
-        deleteHandler={deleteUserHandler}
+        onAbort={abortDeleteHandler}
+        onConfirm={deleteUserHandler}
       />
       <CardLayoutContainer removeBg={true}>
         <CardLayoutHeader
           removeBorder={true}
           heading={"Users"}
-          className="flex justify-between items-center"
+          className="flex items-center justify-between"
         >
           <div className="relative">
             <SecondaryButton
