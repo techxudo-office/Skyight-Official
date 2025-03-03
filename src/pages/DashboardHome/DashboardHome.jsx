@@ -87,7 +87,7 @@ const DashboardHome = () => {
     { columnName: "Status", fieldName: "booking_status", type: "status" },
     { columnName: "Created At", fieldName: "created_at", type: "date" },
   ];
- const actionsData = [
+  const actionsData = [
     {
       name: "View",
       icon: <FaEye title="View" className="text-green-500 " />,
@@ -99,19 +99,19 @@ const DashboardHome = () => {
       handler: (_, item) => {
         console.log("item", item);
         navigate("/dashboard/booking-details", {
-          state: item.id,
+          state: item,
         });
-      },
+      }
     },
-    {
-      name: "Refund",
-      icon: <HiReceiptRefund title="Refund" className="text-blue-500 text-xl" />,
-      handler: (_,item) => {
-        setConfirmStatus(true)
-        setRefundItem(item)
-        
-      },
-    },
+    // {
+    //   name: "Refund",
+    //   icon: <HiReceiptRefund title="Refund" className="text-blue-500 text-xl" />,
+    //   handler: (_, item) => {
+    //     setConfirmStatus(true)
+    //     setRefundItem(item)
+
+    //   },
+    // },
     // {
     //   name: "Cancel",
     //   icon: <MdCancel title="Cancel" className="text-red-500" />,

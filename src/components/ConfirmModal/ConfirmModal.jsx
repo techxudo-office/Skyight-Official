@@ -7,13 +7,13 @@ import {
 } from "../../components/CardLayout/CardLayout";
 import { Button, SecondaryButton } from "../components";
 
-const ConfirmModal = ({ status, onAbort, onConfirm,text }) => {
+const ConfirmModal = ({ status, onAbort, onConfirm, text }) => {
   const modalRef = useRef();
 
   useEffect(() => {
     const outsideClickHandler = (e) => {
       if (modalRef.current && !modalRef.current.contains(e.target)) {
-        onAbort();
+        onAbort
       }
     };
 
@@ -27,9 +27,8 @@ const ConfirmModal = ({ status, onAbort, onConfirm,text }) => {
     <>
       <div
         ref={modalRef}
-        className={`transition-all absolute z-10 ${
-          status ? "top-3" : "top-[-100%]"
-        } left-[50%] translate-x-[-50%]`}
+        className={`transition-all absolute z-10 ${status ? "top-3" : "top-[-100%]"
+          } left-[50%] translate-x-[-50%]`}
       >
         <CardLayoutContainer className={"shadow-xl"}>
           <CardLayoutHeader className="flex justify-between items-center rounded-t-3xl">

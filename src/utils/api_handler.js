@@ -682,26 +682,30 @@ export const getFlightBookings = async (id) => {
   }
 };
 
-// export const getBookingDetails = async (id) => {
-//   try {
-//     let response = await axios({
-//       method: "POST",
-//       url: `${baseUrl}/api/booking-issue`,
-//       data: {
-//         pnr: id,
-//       },
-//       headers: {
-//         Authorization: getToken(),
-//       },
-//     });
-//     console.log(response);
-//     if (response.status === 200) {
-//       return { status: true, data: response.data.data };
-//     }
-//   } catch (error) {
-//     console.log("Failed while getting bookings: ", error);
-//   }
-// };
+export const issueBooking = async (id) => {
+  try {
+    let response = await axios({
+      method: "POST",
+      url: `${baseUrl}/api/booking-issue`,
+      data: {
+        pnr: id,
+      },
+      headers: {
+        Authorization: getToken(),
+      },
+    });
+    console.log(response);
+    if (response.status === 200) {
+      return { status: true, data: response.data.data };
+    } else {
+      return { status: false, data: response.data };
+    }
+  } catch (error) {
+
+
+    console.log("Failed while getting bookings: ", error);
+  }
+};
 export const getBookingDetails = async (id) => {
   try {
     let response = await axios({
@@ -803,26 +807,26 @@ export const confirmBooking = async (payload) => {
         message: "Booking Created",
       };
     }
-    else{
+    else {
       return {
         status: false,
-        message:response.message,
+        message: response.message,
       };
     }
   } catch (error) {
     console.log("Failed while calling confirming booking: ", error);
-    if(error.response.data.data.errors){
+    if (error.response.data.data.errors) {
       return {
         status: false,
         message: Object.values(error.response.data.data.errors),
       };
-    }else{
-      return{
-        status:false,
-        message:error.response.data.message
+    } else {
+      return {
+        status: false,
+        message: error.response.data.message
       }
     }
-    
+
   }
 };
 

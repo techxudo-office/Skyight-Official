@@ -9,10 +9,10 @@ import {
   CardLayoutBody,
   CardLayoutFooter,
 } from "../../components/CardLayout/CardLayout";
-import { Button, Spinner, SecondaryButton, TableNew } from "../../components/components";
+import { Button, Spinner, SecondaryButton, TableNew, ConfirmModal, Tag } from "../../components/components";
 import toast, { Toaster } from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
-import { getBookingDetails, getFlightBookings } from "../../utils/api_handler";
+import { cancelFlightBooking, getBookingDetails, getFlightBookings, issueBooking, refundRequest } from "../../utils/api_handler";
 import { IoIosAirplane, IoMdClock } from "react-icons/io";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc"; // Import UTC plugin
@@ -24,6 +24,13 @@ const TicketDetails = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [bookingDetails, setBookingDetails] = useState();
+  const [confirmObject, setConfirmObject] = useState({
+    onAbort: '',
+    onConfirm: '',
+    status: false,
+    text: ""
+  })
+  const [booking, setBooking] = useState();
 
   const printRef = useRef();
 
@@ -48,291 +55,85 @@ const TicketDetails = () => {
     downloadAsPDF();
   };
 
-  const getBookingDetailsHandler = async (refid) => {
-    const response = await getBookingDetails(refid);
-    console.log("booking-details", response);
-    setBookingDetails(response.data);
+  const getBookingDetailsHandler = async (id) => {
+    if (id) {
+      const response = await getBookingDetails(id);
+      console.log("booking-details", response);
+      setBookingDetails(response.data);
+    }
+
+  };
+  const handleIssue = async (pnr) => {
+    const response = await issueBooking(pnr)
+    if (response.status) {
+      toast.success(`Ordered Successfully Total Fare: ${bookingDetails?.total_fare}`)
+      setConfirmObject((prev) => ({ ...prev, status: false }))
+    }
+    console.log('issue rs', response)
+  }
+  const cancelFlightBookingHandler = async (flight) => {
+    console.log(flight);
+
+    const bookingId = {
+      booking_id: flight.id,
+    };
+
+    console.log(bookingId);
+
+    let response = await cancelFlightBooking(bookingId);
+    if (response.status) {
+      toast.success(response.message);
+    } else {
+      toast.error(response.message);
+    }
+    setConfirmObject((prev) => ({ ...prev, status: false }))
+
+  };
+
+  const refundRequestHandler = async (flight) => {
+    console.log(flight);
+
+    const bookingId = {
+      booking_id: flight.id,
+    };
+
+    console.log(bookingId);
+
+    let response = await refundRequest(bookingId);
+    if (response.status) {
+      toast.success(response.message);
+    } else {
+      toast.error(response.message);
+    }
+    setConfirmObject((prev) => ({ ...prev, status: false }))
   };
 
   useEffect(() => {
     if (location.state) {
-      const refId = location.state;
+      const refId = location.state.id;
+      setBooking(location.state)
       getBookingDetailsHandler(refId);
-      console.log("refid", refId);
+      console.log("refId", refId);
     }
   }, [location.state]);
-
-  // const ticketData = {
-  //   AirReservation: {
-  //     AirItinerary: {
-  //       OriginDestinationOptions: [
-  //         {
-  //           FlightSegment: [
-  //             {
-  //               FlightDuration: "01:30",
-  //               DepartureAirport: {
-  //                 LocationCode: "THR",
-  //                 Terminal: "Tehran",
-  //               },
-  //               ArrivalAirport: {
-  //                 LocationCode: "TBZ",
-  //                 Terminal: "Tabriz",
-  //               },
-  //               OperatingAirline: {
-  //                 Code: "B9",
-  //               },
-  //               Equipment: {
-  //                 AirEquipType: "320",
-  //               },
-  //               MarketingAirline: {
-  //                 Code: "B9",
-  //               },
-  //               BookingClassAvails: [
-  //                 {
-  //                   ResBookDesigCode: "H1",
-  //                   ResBookDesigQuantity: 0,
-  //                   RPH: "191053",
-  //                   AvailablePTC: null,
-  //                   ResBookDesigCabinCode: "Y",
-  //                   FareBasis: null,
-  //                 },
-  //               ],
-  //               DepartureDateTime: "2025-01-02 14:00",
-  //               ArrivalDateTime: "2025-01-02 15:30",
-  //               DepartureDate: "2025-01-02",
-  //               DepartureTime: "14:00",
-  //               ArrivalDate: "2025-01-02",
-  //               ArrivalTime: "15:30",
-  //               FlightNumber: "5555",
-  //               ResBookDesigCode: "H1",
-  //               RPH: "191053",
-  //               FreeBaggages: null,
-  //             },
-  //           ],
-  //           RefNumber: "191053",
-  //           DirectionId: 0,
-  //           ElapsedTime: 0,
-  //           CabinClass: "Y",
-  //         },
-  //       ],
-  //       OriginDestinationCombinations: null,
-  //     },
-  //     PriceInfo: {
-  //       ItinTotalFare: {
-  //         BaseFare: {
-  //           Amount: 2612613,
-  //           CurrencyCode: null,
-  //           DecimalPlaces: 0,
-  //         },
-  //         TotalFare: {
-  //           Amount: 3000000,
-  //           CurrencyCode: null,
-  //           DecimalPlaces: 0,
-  //         },
-  //         TotalEquivFare: {
-  //           Amount: 3000000,
-  //           CurrencyCode: null,
-  //           DecimalPlaces: 0,
-  //         },
-  //       },
-  //       PTC_FareBreakDowns: [
-  //         {
-  //           PassengerTypeQuantity: {
-  //             Code: "ADL",
-  //             Quantity: 1,
-  //           },
-  //           FareBasisCode: null,
-  //           PassengerFare: {
-  //             BaseFare: {
-  //               Amount: 2612613,
-  //               CurrencyCode: null,
-  //               DecimalPlaces: 0,
-  //             },
-  //             MarkupFare: null,
-  //             Taxes: {
-  //               Tax: [
-  //                 { Name: "LP", Amount: 70000 },
-  //                 { Name: "KU", Amount: 26126 },
-  //                 { Name: "I6", Amount: 30000 },
-  //                 { Name: "VT", Amount: 261261 },
-  //               ],
-  //             },
-  //             Fees: null,
-  //             TotalFare: {
-  //               Amount: 3000000,
-  //               CurrencyCode: null,
-  //               DecimalPlaces: 0,
-  //             },
-  //           },
-  //           TravelerRefNumber: null,
-  //           PricingSource: null,
-  //         },
-  //       ],
-  //     },
-  //     TravelerInfo: [
-  //       {
-  //         TravelerNumber: "1",
-  //         PersonName: {
-  //           GivenName: "OFFICE",
-  //           MiddleName: null,
-  //           Surname: "TECHXUDO",
-  //           NameTitle: "MR",
-  //           PersianGivenName: null,
-  //           PersianMiddleName: null,
-  //           PersianSurname: null,
-  //         },
-  //         Telephone: null,
-  //         ContactInfo: null,
-  //         Document: {
-  //           DocType: "N",
-  //           DocID: "5430066131",
-  //           DocIssueCountry: null,
-  //           ExpireDate: null,
-  //           Nationality: null,
-  //         },
-  //         TravelerRefNumber: null,
-  //         BirthDate: null,
-  //         PassengerTypeCode: "ADL",
-  //         Gender: null,
-  //         ETicketInfos: [
-  //           {
-  //             CouponNo: 1,
-  //             ETicketNo: "4911000548397",
-  //             FlightSegmentCode: "THRTBZ",
-  //             FlightSegmentRPH: "191053",
-  //             Status: "2",
-  //             UsedStatus: "OK",
-  //             TicketStatus: "1",
-  //             TicketStatusDescription: "Ticket",
-  //             TicketSegmentStatus: "O",
-  //             TicketSegmentStatusDescription: "Open For Use",
-  //             RefundedAmount: 0,
-  //             Penalty: 0,
-  //             PenaltyPercent: 0,
-  //           },
-  //         ],
-  //       },
-  //     ],
-  //     Ticketing: null,
-  //     bookingReferenceID: {
-  //       Id: "QW8TM",
-  //       Type: 0,
-  //       Timelimit: null,
-  //     },
-  //   },
-  //   Message: null,
-  //   Success: true,
-  //   Error: null,
-  //   PrimaryLangID: null,
-  //   SequenceNmbr: 0,
-  //   TransactionIdentifier: null,
-  //   Version: 0,
-  //   PriceChange: null,
-  // };
-
-  // const flightSegment =
-  //   ticketData?.AirReservation?.AirItinerary?.OriginDestinationOptions?.[0]
-  //     ?.FlightSegment?.[0];
-
-  // if (!flightSegment) {
-  //   return <Spinner className="text-primary" />;
-  // }
-
-  // const {
-  //   PriceInfo: { ItinTotalFare, PTC_FareBreakDowns },
-  //   TravelerInfo,
-  //   bookingReferenceID,
-  // } = ticketData.AirReservation;
-  // console.log("passengers", bookingDetails.passengers)
-  // const renderPassengerDetails = () => {
-  //   bookingDetails.passengers && bookingDetails.passengers.map((item, index) => (
-  //     <div
-  //       key={index}
-  //       className="flex flex-wrap items-center justify-between gap-3 py-3 border-b border-slate-200"
-  //     >
-  //       <h2 className="flex items-center gap-1 text-sm font-semibold text-slate-600">
-
-  //         {item.given_name}{" "}
-  //         {item.surname}
-  //       </h2>
-  //       <h2 className="flex items-center gap-1 text-sm font-semibold text-slate-500">
-
-  //         {item.passenger_type_code}
-  //       </h2>
-  //       <h2 className="flex items-center gap-1 text-sm font-semibold text-slate-500">
-  //         <FaMoneyBillAlt className="text-primary" />
-  //         {/* Taxes:{" "}
-  //       {passenger.PassengerFare.Taxes.Tax.reduce(
-  //         (total, tax) => total + tax.Amount,
-  //         0
-  //       )} */
-  //           item.doc_id
-  //         }
-  //       </h2>
-  //     </div>
-  //   ))
-
-  //   // PTC_FareBreakDowns.map((passenger, index) => (
-  //   //   <div
-  //   //     key={index}
-  //   //     className="flex flex-wrap items-center justify-between gap-3 py-3 border-b border-slate-200"
-  //   //   >
-  //   //     <h2 className="flex items-center gap-1 text-sm font-semibold text-slate-600">
-  //   //       <FaUser className="text-primary" />
-  //   //       {passenger.PassengerTypeQuantity.Quantity}{" "}
-  //   //       {passenger.PassengerTypeQuantity.Code}
-  //   //     </h2>
-  //   //     <h2 className="flex items-center gap-1 text-sm font-semibold text-slate-500">
-  //   //       <FaMoneyBillAlt className="text-primary" />
-  //   //       Base Fare: {passenger.PassengerFare.BaseFare.Amount}
-  //   //     </h2>
-  //   //     <h2 className="flex items-center gap-1 text-sm font-semibold text-slate-500">
-  //   //       <FaMoneyBillAlt className="text-primary" />
-  //   //       Taxes:{" "}
-  //   //       {passenger.PassengerFare.Taxes.Tax.reduce(
-  //   //         (total, tax) => total + tax.Amount,
-  //   //         0
-  //   //       )}
-  //   //     </h2>
-  //   //   </div>
-  //   // ));
-  // }
-
-
-
-
-
-  // const renderTravelerInfo = () =>
-  //   TravelerInfo.map((traveler, index) => (
-  //     <div
-  //       key={index}
-  //       className="flex flex-wrap items-center justify-between gap-3 py-3 border-b border-slate-200"
-  //     >
-  //       <h2 className="flex items-center gap-1 text-sm font-semibold text-slate-600">
-  //         <FaUser className="text-primary" />
-  //         {traveler.PersonName.NameTitle} {traveler.PersonName.GivenName}{" "}
-  //         {traveler.PersonName.Surname}
-  //       </h2>
-  //       <h2 className="text-sm font-semibold text-slate-500">
-  //         Passport: {traveler.Document.DocID || "N/A"}
-  //       </h2>
-  //       <h2 className="text-sm font-semibold text-slate-500">
-  //         E-Ticket No: {traveler.ETicketInfos[0]?.ETicketNo || "Not Available"}
-  //       </h2>
-  //     </div>
-  //   ));
 
   return (
     <>
       <Toaster />
+      <ConfirmModal onAbort={confirmObject.onAbort} onConfirm={confirmObject.onConfirm} status={confirmObject.status} text={confirmObject.text} />
       <div ref={printRef} className="flex flex-col w-full gap-5">
         <CardLayoutContainer>
-          <CardLayoutHeader
-            heading={`Booking Reference: ${bookingDetails?.booking_reference_id}`}
-            className={"flex items-center justify-between"}
+
+          <CardLayoutBody
+            className={'flex justify-between'}
           >
-            <div className="flex flex-wrap gap-2">
-              <div>
+            <div className="flex flex-col gap-3">
+              <div className="py-4 text-3xl font-semibold text-text">
+                <h1 >PNR: <span className="text-primary">{bookingDetails?.booking_reference_id}</span></h1>
+                <h1 className="w-fit flex gap-2 items-center mt-2 ">Status: <Tag value={bookingDetails?.booking_status} /></h1>
+              </div>
+              <div className="flex flex-wrap gap-3">
+                {/* <div>
                 <Button
                   id={"hide-buttons"}
                   onClick={printHandler}
@@ -345,9 +146,48 @@ const TicketDetails = () => {
                   onClick={downloadHandler}
                   text={"Download"}
                 />
+              </div> */}
+                <div>
+                  <Button
+                    onClick={() => setConfirmObject((prev) => ({
+                      ...prev,
+                      status: true,
+                      text: "Are you really want to Refund?",
+                      onAbort: () => setConfirmObject((prev) => ({ ...prev, status: false })),
+                      onConfirm: () => refundRequestHandler(booking)
+                    }))}
+                    text={"Request Refund"}
+                    disabled={bookingDetails?.booking_status == "requested-refund"}
+                  />
+
+                </div>
+                <div>
+                  <Button
+                    onClick={() => setConfirmObject((prev) => ({
+                      ...prev,
+                      status: true,
+                      text: "Are you really want to Cancel this Booking?",
+                      onAbort: () => setConfirmObject((prev) => ({ ...prev, status: false })),
+                      onConfirm: () => cancelFlightBookingHandler(booking)
+                    }))}
+                    text={"Request Cancellation"}
+                    disabled={bookingDetails?.booking_status == "requested-cancellation"}
+                  />
+                </div>
               </div>
             </div>
-          </CardLayoutHeader>
+            <Button disabled={!(bookingDetails?.booking_status == "pending")} className=" py-14 px-14 text-xl " text={"Order Ticket"}
+              onClick={() => setConfirmObject((prev) => ({
+                ...prev,
+                status: true,
+
+                text: `Are you really want to order the ticket. The total fare is ${(bookingDetails?.total_fare).toLocaleString()} `,
+                onAbort: () => setConfirmObject((prev => ({ ...prev, status: false }))),
+                onConfirm: () => handleIssue(bookingDetails?.booking_reference_id)
+              }))}
+
+            />
+          </CardLayoutBody>
           <CardLayoutBody>
             {bookingDetails?.flightSegments && bookingDetails.flightSegments.map((item, idx) => (
               <div key={idx} className="flex max-sm:flex-wrap items-center justify-between gap-5 text-text">
@@ -387,60 +227,30 @@ const TicketDetails = () => {
         </CardLayoutContainer>
         <CardLayoutContainer>
           <CardLayoutHeader className={'mb-2'} heading="Passenger Details" />
-          
-            {/* <CardLayoutBody>{
-              bookingDetails.passengers && bookingDetails.passengers.map((item, index) => (
-                <div
-                  key={index}
-                  className="flex flex-wrap items-center justify-between gap-3 py-3 border-b border-slate-200"
-                >
-                  <h2 className="flex items-center gap-1 text-sm font-semibold text-slate-600">
 
-                    {item.given_name}{" "}
-                    {item.surname}
-                  </h2>
-                  <h2 className="flex items-center gap-1 text-sm font-semibold text-slate-500">
+          {bookingDetails && <TableNew pagination={false} tableData={bookingDetails?.passengers} columnsToView={[
+            { columnName: "Name", fieldName: "given_name", type: "text" },
+            { columnName: "Type", fieldName: "passenger_type_code", type: "text" },
+            { columnName: "Birth Date", fieldName: "birth_date", type: "date" },
+            { columnName: "Passport Number", fieldName: "doc_id", type: "text" },
+            { columnName: "Expiry", fieldName: "expire_date", type: "date" },
+            { columnName: "Issuance", fieldName: "doc_issue_country", type: "text" },
+            { columnName: "Nationality", fieldName: "nationality", type: "text" },
+          ]} />}
 
-                    {item.passenger_type_code}
-                  </h2>
-                  <h2 className="flex items-center gap-1 text-sm font-semibold text-slate-500">
-
-                    Passport No:{item.doc_id}
-                  </h2>
-                  <h2 className="flex items-center gap-1 text-sm font-semibold text-slate-500">
-                    Email:
-                    {
-                      item.email
-                    }
-                  </h2>
-                </div>
-              ))
-            } 
-              </CardLayoutBody>
-             */}
-           {bookingDetails&& <TableNew pagination={false} tableData={bookingDetails?.passengers} columnsToView={[
-              { columnName: "Name", fieldName: "given_name", type: "text" },
-              { columnName: "Type", fieldName: "passenger_type_code", type: "text" },
-              { columnName: "Birth Date", fieldName: "birth_date", type: "date" },
-              { columnName: "Passport Number", fieldName: "doc_id", type: "text" },
-              { columnName: "Expiry", fieldName: "expire_date", type: "date" },
-              { columnName: "Issuance", fieldName: "doc_issue_country", type: "text" },
-              { columnName: "Nationality", fieldName: "nationality", type: "text" },
-            ]} />}
-          
 
         </CardLayoutContainer>
         <CardLayoutContainer>
-          <CardLayoutHeader className={'mb-2'} heading={"Pricing Information"}/>
-          {bookingDetails&&<TableNew pagination={false} tableData={bookingDetails?.passengers} columnsToView={[
-              { columnName: "Name", fieldName: "given_name", type: "text" },
-              { columnName: "Type", fieldName: "passenger_type_code", type: "text" },
-              { columnName: "Birth Date", fieldName: "birth_date", type: "date" },
-              { columnName: "Passport Number", fieldName: "doc_id", type: "text" },
-              { columnName: "Expiry", fieldName: "expire_date", type: "date" },
-              { columnName: "Issuance", fieldName: "doc_issue_country", type: "text" },
-              { columnName: "Nationality", fieldName: "nationality", type: "text" },
-            ]} />}
+          <CardLayoutHeader className={'mb-2'} heading={"Pricing Information"} />
+          {bookingDetails && <TableNew pagination={false} tableData={bookingDetails?.passengers} columnsToView={[
+            { columnName: "Name", fieldName: "given_name", type: "text" },
+            { columnName: "Type", fieldName: "passenger_type_code", type: "text" },
+            { columnName: "Birth Date", fieldName: "birth_date", type: "date" },
+            { columnName: "Passport Number", fieldName: "doc_id", type: "text" },
+            { columnName: "Expiry", fieldName: "expire_date", type: "date" },
+            { columnName: "Issuance", fieldName: "doc_issue_country", type: "text" },
+            { columnName: "Nationality", fieldName: "nationality", type: "text" },
+          ]} />}
           <CardLayoutFooter>
             <h2 className="text-xl font-semibold text-slate-600">
               Total Fare: {Number(bookingDetails?.total_fare).toLocaleString()}
@@ -448,10 +258,7 @@ const TicketDetails = () => {
           </CardLayoutFooter>
         </CardLayoutContainer>
 
-        {/* <CardLayoutContainer>
-          <CardLayoutHeader heading="Traveler Information" />
-          <CardLayoutBody>{renderTravelerInfo()}</CardLayoutBody>
-        </CardLayoutContainer> */}
+
 
         <div className="flex items-center justify-end gap-3">
           <div>
@@ -465,7 +272,7 @@ const TicketDetails = () => {
           </div>
           <div>
             <Button
-            icon={<MdCheck/>}
+              icon={<MdCheck />}
               text="Order Ticket"
               onClick={() => {
                 navigate(-1);

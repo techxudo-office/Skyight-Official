@@ -5,7 +5,7 @@ import { format } from 'date-fns';
 import { TbCheck, TbChevronLeft, TbChevronLeftPipe, TbChevronRight, TbChevronRightPipe } from "react-icons/tb";
 import { object } from 'yup';
 import dayjs from 'dayjs';
-import { CustomTooltip, DownloadButton, Input, Spinner } from '../components';
+import { CustomTooltip, DownloadButton, Input, Spinner, Tag } from '../components';
 import { BsThreeDots } from 'react-icons/bs';
 import { IoIosAirplane } from 'react-icons/io';
 import { FaEdit, FaEye } from 'react-icons/fa';
@@ -14,7 +14,7 @@ import { logo } from '../../assets/Index';
 import { MdDelete } from 'react-icons/md';
 // import {Cell}  from "@table-library/react-table-library/table";
 
-const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows,pagination=true}) => {
+const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows, pagination = true }) => {
     // const data = React.useMemo(() => tableData, []);
     const data = tableData;
     const [rowsPerPage, setRowsPerPage] = useState(15);
@@ -114,9 +114,7 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows,pa
                         accessor: item.fieldName,
                         Cell: ({ value }) => (
                             <span>
-                                <p className={`text-xs md:text-sm w-40 md:w-44 mx-auto  border-[1px]  tracking-tight px-2 py-1  rounded-lg ${value == 'pending' ? 'text-yellowColor border-yellowColor bg-yellowbg' : value == 'requested-cancellation' || value == 'inactive' ? 'text-redColor border-redColor bg-redbg' : 'text-greenColor bg-greenbg border-greenColor'} font-semibold  capitalize`}>
-                                    {value}
-                                </p>
+                                <Tag value={value} />
                             </span>
                         )
                     }
@@ -224,7 +222,7 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows,pa
         //                 <div>
         //                     <DownloadButton/>
         //                 </div>
-                    
+
 
         //         </span>
         //     )
@@ -526,7 +524,7 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows,pa
             }
 
             {/* Paginaion  */}
-            {pagination&&<div className="flex flex-wrap items-center justify-end gap-2 mx-6 my-4">
+            {pagination && <div className="flex flex-wrap items-center justify-end gap-2 mx-6 my-4">
                 <div className="flex items-center gap-2">
                     <span className="text-sm text-text">Rows per page:</span>
                     <input

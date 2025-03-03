@@ -46,7 +46,7 @@ const FlightBookings = () => {
     { columnName: "PNR", fieldName: "booking_reference_id", type: "text" },
     { columnName: "Total Fare", fieldName: "total_fare", type: "number" },
     // { columnName: "Currency", fieldName: "currency", type: "text" },
-    { columnName: "Status", fieldName: "booking_status", type: "status" },
+    // { columnName: "Status", fieldName: "booking_status", type: "status" },
     { columnName: "Created At", fieldName: "created_at", type: "date" },
     // { columnName: "Actions", fieldName: "actions", type: "actions" },
   ];
@@ -82,19 +82,19 @@ const FlightBookings = () => {
       handler: (_, item) => {
         console.log("item", item);
         navigate("/dashboard/booking-details", {
-          state: item.id,
+          state: item,
         });
       },
     },
-    {
-      name: "Refund",
-      icon: <HiReceiptRefund title="Refund" className="text-blue-500 text-xl" />,
-      handler: (_,item) => {
-        setConfirmStatus(true)
-        setRefundItem(item)
-        
-      },
-    },
+    // {
+    //   name: "Refund",
+    //   icon: <HiReceiptRefund title="Refund" className="text-blue-500 text-xl" />,
+    //   handler: (_, item) => {
+    //     setConfirmStatus(true)
+    //     setRefundItem(item)
+
+    //   },
+    // },
     // {
     //   name: "Cancel",
     //   icon: <MdCancel title="Cancel" className="text-red-500" />,
@@ -113,43 +113,6 @@ const FlightBookings = () => {
     }
   };
 
-  const cancelFlightBookingHandler = async (flight) => {
-    console.log(flight);
-
-    const bookingId = {
-      booking_id: flight.id,
-    };
-
-    console.log(bookingId);
-
-    let response = await cancelFlightBooking(bookingId);
-    if (response.status) {
-      toast.success(response.message);
-      setBookingsData([]);
-      gettingFlightBookings();
-    } else {
-      toast.error(response.message);
-    }
-  };
-
-  const refundRequestHandler = async (flight) => {
-    console.log(flight);
-
-    const bookingId = {
-      booking_id: flight.id,
-    };
-
-    console.log(bookingId);
-
-    let response = await refundRequest(bookingId);
-    if (response.status) {
-      toast.success(response.message);
-      setBookingsData([]);
-      gettingFlightBookings();
-    } else {
-      toast.error(response.message);
-    }
-  };
 
   const abortDeleteHandler = () => {
     setModalStatus(false);
@@ -162,11 +125,11 @@ const FlightBookings = () => {
 
   return (
     <>
-      <ConfirmModal
+      {/* <ConfirmModal
         status={modalStatus}
         abortDelete={abortDeleteHandler}
         deleteHandler={cancelFlightBookingHandler}
-      />
+      /> */}
       <CardLayoutContainer removeBg={true}>
         <CardLayoutHeader
           removeBorder={true}
@@ -181,7 +144,7 @@ const FlightBookings = () => {
             />
           </div>
         </CardLayoutHeader>
-          <ConfirmModal status={confirmStatus} onAbort={() => setConfirmStatus(false)} onConfirm={()=>refundRequestHandler(refundItem)} text={"Are you really want to refund the request"} />
+        {/* <ConfirmModal status={confirmStatus} onAbort={() => setConfirmStatus(false)} onConfirm={() => refundRequestHandler(refundItem)} text={"Are you really want to refund the request"} /> */}
         <CardLayoutBody removeBorder={true}>
           {/* <Table
             columns={columnsData}
@@ -189,13 +152,13 @@ const FlightBookings = () => {
             actions={actionsData}
             activeIndex={activeIndex}
           /> */}
-         
-            <TableNew
-              columnsToView={columnsData}
-              tableData={bookingsData}
-              downloadBtn={true}
-              actions={actionsData}
-            />
+
+          <TableNew
+            columnsToView={columnsData}
+            tableData={bookingsData}
+            downloadBtn={true}
+            actions={actionsData}
+          />
         </CardLayoutBody>
         <CardLayoutFooter></CardLayoutFooter>
       </CardLayoutContainer>
