@@ -33,11 +33,11 @@ const initialRolesData = {
     write_transaction: false,
     read_role: false,
     write_role: false,
-    read_notification: false, 
-    read_flight: false,       
-    read_error_log: false,    
+    read_notification: false,
+    read_flight: false,
+    read_error_log: false,
     write_announcement: false,
-    read_announcement: false, 
+    read_announcement: false,
   },
 };
 
@@ -91,11 +91,16 @@ const CreateRole = () => {
     };
 
     try {
-      await createRole(payload);
-      toast.success("Role created successfully");
-      setRolesData(initialRolesData);
+      let response = await createRole(payload);
+      console.log(response)
+      if (response.status) {
+        toast.success("Role created successfully");
+        setRolesData(initialRolesData);
+      } else {
+        toast.error(response.message || "Failed to create role");
+      }
     } catch (error) {
-      toast.error("Failed to create role");
+      toast.error(error.response.data.message || "Failed to create role");
     } finally {
       setLoading(false);
     }
