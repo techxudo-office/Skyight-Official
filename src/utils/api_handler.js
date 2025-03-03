@@ -1,4 +1,5 @@
 import axios from "axios";
+import toast from "react-hot-toast";
 import { data, useNavigate } from "react-router-dom";
 
 export const baseUrl = import.meta.env.VITE_API_URL;
@@ -304,7 +305,11 @@ export const searchFlight = async (payload) => {
       if (!response.data.data || response.data.data.length === 0) {
         return { status: false, message: ["No Flight Found!"] };
       } else {
-        return { status: true, message: "Flights Data Found", data: response.data.data };
+        return {
+          status: true,
+          message: "Flights Data Found",
+          data: response.data.data,
+        };
       }
     }
   } catch (error) {
@@ -317,7 +322,6 @@ export const searchFlight = async (payload) => {
     }
   }
 };
-
 
 //! Transactions...
 export const createTransaction = async (payload) => {
@@ -701,8 +705,6 @@ export const issueBooking = async (id) => {
       return { status: false, data: response.data };
     }
   } catch (error) {
-
-
     console.log("Failed while getting bookings: ", error);
   }
 };
@@ -806,8 +808,7 @@ export const confirmBooking = async (payload) => {
         status: true,
         message: "Booking Created",
       };
-    }
-    else {
+    } else {
       return {
         status: false,
         message: response.message,
@@ -823,10 +824,9 @@ export const confirmBooking = async (payload) => {
     } else {
       return {
         status: false,
-        message: error.response.data.message
-      }
+        message: error.response.data.message,
+      };
     }
-
   }
 };
 
@@ -918,6 +918,10 @@ export const getAnnouncements = async () => {
     }
   } catch (error) {
     console.log("Failed while getting Announcements: ", error);
+    toast.error(
+      error?.response?.data?.message ||
+        "Something went wrong. Please try again."
+    );
   }
 };
 

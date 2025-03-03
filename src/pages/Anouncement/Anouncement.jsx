@@ -23,8 +23,7 @@ const Announcement = () => {
         toast.error(response.message || "Failed to fetch announcements");
       }
     } catch (error) {
-      console.error("Error fetching announcements:", error);
-      toast.error("Something went wrong. Please try again.");
+      console.log(error,"Errors")
     } finally {
       setLoading(false);
     }

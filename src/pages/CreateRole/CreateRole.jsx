@@ -92,7 +92,6 @@ const CreateRole = () => {
 
     try {
       let response = await createRole(payload);
-      console.log(response)
       if (response.status) {
         toast.success("Role created successfully");
         setRolesData(initialRolesData);
