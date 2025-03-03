@@ -7,6 +7,7 @@ import {
 import { getAnnouncements } from "../../utils/api_handler";
 import { Spinner, BellIcon } from "../../components/components";
 import { HiOutlineSpeakerphone } from "react-icons/hi";
+import toast from "react-hot-toast";
 
 const Announcement = () => {
   const [AnnouncementData, setAnnouncementData] = useState([]);
@@ -14,11 +15,19 @@ const Announcement = () => {
 
   const getAnnouncementHandler = useCallback(async () => {
     setLoading(true);
-    let response = await getAnnouncements();
-    if (response.status) {
-      setAnnouncementData(response.data[0]);
+    try {
+      let response = await getAnnouncements();
+      if (response.status) {
+        setAnnouncementData(response.data[0]);
+      } else {
+        toast.error(response.message || "Failed to fetch announcements");
+      }
+    } catch (error) {
+      console.error("Error fetching announcements:", error);
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }, []);
 
   useEffect(() => {
