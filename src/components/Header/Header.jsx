@@ -147,13 +147,18 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
     setSidebarStatusHandler(!sidebarStatus);
   };
 
+  const [loading, setLoading] = useState(false);
+
   const getCreditsHandler = useCallback(async () => {
     if (!credits) {
+      setLoading(true);
       let response = await getCredits();
+      setLoading(false);
+
       if (response?.status) {
         setCredits(response.data.Balence);
       } else {
-        toast.error(response.message);
+        toast.error(response?.message || "Failed to fetch credits.");
       }
     }
   }, [credits]);
@@ -261,7 +266,12 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
                     //   setIsActive(!isActive);
                     // }}
                   >
-                    {credits ? (
+                    {loading ? (
+                      <span className="flex items-center gap-2">
+                        <HiOutlineRefresh className="animate-spin max-sm:hidden" />
+                        <span>Refreshing...</span>
+                      </span>
+                    ) : credits ? (
                       <span
                         onClick={refreshCredits}
                         className="flex items-center gap-2"
@@ -271,15 +281,10 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
                       </span>
                     ) : (
                       <span className="flex items-center gap-2">
-                        <HiOutlineRefresh
-                          className={`transition-all max-sm:hidden ${
-                            !credits ? "rotate-180" : "rotate-0"
-                          }`}
-                        />
-                        <span>Refreshing...</span>
+                        <HiOutlineRefresh className="rotate-180 max-sm:hidden" />
+                        <span>No Credits</span>
                       </span>
                     )}
-
                     <MdArrowDropDown
                       className={`text-xl ${
                         CreditsDropdownOpen ? "rotate-180" : ""
