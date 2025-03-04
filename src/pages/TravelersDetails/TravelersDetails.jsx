@@ -267,6 +267,10 @@ const TravelersDetails = () => {
 
 
     setConfirmStatus(false)
+    if (typeof values.mobile === "object") {
+      var mobileNo = values.mobile
+      var telephoneNo = values.telephone
+    }
     const payload = {
       city: values.city,
       country: nationality || values.country,
@@ -275,7 +279,7 @@ const TravelersDetails = () => {
       first_name: values.first_name,
       gender: values.gender,
       last_name: values.last_name,
-      mobile: {
+      mobile: mobileNo || {
         area_code: String(values.mobile).slice(0, 2),
         country_code: String(values.mobile).slice(0, 3),
         number: String(values.mobile).slice(0, 7),
@@ -284,14 +288,14 @@ const TravelersDetails = () => {
       passport_expiry_date: values.passport_expiry_date,
       passport_number: values.passport_number,
       doc_type: doc_type,
-      telephone: {
+      telephone: telephoneNo || {
         area_code: String(values.mobile).slice(0, 2),
         country_code: String(values.mobile).slice(0, 3),
         number: String(values.mobile).slice(0, 7),
       },
       title: values.title,
     };
-
+    console.log("payload", payload)
     setDisableAddTraveler((prev) => ([...prev, travelerIndex]))
     setAllTravelersData((prevData) => {
       const updatedData = [...prevData]
@@ -334,7 +338,7 @@ const TravelersDetails = () => {
 
     const totalTraveler = Object.values(travelersData).reduce((a, b) => Number(a) + Number(b), 0);
     // console.log('totaltravelers', totalTraveler)
-    if (allTravelersData.length == totalTraveler & !allTravelersData.includes(null)) {
+    if (allTravelersData.length == totalTraveler & !allTravelersData.includes(null) & !allTravelersData.includes(undefined) & !allTravelersData.include(false)) {
       // console.log('navigate')
       navigate("/dashboard/confirm-booking", {
         state: { flightData, travelersData, allTravelersData },

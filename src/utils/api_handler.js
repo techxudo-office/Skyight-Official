@@ -623,9 +623,14 @@ export const getFlightBookings = async (id) => {
         Authorization: getToken(),
       },
     });
+    console.log("flight bookings", response)
     if (response.status === 200) {
-      if (response.data.data.length > 0) {
-        const extractedData = response.data.data.map(
+      if (typeof response.data.data == 'object') {
+        var responseData = [response.data.data]
+      }
+      if (responseData.length > 0) {
+        console.log("isarray", responseData)
+        const extractedData = responseData.map(
           ({
             origin,
             destination,
