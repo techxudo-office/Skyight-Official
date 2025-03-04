@@ -12,7 +12,7 @@ import {
 import { Button, Spinner, SecondaryButton, TableNew, ConfirmModal, Tag } from "../../components/components";
 import toast, { Toaster } from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
-import { cancelFlightBooking, getBookingDetails, issueBooking, refundRequest } from "../../utils/api_handler";
+import { cancelFlightBooking, getBookingDetails, getPNR, issueBooking, refundRequest } from "../../utils/api_handler";
 import { IoIosAirplane, IoMdClock } from "react-icons/io";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc"; // Import UTC plugin
@@ -38,21 +38,21 @@ const TicketDetails = () => {
     const element = printRef.current;
     const canvas = await html2canvas(element);
     const imgData = canvas.toDataURL("image/png");
-
     const pdf = new jsPDF("p", "mm", "a4");
     const pdfWidth = pdf.internal.pageSize.getWidth();
     const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
     pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
     pdf.save("download.pdf");
   };
-
   const printHandler = () => {
     window.print();
   };
 
-  const downloadHandler = () => {
+  const downloadHandler = async () => {
     // alert("download handler");
-    downloadAsPDF();
+    const response = await getPNR(bookingDetails?.booking_reference_id)
+    console.log(response)
+    // downloadAsPDF();
   };
 
   const getBookingDetailsHandler = async (id) => {
@@ -61,7 +61,6 @@ const TicketDetails = () => {
       console.log("booking-details", response);
       setBookingDetails(response.data);
     }
-
   };
   const handleIssue = async (pnr) => {
     const response = await issueBooking(pnr)
@@ -157,7 +156,7 @@ const TicketDetails = () => {
                       onConfirm: () => refundRequestHandler(booking)
                     }))}
                     text={"Request Refund"}
-                    disabled={bookingDetails?.booking_status == "requested-refund"}
+                    disabled={bookingDetails?.booking_status == "requested-refund" || dayjs().isAfter(dayjs(bookingDetails?.Timelimit))}
                   />
 
                 </div>
@@ -171,21 +170,21 @@ const TicketDetails = () => {
                       onConfirm: () => cancelFlightBookingHandler(booking)
                     }))}
                     text={"Request Cancellation"}
-                    disabled={bookingDetails?.booking_status == "requested-cancellation"}
+                    disabled={bookingDetails?.booking_status == "requested-cancellation" || dayjs().isAfter(dayjs(bookingDetails?.Timelimit))}
                   />
                 </div>
               </div>
             </div>
-            <Button disabled={!(bookingDetails?.booking_status == "pending")} className="text-xl  py-14 px-14" text={"Order Ticket"}
+
+            <Button disabled={!(bookingDetails?.booking_status == "pending") || dayjs().isAfter(dayjs(bookingDetails?.Timelimit))} className=" py-14 px-14 text-xl "
+              text={dayjs().isAfter(dayjs(bookingDetails?.Timelimit)) ? "TKT time limit exceeded" : "Order Ticket"}
               onClick={() => setConfirmObject((prev) => ({
                 ...prev,
                 status: true,
-
                 text: `Are you really want to order the ticket. The total fare is ${(bookingDetails?.total_fare).toLocaleString()} `,
                 onAbort: () => setConfirmObject((prev => ({ ...prev, status: false }))),
                 onConfirm: () => handleIssue(bookingDetails?.booking_reference_id)
               }))}
-
             />
           </CardLayoutBody>
           <CardLayoutBody>
@@ -221,7 +220,7 @@ const TicketDetails = () => {
               {dayjs.utc(bookingDetails?.created_at).format('DD MMM YYYY, h:mm a')}
             </div>
             <div>
-              <span className="font-semibold">TKT Time Limit:</span>  {dayjs(bookingDetails?.Timelimit).format('DD MMM YYYY, h:mm a')}
+              <span className="font-semibold">TKT Time Limit:</span>{dayjs(bookingDetails?.Timelimit).format('DD MMM YYYY, h:mm a')}
             </div>
           </div>
         </CardLayoutContainer>
@@ -272,12 +271,11 @@ const TicketDetails = () => {
           </div>
           <div>
             <Button
-              icon={<MdCheck />}
-              text="Order Ticket"
-              onClick={() => {
-                navigate(-1);
-              }}
+              text="View ticket"
+              onClick={downloadHandler}
             />
+          </div>
+          <div>
           </div>
         </div>
       </div>
