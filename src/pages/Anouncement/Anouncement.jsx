@@ -20,14 +20,15 @@ const Announcement = () => {
       if (response.status) {
         setAnnouncementData(response.data[0]);
       } else {
-        toast.error(response.message || "Failed to fetch announcements");
+        toast.error(response.message);
       }
     } catch (error) {
-      console.log(error,"Errors")
+      toast.error("An unexpected error occurred.");
     } finally {
       setLoading(false);
     }
   }, []);
+  
 
   useEffect(() => {
     getAnnouncementHandler();

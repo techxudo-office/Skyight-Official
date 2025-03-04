@@ -888,7 +888,6 @@ export const getNotifications = async () => {
         Authorization: getToken(),
       },
     });
-    console.log(response);
     if (response.status === 200) {
       return {
         status: true,
@@ -897,6 +896,12 @@ export const getNotifications = async () => {
     }
   } catch (error) {
     console.log("Failed while getting notifications: ", error);
+    return {
+      status: false,
+      message:
+        error.response?.data?.message ||
+        "Failed to fetch notifications. Please try again.",
+    };
   }
 };
 
@@ -909,7 +914,6 @@ export const getAnnouncements = async () => {
         Authorization: getToken(),
       },
     });
-    console.log("annoncement", response);
     if (response.status === 200) {
       return {
         status: true,
@@ -918,10 +922,12 @@ export const getAnnouncements = async () => {
     }
   } catch (error) {
     console.log("Failed while getting Announcements: ", error);
-    toast.error(
-      error?.response?.data?.message ||
-        "Something went wrong. Please try again."
-    );
+    return {
+      status: false,
+      message:
+        error?.response?.data?.message ||
+        "Something went wrong. Please try again.",
+    };
   }
 };
 

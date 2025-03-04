@@ -7,6 +7,7 @@ import {
 import { getNotifications } from "../../utils/api_handler";
 import { IoNotificationsOutline } from "react-icons/io5";
 import { Spinner, BellIcon } from "../../components/components";
+import toast from "react-hot-toast";
 
 const Notifications = () => {
   const [notificationsData, setNotificationsData] = useState([]);
@@ -14,11 +15,19 @@ const Notifications = () => {
 
   const getNotificationsHandler = useCallback(async () => {
     setLoading(true);
-    let response = await getNotifications();
-    if (response.status) {
-      setNotificationsData(response.data);
+    try {
+      let response = await getNotifications();
+
+      if (response.status) {
+        setNotificationsData(response.data[0]);
+      } else {
+        toast.error(response.message);
+      }
+    } catch (error) {
+      toast.error("An unexpected error occurred.");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }, []);
 
   useEffect(() => {
