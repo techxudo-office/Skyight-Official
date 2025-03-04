@@ -988,3 +988,27 @@ export const getTravelers = async (passengerType) => {
     console.log("Failed while getting travellers: ", error);
   }
 };
+export const getPNR = async (id) => {
+  try {
+    let response = await axios({
+      method: "POST",
+      url: `${baseUrl}/api/booking-pnr`,
+      headers: {
+        Authorization: getToken(),
+        "Content-Type": "application/json",
+        data: {
+          pnr: id
+        }
+      },
+    });
+    console.log("getpnr", response);
+    if (response.status === 200) {
+      return {
+        status: true,
+        data: response.data.data,
+      };
+    }
+  } catch (error) {
+    console.log("Failed while getting ticket: ", error);
+  }
+};

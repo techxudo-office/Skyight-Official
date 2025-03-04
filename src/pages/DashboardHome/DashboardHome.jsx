@@ -154,17 +154,19 @@ const DashboardHome = () => {
           Featured Flights
         </h2>
         <div className="w-full overflow-x-hidden">
-          {flightsData.length > 0 ? (
-            flightsData.map((item, index) => (
-              <Slider {...settings} className="flex gap-3 ">
+
+          <Slider {...settings} className="flex gap-3 ">
+            {flightsData.length > 0 ? (
+              flightsData.map((item, index) => (
                 <DashboardCards key={index} index={index} data={item} />
-              </Slider>
-            ))
-          ) : (
-            <div className="w-full text-center text-gray-500">
-              No Featured Flights
-            </div>
-          )}
+              ))
+            ) : (
+              <div className="w-full text-center text-gray-500">
+                No Featured Flights
+              </div>
+            )}
+          </Slider>
+
         </div>
       </div>
       {/* Flights */}
