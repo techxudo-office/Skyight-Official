@@ -12,7 +12,7 @@ import {
 import { Button, Spinner, SecondaryButton, TableNew, ConfirmModal, Tag } from "../../components/components";
 import toast, { Toaster } from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
-import { cancelFlightBooking, getBookingDetails, getFlightBookings, issueBooking, refundRequest } from "../../utils/api_handler";
+import { cancelFlightBooking, getBookingDetails, issueBooking, refundRequest } from "../../utils/api_handler";
 import { IoIosAirplane, IoMdClock } from "react-icons/io";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc"; // Import UTC plugin
@@ -130,7 +130,7 @@ const TicketDetails = () => {
             <div className="flex flex-col gap-3">
               <div className="py-4 text-3xl font-semibold text-text">
                 <h1 >PNR: <span className="text-primary">{bookingDetails?.booking_reference_id}</span></h1>
-                <h1 className="w-fit flex gap-2 items-center mt-2 ">Status: <Tag value={bookingDetails?.booking_status} /></h1>
+                <h1 className="flex items-center gap-2 mt-2 w-fit ">Status: <Tag value={bookingDetails?.booking_status} /></h1>
               </div>
               <div className="flex flex-wrap gap-3">
                 {/* <div>
@@ -176,7 +176,7 @@ const TicketDetails = () => {
                 </div>
               </div>
             </div>
-            <Button disabled={!(bookingDetails?.booking_status == "pending")} className=" py-14 px-14 text-xl " text={"Order Ticket"}
+            <Button disabled={!(bookingDetails?.booking_status == "pending")} className="text-xl  py-14 px-14" text={"Order Ticket"}
               onClick={() => setConfirmObject((prev) => ({
                 ...prev,
                 status: true,
@@ -190,7 +190,7 @@ const TicketDetails = () => {
           </CardLayoutBody>
           <CardLayoutBody>
             {bookingDetails?.flightSegments && bookingDetails.flightSegments.map((item, idx) => (
-              <div key={idx} className="flex max-sm:flex-wrap items-center justify-between gap-5 text-text">
+              <div key={idx} className="flex items-center justify-between gap-5 max-sm:flex-wrap text-text">
                 <div className="flex flex-col items-start">
                   <h2 className="mb-2 text-2xl font-semibold text-primary">
                     Departure
@@ -198,7 +198,7 @@ const TicketDetails = () => {
                   <p className="text-xl font-bold">{item.departure_airport}</p>
                   <p className="flex items-center gap-2"><IoMdClock className="text-lg text-primary" />{dayjs(item.departure_datetime).format("MMM-DD-YYYY, hh:mm")}</p>
                 </div>
-                <div className="max-sm:hidden flex items-center gap-3 text-primary">
+                <div className="flex items-center gap-3 max-sm:hidden text-primary">
                   <span className="h-0.5 rounded-full md:w-12 xl:w-28 bg-primary"></span>
                   <IoIosAirplane className="text-5xl" />
                   <span className="h-0.5 rounded-full md:w-12 xl:w-28 bg-primary"></span>

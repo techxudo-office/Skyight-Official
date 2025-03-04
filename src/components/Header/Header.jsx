@@ -72,7 +72,7 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
       name: "Logout",
       icon: <FiLogOut />,
       handler: () => {
-        console.log('logout')
+        console.log("logout");
         logoutHandler();
       },
     },
@@ -152,10 +152,12 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
       let response = await getCredits();
       if (response?.status) {
         setCredits(response.data.Balence);
-        // console.log('credits', response)
+      } else {
+        toast.error(response.message);
       }
     }
   }, [credits]);
+
   const refreshCredits = () => {
     setCredits("");
     setTimeout(() => {
@@ -164,7 +166,7 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
   };
 
   useEffect(() => {
-    getCreditsHandler(); // Component mount hone pe ek bar call hoga
+    getCreditsHandler();
   }, [getCreditsHandler]);
 
   return (
@@ -319,8 +321,6 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
                     className={"md:hidden"}
                   />
                 </div>
-              
-
               </CustomTooltip>
             </div>
           </div>

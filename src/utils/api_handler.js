@@ -1,6 +1,4 @@
 import axios from "axios";
-import toast from "react-hot-toast";
-import { data, useNavigate } from "react-router-dom";
 
 export const baseUrl = import.meta.env.VITE_API_URL;
 export const getToken = () => {
@@ -252,7 +250,6 @@ export const getCredits = async () => {
         Authorization: getToken(),
       },
     });
-
     if (response.status === 200) {
       return {
         status: true,
@@ -260,7 +257,12 @@ export const getCredits = async () => {
       };
     }
   } catch (error) {
-    console.log("Failed while getting credits: ", error);
+    return {
+      status: false,
+      message:
+        error?.response?.data?.message ||
+        "Something went wrong. Please try again.",
+    };
   }
 };
 
@@ -635,7 +637,7 @@ export const getFlightBookings = async (id) => {
   try {
     let response = await axios({
       method: "GET",
-      url: `${baseUrl}/api/booking/company/${id}`,
+      url: `${baseUrl}/api/booking/${id}`,
       headers: {
         Authorization: getToken(),
       },
