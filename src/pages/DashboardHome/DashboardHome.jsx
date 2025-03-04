@@ -68,8 +68,10 @@ const DashboardHome = () => {
 
   const getActiveRoutes = async () => {
     let response = await getRoutes();
-    if (response.status) {
+    if (response?.status) {
       setFlightsData(response.data.slice(0, 3));
+    } else {
+      toast.error(response.message);
     }
   };
 
@@ -101,11 +103,11 @@ const DashboardHome = () => {
         navigate("/dashboard/booking-details", {
           state: item,
         });
-      }
+      },
     },
     // {
     //   name: "Refund",
-    //   icon: <HiReceiptRefund title="Refund" className="text-blue-500 text-xl" />,
+    //   icon: <HiReceiptRefund title="Refund" className="text-xl text-blue-500" />,
     //   handler: (_, item) => {
     //     setConfirmStatus(true)
     //     setRefundItem(item)
@@ -151,12 +153,17 @@ const DashboardHome = () => {
           Featured Flights
         </h2>
         <div className="w-full overflow-x-hidden">
-          <Slider {...settings} className="flex gap-3 ">
-            {flightsData.length > 0 &&
-              flightsData.map((item, index) => (
+          {flightsData.length > 0 ? (
+            flightsData.map((item, index) => (
+              <Slider {...settings} className="flex gap-3 ">
                 <DashboardCards key={index} index={index} data={item} />
-              ))}
-          </Slider>
+              </Slider>
+            ))
+          ) : (
+            <div className="w-full text-center text-gray-500">
+              No Featured Flights
+            </div>
+          )}
         </div>
       </div>
       {/* Flights */}

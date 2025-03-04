@@ -842,16 +842,19 @@ export const getRoutes = async () => {
         Authorization: getToken(),
       },
     });
-    // console.log(response);
     if (response.status === 200) {
-      const data = response.data.data.Routes;
       return {
         status: true,
-        data: data,
+        data: response.data.data.Routes,
       };
     }
   } catch (error) {
-    console.log("Failed while getting routes: ", error);
+    return {
+      status: false,
+      message:
+        error?.response?.data?.message ||
+        "Something went wrong while fetching routes.",
+    };
   }
 };
 

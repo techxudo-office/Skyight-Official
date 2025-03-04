@@ -22,8 +22,6 @@ const Announcement = () => {
       } else {
         toast.error(response.message);
       }
-    } catch (error) {
-      toast.error("An unexpected error occurred.");
     } finally {
       setLoading(false);
     }

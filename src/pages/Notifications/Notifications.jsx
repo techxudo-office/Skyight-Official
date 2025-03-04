@@ -17,14 +17,11 @@ const Notifications = () => {
     setLoading(true);
     try {
       let response = await getNotifications();
-
       if (response.status) {
         setNotificationsData(response.data[0]);
       } else {
         toast.error(response.message);
       }
-    } catch (error) {
-      toast.error("An unexpected error occurred.");
     } finally {
       setLoading(false);
     }
