@@ -126,9 +126,10 @@ const DashboardHome = () => {
     const userData = JSON.parse(localStorage.getItem("userData"));
     const id = userData?.company_id;
     const response = await getFlightBookings(id);
-    if (response.status) {
+    if (response?.status) {
       setBookingsData(response.data);
-      console.log("bookking", response.data);
+    } else {
+      toast.error(response.message);
     }
   };
 

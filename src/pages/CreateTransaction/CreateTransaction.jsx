@@ -26,6 +26,7 @@ import { Formik, Form } from "formik";
 import { transactionInitialValues, transactionSchema } from "../../validations";
 import { allowedTypes } from "../../helper/allowedTypes";
 import { successToastify, errorToastify } from "../../helper/toast"
+import toast from "react-hot-toast";
 
 
 const CreateTransaction = () => {
@@ -74,13 +75,7 @@ const CreateTransaction = () => {
         navigate("/dashboard/transactions");
       }, 2000);
     } else {
-      if (Array.isArray(response.message)) {
-        response.message.map((error) => {
-          return errorToastify(error.toUpperCase());
-        });
-      } else {
-        errorToastify(response.message);
-      }
+      toast.error(response.message);
     }
   };
 
@@ -113,27 +108,27 @@ const CreateTransaction = () => {
 
   return (
     <>
-      <div className="w-full flex flex-col">
+      <div className="flex flex-col w-full">
         <CardLayoutContainer className={"mb-5"}>
           <CardLayoutHeader
             heading="Transaction Receipt"
             className={"flex items-center justify-between"}
           />
           <CardLayoutBody>
-            <div className="flex flex-col justify-center items-center gap-4 mt-2">
+            <div className="flex flex-col items-center justify-center gap-4 mt-2">
               {selectedFile ? (
                 <img
                   src={URL.createObjectURL(selectedFile)}
                   alt="Uploaded Preview"
-                  className=" object-cover rounded-xl border-2 border-slate-100"
+                  className="object-cover border-2 rounded-xl border-slate-100"
                 />
               ) : (
                 <label
                   htmlFor="image-upload"
-                  className="p-16 flex flex-col items-center justify-center"
+                  className="flex flex-col items-center justify-center p-16"
                 >
-                  <FaCloudUploadAlt className="text-5xl text-slate-400 transition-all mb-3 cursor-pointer upload-icon" />
-                  <h2 className="text-md text-center text-slate-500">
+                  <FaCloudUploadAlt className="mb-3 text-5xl transition-all cursor-pointer text-slate-400 upload-icon" />
+                  <h2 className="text-center text-md text-slate-500">
                     Upload Transaction Receipt
                   </h2>
                 </label>
@@ -143,7 +138,7 @@ const CreateTransaction = () => {
           <CardLayoutFooter>
             <label
               htmlFor="image-upload"
-              className="cursor-pointer bg-blue-100 hover:bg-secondary text-primary hover:text-white py-2 font-semibold px-4 rounded-full transition duration-300"
+              className="px-4 py-2 font-semibold transition duration-300 bg-blue-100 rounded-full cursor-pointer hover:bg-secondary text-primary hover:text-white"
             >
               Upload Image
             </label>
@@ -169,7 +164,7 @@ const CreateTransaction = () => {
             {({ values, errors, touched, setFieldValue }) => (
               <Form>
                 <CardLayoutBody>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-5 mb-7">
+                  <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3 md:gap-5 mb-7">
                     <div className="relative mb-5">
                       <Select
                         id="bank_name"
@@ -184,7 +179,7 @@ const CreateTransaction = () => {
                         optionIcons={<PiBankBold />}
                       />
                       {touched.bank_name && errors.bank_name && (
-                        <div className="text-red-500 text-sm mt-2 absolute left-0">
+                        <div className="absolute left-0 mt-2 text-sm text-red-500">
                           {errors.bank_name}
                         </div>
                       )}
@@ -202,7 +197,7 @@ const CreateTransaction = () => {
                         }
                       />
                       {touched.bank_name && errors.bank_name && (
-                        <div className="text-red-500 text-sm mt-2 absolute left-0">
+                        <div className="absolute left-0 mt-2 text-sm text-red-500">
                           {errors.bank_name}
                         </div>
                       )}
@@ -220,7 +215,7 @@ const CreateTransaction = () => {
                         }
                       />
                       {touched.bank_number && errors.bank_number && (
-                        <div className="text-red-500 text-sm mt-2 absolute left-0">
+                        <div className="absolute left-0 mt-2 text-sm text-red-500">
                           {errors.bank_number}
                         </div>
                       )}
@@ -239,7 +234,7 @@ const CreateTransaction = () => {
                       />
                       {touched.account_holder_name &&
                         errors.account_holder_name && (
-                          <div className="text-red-500 text-sm mt-2 absolute left-0">
+                          <div className="absolute left-0 mt-2 text-sm text-red-500">
                             {errors.account_holder_name}
                           </div>
                         )}
@@ -257,7 +252,7 @@ const CreateTransaction = () => {
                         }
                       />
                       {touched.document_number && errors.document_number && (
-                        <div className="text-red-500 text-sm mt-2 absolute left-0">
+                        <div className="absolute left-0 mt-2 text-sm text-red-500">
                           {errors.document_number}
                         </div>
                       )}
@@ -275,7 +270,7 @@ const CreateTransaction = () => {
                         }
                       />
                       {touched.amount && errors.amount && (
-                        <div className="text-red-500 text-sm mt-2 absolute left-0">
+                        <div className="absolute left-0 mt-2 text-sm text-red-500">
                           {errors.amount}
                         </div>
                       )}
@@ -303,7 +298,7 @@ const CreateTransaction = () => {
 
                       />
                       {touched.payment_date && errors.payment_date && (
-                        <div className="text-red-500 text-sm mt-2 absolute left-0">
+                        <div className="absolute left-0 mt-2 text-sm text-red-500">
                           {errors.payment_date}
                         </div>
                       )}
@@ -322,7 +317,7 @@ const CreateTransaction = () => {
                       }
                     />
                     {touched.comment && errors.comment && (
-                      <div className="text-red-500 text-sm mt-2 absolute left-0">
+                      <div className="absolute left-0 mt-2 text-sm text-red-500">
                         {errors.comment}
                       </div>
                     )}

@@ -88,7 +88,7 @@ const FlightBookings = () => {
     },
     // {
     //   name: "Refund",
-    //   icon: <HiReceiptRefund title="Refund" className="text-blue-500 text-xl" />,
+    //   icon: <HiReceiptRefund title="Refund" className="text-xl text-blue-500" />,
     //   handler: (_, item) => {
     //     setConfirmStatus(true)
     //     setRefundItem(item)
@@ -107,12 +107,14 @@ const FlightBookings = () => {
   const gettingFlightBookings = async () => {
     const userData = JSON.parse(localStorage.getItem("userData"));
     const id = userData?.company_id;
+  
     const response = await getFlightBookings(id);
-    if (response.status) {
+    if (response?.status) {
       setBookingsData(response.data);
+    } else {
+      toast.error(response.message);
     }
   };
-
 
   const abortDeleteHandler = () => {
     setModalStatus(false);

@@ -101,10 +101,9 @@ const CreateUser = () => {
         const response = await getRoles();
         if (response.status) {
           setRoles(response.data.roles);
+        } else {
+          toast.error(response.message);
         }
-      } catch (error) {
-        console.error("Error fetching roles:", error);
-        toast.error("Failed to fetch roles.");
       } finally {
         setLoading(false);
       }

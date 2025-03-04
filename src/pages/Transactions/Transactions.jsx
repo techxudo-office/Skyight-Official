@@ -48,6 +48,8 @@ const Transactions = () => {
     const response = await getTransactions();
     if (response.status) {
       setTransactionsData(response.data);
+    } else {
+      toast.error(response.message);
     }
   };
 
@@ -62,7 +64,7 @@ const Transactions = () => {
         <CardLayoutHeader
           removeBorder={true}
           heading={"Transactions"}
-          className="flex justify-between items-center"
+          className="flex items-center justify-between"
         >
           <div className="relative">
             <SecondaryButton

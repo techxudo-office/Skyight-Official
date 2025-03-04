@@ -301,8 +301,6 @@ export const searchFlight = async (payload) => {
         Authorization: getToken(),
       },
     });
-
-    console.log(response);
     if (response.status === 200) {
       if (!response.data.data || response.data.data.length === 0) {
         return { status: false, message: ["No Flight Found!"] };
@@ -315,13 +313,10 @@ export const searchFlight = async (payload) => {
       }
     }
   } catch (error) {
-    console.log("Failed while searching flight: ", error);
-    if (error.response && error.response.data?.data?.errors) {
-      const errors = Object.values(error.response.data.data.errors);
-      return { status: false, message: errors };
-    } else {
-      return { status: false, message: "Server Connection Error" };
-    }
+    return {
+      status: false,
+      message: error?.response?.data?.message || "Failed to search Flights",
+    };
   }
 };
 
@@ -347,30 +342,11 @@ export const createTransaction = async (payload) => {
     }
   } catch (error) {
     console.log("Failed while creating transaction: ", error);
-    if (error.response) {
-      if (error.response.data.data.errors) {
-        const errors = Object.keys(error.response.data.data.errors);
-        const errorMessages = [];
-
-        for (let i = 0; i < errors.length; i++) {
-          errorMessages.push(error.response.data.data.errors[errors[i]]);
-        }
-        return {
-          status: false,
-          message: errorMessages,
-        };
-      } else {
-        return {
-          status: false,
-          message: "Failed while creating transaction",
-        };
-      }
-    } else {
-      return {
-        status: false,
-        message: "Server Connection Error",
-      };
-    }
+    return {
+      status: false,
+      message:
+        error?.response?.data?.message || "Failed to create user transactions",
+    };
   }
 };
 
@@ -420,6 +396,11 @@ export const getTransactions = async () => {
     }
   } catch (error) {
     console.log("Failed while getting transactions: ", error);
+    return {
+      status: false,
+      message:
+        error?.response?.data?.message || "Failed to fetch User Transactions.",
+    };
   }
 };
 
@@ -642,7 +623,6 @@ export const getFlightBookings = async (id) => {
         Authorization: getToken(),
       },
     });
-    console.log(response);
     if (response.status === 200) {
       if (response.data.data.length > 0) {
         const extractedData = response.data.data.map(
@@ -681,10 +661,16 @@ export const getFlightBookings = async (id) => {
           })
         );
         return { status: true, data: extractedData };
+      } else {
+        return { status: false, message: "No bookings found." };
       }
     }
   } catch (error) {
-    console.log("Failed while getting bookings: ", error);
+    return {
+      status: false,
+      message:
+        error?.response?.data?.message || "Failed to fetch flight bookings.",
+    };
   }
 };
 
@@ -965,7 +951,6 @@ export const getRoles = async (page = 0, limit = 10) => {
         Authorization: getToken(),
       },
     });
-
     if (response.status === 200) {
       return {
         status: true,
@@ -974,8 +959,11 @@ export const getRoles = async (page = 0, limit = 10) => {
       };
     }
   } catch (error) {
-    console.error("Failed to get roles: ", error);
-    return { status: false };
+    return {
+      status: false,
+      message:
+        error?.response?.data?.message || "Failed to create new role",
+    };
   }
 };
 

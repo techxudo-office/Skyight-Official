@@ -19,6 +19,7 @@ import {
 } from "../../components/components";
 import { useNavigate } from "react-router-dom";
 import { getRoles } from "../../utils/api_handler";
+import toast from "react-hot-toast";
 
 const Roles = () => {
   const navigate = useNavigate();
@@ -44,6 +45,8 @@ const Roles = () => {
           status: item.is_deleted ? "inactive" : "active",
         }));
         setRolesData(data);
+      } else {
+        toast.error(response.message);
       }
     } finally {
       setLoading(false);
