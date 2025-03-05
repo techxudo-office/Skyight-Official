@@ -172,8 +172,7 @@ const DashboardHome = () => {
         <CardLayoutHeader
           removeBorder={true}
           heading={"Flight Bookings"}
-          className="flex items-center justify-between"
-        ></CardLayoutHeader>
+          className="flex items-center justify-between"></CardLayoutHeader>
         <CardLayoutBody removeBorder={true}>
           {/* <Table
             columns={columnsData}
@@ -192,8 +191,7 @@ const DashboardHome = () => {
       </CardLayoutContainer>
       <div
         id="footer-container"
-        className="flex items-center justify-center w-full p-3 pb-0 bg-white"
-      >
+        className="flex items-center justify-center w-full p-3 pb-0 bg-white">
         <h2 className="mt-2 font-semibold text-center text-text text-md">
           © 2024 All rights reserved by SKYIGHT AIR & BOOKING SYSTEM
         </h2>
