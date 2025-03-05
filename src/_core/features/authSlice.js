@@ -1,117 +1,63 @@
-/** @format */
-
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
-import { VITE_API_URL } from '../../utils/ApiBaseUrl';
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
+import { VITE_API_URL } from "../../utils/ApiBaseUrl";
 
 const initialState = {
+  userData: null,
   isLoading: false,
-  authError: null,
-  logoutError: null,
-  isLogoutLoading: false,
-  oneSignalExternalIdStatus: false,
+  error: null,
 };
 
 const authSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState,
   reducers: {
+    logout: (state) => {
+      state.userData = null;
+    },
   },
-  extraReducers: builder => {
-    builder.addCase(forgotPassword.pending, (state, action) => {
-      state.isLoading = true;
-    });
-    builder.addCase(forgotPassword.fulfilled, (state, action) => {
-      state.isLoading = false;
-      state.forgotMessage = action.payload?.msg;
-    });
-    builder.addCase(forgotPassword.rejected, (state, action) => {
-      state.isLoading = false;
-      state.userError = action.payload;
-    });
-    builder.addCase(logoutUser?.pending, (state, action) => {
-      state.isLogoutLoading = true;
-    });
-    builder.addCase(logoutUser.fulfilled, (state, action) => {
-      state.isLogoutLoading = false;
-      state.logoutError = action.payload?.msg;
-    });
-    builder.addCase(logoutUser.rejected, (state, action) => {
-      state.isLogoutLoading = false;
-    });
+  extraReducers: (builder) => {
+    builder
+      .addCase(login.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(login.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.userData = action.payload;
+      })
+      .addCase(login.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      });
   },
 });
 
-export const forgotPassword = createAsyncThunk(
-  'auth//forgotPassword',
-  async (data, thunkAPI) => {
-    const headers = {
-      Authorization: `Bearer ${process.env.AUTH_TOKEN}`,
-    };
-    const url = `${BASE_URL}forget`;
+export const login = createAsyncThunk(
+  "auth/login",
+  async (payload, thunkAPI) => {
     try {
-      const resp = await axios.post(url, data, {
-        headers: headers,
+      const response = await axios.post(`${VITE_API_URL}/api/login`, payload, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
       });
-      if (resp.data?.status == 'success') {
-        thunkAPI.dispatch(
-          showToast({
-            visible: true,
-            text: 'Email Sent Successfully',
-            type: 'success',
-          }),
-        );
+      if (response.status === 200) {
+        return response.data.data;
       }
-      return resp.data;
     } catch (error) {
-      console.log(error.message, 'err');
-      thunkAPI.dispatch(
-        showToast({
-          visible: true,
-          text: error?.response?.message,
-          type: 'error',
-        }),
-      );
-      return thunkAPI.rejectWithValue(error?.response?.data?.message);
+      console.error("Login Error:", error);
+      if (error.response) {
+        return thunkAPI.rejectWithValue(
+          error.response.data?.message || "Login failed"
+        );
+      } else {
+        return thunkAPI.rejectWithValue("Server Connection Error");
+      }
     }
-  },
+  }
 );
 
-export const logoutUser = createAsyncThunk(
-  'auth//LOGOUT',
-  async ({ token }, thunkAPI) => {
-    const url = `${BASE_URL}logout`;
-    const headers = {
-      Authorization: `Bearer ${token}`,
-    };
-    try {
-      const resp = await axios.post(url, '', {
-        headers: headers,
-      });
-      if (resp.data.status === 'success') {
-        thunkAPI.dispatch(
-          showToast({
-            visible: true,
-            text: resp?.data?.response?.message,
-            type: 'success',
-          }),
-        );
-        thunkAPI.dispatch(logout());
-      }
-      return resp.data;
-    } catch (error) {
-      thunkAPI.dispatch(
-        showToast({
-          visible: true,
-          text: error?.response?.data?.message,
-          type: 'error',
-        }),
-      );
-      console.log(error, 'eroo');
-      return thunkAPI.rejectWithValue(error?.response?.data?.message);
-    }
-  },
-);
-
-export const { } = authSlice.actions;
+export const { logout } = authSlice.actions;
 export default authSlice.reducer;

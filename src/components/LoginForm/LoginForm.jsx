@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   CardLayoutContainer,
   CardLayoutBody,
@@ -13,15 +13,17 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate, Link } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
-import { login } from "../../utils/api_handler";
+// import { login } from "../../utils/api_handler";
 import { FaCheck } from "react-icons/fa6";
 import { AuthContext } from "../../context/AuthContext";
+import { login } from "../../_core/features/authSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const LoginForm = () => {
   const navigate = useNavigate();
-  const { updateAuthToken } = useContext(AuthContext);
-
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
+  const userData = useSelector((state) => state.auth.userData);
 
   const validationSchema = Yup.object({
     email: Yup.string()
@@ -30,22 +32,38 @@ const LoginForm = () => {
     password: Yup.string().required("Please enter your password"),
   });
 
+  useEffect(() => {
+    if (userData) {
+      navigate("/dashboard");
+    }
+  }, [userData, navigate]);
+
   const loginHandler = async (payload, resetForm) => {
-    setLoading(true);
-    let response = await login(payload);
-    if (response.status) {
-      updateAuthToken(response.token);
+    try {
+      const response = await dispatch(login(payload)).unwrap();
       toast.success(response.message);
       resetForm();
-      setLoading(false);
-      setTimeout(() => {
-        navigate("/dashboard");
-        }, 3000);
-    } else {
-      toast.error(response.message);
-      setLoading(false);
+    } catch (error) {
+      toast.error(error || "Login failed. Please try again.");
     }
   };
+
+  // const loginHandler = async (payload, resetForm) => {
+  //   setLoading(true);
+  //   let response = await login(payload);
+  //   if (response.status) {
+  //     updateAuthToken(response.token);
+  //     toast.success(response.message);
+  //     resetForm();
+  //     setLoading(false);
+  //     setTimeout(() => {
+  //       navigate("/dashboard");
+  //       }, 3000);
+  //   } else {
+  //     toast.error(response.message);
+  //     setLoading(false);
+  //   }
+  // };
 
   const formik = useFormik({
     initialValues: {
@@ -72,13 +90,11 @@ const LoginForm = () => {
             <h3 className="mb-10 text-4xl font-extrabold text-center">Login</h3>
             <form
               onSubmit={formik.handleSubmit}
-              className="flex flex-col gap-5"
-            >
+              className="flex flex-col gap-5">
               <div
                 className={`relative ${
                   formik.touched.email && formik.errors.email ? "mb-5" : ""
-                }`}
-              >
+                }`}>
                 <Input
                   placeholder="abc.xcv@gmail.com"
                   id="email"
@@ -101,8 +117,7 @@ const LoginForm = () => {
                   formik.touched.password && formik.errors.password
                     ? "mb-5"
                     : ""
-                }`}
-              >
+                }`}>
                 <Input
                   placeholder="********"
                   id="password"
@@ -122,8 +137,7 @@ const LoginForm = () => {
 
               <Link
                 className="text-center transition-all hover:text-primary"
-                to="/forget-password"
-              >
+                to="/forget-password">
                 Forget your password?
               </Link>
 

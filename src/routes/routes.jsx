@@ -1,73 +1,51 @@
-import React, { useContext } from "react";
-import { BrowserRouter as Router, Routes, Route,Navigate } from "react-router-dom";
+import React from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { routesData } from "../data/routesData";
-import { AuthContext } from "../context/AuthContext";
-
-const ProtectedRoute = ({ element }) => {
-  const { authToken, loading } = useContext(AuthContext);
-
-  if (loading) {
-    return null; 
-  }
-
-  if (!authToken) {
-    return <Navigate to="/" replace />;
-  }
-
-  return element;
-};
 
 const AppRoutes = () => {
+  const userData = useSelector((state) => state.auth.userData);
+  console.log(userData, "userData"); // Debugging
+
   return (
-   
-      <Routes>
-        {routesData.map((route, index) => {
-          if (route.children) {
-            return (
-              <Route
-                key={index}
-                path={route.path}
-                element={
-                  route.protected ? (
-                    <ProtectedRoute element={route.element} />
-                  ) : (
-                    route.element
-                  )
-                }
-              >
-                {route.children.map((child, childIndex) => (
-                  <Route
-                    key={childIndex}
-                    index={child.index}
-                    path={child.path}
-                    element={
-                      child.protected ? (
-                        <ProtectedRoute element={child.element} />
-                      ) : (
-                        child.element
-                      )
-                    }
-                  />
-                ))}
-              </Route>
-            );
-          }
+    <Routes>
+      {routesData.map((route, index) => {
+        if (route.children) {
           return (
-            <Route
-              key={index}
-              path={route.path}
-              element={
-                route.protected ? (
-                  <ProtectedRoute element={route.element} />
-                ) : (
-                  route.element
-                )
-              }
-            />
+            <Route key={index} path={route.path} element={route.element}>
+              {route.children.map((child, childIndex) => (
+                <Route
+                  key={childIndex}
+                  index={child.index}
+                  path={child.path}
+                  element={
+                    child.protected && !userData ? (
+                      <Navigate to="/login" replace />
+                    ) : (
+                      child.element
+                    )
+                  }
+                />
+              ))}
+            </Route>
           );
-        })}
-      </Routes>
-   
+        }
+
+        return (
+          <Route
+            key={index}
+            path={route.path}
+            element={
+              route.protected && !userData ? (
+                <Navigate to="/login" replace />
+              ) : (
+                route.element
+              )
+            }
+          />
+        );
+      })}
+    </Routes>
   );
 };
 
