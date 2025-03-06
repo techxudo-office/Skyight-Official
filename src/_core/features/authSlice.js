@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { VITE_API_URL } from "../../utils/ApiBaseUrl";
+import { BASE_URL } from "../../utils/ApiBaseUrl";
 
 const initialState = {
   userData: null,
@@ -45,7 +45,7 @@ export const login = createAsyncThunk(
   "auth/login",
   async (payload, thunkAPI) => {
     try {
-      const response = await axios.post(`${VITE_API_URL}/api/login`, payload, {
+      const response = await axios.post(`${BASE_URL}/api/login`, payload, {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
@@ -71,7 +71,7 @@ export const logoutUser = createAsyncThunk(
   "auth/logout",
   async (token, thunkAPI) => {
     try {
-      const response = await axios.get(`${VITE_API_URL}/api/logout`, {
+      const response = await axios.get(`${BASE_URL}/api/logout`, {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",

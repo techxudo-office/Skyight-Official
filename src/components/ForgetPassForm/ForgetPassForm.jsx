@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import {
   CardLayoutContainer,
   CardLayoutBody,
@@ -6,55 +6,30 @@ import {
 import { Button, Spinner, Input } from "../../components/components";
 import toast, { Toaster } from "react-hot-toast";
 import { forgotPassword } from "../../utils/api_handler";
-import { useLocation, useNavigate, Link } from "react-router-dom";
-import { useFormik } from "formik";
-import * as Yup from "yup";
+import { Link } from "react-router-dom";
 
 const ForgetPassForm = () => {
-  const validationSchema = Yup.object({
-    email: Yup.string()
-      .email("Invalid email format")
-      .required("Please enter your email"),
-  });
-
-  const navigate = useNavigate();
-  const location = useLocation();
-
   const [loading, setLoading] = useState(false);
-
   const [email, setEmail] = useState("");
 
-  const forgetPasswordHandler = async (payload, resetForm) => {
-    setLoading(true);
-    let response = await forgotPassword(payload);
-    if (response.status) {
-      toast.success(response.message);
-      setLoading(false);
-      setTimeout(() => {
-        // navigate("/login");
-      }, 3000);
-    } else {
-      toast.error(response.message);
-      setLoading(false);
-    }
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
   };
 
-  const formik = useFormik({
-    initialValues: {
-      email: "",
-    },
-    validationSchema,
-    onSubmit: async (values, { resetForm }) => {
-      const payload = {
-        email: values.email,
-      };
-      forgetPasswordHandler(payload, resetForm);
-    },
-  });
+  const forgetPasswordHandler = async () => {
+    if (!validateEmail(email)) {
+      toast.error("Invalid email format");
+      return;
+    }
+    setLoading(true);
+    let response = await forgotPassword({ email });
+    setLoading(false);
 
-  const onKeyPressHandler = (e, index) => {
-    if (e.key === "Enter") {
-      forgetPasswordHandler();
+    if (response.status) {
+      toast.success(response.message);
+    } else {
+      toast.error(response.message);
     }
   };
 
@@ -69,8 +44,7 @@ const ForgetPassForm = () => {
               fill="none"
               viewBox="0 0 395 274"
               width={395}
-              height={200}
-            >
+              height={200}>
               <g filter="url(#password_svg__a)">
                 <path
                   fill="#fff"
@@ -165,8 +139,7 @@ const ForgetPassForm = () => {
                   x2="234.94"
                   y1="198.71"
                   y2="164.95"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#9076C9" />
                   <stop offset="0.77" stopColor="#CBD0E3" />
                   <stop offset={1} stopColor="#E1E7FF" />
@@ -177,8 +150,7 @@ const ForgetPassForm = () => {
                   x2="214.44"
                   y1="-31.54"
                   y2="152.33"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#E6E5F7" />
                   <stop offset="0.34" stopColor="#F5EBF4" />
                   <stop offset="0.57" stopColor="#FBCBD7" />
@@ -191,8 +163,7 @@ const ForgetPassForm = () => {
                   x2="163.37"
                   y1="156.49"
                   y2="186.05"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F55F30" />
                   <stop offset="0.63" stopColor="#FF9A9A" />
                   <stop offset={1} stopColor="#FFC93D" />
@@ -203,8 +174,7 @@ const ForgetPassForm = () => {
                   x2="294.63"
                   y1="170.7"
                   y2="66.94"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F55F30" />
                   <stop offset={1} stopColor="#FFC93D" />
                 </linearGradient>
@@ -215,8 +185,7 @@ const ForgetPassForm = () => {
                   x="0.59"
                   y="151.05"
                   colorInterpolationFilters="sRGB"
-                  filterUnits="userSpaceOnUse"
-                >
+                  filterUnits="userSpaceOnUse">
                   <feFlood floodOpacity={0} result="BackgroundImageFix" />
                   <feColorMatrix
                     in="SourceAlpha"
@@ -244,8 +213,7 @@ const ForgetPassForm = () => {
                   x="188.89"
                   y="138.14"
                   colorInterpolationFilters="sRGB"
-                  filterUnits="userSpaceOnUse"
-                >
+                  filterUnits="userSpaceOnUse">
                   <feFlood floodOpacity={0} result="BackgroundImageFix" />
                   <feColorMatrix
                     in="SourceAlpha"
@@ -276,39 +244,27 @@ const ForgetPassForm = () => {
             </h3>
             <h3 className="text-md text-slate-500 text-start mb-10 mx-2">
               Enter your email to reset your account password. We will send a
-              mail to your mail box
+              mail to your mailbox.
             </h3>
 
             <div className="flex flex-col gap-5 px-2">
-              <div
-                className={`relative ${
-                  formik.touched.email && formik.errors.email ? "mb-5" : ""
-                }`}
-              >
+              <div className="relative">
                 <Input
                   placeholder="abc.xcv@gmail.com"
                   id="email"
                   name="email"
                   label="Email Address*"
                   type="email"
-                  value={formik.values.email}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  onKeyPressHandler={onKeyPressHandler}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
-                {formik.touched.email && formik.errors.email && (
-                  <div className="text-red-500 text-sm mt-2 absolute left-0">
-                    {formik.errors.email}
-                  </div>
-                )}
               </div>
 
               <div className="flex items-center justify-end px-1 mt-[-10px]">
                 <Link
                   to={"/login"}
-                  className="text-end text-primary hover:text-secondary transition-all"
-                >
-                  Bank to Login?
+                  className="text-end text-primary hover:text-secondary transition-all">
+                  Back to Login?
                 </Link>
               </div>
 

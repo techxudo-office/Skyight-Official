@@ -1,6 +1,6 @@
 import axios from "axios";
+import { BASE_URL } from "./ApiBaseUrl";
 
-export const baseUrl = import.meta.env.VITE_API_URL;
 export const getToken = () => {
   return localStorage.getItem("auth_token");
 };
@@ -14,7 +14,7 @@ export const login = async (payload) => {
         "Content-Type": "application/json",
       },
       method: "POST",
-      url: `${baseUrl}/api/login`,
+      url: `${BASE_URL}/api/login`,
       data: payload,
     });
     console.log(response, "Login Response");
@@ -64,7 +64,7 @@ export const registration = async (payload) => {
   try {
     let response = await axios({
       method: "POST",
-      url: `${baseUrl}/api/register-company`,
+      url: `${BASE_URL}/api/register-company`,
       data: payload,
     });
     console.log(response);
@@ -109,7 +109,7 @@ export const verifyOTP = async (payload) => {
   try {
     let response = await axios({
       method: "POST",
-      url: `${baseUrl}/api/verify-verification-code`,
+      url: `${BASE_URL}/api/verify-verification-code`,
       data: payload,
     });
     console.log(response);
@@ -154,7 +154,7 @@ export const resendCode = async (payload) => {
   try {
     let response = await axios({
       method: "POST",
-      url: `${baseUrl}/api/resend-verification-code`,
+      url: `${BASE_URL}/api/resend-verification-code`,
       data: payload,
     });
     console.log(response);
@@ -196,10 +196,11 @@ export const resendCode = async (payload) => {
 };
 
 export const forgotPassword = async (payload) => {
+  console.log(payload)
   try {
     let response = await axios({
       method: "POST",
-      url: `${baseUrl}/api/forgot-password`,
+      url: `${BASE_URL}/api/forgot-password`,
       data: payload,
     });
     console.log(response);
@@ -245,7 +246,7 @@ export const getCredits = async () => {
   try {
     let response = await axios({
       method: "POST",
-      url: `${baseUrl}/api/booking-credit`,
+      url: `${BASE_URL}/api/booking-credit`,
       headers: {
         Authorization: getToken(),
       },
@@ -268,7 +269,7 @@ export const getCredits = async () => {
 
 //! Flight...
 export const searchFlight = async (payload) => {
-  const apiUrl = `${baseUrl}/api/search`;
+  const apiUrl = `${BASE_URL}/api/search`;
 
   // Constructing the required body dynamically
   const requestBody = {
@@ -325,7 +326,7 @@ export const createTransaction = async (payload) => {
   try {
     let response = await axios({
       method: "POST",
-      url: `${baseUrl}/api/company/create-transaction`,
+      url: `${BASE_URL}/api/company/create-transaction`,
       data: payload,
       headers: {
         Accept: "multipart/form-data",
@@ -354,7 +355,7 @@ export const getTransactions = async () => {
   try {
     let response = await axios({
       method: "GET",
-      url: `${baseUrl}/api/company/user-transactions`,
+      url: `${BASE_URL}/api/company/user-transactions`,
       headers: {
         Authorization: getToken(),
       },
@@ -409,7 +410,7 @@ export const getTransactions = async () => {
 //   try {
 //     let response = await axios({
 //       method: "POST",
-//       url: `${baseUrl}/api/user`,
+//       url: `${BASE_URL}/api/user`,
 //       data: payload,
 // headers: {
 //   Authorization: getToken(),
@@ -448,7 +449,7 @@ export const getTransactions = async () => {
 
 export const createUser = async (payload) => {
   try {
-    const response = await axios.post(`${baseUrl}/api/user`, payload, {
+    const response = await axios.post(`${BASE_URL}/api/user`, payload, {
       headers: {
         Authorization: getToken(),
         "Content-Type": "application/json",
@@ -468,7 +469,7 @@ export const createUser = async (payload) => {
 //   try {
 //     let response = await axios({
 //       method: "GET",
-//       url: `${baseUrl}/api/user/company-user`,
+//       url: `${BASE_URL}/api/user/company-user`,
 //       headers: {
 //         Authorization: getToken(),
 //       },
@@ -496,7 +497,7 @@ export const createUser = async (payload) => {
 // };
 
 export const getUsers = async () => {
-  let response = await axios.get(`${baseUrl}/api/user/company-user`, {
+  let response = await axios.get(`${BASE_URL}/api/user/company-user`, {
     headers: {
       Authorization: getToken(),
     },
@@ -508,7 +509,7 @@ export const deleteUser = async (id) => {
   try {
     let response = await axios({
       method: "DELETE",
-      url: `${baseUrl}/api/user/${id}`,
+      url: `${BASE_URL}/api/user/${id}`,
       headers: {
         Authorization: getToken(),
       },
@@ -528,7 +529,7 @@ export const createTicket = async (payload) => {
   try {
     let response = await axios({
       method: "POST",
-      url: `${baseUrl}/api/ticket`,
+      url: `${BASE_URL}/api/ticket`,
       data: payload,
       headers: {
         Authorization: getToken(),
@@ -569,7 +570,7 @@ export const getTickets = async () => {
   try {
     let response = await axios({
       method: "GET",
-      url: `${baseUrl}/api/ticket/company`,
+      url: `${BASE_URL}/api/ticket/company`,
       headers: {
         Authorization: getToken(),
       },
@@ -597,7 +598,7 @@ export const deleteTicket = async (id) => {
   try {
     let response = await axios({
       method: "DELETE",
-      url: `${baseUrl}/api/ticket/${id}`,
+      url: `${BASE_URL}/api/ticket/${id}`,
       headers: {
         Authorization: getToken(),
       },
@@ -618,7 +619,7 @@ export const getFlightBookings = async (id) => {
   try {
     let response = await axios({
       method: "GET",
-      url: `${baseUrl}/api/booking/${id}`,
+      url: `${BASE_URL}/api/booking/${id}`,
       headers: {
         Authorization: getToken(),
       },
@@ -683,7 +684,7 @@ export const issueBooking = async (id) => {
   try {
     let response = await axios({
       method: "POST",
-      url: `${baseUrl}/api/booking-issue`,
+      url: `${BASE_URL}/api/booking-issue`,
       data: {
         pnr: id,
       },
@@ -705,7 +706,7 @@ export const getBookingDetails = async (id) => {
   try {
     let response = await axios({
       method: "GET",
-      url: `${baseUrl}/api/booking/${id}`,
+      url: `${BASE_URL}/api/booking/${id}`,
       headers: {
         "Content-Type": "application/json",
         Authorization: getToken(),
@@ -726,7 +727,7 @@ export const cancelFlightBooking = async (payload) => {
   try {
     let response = await axios({
       method: "POST",
-      url: `${baseUrl}/api/request-cancel-booking`,
+      url: `${BASE_URL}/api/request-cancel-booking`,
       data: payload,
       headers: {
         Authorization: getToken(),
@@ -758,7 +759,7 @@ export const refundRequest = async (payload) => {
   try {
     let response = await axios({
       method: "POST",
-      url: `${baseUrl}/api/request-booking-refund`,
+      url: `${BASE_URL}/api/request-booking-refund`,
       data: payload,
       headers: {
         Authorization: getToken(),
@@ -788,7 +789,7 @@ export const confirmBooking = async (payload) => {
   try {
     let response = await axios({
       method: "POST",
-      url: `${baseUrl}/api/booking`,
+      url: `${BASE_URL}/api/booking`,
       data: payload,
       headers: {
         Authorization: getToken(),
@@ -828,7 +829,7 @@ export const getRoutes = async () => {
   try {
     let response = await axios({
       method: "POST",
-      url: `${baseUrl}/api/booking-all-active-routes`,
+      url: `${BASE_URL}/api/booking-all-active-routes`,
       headers: {
         Authorization: getToken(),
       },
@@ -854,7 +855,7 @@ export const getBanks = async () => {
   try {
     let response = await axios({
       method: "GET",
-      url: `${baseUrl}/api/bank`,
+      url: `${BASE_URL}/api/bank`,
       headers: {
         Authorization: getToken(),
       },
@@ -879,7 +880,7 @@ export const getNotifications = async () => {
   try {
     let response = await axios({
       method: "GET",
-      url: `${baseUrl}/api/notification?isMaster=${true}`,
+      url: `${BASE_URL}/api/notification?isMaster=${true}`,
       headers: {
         Authorization: getToken(),
       },
@@ -905,7 +906,7 @@ export const getAnnouncements = async () => {
   try {
     let response = await axios({
       method: "GET",
-      url: `${baseUrl}/api/getAnnouncements`,
+      url: `${BASE_URL}/api/getAnnouncements`,
       headers: {
         Authorization: getToken(),
       },
@@ -930,7 +931,7 @@ export const getAnnouncements = async () => {
 //! Roles...
 export const createRole = async (payload) => {
   try {
-    const response = await axios.post(`${baseUrl}/api/role`, payload, {
+    const response = await axios.post(`${BASE_URL}/api/role`, payload, {
       headers: {
         Authorization: getToken(),
         "Content-Type": "application/json",
@@ -951,7 +952,7 @@ export const getRoles = async (page = 0, limit = 10) => {
   try {
     let response = await axios({
       method: "GET",
-      url: `${baseUrl}/api/role?is_deleted=false&page=${page}&limit=${limit}`,
+      url: `${BASE_URL}/api/role?is_deleted=false&page=${page}&limit=${limit}`,
       headers: {
         Authorization: getToken(),
       },
@@ -977,7 +978,7 @@ export const getTravelers = async (passengerType) => {
   try {
     let response = await axios({
       method: "GET",
-      url: `${baseUrl}/api/getTravellers?passenger_type=${passengerType}`,
+      url: `${BASE_URL}/api/getTravellers?passenger_type=${passengerType}`,
       headers: {
         Authorization: getToken(),
       },
@@ -997,7 +998,7 @@ export const getPNR = async (id) => {
   try {
     let response = await axios({
       method: "POST",
-      url: `${baseUrl}/api/booking-pnr`,
+      url: `${BASE_URL}/api/booking-pnr`,
       headers: {
         Authorization: getToken(),
         "Content-Type": "application/json",
