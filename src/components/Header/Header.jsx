@@ -37,10 +37,12 @@ import { SlSettings } from "react-icons/sl";
 import Notifications from "../../pages/Notifications/Notifications";
 import { motion } from "framer-motion";
 import Announcement from "../../pages/Anouncement/Anouncement";
+import { logoutUser } from "../../_core/features/authSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
   const navigate = useNavigate();
-  const { updateAuthToken } = useContext(AuthContext);
+  const dispatch = useDispatch();
 
   const [dropdownStatus, setDropDownStatus] = useState(false);
   const [isActive, setIsActive] = useState(false);
@@ -72,7 +74,6 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
       name: "Logout",
       icon: <FiLogOut />,
       handler: () => {
-        console.log("logout");
         logoutHandler();
       },
     },
@@ -129,13 +130,16 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
     },
   ];
 
+  const userData = useSelector((state) => state.auth.userData);
+
   const logoutHandler = () => {
-    console.log("Logout Handler");
-    dropdownHandler();
-    toast.success("Logout Successfully");
-    setTimeout(() => {
-      updateAuthToken();
-    }, 2000);
+    if (!userData?.token) return;
+
+    dispatch(logoutUser(userData.token)).then(() => {
+      console.log("User logged out successfully");
+      dropdownHandler();
+      toast.success("Logout Successfully");
+    });
   };
 
   const navigationHandler = (path) => {
@@ -188,8 +192,7 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
               <CustomTooltip content={"Open / close"}>
                 <button
                   className="text-gray-700 transition hover:text-gray-900"
-                  onClick={sidebarHandler}
-                >
+                  onClick={sidebarHandler}>
                   <GiHamburgerMenu size={22} />{" "}
                   {/* Consistent size for mobile and desktop */}
                 </button>
@@ -209,8 +212,7 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
               <div
                 className="relative py-2"
                 onMouseEnter={() => setIsAnnHovered(true)}
-                onMouseLeave={() => setIsAnnHovered(false)}
-              >
+                onMouseLeave={() => setIsAnnHovered(false)}>
                 {" "}
                 <CustomTooltip content={"Announcement"}>
                   <div className="max-md:hidden">
@@ -223,8 +225,7 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.3 }}
-                    className="absolute top-10 right-0 w-[300px] bg-white shadow-lg rounded-lg p-3 z-50"
-                  >
+                    className="absolute top-10 right-0 w-[300px] bg-white shadow-lg rounded-lg p-3 z-50">
                     <Announcement />
                   </motion.div>
                 )}
@@ -232,8 +233,7 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
               <div
                 className="relative py-2"
                 onMouseEnter={() => setIsNotiHovered(true)}
-                onMouseLeave={() => setIsNotiHovered(false)}
-              >
+                onMouseLeave={() => setIsNotiHovered(false)}>
                 <CustomTooltip content={"Notifications"}>
                   <div className="max-md:hidden">
                     <MdNotificationsNone className="text-2xl cursor-pointer text-text" />
@@ -246,8 +246,7 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.3 }}
-                    className="absolute top-10 right-0 w-[500px] bg-white shadow-lg rounded-lg p-3 z-50"
-                  >
+                    className="absolute top-10 right-0 w-[500px] bg-white shadow-lg rounded-lg p-3 z-50">
                     <Notifications />
                   </motion.div>
                 )}
@@ -274,8 +273,7 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
                     ) : credits ? (
                       <span
                         onClick={refreshCredits}
-                        className="flex items-center gap-2"
-                      >
+                        className="flex items-center gap-2">
                         <HiOutlineRefresh className="max-sm:hidden" />
                         <span>PKR {credits?.toLocaleString("en-US")}</span>
                       </span>
