@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   CardLayoutContainer,
   CardLayoutBody,
@@ -7,12 +7,14 @@ import { Input, Button, Spinner } from "../../components/components";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate, Link } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
-import { registration } from "../../utils/api_handler";
+import { Toaster } from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { register } from "../../_core/features/authSlice";
 
 const RegistrationForm = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const loading = useSelector((state) => state.auth.isLoadingRegister);
 
   const validationSchema = Yup.object({
     company_name: Yup.string().required("Please enter your company name"),
@@ -28,30 +30,13 @@ const RegistrationForm = () => {
     website: Yup.string().required("Please enter your website"),
   });
 
-  const registrationHandler = async (payload, resetForm) => {
-    setLoading(true);
-    const email = payload.email;
-    let response = await registration(payload);
-    if (response.status) {
-      toast.success(response.message);
-      setLoading(false);
-      resetForm();
-      setTimeout(() => {        
-        navigate("/verification", { state: email });
-      }, 3000);
-    } else {
-      if (Array.isArray(response.message)) {
-        const errMessages = response.message;
-        if (errMessages.length > 0) {
-          errMessages.map((error, _) => {
-            toast.error(error);
-          });
-        }
-      } else {
-        toast.error(response.message);
+  const registrationHandler = (payload, resetForm) => {
+    dispatch(register(payload)).then((action) => {
+      if (register.fulfilled.match(action)) {
+        resetForm();
+        navigate("/verification", { state: payload.email });
       }
-      setLoading(false);
-    }
+    });
   };
 
   const formik = useFormik({
@@ -98,15 +83,13 @@ const RegistrationForm = () => {
             </h3>
             <form
               onSubmit={formik.handleSubmit}
-              className="flex flex-col gap-5"
-            >
+              className="flex flex-col gap-5">
               <div
                 className={`relative ${
                   formik.touched.company_name && formik.errors.company_name
                     ? "mb-5"
                     : ""
-                }`}
-              >
+                }`}>
                 <Input
                   placeholder="Skyight"
                   id="company_name"
@@ -128,8 +111,7 @@ const RegistrationForm = () => {
                   formik.touched.first_name && formik.errors.first_name
                     ? "mb-5"
                     : ""
-                }`}
-              >
+                }`}>
                 <Input
                   placeholder="John"
                   id="first_name"
@@ -151,8 +133,7 @@ const RegistrationForm = () => {
                   formik.touched.last_name && formik.errors.last_name
                     ? "mb-5"
                     : ""
-                }`}
-              >
+                }`}>
                 <Input
                   placeholder="Albert"
                   id="last_name"
@@ -172,8 +153,7 @@ const RegistrationForm = () => {
               <div
                 className={`relative ${
                   formik.touched.email && formik.errors.email ? "mb-5" : ""
-                }`}
-              >
+                }`}>
                 <Input
                   placeholder="abc.xcv@gmail.com"
                   id="email"
@@ -195,8 +175,7 @@ const RegistrationForm = () => {
                   formik.touched.phone_number && formik.errors.phone_number
                     ? "mb-5"
                     : ""
-                }`}
-              >
+                }`}>
                 <Input
                   placeholder="+923312334567"
                   id="phone_number"
@@ -218,8 +197,7 @@ const RegistrationForm = () => {
                   formik.touched.mobile_number && formik.errors.mobile_number
                     ? "mb-5"
                     : ""
-                }`}
-              >
+                }`}>
                 <Input
                   placeholder="03312334567"
                   id="mobile_number"
@@ -242,8 +220,7 @@ const RegistrationForm = () => {
                   formik.touched.password && formik.errors.password
                     ? "mb-5"
                     : ""
-                }`}
-              >
+                }`}>
                 <Input
                   placeholder="********"
                   id="password"
@@ -263,8 +240,7 @@ const RegistrationForm = () => {
               <div
                 className={`relative ${
                   formik.touched.city && formik.errors.city ? "mb-5" : ""
-                }`}
-              >
+                }`}>
                 <Input
                   placeholder="Karachi"
                   id="city"
@@ -284,8 +260,7 @@ const RegistrationForm = () => {
               <div
                 className={`relative ${
                   formik.touched.country && formik.errors.country ? "mb-5" : ""
-                }`}
-              >
+                }`}>
                 <Input
                   placeholder="Pakistan"
                   id="country"
@@ -305,8 +280,7 @@ const RegistrationForm = () => {
               <div
                 className={`relative ${
                   formik.touched.address && formik.errors.add ? "mb-5" : ""
-                }`}
-              >
+                }`}>
                 <Input
                   placeholder="House no. abc near xvc mart"
                   id="address"
@@ -326,8 +300,7 @@ const RegistrationForm = () => {
               <div
                 className={`mt-5 relative ${
                   formik.touched.website && formik.errors.website ? "mb-5" : ""
-                }`}
-              >
+                }`}>
                 <Input
                   placeholder="www.skyight.com"
                   id="website"
@@ -347,8 +320,7 @@ const RegistrationForm = () => {
 
               <Link
                 className="text-center hover:text-primary transition-all"
-                to="/login"
-              >
+                to="/login">
                 Already have an account ?
               </Link>
 

@@ -9,18 +9,21 @@ const initialState = {
   loginError: null,
   isLoadingForgotPassword: false,
   forgotPasswordError: null,
+  isLoadingRegister: false,
+  registerError: null,
+  isLoadingVerifyOTP: false,
+  verifyOTPError: null,
 };
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(login.pending, (state) => {
         state.isLoading = true;
-        state.error = null;
+        state.loginError = null;
       })
       .addCase(login.fulfilled, (state, action) => {
         state.isLoading = false;
@@ -31,7 +34,7 @@ const authSlice = createSlice({
       })
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload;
+        state.loginError = action.payload;
       })
       .addCase(logout.fulfilled, (state) => {
         state.userData = null;
@@ -47,6 +50,28 @@ const authSlice = createSlice({
       .addCase(forgotPassword.rejected, (state, action) => {
         state.isLoadingForgotPassword = false;
         state.forgotPasswordError = action.payload;
+      })
+      .addCase(register.pending, (state) => {
+        state.isLoadingRegister = true;
+        state.registerError = null;
+      })
+      .addCase(register.fulfilled, (state) => {
+        state.isLoadingRegister = false;
+      })
+      .addCase(register.rejected, (state, action) => {
+        state.isLoadingRegister = false;
+        state.registerError = action.payload;
+      })
+      .addCase(verifyOTP.pending, (state) => {
+        state.isLoadingVerifyOTP = true;
+        state.verifyOTPError = null;
+      })
+      .addCase(verifyOTP.fulfilled, (state) => {
+        state.isLoadingVerifyOTP = false;
+      })
+      .addCase(verifyOTP.rejected, (state, action) => {
+        state.isLoadingVerifyOTP = false;
+        state.verifyOTPError = action.payload;
       });
   },
 });
@@ -110,5 +135,48 @@ export const forgotPassword = createAsyncThunk(
   }
 );
 
-export const { } = authSlice.actions;
+export const register = createAsyncThunk(
+  "auth/registerCompany",
+  async (payload, thunkAPI) => {
+    try {
+      const response = await axios.post(`${BASE_URL}/api/register-company`, payload);
+      if (response.status === 200) {
+        toast.success("Registration successful. Verify OTP...");
+        return response.data.message;
+      }
+    } catch (error) {
+      console.error("Registration Error:", error);
+      let errorMessage = "Registration failed. Please try again.";
+
+      if (error.response) {
+        if (error.response.data.data?.errors) {
+          const errors = Object.values(error.response.data.data.errors);
+          errorMessage = errors.join(", ");
+        } else if (error.response.data.message) {
+          errorMessage = error.response.data.message;
+        }
+      }
+      toast.error(errorMessage);
+      return thunkAPI.rejectWithValue(errorMessage);
+    }
+  }
+);
+
+export const verifyOTP = createAsyncThunk(
+  "auth/verifyOTP",
+  async (payload, thunkAPI) => {
+    try {
+      const response = await axios.post(`${BASE_URL}/api/verify-verification-code`, payload);
+      if (response.status === 200) {
+        return response.data.message;
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "OTP verification failed")
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "OTP verification failed"
+      );
+    }
+  }
+);
+
 export default authSlice.reducer;
