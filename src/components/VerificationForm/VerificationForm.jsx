@@ -21,8 +21,8 @@ const VerificationForm = () => {
   const inputRefs = useRef([]);
 
   const verificationHandler = (payload) => {
-    dispatch(verifyOTP(payload)).then((response) => {
-      if (response.code === 200) {
+    dispatch(verifyOTP(payload)).then((action) => {
+      if (verifyOTP.fulfilled.match(action)) {
         setVerificationCode(["", "", "", ""]);
         navigate("/login");
       }

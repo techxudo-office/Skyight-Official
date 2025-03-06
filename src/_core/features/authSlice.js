@@ -124,10 +124,11 @@ export const forgotPassword = createAsyncThunk(
     try {
       const response = await axios.post(`${BASE_URL}/api/forgot-password`, payload);
       if (response.status === 200) {
+        toast.success("Forgot Password Successfully");
         return response.data.message;
       }
     } catch (error) {
-      console.error("Forgot Password Error:", error);
+      toast.success(error.response?.data?.message || "Forgot password request failed");
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || "Forgot password request failed"
       );
@@ -168,10 +169,11 @@ export const verifyOTP = createAsyncThunk(
     try {
       const response = await axios.post(`${BASE_URL}/api/verify-verification-code`, payload);
       if (response.status === 200) {
+        toast.success("OTP Verified Successfully");
         return response.data.message;
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || "OTP verification failed")
+      toast.error(error.response?.data?.message || "OTP verification failed");
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || "OTP verification failed"
       );

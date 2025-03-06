@@ -24,16 +24,7 @@ const ForgetPassForm = () => {
       toast.error("Invalid email format");
       return;
     }
-
-    dispatch(forgotPassword({ email }))
-      .unwrap()
-      .then((response) => {
-        console.log(response);
-        toast.success(response);
-      })
-      .catch((error) => {
-        toast.error(error);
-      });
+    dispatch(forgotPassword({ email }));
   };
 
   return (
