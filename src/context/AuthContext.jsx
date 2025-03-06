@@ -18,7 +18,6 @@ const AuthProvider = ({ children }) => {
   const updateAuthToken = (token) => {
     if (token) {
       const decoded = jwtDecode(token);
-      console.log(decoded)
       const expiryTime = decoded.exp * 1000; // Convert expiry to milliseconds
 
       localStorage.setItem("auth_token", token);

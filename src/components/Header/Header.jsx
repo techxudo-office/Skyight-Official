@@ -30,7 +30,7 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
 
   const [dropdownStatus, setDropDownStatus] = useState(false);
   const [isActive, setIsActive] = useState(false);
-  const [credits, setCredits] = useState("");
+  const [credits, setCredits] = useState(null);
   const [CreditsDropdownOpen, setCreditsDropdownOpen] = useState(false);
   const [isAnnHovered, setIsAnnHovered] = useState(false);
   const [isNotiHovered, setIsNotiHovered] = useState(false);

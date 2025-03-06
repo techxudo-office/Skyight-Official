@@ -177,7 +177,7 @@ const TicketDetails = () => {
             </div>
 
             <Button disabled={!(bookingDetails?.booking_status == "pending") || dayjs().isAfter(dayjs(bookingDetails?.Timelimit))} className=" py-14 px-14 text-xl "
-              text={dayjs().isAfter(dayjs(bookingDetails?.Timelimit)) ? "TKT time limit exceeded" : "Order Ticket"}
+              text={dayjs().isAfter(dayjs.utc(bookingDetails?.Timelimit)) ? "TKT time limit exceeded" : "Order Ticket"}
               onClick={() => setConfirmObject((prev) => ({
                 ...prev,
                 status: true,

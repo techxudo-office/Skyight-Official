@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import { FaCalendar, FaChevronCircleUp, FaUser } from "react-icons/fa";
+import { FaChevronCircleUp, FaUser } from "react-icons/fa";
 
 import { FaPlaneDeparture } from "react-icons/fa6";
 import { FaChevronCircleDown } from "react-icons/fa";
@@ -14,8 +14,7 @@ import {
   CardLayoutBody,
 } from "../../components/CardLayout/CardLayout";
 
-import { Formik, Form, useFormik } from "formik";
-import * as Yup from "yup";
+import { Formik, Form } from "formik";
 
 import {
   Button,
@@ -26,26 +25,16 @@ import {
   CustomDate,
   FlightInfoCard,
   PriceSummary,
-  Dropdown,
   ConfirmModal,
   TravelersQuantity,
   PopupMessage,
-  FlightDetailCard,
-  PassengerDetail,
   CustomTooltip,
-  PhoneNumberInput,
 } from "../../components/components";
-import toast, { Toaster } from "react-hot-toast";
-import { MdAdd, MdArrowBack, MdArrowForward, MdCalendarMonth, MdCalendarToday, MdCalendarViewMonth, MdCancel, MdCheck, MdChildCare, MdChildFriendly, MdOutlineCalendarMonth, MdPerson } from "react-icons/md";
+import { MdAdd, MdArrowBack, MdArrowForward, MdCancel } from "react-icons/md";
 
 import { travelerDetailScehma } from "../../validations";
 import { getTravelers } from "../../utils/api_handler";
 
-const passengerOptions = [
-  { label: "Adult", value: "ADT" },
-  { label: "Child", value: "CHD" },
-  { label: "Infant", value: "INF" },
-];
 const titleOptions = [
   { label: "Mr", value: "MR" },
   { label: "Mrs", value: "MS" },
@@ -67,34 +56,13 @@ const TravelersDetails = () => {
 
   const [value, setValue] = useState();
   const [allTravelersData, setAllTravelersData] = useState(JSON.parse(localStorage.getItem("allFormData"))
-    // ?.map((item) => {
-    //   const mobile = Object.values(item.mobile).join('')
-    //   const telephone = Object.values(item.telephone).join('')
-    //   return (
-    //     {
-    //       ...item,
-    //       mobile: mobile,
-    //       telephone: telephone
-
-    //     }
-    //   )
-    // })
     || [])
-  // useEffect(() => {
-  //   const allFormData = localStorage.getItem("allFormData")
-  //   // console.log(allFormData)
-  //   if (allFormData) {
-  //     setAllTravelersData(JSON.parse(allFormData));
-  //   }
-
-  // }, [])
 
 
 
   const formikRefs = useRef([]);
   const [flightData, setFlightData] = useState(null);
   const [travelersData, setTravelersData] = useState(null);
-  const [flightSegments, setFlightSegments] = useState([]);
   const [pricingInfo, setPricingInfo] = useState();
   const [toogleForm, setToogleForm] = useState(null);
   const [clickedIndex, setClickedIndex] = useState(null);
@@ -102,10 +70,8 @@ const TravelersDetails = () => {
   const [oldTraveller, setOldTraveller] = useState(JSON.parse(localStorage.getItem("oldTraveller")) || []);
   const [isFormValid, setIsFormValid] = useState([]);
   const [PassengersInfo, setPassengersInfo] = useState([]);
-  const [editedValues, setEditedValues] = useState({});
   const [DocType, setDocType] = useState();
   const [errorsValue, setErrorsValue] = useState([]);
-  const [clearIndex, setClearIndex] = useState(-1);
   const [Passengers, setPassengers] = useState([
     { value: '', label: '' }
   ]);
@@ -317,18 +283,6 @@ const TravelersDetails = () => {
       }, 2000);
     }
   }, [successPopup.status])
-  // useEffect(() => {
-  //   if (allTravelersData.length > 0) {
-  //     setSuccessPopup({
-  //       status: true,
-  //       message: 'Traveler Added',
-  //       icon: <MdCheck className="text-greenColor" />
-  //     })
-  //   }
-
-
-
-  // }, [allTravelersData])
   console.log('alltravelersdata', allTravelersData)
   const addAllTravelers = () => {
 
@@ -338,7 +292,7 @@ const TravelersDetails = () => {
 
     const totalTraveler = Object.values(travelersData).reduce((a, b) => Number(a) + Number(b), 0);
     // console.log('totaltravelers', totalTraveler)
-    if (allTravelersData.length == totalTraveler & !allTravelersData.includes(null) & !allTravelersData.includes(undefined) & !allTravelersData.include(false)) {
+    if (allTravelersData.length == totalTraveler && !allTravelersData.includes(null) && !allTravelersData.includes(undefined) && !allTravelersData.includes(false)) {
       // console.log('navigate')
       navigate("/dashboard/confirm-booking", {
         state: { flightData, travelersData, allTravelersData },
@@ -357,7 +311,6 @@ const TravelersDetails = () => {
       setFlightData(location.state.data);
       setTravelersData(location.state.travelers);
       setPricingInfo(location.state.pricingInfo);
-      setFlightSegments(location.state.data.AirItinerary.OriginDestinationOptions[0].FlightSegment)
       setDocType(location.state.doc_type)
 
     }
@@ -384,48 +337,7 @@ const TravelersDetails = () => {
     }
   });
 
-  const passengersList = [
-    { value: 'Ahsan', label: 'Ahsan' },
-    { value: 'Talha', label: 'Talha' },
-    { value: 'Bakhtawar', label: 'Bakhtawar' },
-    { value: 'Abdullah', label: 'Abdullah' },
-    { value: 'Hashamuddin', label: 'Hashamuddin' },
-    { value: 'Umer Khalid', label: 'Umer Khalid' }
-  ]
-  const handleClearData = (setValues) => {
-    const formikInstance = formikRefs.current[clearIndex];
-    console.log("clearIndex:", clearIndex)
-    if (formikInstance) {
-      const values = { ...formikInstance.values };
-      console.log("index", travelerIndex)
-      executeClearData(setValues, values.email)
-    }
 
-  }
-  const executeClearData = (setValues, email) => {
-    const previousValues = {
-      title: titleOptions[0].value,
-      previousPassenger: '',
-      first_name: "",
-      last_name: "",
-      email: "",
-      telephone: "",
-      mobile: "",
-      country: DocType == "Domestic" ? "IRN" : "",
-      city: "",
-      date_of_birth: "",
-      gender: genderOptions[0].value,
-      passport_number: "",
-      passport_expiry_date: "",
-    }
-    setValues((prev) => ({ ...prev, ...previousValues }))
-    setAllTravelersData((prev) => prev.filter((item) => (item.email != email)))
-    setDisableAddTraveler((prev) => prev.filter((item, i) => (item != clearIndex)))
-  }
-  const handleEditData = (setValues, newValues) => {
-    setValues(newValues)
-
-  }
   console.log('valid', isFormValid)
   const gettingTravellers = async (type) => {
     const response = await getTravelers(type)
@@ -464,7 +376,6 @@ const TravelersDetails = () => {
   }
   return (
     <>
-      <Toaster />
       <PopupMessage icon={successPopup.icon} onClose={() => setSuccessPopup((prev) => ({ ...prev, status: false }))} active={successPopup.status} message={successPopup.message} />
       <div className="w-full flex flex-col">
         <TravelersQuantity flightSegments={location.state.data.AirItinerary.OriginDestinationOptions} travelers={travelersData} />
@@ -509,8 +420,6 @@ const TravelersDetails = () => {
                     <Formik
                       innerRef={(el) => (formikRefs.current[index] = el)}
                       initialValues={
-                        // allTravelersData[index]
-                        // || formikRefs.current[index]?.values || 
                         {
                           title: titleOptions[0].value,
                           previousPassenger: '',
@@ -590,8 +499,6 @@ const TravelersDetails = () => {
                                 {oldTraveller.includes(index) &&
                                   <MdCancel className="text-primary text-2xl cursor-pointer"
                                     onClick={() => {
-                                      // const { passenger_type, ...rest } = initialValues;
-                                      // setValues((prev) => ({ ...prev, ...rest }))
                                       setOldTraveller((prev) => prev.filter((item) => item != index))
                                       formikRefs.current[index]?.resetForm()
                                       setDisableAddTraveler((prev) => prev.filter((item) => (item !== index)))
@@ -636,7 +543,7 @@ const TravelersDetails = () => {
                                                 options={input.options}
                                                 disabled={disableAddTraveler.includes(index) || input.disabled}
                                                 placeholder={input.placeholder}
-                                                value={values[input.name]}
+                                                value={input.id === "country" ? (DocType === "Domestic" ? "IRN" : values[input.name]) : values[input.name]}
                                                 optionIcons={input.optionIcons}
                                                 onChange={(option) => setFieldValue(input.name, option.value)}
                                               />
