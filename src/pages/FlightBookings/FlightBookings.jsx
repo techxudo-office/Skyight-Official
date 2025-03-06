@@ -31,7 +31,7 @@ const FlightBookings = () => {
     { columnName: "PNR", fieldName: "booking_reference_id", type: "text" },
     { columnName: "Total Fare", fieldName: "total_fare", type: "number" },
     // { columnName: "Currency", fieldName: "currency", type: "text" },
-    // { columnName: "Status", fieldName: "booking_status", type: "status" },
+    { columnName: "Status", fieldName: "booking_status", type: "status" },
     { columnName: "Created At", fieldName: "created_at", type: "date" },
     // { columnName: "Actions", fieldName: "actions", type: "actions" },
   ];

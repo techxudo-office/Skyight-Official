@@ -981,5 +981,9 @@ export const getPNR = async (id) => {
       };
     }
   } catch (error) {
+    return {
+      status: true,
+      data: response,
+    };
   }
 };

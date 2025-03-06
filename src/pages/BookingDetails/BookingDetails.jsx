@@ -63,12 +63,20 @@ const TicketDetails = () => {
     }
   };
   const handleIssue = async (pnr) => {
-    const response = await issueBooking(pnr)
-    if (response.status) {
-      toast.success(`Ordered Successfully Total Fare: ${bookingDetails?.total_fare}`)
-      setConfirmObject((prev) => ({ ...prev, status: false }))
+    console.log((pnr), "pnr")
+    if (bookingDetails?.booking_status === "booked") {
+      const response = await issueBooking(pnr)
+      if (response.status) {
+        toast.success(`Ordered Successfully Total Fare: ${bookingDetails?.total_fare}`)
+        setConfirmObject((prev) => ({ ...prev, status: false }))
+      }
     }
-    console.log('issue rs', response)
+    if (bookingDetails?.booking_status === "confirmed") {
+      const response = await getPNR(pnr)
+      console.log(response)
+    }
+
+
   }
   const cancelFlightBookingHandler = async (flight) => {
     console.log(flight);
@@ -115,6 +123,18 @@ const TicketDetails = () => {
       console.log("refId", refId);
     }
   }, [location.state]);
+  const now = dayjs.utc();
+  const timeLimit = dayjs(bookingDetails?.Timelimit);
+  // const timeLimitLocal = (bookingDetails?.Timelimit).toISOString();
+
+  console.log("Current UTC:", now.format("M/D/YYYY h:m:s a"));
+  console.log("Time Limit UTC:", timeLimit.format("M/D/YYYY h:m:s a"));
+  // console.log("Time Limit local:", dayjs(timeLimitLocal).local().format('DD MMMM YYYY, h:mm a'));
+
+  console.log("Comparison result:", now.format("M/D/YYYY h:m:s a") > timeLimit.format("M/D/YYYY h:m:s a"));
+  const timelimit = new Date(bookingDetails?.Timelimit)
+  const localTimeLimit = timelimit.toLocaleString("en-GB")
+
 
   return (
     <>
@@ -156,7 +176,7 @@ const TicketDetails = () => {
                       onConfirm: () => refundRequestHandler(booking)
                     }))}
                     text={"Request Refund"}
-                    disabled={bookingDetails?.booking_status == "requested-refund" || dayjs().isAfter(dayjs(bookingDetails?.Timelimit))}
+                    disabled={bookingDetails?.booking_status !== "confirmed"}
                   />
 
                 </div>
@@ -170,20 +190,26 @@ const TicketDetails = () => {
                       onConfirm: () => cancelFlightBookingHandler(booking)
                     }))}
                     text={"Request Cancellation"}
-                    disabled={bookingDetails?.booking_status == "requested-cancellation" || dayjs().isAfter(dayjs(bookingDetails?.Timelimit))}
+                    disabled={bookingDetails?.booking_status !== "confirmed"}
+
                   />
                 </div>
               </div>
             </div>
 
-            <Button disabled={!(bookingDetails?.booking_status == "pending") || dayjs().isAfter(dayjs(bookingDetails?.Timelimit))} className=" py-14 px-14 text-xl "
-              text={dayjs().isAfter(dayjs.utc(bookingDetails?.Timelimit)) ? "TKT time limit exceeded" : "Order Ticket"}
+            <Button disabled={(bookingDetails?.booking_status === "expired") ||
+              now.format("M/D/YYYY h:m:s a") > timeLimit.format("M/D/YYYY h:m:s a")}
+              className=" py-14 px-14 text-xl "
+              text={bookingDetails?.booking_status !== "booked"
+                || now.format("M/D/YYYY h:m:s a") > timeLimit.format("M/D/YYYY h:m:s a")
+                ? (bookingDetails?.booking_status === "confirmed" ? "Get PNR" : "PNR Expired")
+                : "Order Ticket"}
               onClick={() => setConfirmObject((prev) => ({
                 ...prev,
                 status: true,
                 text: `Are you really want to order the ticket. The total fare is ${(bookingDetails?.total_fare).toLocaleString()} `,
                 onAbort: () => setConfirmObject((prev => ({ ...prev, status: false }))),
-                onConfirm: () => handleIssue(bookingDetails?.booking_reference_id)
+                onConfirm: () => handleIssue(String(bookingDetails?.booking_reference_id))
               }))}
             />
           </CardLayoutBody>
@@ -220,7 +246,7 @@ const TicketDetails = () => {
               {dayjs.utc(bookingDetails?.created_at).format('DD MMM YYYY, h:mm a')}
             </div>
             <div>
-              <span className="font-semibold">TKT Time Limit:</span>{dayjs(bookingDetails?.Timelimit).format('DD MMM YYYY, h:mm a')}
+              <span className="font-semibold">TKT Time Limit: </span>{dayjs(bookingDetails?.Timelimit).format("DD MMM YYYY, h:mm a")}
             </div>
           </div>
         </CardLayoutContainer>
