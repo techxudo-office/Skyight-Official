@@ -5,10 +5,9 @@ import {
 } from "../../components/CardLayout/CardLayout";
 import { Button, Spinner } from "../../components/components";
 import toast, { Toaster } from "react-hot-toast";
-import { resendCode } from "../../utils/api_handler";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { verifyOTP } from "../../_core/features/authSlice";
+import { resendCode, verifyOTP } from "../../_core/features/authSlice";
 
 const VerificationForm = () => {
   const navigate = useNavigate();
@@ -70,13 +69,8 @@ const VerificationForm = () => {
     }
   };
 
-  const resendCodeHandler = async () => {
-    let response = await resendCode({ email: email });
-    if (response.status) {
-      toast.success(response.message);
-    } else {
-      toast.error(response.message);
-    }
+  const resendCodeHandler = () => {
+    dispatch(resendCode({ email }));
   };
 
   useEffect(() => {

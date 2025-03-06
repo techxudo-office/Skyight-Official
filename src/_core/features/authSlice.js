@@ -13,6 +13,8 @@ const initialState = {
   registerError: null,
   isLoadingVerifyOTP: false,
   verifyOTPError: null,
+  isLoadingResendCode: false,
+  resendCodeError: null,
 };
 
 const authSlice = createSlice({
@@ -72,6 +74,17 @@ const authSlice = createSlice({
       .addCase(verifyOTP.rejected, (state, action) => {
         state.isLoadingVerifyOTP = false;
         state.verifyOTPError = action.payload;
+      })
+      .addCase(resendCode.pending, (state) => {
+        state.isLoadingResendCode = true;
+        state.resendCodeError = null;
+      })
+      .addCase(resendCode.fulfilled, (state) => {
+        state.isLoadingResendCode = false;
+      })
+      .addCase(resendCode.rejected, (state, action) => {
+        state.isLoadingResendCode = false;
+        state.resendCodeError = action.payload;
       });
   },
 });
@@ -177,6 +190,26 @@ export const verifyOTP = createAsyncThunk(
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || "OTP verification failed"
       );
+    }
+  }
+);
+
+export const resendCode = createAsyncThunk(
+  "auth/resendCode",
+  async (payload, thunkAPI) => {
+    try {
+      const response = await axios.post(`${BASE_URL}/api/resend-verification-code`, payload);
+      if (response.status === 200) {
+        toast.success("Verification code resent successfully");
+        return response.data.message;
+      }
+    } catch (error) {
+      let errorMessage = "Failed to resend verification code";
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+      toast.error(errorMessage);
+      return thunkAPI.rejectWithValue(errorMessage);
     }
   }
 );

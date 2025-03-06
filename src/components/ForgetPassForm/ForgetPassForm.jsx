@@ -19,7 +19,7 @@ const ForgetPassForm = () => {
     return emailRegex.test(email);
   };
 
-  const forgetPasswordHandler = async () => {
+  const forgetPasswordHandler = () => {
     if (!validateEmail(email)) {
       toast.error("Invalid email format");
       return;

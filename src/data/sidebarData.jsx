@@ -1,21 +1,14 @@
-import { GoDotFill } from "react-icons/go";
 import { MdFlight, MdOutlineReadMore, MdSearch } from "react-icons/md";
 import { RiDashboardFill } from "react-icons/ri";
 import { MdContentPasteSearch } from "react-icons/md";
 import { FaBusinessTime } from "react-icons/fa6";
-import { FaCreditCard } from "react-icons/fa";
 import { FaMoneyBill1Wave } from "react-icons/fa6";
-import { IoIosStopwatch } from "react-icons/io";
 import { MdAdminPanelSettings } from "react-icons/md";
 import { IoTicket } from "react-icons/io5";
-import { FaHandsHelping } from "react-icons/fa";
 import { BiSolidBookmarks } from "react-icons/bi";
-import { MdPayments } from "react-icons/md";
 import { MdOutlineHistory } from "react-icons/md";
 import { MdSupervisedUserCircle } from "react-icons/md";
-import { ImUser } from "react-icons/im";
 import { HiUsers } from "react-icons/hi";
-import { MdAirplaneTicket } from "react-icons/md";
 const pagePermissions = JSON.parse(localStorage.getItem("userData"))?.role
   ?.page_permission || {
   dashboard: true,
