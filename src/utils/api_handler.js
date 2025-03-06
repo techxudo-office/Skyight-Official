@@ -601,7 +601,7 @@ export const getFlightBookings = async (id) => {
   try {
     let response = await axios({
       method: "GET",
-      url: `${BASE_URL}/api/booking/${id}`,
+      url: `${BASE_URL}/api/booking/company/${id}`,
       headers: {
         Authorization: getToken(),
       },

@@ -38,32 +38,10 @@ const LoginForm = () => {
   }, [userData, navigate]);
 
   const loginHandler = (payload, resetForm) => {
-    dispatch(login(payload))
-      .then((response) => {
-        toast.success(response.message);
-        resetForm();
-      })
-      .catch((error) => {
-        toast.error(error || "Login failed. Please try again.");
-      });
+    dispatch(login(payload)).then((response) => {
+      resetForm();
+    });
   };
-
-  // const loginHandler = async (payload, resetForm) => {
-  //   setLoading(true);
-  //   let response = await login(payload);
-  //   if (response.status) {
-  //     updateAuthToken(response.token);
-  //     toast.success(response.message);
-  //     resetForm();
-  //     setLoading(false);
-  //     setTimeout(() => {
-  //       navigate("/dashboard");
-  //       }, 3000);
-  //   } else {
-  //     toast.error(response.message);
-  //     setLoading(false);
-  //   }
-  // };
 
   const formik = useFormik({
     initialValues: {

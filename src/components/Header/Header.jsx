@@ -21,7 +21,7 @@ import { SlSettings } from "react-icons/sl";
 import Notifications from "../../pages/Notifications/Notifications";
 import { motion } from "framer-motion";
 import Announcement from "../../pages/Anouncement/Anouncement";
-import { logoutUser } from "../../_core/features/authSlice";
+import { logout } from "../../_core/features/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
@@ -118,10 +118,8 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
   const logoutHandler = () => {
     if (!userData?.token) return;
 
-    dispatch(logoutUser(userData.token)).then(() => {
-      console.log("User logged out successfully");
+    dispatch(logout(userData.token)).then(() => {
       dropdownHandler();
-      toast.success("Logout Successfully");
     });
   };
 

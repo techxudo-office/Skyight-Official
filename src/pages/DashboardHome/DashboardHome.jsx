@@ -118,7 +118,7 @@ const DashboardHome = () => {
     // },
   ];
   const gettingFlightBookings = async () => {
-    const id = userData?.user?.id;
+    const id = userData?.user?.company_id;
     const response = await getFlightBookings(id);
     if (response?.status) {
       setBookingsData(response.data);

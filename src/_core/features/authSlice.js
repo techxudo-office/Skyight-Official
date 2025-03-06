@@ -1,12 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { BASE_URL } from "../../utils/ApiBaseUrl";
+import toast from "react-hot-toast";
 
 const initialState = {
   userData: null,
   isLoading: false,
-  isLoadingForgotPassword: false,
   loginError: null,
+  isLoadingForgotPassword: false,
   forgotPasswordError: null,
 };
 
@@ -14,9 +15,6 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    logout: (state) => {
-      state.userData = null;
-    },
   },
   extraReducers: (builder) => {
     builder
@@ -35,7 +33,7 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload;
       })
-      .addCase(logoutUser.fulfilled, (state) => {
+      .addCase(logout.fulfilled, (state) => {
         state.userData = null;
         localStorage.removeItem("auth_token");
       })
@@ -62,17 +60,18 @@ export const login = createAsyncThunk("auth/login", async (payload, thunkAPI) =>
       },
     });
     if (response.status === 200) {
+      toast.success("Login Successfully");
       return response.data.data;
     }
   } catch (error) {
-    console.error("Login Error:", error);
+    toast.error(error.response?.data?.message || "Login failed. Please try again.");
     return thunkAPI.rejectWithValue(
       error.response?.data?.message || "Login failed"
     );
   }
 });
 
-export const logoutUser = createAsyncThunk("auth/logout", async (token, thunkAPI) => {
+export const logout = createAsyncThunk("auth/logout", async (token, thunkAPI) => {
   try {
     const response = await axios.get(`${BASE_URL}/api/logout`, {
       headers: {
@@ -83,6 +82,7 @@ export const logoutUser = createAsyncThunk("auth/logout", async (token, thunkAPI
     });
 
     if (response.status === 200) {
+      toast.success("Logout Successfully");
       return response.data.message;
     }
   } catch (error) {
@@ -110,5 +110,5 @@ export const forgotPassword = createAsyncThunk(
   }
 );
 
-export const { logout } = authSlice.actions;
+export const { } = authSlice.actions;
 export default authSlice.reducer;
