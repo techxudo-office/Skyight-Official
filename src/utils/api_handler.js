@@ -630,7 +630,6 @@ export const getFlightBookings = async (id) => {
         var responseData = [response.data.data]
       }
       if (responseData.length > 0) {
-        console.log("isarray", responseData)
         const extractedData = responseData.map(
           ({
             origin,

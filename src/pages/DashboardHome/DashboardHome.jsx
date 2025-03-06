@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from "react";
 import {
   DashboardCards,
-  Table,
-  SecondaryButton,
-  ConfirmModal,
   TableNew,
   Searchbar,
-  DownloadButton,
 } from "../../components/components";
 import { getRoutes, getFlightBookings } from "../../utils/api_handler";
 import { useNavigate } from "react-router-dom";
@@ -19,12 +15,17 @@ import {
 import toast from "react-hot-toast";
 
 import { FaEye } from "react-icons/fa";
-import { HiReceiptRefund } from "react-icons/hi";
-import { MdCancel } from "react-icons/md";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { useSelector } from "react-redux";
+
 const DashboardHome = () => {
+  const navigate = useNavigate();
+  const [flightsData, setFlightsData] = useState([]);
+  const [bookingsData, setBookingsData] = useState([]);
+  const userData = useSelector((state) => state.auth.userData);
+
   var settings = {
     dots: false,
     infinite: true,
@@ -56,11 +57,6 @@ const DashboardHome = () => {
       },
     ],
   };
-
-  const navigate = useNavigate();
-
-  const [flightsData, setFlightsData] = useState([]);
-  const [bookingsData, setBookingsData] = useState([]);
 
   const navigationHandler = () => {
     navigate("/dashboard/search-flights");
@@ -123,8 +119,7 @@ const DashboardHome = () => {
     // },
   ];
   const gettingFlightBookings = async () => {
-    const userData = JSON.parse(localStorage.getItem("userData"));
-    const id = userData?.company_id;
+    const id = userData?.user?.id;
     const response = await getFlightBookings(id);
     if (response?.status) {
       setBookingsData(response.data);

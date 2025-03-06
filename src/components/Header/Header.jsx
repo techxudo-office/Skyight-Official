@@ -1,36 +1,20 @@
-import React, { useContext, useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { HiOutlineMenuAlt1, HiOutlineSpeakerphone } from "react-icons/hi";
-import { FaCircleUser } from "react-icons/fa6";
+import { HiOutlineSpeakerphone } from "react-icons/hi";
 import { FaUser, FaUserCircle } from "react-icons/fa";
-import { IoIosSettings } from "react-icons/io";
-import { FaBell } from "react-icons/fa6";
 import { FiLogOut } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
-import {
-  CreditsDropdown,
-  CustomTooltip,
-  Dropdown,
-  SecondaryButton,
-  Spinner,
-} from "../components";
+import { CreditsDropdown, CustomTooltip, Dropdown } from "../components";
 import { HiOutlineRefresh } from "react-icons/hi";
 import { PiCoinsFill } from "react-icons/pi";
 import { PiHandCoinsFill } from "react-icons/pi";
 import { getCredits } from "../../utils/api_handler";
 import { IoHome } from "react-icons/io5";
-import { AuthContext } from "../../context/AuthContext";
-import { logo, skyightLogo } from "../../assets/Index";
+import { skyightLogo } from "../../assets/Index";
 import { GiHamburgerMenu } from "react-icons/gi";
 import {
   MdNotificationsNone,
-  MdLogout,
-  MdPerson,
-  MdPersonPinCircle,
-  MdOutlinePersonPinCircle,
-  MdPersonPin,
   MdArrowDropDown,
-  MdEmail,
   MdSettings,
 } from "react-icons/md";
 import { SlSettings } from "react-icons/sl";
@@ -50,7 +34,6 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
   const [CreditsDropdownOpen, setCreditsDropdownOpen] = useState(false);
   const [isAnnHovered, setIsAnnHovered] = useState(false);
   const [isNotiHovered, setIsNotiHovered] = useState(false);
-  // const [credits, setCredits] = useState("");
 
   const dropdownHandler = () => {
     setDropDownStatus(!dropdownStatus);
