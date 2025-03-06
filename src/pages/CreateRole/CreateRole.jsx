@@ -38,6 +38,10 @@ const initialRolesData = {
     read_error_log: false,
     write_announcement: false,
     read_announcement: false,
+    read_setting: false,
+    write_setting: false,
+    read_ticket: false,
+    write_ticket: false,
   },
 };
 
@@ -111,8 +115,7 @@ const CreateRole = () => {
       <CardLayoutContainer>
         <CardLayoutHeader
           heading="Create Role"
-          className="flex items-center justify-between"
-        >
+          className="flex items-center justify-between">
           {/* <span onClick={() => setIsActive(!isActive)}>
             <Switch switchStatus={isActive} />
           </span> */}

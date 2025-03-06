@@ -7,12 +7,11 @@ import {
 } from "../../components/CardLayout/CardLayout";
 
 import { FaCross, FaEye } from "react-icons/fa";
-import { MdEditSquare, MdFilter, MdFilterList } from "react-icons/md";
-import { FaRegCircleCheck,FaPlus  } from "react-icons/fa6";
+import { MdEditSquare, MdFilterList } from "react-icons/md";
+import { FaRegCircleCheck, FaPlus } from "react-icons/fa6";
 import { MdAutoDelete } from "react-icons/md";
 
 import {
-  Table,
   Dropdown,
   SecondaryButton,
   TableNew,
@@ -176,14 +175,13 @@ const Roles = () => {
         <CardLayoutHeader
           removeBorder={true}
           heading={"Roles"}
-          className="flex items-center justify-between"
-        >
+          className="flex items-center justify-between">
           <div className="relative">
             <SecondaryButton
               text={"Create New Role"}
-              icon={<FaPlus  />}
+              icon={<FaPlus />}
               onClick={() => {
-                navigate('/dashboard/create-role')
+                navigate("/dashboard/create-role");
               }}
               className="mb-4"
             />
