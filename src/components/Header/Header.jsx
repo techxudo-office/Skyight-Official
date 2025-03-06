@@ -44,7 +44,7 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
 
   const [dropdownStatus, setDropDownStatus] = useState(false);
   const [isActive, setIsActive] = useState(false);
-  const [credits, setCredits] = useState("");
+  const [credits, setCredits] = useState(null);
   const [CreditsDropdownOpen, setCreditsDropdownOpen] = useState(false);
   const [isAnnHovered, setIsAnnHovered] = useState(false);
   const [isNotiHovered, setIsNotiHovered] = useState(false);
@@ -72,7 +72,6 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
       name: "Logout",
       icon: <FiLogOut />,
       handler: () => {
-        console.log("logout");
         logoutHandler();
       },
     },
@@ -130,7 +129,6 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
   ];
 
   const logoutHandler = () => {
-    console.log("Logout Handler");
     dropdownHandler();
     toast.success("Logout Successfully");
     setTimeout(() => {
@@ -156,7 +154,7 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
       setLoading(false);
 
       if (response?.status) {
-        setCredits(response.data.Balence);
+        setCredits(response.data.amount);
       } else {
         toast.error(response?.message || "Failed to fetch credits.");
       }
@@ -262,9 +260,9 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
                 <CustomTooltip content={"credits"}>
                   <button
                     className={`w-full text-sm md:text-base relative flex items-center justify-center gap-1 md:gap-2 cursor-pointer p-1 px-2 md:py-2 md:px-4 border-primary border-[1px]  bg-blue-100 hover:text-secondary  text-primary font-semibold rounded-xl transition duration-300 ease-in-out transform focus:outline-none`}
-                    // onClick={() => {
-                    //   setIsActive(!isActive);
-                    // }}
+                  // onClick={() => {
+                  //   setIsActive(!isActive);
+                  // }}
                   >
                     {loading ? (
                       <span className="flex items-center gap-2">
@@ -277,7 +275,7 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
                         className="flex items-center gap-2"
                       >
                         <HiOutlineRefresh className="max-sm:hidden" />
-                        <span>PKR {credits?.toLocaleString("en-US")}</span>
+                        <span>PKR {Number(credits)?.toLocaleString("en-US")}</span>
                       </span>
                     ) : (
                       <span className="flex items-center gap-2">
@@ -286,9 +284,8 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
                       </span>
                     )}
                     <MdArrowDropDown
-                      className={`text-xl ${
-                        CreditsDropdownOpen ? "rotate-180" : ""
-                      } transition-all duration-300`}
+                      className={`text-xl ${CreditsDropdownOpen ? "rotate-180" : ""
+                        } transition-all duration-300`}
                       onClick={() => setCreditsDropdownOpen((prev) => !prev)}
                     />
                     <div className="absolute right-0 top-14">

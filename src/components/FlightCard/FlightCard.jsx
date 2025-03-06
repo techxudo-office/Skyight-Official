@@ -24,10 +24,7 @@ const FlightCard = ({ data, doc_type, travelers, pricingInfo }) => {
       totalTravelers.push(key.replace('s', ''))
     }
   })
-  console.log('totaltravelrs', totalTravelers)
-  console.log("data", data)
 
-  console.log('flightSegment', flightSegment)
   const viewDetails = () => {
     navigate("/dashboard/travelers-details", { state: { data, doc_type, travelers, pricingInfo } });
   };
@@ -111,23 +108,23 @@ const FlightCard = ({ data, doc_type, travelers, pricingInfo }) => {
                       </h2>
                     </div>
                     <div className="pr-16">
-                    {flightSegment.map((item, idx) => {
-                      return (
-                        <h2 className="text-sm mb-1 font-semibold text-text  flex items-center gap-1">
-                          <span>
-                            <FaSuitcase />
-                          </span>
+                      {flightSegment.map((item, idx) => {
+                        return (
+                          <h2 className="text-sm mb-1 font-semibold text-text  flex items-center gap-1">
+                            <span>
+                              <FaSuitcase />
+                            </span>
 
 
-                          <span key={idx}>
-                           Flight-{idx+1}: {item.FreeBaggages[index].Quantity} {item.FreeBaggages[index].Unit}
-                          </span>
+                            <span key={idx}>
+                              Flight-{idx + 1}: {item.FreeBaggages[index].Quantity} {item.FreeBaggages[index].Unit}
+                            </span>
 
-                        </h2>
-                      )
-                    })}
+                          </h2>
+                        )
+                      })}
                     </div>
-                    
+
                     <h2 className="text-sm font-semibold text-text flex items-center justify-end gap-1">
                       <span>
                         <FaMoneyBillAlt />

@@ -2,7 +2,6 @@ import React from 'react'
 import { CardLayoutContainer } from '../CardLayout/CardLayout'
 
 export default function AvailableFlights({ flights }) {
-    console.log(flights)
 
     return (
         <CardLayoutContainer className={'mb-4'}>
@@ -25,8 +24,8 @@ export default function AvailableFlights({ flights }) {
                             )
                         })
                     }
-                  
-                  
+
+
                 </div>
             </div>
 

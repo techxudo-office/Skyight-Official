@@ -3,6 +3,7 @@ import axios from "axios";
 export const baseUrl = import.meta.env.VITE_API_URL;
 export const getToken = () => {
   return localStorage.getItem("auth_token");
+
 };
 
 //! Authentication
@@ -17,7 +18,6 @@ export const login = async (payload) => {
       url: `${baseUrl}/api/login`,
       data: payload,
     });
-    console.log(response, "Login Response");
     if (response.status === 200) {
       localStorage.setItem("auth_token", response.data.data.token);
       localStorage.setItem("userData", JSON.stringify(response.data.data.user));
@@ -29,9 +29,7 @@ export const login = async (payload) => {
       };
     }
   } catch (error) {
-    console.log("Failed while trying to login account: ", error);
     if (error.response) {
-      console.log(error.response);
       if (error.response.data.data.errors) {
         const errors = Object.keys(error.response.data.data.errors);
         const errorMessages = [];
@@ -67,7 +65,7 @@ export const registration = async (payload) => {
       url: `${baseUrl}/api/register-company`,
       data: payload,
     });
-    console.log(response);
+
     if (response.status === 200) {
       return {
         status: true,
@@ -75,7 +73,6 @@ export const registration = async (payload) => {
       };
     }
   } catch (error) {
-    console.log("Failed while trying to register your account: ", error);
     if (error.response) {
       if (error.response.data.data.errors) {
         const errors = Object.keys(error.response.data.data.errors);
@@ -112,7 +109,7 @@ export const verifyOTP = async (payload) => {
       url: `${baseUrl}/api/verify-verification-code`,
       data: payload,
     });
-    console.log(response);
+
     if (response.status === 200) {
       return {
         status: true,
@@ -120,7 +117,6 @@ export const verifyOTP = async (payload) => {
       };
     }
   } catch (error) {
-    console.log("Failed while trying to verify your account: ", error);
     if (error.response) {
       if (error.response.data.data.errors) {
         const errors = Object.keys(error.response.data.data.errors);
@@ -157,7 +153,7 @@ export const resendCode = async (payload) => {
       url: `${baseUrl}/api/resend-verification-code`,
       data: payload,
     });
-    console.log(response);
+
     if (response.status === 200) {
       return {
         status: true,
@@ -165,7 +161,6 @@ export const resendCode = async (payload) => {
       };
     }
   } catch (error) {
-    console.log("Failed while trying to resend code: ", error);
     if (error.response) {
       if (error.response.data.data.errors) {
         const errors = Object.keys(error.response.data.data.errors);
@@ -202,7 +197,7 @@ export const forgotPassword = async (payload) => {
       url: `${baseUrl}/api/forgot-password`,
       data: payload,
     });
-    console.log(response);
+
     if (response.status === 200) {
       return {
         status: true,
@@ -210,7 +205,6 @@ export const forgotPassword = async (payload) => {
       };
     }
   } catch (error) {
-    console.log("Failed while trying to forget your password: ", error);
     if (error.response) {
       if (error.response.data.data.errors) {
         const errors = Object.keys(error.response.data.data.errors);
@@ -244,8 +238,8 @@ export const forgotPassword = async (payload) => {
 export const getCredits = async () => {
   try {
     let response = await axios({
-      method: "POST",
-      url: `${baseUrl}/api/booking-credit`,
+      method: "GET",
+      url: `${baseUrl}/api/booking-credits`,
       headers: {
         Authorization: getToken(),
       },
@@ -333,7 +327,6 @@ export const createTransaction = async (payload) => {
         Authorization: getToken(),
       },
     });
-    console.log(response);
     if (response.status === 200) {
       return {
         status: true,
@@ -341,7 +334,6 @@ export const createTransaction = async (payload) => {
       };
     }
   } catch (error) {
-    console.log("Failed while creating transaction: ", error);
     return {
       status: false,
       message:
@@ -359,7 +351,6 @@ export const getTransactions = async () => {
         Authorization: getToken(),
       },
     });
-    console.log(response);
     if (response.status === 200) {
       if (response.data.data[0].length > 0) {
         const extractedData = response.data.data[0].map(
@@ -395,7 +386,6 @@ export const getTransactions = async () => {
       }
     }
   } catch (error) {
-    console.log("Failed while getting transactions: ", error);
     return {
       status: false,
       message:
@@ -404,47 +394,6 @@ export const getTransactions = async () => {
   }
 };
 
-//! Users
-// export const createUser = async (payload) => {
-//   try {
-//     let response = await axios({
-//       method: "POST",
-//       url: `${baseUrl}/api/user`,
-//       data: payload,
-// headers: {
-//   Authorization: getToken(),
-// },
-//     });
-//     console.log(response);
-//     if (response.status === 200) {
-//       return {
-//         status: true,
-//         message: "New User Created",
-//       };
-//     }
-//   } catch (error) {
-//     console.log("Failed while creating user: ", error);
-//     if (error.response) {
-//       if (error.response.data.data.errors) {
-//         const errors = Object.keys(error.response.data.data.errors);
-//         const errorMessages = [];
-
-//         for (let i = 0; i < errors.length; i++) {
-//           errorMessages.push(error.response.data.data.errors[errors[i]]);
-//         }
-//         return {
-//           status: false,
-//           message: errorMessages,
-//         };
-//       }
-//     } else {
-//       return {
-//         status: false,
-//         message: "Server Connection Error",
-//       };
-//     }
-//   }
-// };
 
 export const createUser = async (payload) => {
   try {
@@ -464,37 +413,6 @@ export const createUser = async (payload) => {
   }
 };
 
-// export const getUsers = async () => {
-//   try {
-//     let response = await axios({
-//       method: "GET",
-//       url: `${baseUrl}/api/user/company-user`,
-//       headers: {
-//         Authorization: getToken(),
-//       },
-//     });
-//     console.log(response);
-//     if (response.status === 200) {
-//       if (response.data.data.length > 0) {
-//         const extractedData = response.data.data.map(
-//           ({ id, first_name, last_name, email, mobile_number, role }) => ({
-//             id,
-//             first_name,
-//             last_name,
-//             email,
-//             mobile_number,
-//             role,
-//             status: "active",
-//           })
-//         );
-//         return { status: true, data: extractedData };
-//       }
-//     }
-//   } catch (error) {
-//     console.log("Failed while getting users: ", error);
-//   }
-// };
-
 export const getUsers = async () => {
   let response = await axios.get(`${baseUrl}/api/user/company-user`, {
     headers: {
@@ -513,12 +431,10 @@ export const deleteUser = async (id) => {
         Authorization: getToken(),
       },
     });
-    console.log(response);
     if (response.status === 200) {
       return { status: true, message: "User has been deleted" };
     }
   } catch (error) {
-    console.log("Failed while deleting user: ", error);
     return { status: false, message: "Failed while deleting this user" };
   }
 };
@@ -534,7 +450,6 @@ export const createTicket = async (payload) => {
         Authorization: getToken(),
       },
     });
-    console.log(response);
     if (response.status === 200) {
       return {
         status: true,
@@ -542,7 +457,6 @@ export const createTicket = async (payload) => {
       };
     }
   } catch (error) {
-    console.log("Failed while creating ticket: ", error);
     if (error.response) {
       if (error.response.data.data.errors) {
         const errors = Object.keys(error.response.data.data.errors);
@@ -574,7 +488,6 @@ export const getTickets = async () => {
         Authorization: getToken(),
       },
     });
-    console.log(response);
     if (response.status === 200) {
       if (response.data.data.length > 0) {
         const extractedData = response.data.data.map(
@@ -589,7 +502,6 @@ export const getTickets = async () => {
       }
     }
   } catch (error) {
-    console.log("Failed while getting tickets: ", error);
   }
 };
 
@@ -602,34 +514,31 @@ export const deleteTicket = async (id) => {
         Authorization: getToken(),
       },
     });
-    console.log(response);
+
     if (response.status === 200) {
       return { status: true, message: "Ticket has been deleted" };
     }
   } catch (error) {
-    console.log("Failed while deleting ticket: ", error);
     return { status: false, message: "Failed while deleting this ticket" };
   }
 };
 
 //! Bookings
 export const getFlightBookings = async (id) => {
-  console.log(getToken(), "token");
   try {
     let response = await axios({
       method: "GET",
-      url: `${baseUrl}/api/booking/${id}`,
+      url: `${baseUrl}/api/booking/company/${id}`,
       headers: {
         Authorization: getToken(),
       },
     });
-    console.log("flight bookings", response)
-    if (response.status === 200) {
-      if (typeof response.data.data == 'object') {
-        var responseData = [response.data.data]
+    if (response.data.status === "success") {
+      let responseData = response.data.data
+      if (!Array.isArray(response.data.data)) {
+        responseData = [response.data.data]
       }
       if (responseData.length > 0) {
-        console.log("isarray", responseData)
         const extractedData = responseData.map(
           ({
             origin,
@@ -642,7 +551,7 @@ export const getFlightBookings = async (id) => {
             actions,
             updated_at,
             transaction_identifier,
-            ticketing_time_limit,
+            Timelimit,
             id,
             rate,
             persantage,
@@ -658,7 +567,7 @@ export const getFlightBookings = async (id) => {
             actions,
             updated_at,
             transaction_identifier,
-            ticketing_time_limit,
+            Timelimit,
             id,
             rate,
             persantage,
@@ -691,14 +600,12 @@ export const issueBooking = async (id) => {
         Authorization: getToken(),
       },
     });
-    console.log(response);
     if (response.status === 200) {
       return { status: true, data: response.data.data };
     } else {
       return { status: false, data: response.data };
     }
   } catch (error) {
-    console.log("Failed while getting bookings: ", error);
   }
 };
 export const getBookingDetails = async (id) => {
@@ -711,17 +618,14 @@ export const getBookingDetails = async (id) => {
         Authorization: getToken(),
       },
     });
-    console.log(response);
     if (response.status === 200) {
       return { status: true, data: response.data.data };
     }
   } catch (error) {
-    console.log("Failed while getting bookings: ", error);
   }
 };
 
 export const cancelFlightBooking = async (payload) => {
-  console.log(payload);
 
   try {
     let response = await axios({
@@ -732,12 +636,11 @@ export const cancelFlightBooking = async (payload) => {
         Authorization: getToken(),
       },
     });
-    console.log(response);
+
     if (response.status === 200) {
       return { status: true, message: "Cancelled Requested" };
     }
   } catch (error) {
-    console.log("Failed while calling cancel booking api: ", error);
     if (error.response) {
       return {
         status: false,
@@ -753,7 +656,6 @@ export const cancelFlightBooking = async (payload) => {
 };
 
 export const refundRequest = async (payload) => {
-  console.log(payload);
 
   try {
     let response = await axios({
@@ -764,12 +666,11 @@ export const refundRequest = async (payload) => {
         Authorization: getToken(),
       },
     });
-    console.log(response);
+
     if (response.status === 200) {
       return { status: true, message: "Refund Requested" };
     }
   } catch (error) {
-    console.log("Failed while calling refund booking api: ", error);
     if (error.response) {
       return {
         status: false,
@@ -795,7 +696,6 @@ export const confirmBooking = async (payload) => {
         "Content-Type": "application/json",
       },
     });
-    console.log("confirm booking response: ", response);
     if (response.status === 200) {
       return {
         status: true,
@@ -808,7 +708,6 @@ export const confirmBooking = async (payload) => {
       };
     }
   } catch (error) {
-    console.log("Failed while calling confirming booking: ", error);
     if (error.response.data.data.errors) {
       return {
         status: false,
@@ -859,7 +758,7 @@ export const getBanks = async () => {
         Authorization: getToken(),
       },
     });
-    console.log(response);
+
     if (response.status === 200) {
       if (response.data.data[0].length > 0) {
         const extractedData = response.data.data[0].map(({ id, bank }) => ({
@@ -870,7 +769,8 @@ export const getBanks = async () => {
       }
     }
   } catch (error) {
-    console.log("Failed while getting banks: ", error);
+    return { status: false, data: "No Banks" };
+
   }
 };
 
@@ -891,7 +791,6 @@ export const getNotifications = async () => {
       };
     }
   } catch (error) {
-    console.log("Failed while getting notifications: ", error);
     return {
       status: false,
       message:
@@ -917,7 +816,6 @@ export const getAnnouncements = async () => {
       };
     }
   } catch (error) {
-    console.log("Failed while getting Announcements: ", error);
     return {
       status: false,
       message:
@@ -936,7 +834,6 @@ export const createRole = async (payload) => {
         "Content-Type": "application/json",
       },
     });
-    console.log(response, "Create Role");
     return response.data;
   } catch (error) {
     console.error(
@@ -982,7 +879,6 @@ export const getTravelers = async (passengerType) => {
         Authorization: getToken(),
       },
     });
-    console.log("travelers", response);
     if (response.status === 200) {
       return {
         status: true,
@@ -990,7 +886,6 @@ export const getTravelers = async (passengerType) => {
       };
     }
   } catch (error) {
-    console.log("Failed while getting travellers: ", error);
   }
 };
 export const getPNR = async (id) => {
@@ -1006,7 +901,6 @@ export const getPNR = async (id) => {
         }
       },
     });
-    console.log("getpnr", response);
     if (response.status === 200) {
       return {
         status: true,
@@ -1014,6 +908,5 @@ export const getPNR = async (id) => {
       };
     }
   } catch (error) {
-    console.log("Failed while getting ticket: ", error);
   }
 };

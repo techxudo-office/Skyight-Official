@@ -12,6 +12,7 @@ import { FaEdit, FaEye } from 'react-icons/fa';
 import { Modal } from '../components'
 import { logo } from '../../assets/Index';
 import { MdDelete } from 'react-icons/md';
+import toast, { Toaster } from 'react-hot-toast';
 // import {Cell}  from "@table-library/react-table-library/table";
 
 const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows, pagination = true }) => {
@@ -25,15 +26,6 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows, p
     const [modal, setModal] = useState(false);
     const [maxLength, setmaxLength] = useState(null);
     const [editIdx, setEditIdx] = useState(null);
-
-
-    console.log('tableData', tableData)
-    // console.log('active in/dex', activeIndex)
-    // console.log('columns', columnsToView)
-    // console.log(extraRow);
-
-
-
 
     useEffect(() => {
         if (toggle) {
@@ -50,7 +42,6 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows, p
     }, [])
 
 
-    console.log('filednames', extraRows)
     useEffect(() => {
         // it is to get the field names from tableData which are  present in extraRows an and show them when click on viw button action
         if (activeIndex != null & extraRows != undefined) {
@@ -385,18 +376,22 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows, p
         usePagination
     );
     useEffect(() => {
-        setPageSize(Number(finalRowsPerPage)); // Ensure it's a number
+        if (finalRowsPerPage > 0) {
+            setPageSize(Number(finalRowsPerPage)); // Ensure it's a number
+
+        } else {
+            toast.error("Wrong Page Size")
+        }
     }, [finalRowsPerPage, setPageSize]);
-    // console.log('headers', headerGroups)
     return (
         <div className="">
-
+            <Toaster />
             <div className="container mx-auto overflow-x-auto shadow-md max-w- scrollbar-hide">
                 <table className="min-w-full overflow-hidden bg-white rounded-lg " {...getTableProps()}>
                     {columnsToView.length > 0 && <thead className="bg-primary">
-                        {headerGroups.map((headerGroup) => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                {headerGroup.headers.map((column) => {
+                        {headerGroups.map((headerGroup, index) => (
+                            <tr {...headerGroup.getHeaderGroupProps()} key={index}>
+                                {headerGroup.headers.map((column, idx) => {
                                     // if (column == "Route")
                                     //     return <th
                                     //         colSpan={columns.length - 4}
@@ -409,6 +404,7 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows, p
 
                                     return <th
                                         {...column.getHeaderProps()}
+                                        key={idx}
                                         className="px-4 py-5 mx-5 text-sm font-bold tracking-wider text-center text-white uppercase"
                                     >
                                         {column.render("Header")}
@@ -420,25 +416,26 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows, p
                     </thead>}
                     {tableData.length > 0 ?
                         <tbody {...getTableBodyProps()}>
-                            {page.map((row) => {
+                            {page.map((row, key) => {
                                 prepareRow(row);
                                 return (
                                     <>
-                                        <tr {...row.getRowProps()} className="transition-colors hover:bg-slate-50">
-                                            {row.cells.map((cell) => (
-                                                <>
-                                                    <td
-                                                        {...cell.getCellProps()}
-                                                        className="px-4 py-5 min-w-32 text-lg text-center border-t lg:px-6 text-text border-slate-100 "
-                                                    >
-                                                        {cell.render("Cell")}
-                                                    </td>
+                                        <tr {...row.getRowProps()} key={key + 1} className="transition-colors hover:bg-slate-50">
+                                            {row.cells.map((cell, i) => (
 
-                                                </>
+                                                <td
+                                                    {...cell.getCellProps()}
+                                                    className="px-4 py-5 min-w-32 text-lg text-center border-t lg:px-6 text-text border-slate-100 "
+                                                    key={i}
+                                                >
+                                                    {cell.render("Cell")}
+                                                </td>
+
+
                                             ))}
                                         </tr>
-                                        {activeIndex !== null && extraRow != null && activeIndex === row.index ? (
-                                            <tr className="w-full h-10 transition-colors bg-slate-200 text-text ">
+                                        {/* {activeIndex !== null && extraRow != null && activeIndex === row.index ? (
+                                            <tr key={key} className="w-full h-10 transition-colors bg-slate-200 text-text ">
                                                 <td colSpan={columns.length} className="w-full p-10">
                                                     <div className='flex flex-col lg:justify-between lg:flex-row max-lg:items-center'>
                                                         <div className='lg:w-1/2'>
@@ -481,7 +478,7 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows, p
                                                             {extraRow.filter(([key, value]) => (
                                                                 key == 'document_url'
                                                             )).map(([key, value]) => (
-                                                                <div className='flex items-center justify-center w-full my-4 lg:self-end '>
+                                                                <div key={key} className='flex items-center justify-center w-full my-4 lg:self-end '>
                                                                     <img className='lg:w-60 w-52 ' src={value} alt="" />
                                                                 </div>
                                                             ))
@@ -494,7 +491,7 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows, p
 
                                                 </td>
                                             </tr>
-                                        ) : ''}
+                                        ) : ''} */}
                                     </>
                                 );
                             })}
@@ -531,7 +528,7 @@ const TableNew = ({ columnsToView, tableData, actions, activeIndex, extraRows, p
                         type="number" value={rowsPerPage} onChange={(e) => setRowsPerPage(e.target.value)}
                         className="flex items-center justify-center w-12 h-8 text-sm text-center border rounded-md text-text border-gray focus:border-primary focus:outline-none"
                     />{
-                        rowsPerPage !== finalRowsPerPage &&
+                        rowsPerPage !== finalRowsPerPage && rowsPerPage !== 0 &&
                         <TbCheck className='text-primary' onClick={() => setfinalRowsPerPage(rowsPerPage)} />
                     }
                 </div>

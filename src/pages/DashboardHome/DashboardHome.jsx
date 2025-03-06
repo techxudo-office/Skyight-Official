@@ -99,7 +99,6 @@ const DashboardHome = () => {
       //   } else setActiveIndex(index);
       // },
       handler: (_, item) => {
-        console.log("item", item);
         navigate("/dashboard/booking-details", {
           state: item,
         });
