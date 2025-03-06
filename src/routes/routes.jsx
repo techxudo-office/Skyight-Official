@@ -5,7 +5,7 @@ import { routesData } from "../data/routesData";
 
 const AppRoutes = () => {
   const userData = useSelector((state) => state.auth.userData);
-  console.log(userData, "userData"); // Debugging
+  console.log(userData, "userData");
 
   return (
     <Routes>

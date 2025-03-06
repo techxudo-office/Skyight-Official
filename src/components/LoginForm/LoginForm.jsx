@@ -22,8 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
 const LoginForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false);
-  const userData = useSelector((state) => state.auth.userData);
+  const { userData, isLoading } = useSelector((state) => state.auth);
 
   const validationSchema = Yup.object({
     email: Yup.string()
@@ -38,14 +37,15 @@ const LoginForm = () => {
     }
   }, [userData, navigate]);
 
-  const loginHandler = async (payload, resetForm) => {
-    try {
-      const response = await dispatch(login(payload)).unwrap();
-      toast.success(response.message);
-      resetForm();
-    } catch (error) {
-      toast.error(error || "Login failed. Please try again.");
-    }
+  const loginHandler = (payload, resetForm) => {
+    dispatch(login(payload))
+      .then((response) => {
+        toast.success(response.message);
+        resetForm();
+      })
+      .catch((error) => {
+        toast.error(error || "Login failed. Please try again.");
+      });
   };
 
   // const loginHandler = async (payload, resetForm) => {
@@ -142,9 +142,9 @@ const LoginForm = () => {
               </Link>
 
               <Button
-                text={loading ? <Spinner /> : "Login"}
+                text={isLoading ? <Spinner /> : "Login"}
                 type="submit"
-                disabled={loading}
+                disabled={isLoading}
               />
             </form>
           </div>

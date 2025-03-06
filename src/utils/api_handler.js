@@ -245,8 +245,8 @@ export const forgotPassword = async (payload) => {
 export const getCredits = async () => {
   try {
     let response = await axios({
-      method: "POST",
-      url: `${BASE_URL}/api/booking-credit`,
+      method: "GET",
+      url: `${BASE_URL}/api/booking-credits`,
       headers: {
         Authorization: getToken(),
       },

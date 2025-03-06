@@ -160,7 +160,7 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
       setLoading(false);
 
       if (response?.status) {
-        setCredits(response.data.Balence);
+        setCredits(response.data.amount);
       } else {
         toast.error(response?.message || "Failed to fetch credits.");
       }

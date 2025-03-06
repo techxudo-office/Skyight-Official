@@ -5,12 +5,14 @@ import {
 } from "../../components/CardLayout/CardLayout";
 import { Button, Spinner, Input } from "../../components/components";
 import toast, { Toaster } from "react-hot-toast";
-import { forgotPassword } from "../../utils/api_handler";
 import { Link } from "react-router-dom";
+import { forgotPassword } from "../../_core/features/authSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const ForgetPassForm = () => {
-  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
+  const loading = useSelector((state) => state.auth.isLoadingForgotPassword);
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -22,15 +24,16 @@ const ForgetPassForm = () => {
       toast.error("Invalid email format");
       return;
     }
-    setLoading(true);
-    let response = await forgotPassword({ email });
-    setLoading(false);
 
-    if (response.status) {
-      toast.success(response.message);
-    } else {
-      toast.error(response.message);
-    }
+    dispatch(forgotPassword({ email }))
+      .unwrap()
+      .then((response) => {
+        console.log(response);
+        toast.success(response);
+      })
+      .catch((error) => {
+        toast.error(error);
+      });
   };
 
   return (
