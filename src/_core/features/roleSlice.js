@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 const initialState = {
   roles: [],
   isLoadingRoles: false,
+  isLoadingCreateRole: false,
   rolesError: null,
   totalPages: 1,
 };
@@ -30,14 +31,14 @@ const roleSlice = createSlice({
         state.rolesError = action.payload;
       })
       .addCase(createRole.pending, (state) => {
-        state.isLoadingRoles = true;
+        state.isLoadingCreateRole = true;
       })
       .addCase(createRole.fulfilled, (state, action) => {
-        state.isLoadingRoles = false;
+        state.isLoadingCreateRole = false;
         state.roles = [action.payload, ...state.roles];
       })
       .addCase(createRole.rejected, (state, action) => {
-        state.isLoadingRoles = false;
+        state.isLoadingCreateRole = false;
         state.rolesError = action.payload;
       });
   },
@@ -71,11 +72,11 @@ export const getRoles = createAsyncThunk(
 
 export const createRole = createAsyncThunk(
   "role/createRole",
-  async (payload, thunkAPI) => {
+  async ({ data, token }, thunkAPI) => {
     try {
-      const response = await axios.post(`${BASE_URL}/api/role`, payload, {
+      const response = await axios.post(`${BASE_URL}/api/role`, data, {
         headers: {
-          Authorization: getToken(),
+          Authorization: token,
           "Content-Type": "application/json",
         },
       });
