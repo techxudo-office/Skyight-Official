@@ -3,14 +3,15 @@ import { GiCommercialAirplane } from "react-icons/gi";
 import { IoIosArrowForward } from "react-icons/io";
 
 import { useNavigate, useLocation } from "react-router-dom";
-import { sidebarLinks } from "../../data/sidebarData";
 import {
   CardLayoutContainer,
   CardLayoutHeader,
 } from "../CardLayout/CardLayout";
 import { MdEdit } from "react-icons/md";
+import { useSidebarLinks } from "../../data/sidebarData";
 
 const Sidebar = ({ status, updateStatus }) => {
+  const sidebarLinks = useSidebarLinks();
   const navigate = useNavigate();
   const location = useLocation();
   const sidebarRef = useRef();
