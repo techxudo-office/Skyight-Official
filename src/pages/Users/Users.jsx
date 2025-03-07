@@ -5,7 +5,7 @@ import {
   ConfirmModal,
   TableNew,
 } from "../../components/components";
-import { getUsers, deleteUser } from "../../utils/api_handler";
+// import { getUsers, deleteUser } from "../../utils/api_handler";
 import { MdAdd, MdEditSquare } from "react-icons/md";
 import { MdAutoDelete } from "react-icons/md";
 
@@ -18,25 +18,29 @@ import {
 } from "../../components/CardLayout/CardLayout";
 import { userColumns } from "../../data/columns";
 import { successToastify, errorToastify } from "../../helper/toast";
+import { useDispatch, useSelector } from "react-redux";
+import { getUsers } from "../../_core/features/userSlice";
 
 const Users = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [usersData, setUsersData] = useState([]);
+  const [modalStatus, setModalStatus] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+  const userData = useSelector((state) => state.auth.userData);
+  const { users, isLoadingUsers, isCreatingUser, isDeletingUser } = useSelector(
+    (state) => state.user
+  );
 
   const navigationHandler = () => {
     navigate("/dashboard/create-user");
   };
-
-  const [usersData, setUsersData] = useState([]);
-  const [modalStatus, setModalStatus] = useState(false);
-  const [deleteId, setDeleteId] = useState(null);
-
-
   const actionsData = [
     {
       name: "Edit",
       icon: <MdEditSquare title="Edit" className="text-blue-500" />,
       handler: (index, item) => {
-        console.log('item',item)
+        console.log("item", item);
         navigate("/dashboard/update-reason", { state: item });
       },
     },
@@ -49,11 +53,6 @@ const Users = () => {
       },
     },
   ];
-
-  const gettingUsers = async () => {
-    const response = await getUsers();
-    setUsersData(response[0])
-  };
 
   const deleteUserHandler = async (idx) => {
     if (!idx) {
@@ -78,7 +77,7 @@ const Users = () => {
   };
 
   useEffect(() => {
-    gettingUsers();
+    dispatch(getUsers(userData?.token));
   }, []);
 
   return (
@@ -96,7 +95,7 @@ const Users = () => {
         >
           <div className="relative">
             <SecondaryButton
-            icon={<MdAdd/>}
+              icon={<MdAdd />}
               text={"Create New User"}
               onClick={navigationHandler}
             />
@@ -105,10 +104,9 @@ const Users = () => {
         <CardLayoutBody removeBorder={true}>
           <TableNew
             columnsToView={userColumns}
-            tableData={usersData}
+            tableData={users[0]}
             // onDeleteUser={deleteUserHandler}
             actions={actionsData}
-
           />
         </CardLayoutBody>
         <CardLayoutFooter></CardLayoutFooter>

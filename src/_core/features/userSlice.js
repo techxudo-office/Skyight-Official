@@ -27,6 +27,7 @@ const userSlice = createSlice({
       })
       .addCase(getUsers.fulfilled, (state, action) => {
         state.isLoadingUsers = false;
+        console.log(action.payload)
         state.users = action.payload;
       })
       .addCase(getUsers.rejected, (state, action) => {
@@ -62,11 +63,11 @@ const userSlice = createSlice({
 
 export const getUsers = createAsyncThunk(
   "user/getUsers",
-  async (_, thunkAPI) => {
+  async (token, thunkAPI) => {
     try {
       const response = await axios.get(`${BASE_URL}/api/user/company-user`, {
         headers: {
-          Authorization: getToken(),
+          Authorization: token,
         },
       });
       toast.success("Users fetched successfully");
