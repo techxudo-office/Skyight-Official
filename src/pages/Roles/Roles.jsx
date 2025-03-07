@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   CardLayoutContainer,
   CardLayoutHeader,
@@ -6,7 +6,7 @@ import {
   CardLayoutFooter,
 } from "../../components/CardLayout/CardLayout";
 
-import { FaCross, FaEye } from "react-icons/fa";
+import { FaEye } from "react-icons/fa";
 import { MdEditSquare, MdFilterList } from "react-icons/md";
 import { FaRegCircleCheck, FaPlus } from "react-icons/fa6";
 import { MdAutoDelete } from "react-icons/md";
@@ -17,77 +17,44 @@ import {
   TableNew,
 } from "../../components/components";
 import { useNavigate } from "react-router-dom";
-import { getRoles } from "../../utils/api_handler";
-import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { getRoles } from "../../_core/features/roleSlice";
 
 const Roles = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const [rolesData, setRolesData] = useState([]);
+  const dispatch = useDispatch();
   const [activeIndex, setActiveIndex] = useState(null);
   const [dropdownStatus, setDropdownStatus] = useState(false);
-
-  const handleGetRoles = useCallback(async () => {
-    setLoading(true);
-    try {
-      const response = await getRoles();
-      if (response.status) {
-        let data = response.data.roles.map((item) => ({
-          id: item.id.toString(),
-          role: item.name || "Unknown",
-          roleRights: item.page_permission
-            ? Object.keys(item.page_permission)
-                .filter((key) => item.page_permission[key])
-                .map((key) => key.replace(/_/g, " "))
-                .join(", ")
-            : "No Permissions",
-          status: item.is_deleted ? "inactive" : "active",
-        }));
-        setRolesData(data);
-      } else {
-        toast.error(response.message);
-      }
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const [rolesData, setRolesData] = useState([]);
+  const { roles, isLoadingRoles, rolesError } = useSelector(
+    (state) => state.role
+  );
+  const userData = useSelector((state) => state.auth.userData);
 
   useEffect(() => {
-    handleGetRoles();
-  }, [handleGetRoles]);
-
-  const data = [
-    {
-      id: "64c3f3f4e4b0f1a1d2c3b3e1",
-      role: "Admin",
-      roleRights: "Full Access",
-      status: "active",
-    },
-    {
-      id: "64c3f3f4e4b0f1a1d2c3b3e2",
-      role: "Editor",
-      roleRights: "Create, Update, View",
-      status: "active",
-    },
-    {
-      id: "64c3f3f4e4b0f1a1d2c3b3e3",
-      role: "Viewer",
-      roleRights: "View Only",
-      status: "inactive",
-    },
-    {
-      id: "64c3f3f4e4b0f1a1d2c3b3e4",
-      role: "Manager",
-      roleRights: "Create, Update, View",
-      status: "active",
-    },
-    {
-      id: "64c3f3f4e4b0f1a1d2c3b3e5",
-      role: "Support",
-      roleRights: "Limited Access",
-      status: "inactive",
-    },
-  ];
+    dispatch(getRoles({ page: 0, limit: 10, token: userData?.token }))
+      .then(() => {
+        if (roles) {
+          const formattedData = roles.roles.map((item) => ({
+            id: item.id.toString(),
+            role: item.name || "Unknown",
+            roleRights: item.page_permission
+              ? Object.keys(item.page_permission)
+                  .filter((key) => item.page_permission[key])
+                  .map((key) => key.replace(/_/g, " "))
+                  .join(", ")
+              : "No Permissions",
+            status: item.is_deleted ? "inactive" : "active",
+          }));
+          setRolesData(formattedData);
+        } else {
+          setRolesData([]);
+        }
+      })
+      .catch(() => {
+        setRolesData([]);
+      });
+  }, [dispatch]);
 
   const columnsData = [
     // { columnName: "No.", fieldName: "no.", type: "no." },
@@ -97,11 +64,6 @@ const Roles = () => {
     { columnName: "Status", fieldName: "status", type: "status" },
     // { columnName: "Actions", fieldName: "actions", type: "actions" },
   ];
-
-  const viewColumns = [
-    { columnName: "Role Rights", fieldName: "roleRights", type: "text" },
-  ];
-
   const actionsData = [
     {
       name: "View",
@@ -160,22 +122,12 @@ const Roles = () => {
 
   return (
     <>
-      {/* {data.map((item, i) => (
-
-        i == activeIndex && <div className="fixed flex items-center justify-center w-full h-screen">
-          <div className="relative flex items-center justify-center p-3 bg-white rounded-lg w-96 h-96 text-text">
-            <FaCross onClick={() => setActiveIndex(null)} className="absolute text-4xl text-redColor top-5 right-5" />
-            {item.roleRights}
-          </div>
-        </div>
-
-      ))} */}
-
       <CardLayoutContainer removeBg={true}>
         <CardLayoutHeader
           removeBorder={true}
           heading={"Roles"}
-          className="flex items-center justify-between">
+          className="flex items-center justify-between"
+        >
           <div className="relative">
             <SecondaryButton
               text={"Create New Role"}
@@ -201,20 +153,13 @@ const Roles = () => {
           </div>
         </CardLayoutHeader>
         <CardLayoutBody removeBorder={true}>
-          {/* <Table
-            columns={columnsData}
-            viewColumns={viewColumns}
-            data={data}
-            actions={actionsData}
-            activeIndex={activeIndex}
-          /> */}
           <TableNew
             columnsToView={columnsData}
             tableData={rolesData}
             actions={actionsData}
             extraRows={["roleRights"]}
             activeIndex={activeIndex}
-            // activeField={["roleRights"]}
+            loader={isLoadingRoles}
           />
         </CardLayoutBody>
         <CardLayoutFooter></CardLayoutFooter>
