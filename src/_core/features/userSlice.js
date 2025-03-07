@@ -27,8 +27,8 @@ const userSlice = createSlice({
       })
       .addCase(getUsers.fulfilled, (state, action) => {
         state.isLoadingUsers = false;
-        console.log(action.payload)
-        state.users = action.payload;
+        console.log(action.payload);
+        state.users = action.payload[0];
       })
       .addCase(getUsers.rejected, (state, action) => {
         state.isLoadingUsers = false;
@@ -105,17 +105,17 @@ export const createUser = createAsyncThunk(
 
 export const deleteUser = createAsyncThunk(
   "user/deleteUser",
-  async (id, thunkAPI) => {
+  async ({ id, token }, thunkAPI) => {
     try {
       let response = await axios.delete(`${BASE_URL}/api/user/${id}`, {
         headers: {
-          Authorization: getToken(),
+          Authorization: token,
         },
       });
 
       if (response.status === 200) {
         toast.success("User deleted successfully");
-        return id; // Returning user ID to remove from state
+        return id;
       }
     } catch (error) {
       const errorMessage = "Failed while deleting this user";
