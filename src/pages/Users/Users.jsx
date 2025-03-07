@@ -107,6 +107,7 @@ const Users = () => {
             tableData={users[0]}
             // onDeleteUser={deleteUserHandler}
             actions={actionsData}
+            loader={isLoadingUsers}
           />
         </CardLayoutBody>
         <CardLayoutFooter></CardLayoutFooter>
