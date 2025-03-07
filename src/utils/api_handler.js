@@ -396,47 +396,6 @@ export const getTransactions = async () => {
 };
 
 //! Users
-// export const createUser = async (payload) => {
-//   try {
-//     let response = await axios({
-//       method: "POST",
-//       url: `${BASE_URL}/api/user`,
-//       data: payload,
-// headers: {
-//   Authorization: getToken(),
-// },
-//     });
-//     console.log(response);
-//     if (response.status === 200) {
-//       return {
-//         status: true,
-//         message: "New User Created",
-//       };
-//     }
-//   } catch (error) {
-//     console.log("Failed while creating user: ", error);
-//     if (error.response) {
-//       if (error.response.data.data.errors) {
-//         const errors = Object.keys(error.response.data.data.errors);
-//         const errorMessages = [];
-
-//         for (let i = 0; i < errors.length; i++) {
-//           errorMessages.push(error.response.data.data.errors[errors[i]]);
-//         }
-//         return {
-//           status: false,
-//           message: errorMessages,
-//         };
-//       }
-//     } else {
-//       return {
-//         status: false,
-//         message: "Server Connection Error",
-//       };
-//     }
-//   }
-// };
-
 export const createUser = async (payload) => {
   try {
     const response = await axios.post(`${BASE_URL}/api/user`, payload, {
@@ -454,37 +413,6 @@ export const createUser = async (payload) => {
     throw error;
   }
 };
-
-// export const getUsers = async () => {
-//   try {
-//     let response = await axios({
-//       method: "GET",
-//       url: `${BASE_URL}/api/user/company-user`,
-//       headers: {
-//         Authorization: getToken(),
-//       },
-//     });
-//     console.log(response);
-//     if (response.status === 200) {
-//       if (response.data.data.length > 0) {
-//         const extractedData = response.data.data.map(
-//           ({ id, first_name, last_name, email, mobile_number, role }) => ({
-//             id,
-//             first_name,
-//             last_name,
-//             email,
-//             mobile_number,
-//             role,
-//             status: "active",
-//           })
-//         );
-//         return { status: true, data: extractedData };
-//       }
-//     }
-//   } catch (error) {
-//     console.log("Failed while getting users: ", error);
-//   }
-// };
 
 export const getUsers = async () => {
   let response = await axios.get(`${BASE_URL}/api/user/company-user`, {

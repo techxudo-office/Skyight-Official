@@ -3,12 +3,12 @@
 "use client";
 
 import authReducer from '../features/authSlice';
-import counterReducer from "../features/counterSlice";
+import userReducer from '../features/userSlice';
 import { combineReducers } from "@reduxjs/toolkit";
 import storage from "redux-persist/lib/storage";
 const appReducer = combineReducers({
   auth: authReducer,
-  counter: counterReducer,
+  user: userReducer,
 });
 
 const rootReducer = (state, action) => {

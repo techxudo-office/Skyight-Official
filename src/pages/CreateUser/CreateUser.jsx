@@ -15,9 +15,11 @@ import {
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
-import { createUser, getRoles } from "../../utils/api_handler";
+import { getRoles } from "../../utils/api_handler";
 import { userSchema } from "../../validations/index";
 import { FaCaretDown } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import { createUser } from "../../_core/features/userSlice";
 
 let inputFields = [
   {
@@ -48,6 +50,7 @@ let inputFields = [
 ];
 const CreateUser = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [errors, setErrors] = useState({});
   const [roles, setRoles] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -61,6 +64,7 @@ const CreateUser = () => {
   });
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [selectedRole, setSelectedRole] = useState(null);
+  const userData = useSelector((state) => state.auth.userData);
 
   const validateForm = () => {
     let newErrors = {};
@@ -136,35 +140,35 @@ const CreateUser = () => {
       toast.error("Please fix the errors before submitting.");
       return;
     }
+    dispatch(createUser({ token: userData.token, data: formData }));
+    // try {
+    //   setLoading(true);
+    //   console.log("Submitting Payload:", formData);
+    //   const response = await createUser(JSON.stringify(formData));
 
-    try {
-      setLoading(true);
-      console.log("Submitting Payload:", formData);
-      const response = await createUser(JSON.stringify(formData));
-
-      if (response?.status) {
-        toast.success(response.message);
-        setFormData({
-          first_name: "",
-          last_name: "",
-          email: "",
-          mobile_number: "",
-          password: "",
-          role_id: "",
-        });
-        setSelectedRole(null);
-        setErrors({});
-        setTimeout(() => navigate("/dashboard/users"), 1000);
-      } else {
-        Array.isArray(response.message)
-          ? response.message.forEach((error) => toast.error(error))
-          : toast.error(response.message);
-      }
-    } catch (error) {
-      toast.error(error.message);
-    } finally {
-      setLoading(false);
-    }
+    //   if (response?.status) {
+    //     toast.success(response.message);
+    //     setFormData({
+    //       first_name: "",
+    //       last_name: "",
+    //       email: "",
+    //       mobile_number: "",
+    //       password: "",
+    //       role_id: "",
+    //     });
+    //     setSelectedRole(null);
+    //     setErrors({});
+    //     setTimeout(() => navigate("/dashboard/users"), 1000);
+    //   } else {
+    //     Array.isArray(response.message)
+    //       ? response.message.forEach((error) => toast.error(error))
+    //       : toast.error(response.message);
+    //   }
+    // } catch (error) {
+    //   toast.error(error.message);
+    // } finally {
+    //   setLoading(false);
+    // }
   };
 
   return (
