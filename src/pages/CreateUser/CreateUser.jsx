@@ -5,21 +5,12 @@ import {
   CardLayoutBody,
   CardLayoutFooter,
 } from "../../components/CardLayout/CardLayout";
-import {
-  Input,
-  Button,
-  Switch,
-  Spinner,
-  Select,
-} from "../../components/components";
-import { useFormik } from "formik";
-import { useNavigate } from "react-router-dom";
+import { Input, Button, Spinner } from "../../components/components";
 import toast, { Toaster } from "react-hot-toast";
-import { getRoles } from "../../utils/api_handler";
-import { userSchema } from "../../validations/index";
 import { FaCaretDown } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { createUser } from "../../_core/features/userSlice";
+import { getRoles } from "../../_core/features/roleSlice";
 
 let inputFields = [
   {
@@ -49,11 +40,8 @@ let inputFields = [
   },
 ];
 const CreateUser = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [errors, setErrors] = useState({});
-  const [roles, setRoles] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -65,6 +53,9 @@ const CreateUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [selectedRole, setSelectedRole] = useState(null);
   const userData = useSelector((state) => state.auth.userData);
+  const { roles, isLoadingRoles, rolesError } = useSelector(
+    (state) => state.role
+  );
 
   const validateForm = () => {
     let newErrors = {};
@@ -99,22 +90,8 @@ const CreateUser = () => {
   };
 
   useEffect(() => {
-    const fetchRoles = async () => {
-      setLoading(true);
-      try {
-        const response = await getRoles();
-        if (response.status) {
-          setRoles(response.data.roles);
-        } else {
-          toast.error(response.message);
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchRoles();
-  }, []);
+    dispatch(getRoles({ page: 0, limit: 10, token: userData?.token }));
+  }, [dispatch]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -141,34 +118,6 @@ const CreateUser = () => {
       return;
     }
     dispatch(createUser({ token: userData.token, data: formData }));
-    // try {
-    //   setLoading(true);
-    //   console.log("Submitting Payload:", formData);
-    //   const response = await createUser(JSON.stringify(formData));
-
-    //   if (response?.status) {
-    //     toast.success(response.message);
-    //     setFormData({
-    //       first_name: "",
-    //       last_name: "",
-    //       email: "",
-    //       mobile_number: "",
-    //       password: "",
-    //       role_id: "",
-    //     });
-    //     setSelectedRole(null);
-    //     setErrors({});
-    //     setTimeout(() => navigate("/dashboard/users"), 1000);
-    //   } else {
-    //     Array.isArray(response.message)
-    //       ? response.message.forEach((error) => toast.error(error))
-    //       : toast.error(response.message);
-    //   }
-    // } catch (error) {
-    //   toast.error(error.message);
-    // } finally {
-    //   setLoading(false);
-    // }
   };
 
   return (
@@ -208,8 +157,8 @@ const CreateUser = () => {
                 </div>
                 {dropdownOpen && (
                   <ul className="absolute z-10 w-full mt-1 overflow-y-auto bg-white border border-gray-300 rounded-md shadow-md max-h-40">
-                    {roles.length > 0 ? (
-                      roles.map((role) => (
+                    {roles.roles.length > 0 ? (
+                      roles.roles.map((role) => (
                         <li
                           key={role.id}
                           className="p-3 cursor-pointer hover:bg-gray-100"
@@ -232,8 +181,8 @@ const CreateUser = () => {
 
           <CardLayoutFooter>
             <Button
-              text={loading ? <Spinner /> : "Create User"}
-              disabled={loading}
+              text={isLoadingRoles ? <Spinner /> : "Create User"}
+              disabled={isLoadingRoles}
               type="submit"
             />
           </CardLayoutFooter>
