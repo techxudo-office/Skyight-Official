@@ -4,7 +4,6 @@ import {
   ConfirmModal,
   TableNew,
 } from "../../components/components";
-import { deleteTicket } from "../../utils/api_handler";
 import { MdAutoDelete } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import {
@@ -18,7 +17,7 @@ import { ticketColumns } from "../../data/columns";
 import { successToastify, errorToastify } from "../../helper/toast";
 import { MdAdd } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import { getTickets } from "../../_core/features/ticketSlice";
+import { deleteTicket, getTickets } from "../../_core/features/ticketSlice";
 
 const ViewTickets = () => {
   const navigate = useNavigate();
@@ -33,7 +32,9 @@ const ViewTickets = () => {
   const [deleteId, setDeleteId] = useState(null);
   const [activeIndex, setActiveIndex] = useState(null);
   const { userData } = useSelector((state) => state.auth);
-  const { tickets, isLoadingTickets } = useSelector((state) => state.ticket);
+  const { tickets, isLoadingTickets, isDeletingTicket } = useSelector(
+    (state) => state.ticket
+  );
 
   const actionsData = [
     {
@@ -55,24 +56,17 @@ const ViewTickets = () => {
     },
   ];
 
-  const deleteTicketHandler = async () => {
+  const deleteTicketHandler = () => {
     if (!deleteId) {
       errorToastify("Failed to delete this ticket");
       setModalStatus(false);
     } else {
-      const response = await deleteTicket(deleteId);
-      if (response.status) {
-        // setTicketsData(ticketsData.filter(({ id }) => id !== deleteId));
-        // Fix: Use prevState.filter() instead of directly modifying state.
-        setTicketsData((prevTickets) =>
-          prevTickets.filter(({ id }) => id !== deleteId)
-        );
-        setModalStatus(false);
-        setDeleteId(null);
-        successToastify(response.message);
-      } else {
-        errorToastify(response.message);
-      }
+      dispatch(deleteTicket({ id: deleteId, token: userData?.token })).then(
+        () => {
+          setModalStatus(false);
+          setDeleteId(null);
+        }
+      );
     }
   };
 
@@ -92,6 +86,7 @@ const ViewTickets = () => {
   return (
     <>
       <ConfirmModal
+        loading={isDeletingTicket}
         status={modalStatus}
         onAbort={abortDeleteHandler}
         onConfirm={deleteTicketHandler}

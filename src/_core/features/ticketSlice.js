@@ -69,7 +69,7 @@ export const createTicket = createAsyncThunk(
   "ticket/createTicket",
   async ({ data, token }, thunkAPI) => {
     try {
-        console.log(token,"token")
+      console.log(token, "token");
       const response = await axios.post(`${BASE_URL}/api/ticket`, data, {
         headers: {
           Authorization: token,
@@ -129,11 +129,14 @@ export const deleteTicket = createAsyncThunk(
   "ticket/deleteTicket",
   async ({ id, token }, thunkAPI) => {
     try {
-      const response = await axios.delete(`${BASE_URL}/api/ticket/${id}`, {
-        headers: {
-          Authorization: token,
-        },
-      });
+      const response = await axios.delete(
+        `${BASE_URL}/api/ticket?ticket_id=${id}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
 
       if (response.status === 200) {
         toast.success("Ticket has been deleted");
