@@ -111,15 +111,7 @@ export const getTickets = createAsyncThunk(
       });
 
       if (response.status === 200) {
-        const extractedData = response.data.data.map(
-          ({ id, title, description, status }) => ({
-            id,
-            title,
-            description,
-            status,
-          })
-        );
-        return extractedData;
+        return response.data.data;
       } else {
         throw new Error("Failed to fetch tickets");
       }
