@@ -47,7 +47,7 @@ const Transactions = () => {
   ];
 
   useEffect(() => {
-    dispatch(getTransactions(userData?.token));
+    dispatch(getTransactions({ token: userData?.token }));
   }, []);
 
   return (

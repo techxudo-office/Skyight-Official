@@ -76,10 +76,10 @@ export const createTransaction = createAsyncThunk(
 
 export const getTransactions = createAsyncThunk(
   "transaction/getTransactions",
-  async (token, thunkAPI) => {
+  async ({ token, page = 0, limit = 10 }, thunkAPI) => {
     try {
       const response = await axios.get(
-        `${BASE_URL}/api/company/user-transactions`,
+        `${BASE_URL}/api/company/user-transactions?page=${page}&limit=${limit}`,
         {
           headers: {
             Authorization: token,
