@@ -1,4 +1,5 @@
 import {
+  Finalticket,
   Home,
   About,
   Contact,
@@ -52,7 +53,7 @@ export const routesData = [
   {
     path: "/dashboard",
     element: <Dashboard />,
-    protected: true, 
+    protected: true,
     children: [
       { index: true, element: <DashboardHome />, protected: true },
       { path: "search-flights", element: <SearchFlights />, protected: true },
@@ -82,7 +83,8 @@ export const routesData = [
       { path: "flight-details", element: <FlightDetails />, protected: true },
       { path: "travelers-details", element: <TravelersDetails />, protected: true },
       { path: "confirm-booking", element: <ConfirmBooking />, protected: true },
-      { path: "announcement", element: <Anouncement/>, protected: true },
+      { path: "announcement", element: <Anouncement />, protected: true },
+      { path: "ticket-info", element: <Finalticket />, protected: true },
     ],
   },
   { path: "*", element: <NotFound /> },

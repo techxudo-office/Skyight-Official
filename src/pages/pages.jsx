@@ -51,4 +51,6 @@ export { default as Registration } from "./Registration/Registration";
 export { default as Verification } from "./Verification/Verification";
 export { default as ForgetPassword } from "./ForgetPassword/ForgetPassword";
 export { default as Anouncement } from "./Anouncement/Anouncement";
+export { default as Finalticket } from "../pages/FinalTicket/Finalticket"
+
 

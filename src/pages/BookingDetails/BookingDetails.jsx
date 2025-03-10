@@ -9,7 +9,7 @@ import {
   CardLayoutBody,
   CardLayoutFooter,
 } from "../../components/CardLayout/CardLayout";
-import { Button, Spinner, SecondaryButton, TableNew, ConfirmModal, Tag } from "../../components/components";
+import { Button, Spinner, SecondaryButton, TableNew, ConfirmModal, Tag, DownloadButton } from "../../components/components";
 import toast, { Toaster } from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
 import { cancelFlightBooking, getBookingDetails, getPNR, issueBooking, refundRequest } from "../../utils/api_handler";
@@ -24,6 +24,7 @@ const TicketDetails = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [bookingDetails, setBookingDetails] = useState();
+  const [getPnr, setGetPnr] = useState(null);
   const [confirmObject, setConfirmObject] = useState({
     onAbort: '',
     onConfirm: '',
@@ -63,20 +64,25 @@ const TicketDetails = () => {
     }
   };
   const handleIssue = async (pnr) => {
-    console.log((pnr), "pnr")
-    if (bookingDetails?.booking_status === "booked") {
-      const response = await issueBooking(pnr)
-      if (response.status) {
-        toast.success(`Ordered Successfully Total Fare: ${bookingDetails?.total_fare}`)
-        setConfirmObject((prev) => ({ ...prev, status: false }))
-      }
-    }
-    if (bookingDetails?.booking_status === "confirmed") {
-      const response = await getPNR(pnr)
-      console.log(response)
-    }
 
+    const response = await issueBooking(pnr)
+    if (response.status) {
+      toast.success(`Ordered Successfully Total Fare: ${bookingDetails?.total_fare}`)
+      setConfirmObject((prev) => ({ ...prev, status: false }))
+    }
+  }
+  const handleGetPnr = async (pnr) => {
 
+    const response = await getPNR(pnr)
+    console.log("getPnr", response)
+    if (response.status) {
+      navigate("/dashboard/ticket-info", { state: response.data })
+      setGetPnr(response.data)
+      toast.success("Your PNR Retrieve")
+    } else {
+      response.data.map((error) => toast.error(error))
+
+    } F
   }
   const cancelFlightBookingHandler = async (flight) => {
     console.log(flight);
@@ -139,6 +145,7 @@ const TicketDetails = () => {
   return (
     <>
       <Toaster />
+      {getPnr && <DownloadButton data={getPnr} />}
       <ConfirmModal onAbort={confirmObject.onAbort} onConfirm={confirmObject.onConfirm} status={confirmObject.status} text={confirmObject.text} />
       <div ref={printRef} className="flex flex-col w-full gap-5">
         <CardLayoutContainer>
@@ -197,20 +204,30 @@ const TicketDetails = () => {
               </div>
             </div>
 
-            <Button disabled={(bookingDetails?.booking_status === "expired") ||
-              now.format("M/D/YYYY h:m:s a") > timeLimit.format("M/D/YYYY h:m:s a")}
+            <Button
+              disabled={(bookingDetails?.booking_status === "expired")
+                // || now.format("M/D/YYYY h:m:s a") > timeLimit.format("M/D/YYYY h:m:s a")
+              }
+
               className=" py-14 px-14 text-xl "
               text={bookingDetails?.booking_status !== "booked"
                 || now.format("M/D/YYYY h:m:s a") > timeLimit.format("M/D/YYYY h:m:s a")
                 ? (bookingDetails?.booking_status === "confirmed" ? "Get PNR" : "PNR Expired")
                 : "Order Ticket"}
-              onClick={() => setConfirmObject((prev) => ({
-                ...prev,
-                status: true,
-                text: `Are you really want to order the ticket. The total fare is ${(bookingDetails?.total_fare).toLocaleString()} `,
-                onAbort: () => setConfirmObject((prev => ({ ...prev, status: false }))),
-                onConfirm: () => handleIssue(String(bookingDetails?.booking_reference_id))
-              }))}
+
+              onClick={() => {
+                if (bookingDetails?.booking_status === "confirmed") {
+                  handleGetPnr(bookingDetails?.booking_reference_id)
+                } else {
+                  setConfirmObject((prev) => ({
+                    ...prev,
+                    status: true,
+                    text: `Are you really want to order the ticket. The total fare is ${(bookingDetails?.total_fare).toLocaleString()} `,
+                    onAbort: () => setConfirmObject((prev => ({ ...prev, status: false }))),
+                    onConfirm: () => handleIssue((bookingDetails?.booking_reference_id))
+                  }))
+                }
+              }}
             />
           </CardLayoutBody>
           <CardLayoutBody>

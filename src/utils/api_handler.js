@@ -969,21 +969,29 @@ export const getPNR = async (id) => {
       headers: {
         Authorization: getToken(),
         "Content-Type": "application/json",
-        data: {
-          pnr: id
-        }
+
       },
+      data: {
+        pnr: id
+      }
+
     });
     if (response.status === 200) {
+
       return {
         status: true,
         data: response.data.data,
       };
+    } else {
+      return {
+        status: false,
+        data: Object.values(response.data.data.errors).map((value) => value),
+      };
     }
   } catch (error) {
     return {
-      status: true,
-      data: response,
+      status: false,
+      data: Object.values(error.response.data.data.errors).map((value) => value),
     };
   }
 };
