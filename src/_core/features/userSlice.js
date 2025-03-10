@@ -70,7 +70,6 @@ export const getUsers = createAsyncThunk(
           Authorization: token,
         },
       });
-      toast.success("Users fetched successfully");
       return response?.data?.data;
     } catch (error) {
       const errorMessage =
