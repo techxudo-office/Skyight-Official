@@ -501,57 +501,6 @@ export const getBanks = async () => {
   }
 };
 
-//! Notifications...
-export const getNotifications = async () => {
-  try {
-    let response = await axios({
-      method: "GET",
-      url: `${BASE_URL}/api/notification?isMaster=${true}`,
-      headers: {
-        Authorization: getToken(),
-      },
-    });
-    if (response.status === 200) {
-      return {
-        status: true,
-        data: response.data.data,
-      };
-    }
-  } catch (error) {
-    return {
-      status: false,
-      message:
-        error.response?.data?.message ||
-        "Failed to fetch notifications. Please try again.",
-    };
-  }
-};
-
-export const getAnnouncements = async () => {
-  try {
-    let response = await axios({
-      method: "GET",
-      url: `${BASE_URL}/api/getAnnouncements`,
-      headers: {
-        Authorization: getToken(),
-      },
-    });
-    if (response.status === 200) {
-      return {
-        status: true,
-        data: response.data.data,
-      };
-    }
-  } catch (error) {
-    return {
-      status: false,
-      message:
-        error?.response?.data?.message ||
-        "Something went wrong. Please try again.",
-    };
-  }
-};
-
 //! Travelers...
 export const getTravelers = async (passengerType) => {
   try {

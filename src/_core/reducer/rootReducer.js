@@ -7,11 +7,13 @@ import { combineReducers } from "@reduxjs/toolkit";
 import authReducer from '../features/authSlice';
 import userReducer from '../features/userSlice';
 import roleReducer from '../features/roleSlice';
+import ticketReducer from '../features/ticketSlice';
 import notificationReducer from '../features/notificationSlice';
 const appReducer = combineReducers({
   auth: authReducer,
   user: userReducer,
   role: roleReducer,
+  ticket: ticketReducer,
   notification: notificationReducer,
 });
 
