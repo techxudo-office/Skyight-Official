@@ -1,42 +1,32 @@
-import React, { useEffect, useState, useCallback } from "react";
-import { FixedSizeList as List } from "react-window"; // Import List from react-window
+import React, { useEffect } from "react";
+import { FixedSizeList as List } from "react-window";
 import {
   CardLayoutContainer,
   CardLayoutHeader,
 } from "../../components/CardLayout/CardLayout";
-import { getAnnouncements } from "../../utils/api_handler";
 import { Spinner, BellIcon } from "../../components/components";
 import { HiOutlineSpeakerphone } from "react-icons/hi";
-import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { getAnnouncements } from "../../_core/features/notificationSlice";
 
 const Announcement = () => {
-  const [AnnouncementData, setAnnouncementData] = useState([]);
-  const [loading, setLoading] = useState(false);
-
-  const getAnnouncementHandler = useCallback(async () => {
-    setLoading(true);
-    try {
-      let response = await getAnnouncements();
-      if (response.status) {
-        setAnnouncementData(response.data[0]);
-      } else {
-        toast.error(response.message);
-      }
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-  
+  const dispatch = useDispatch();
+  const { announcements, isLoadingAnnouncements } = useSelector(
+    (state) => state.notification
+  );
+  const userData = useSelector((state) => state.auth.userData);
 
   useEffect(() => {
-    getAnnouncementHandler();
-  }, [getAnnouncementHandler]);
+    if (userData?.token) {
+      dispatch(getAnnouncements(userData.token));
+    }
+  }, [dispatch, userData?.token]);
 
   // Render function for each item in the list
   const renderRow = ({ index, style }) => {
-    const item = AnnouncementData[index];
+    const item = announcements[index];
     return (
-      <div style={style} key={index}>
+      <div style={style} key={item?.id || index}>
         <CardLayoutContainer className="w-full mb-5">
           <CardLayoutHeader
             className="flex flex-wrap items-center justify-start gap-5 py-3"
@@ -52,10 +42,10 @@ const Announcement = () => {
                 {new Date(item?.created_at).toISOString().split("T")[0]}
               </h3>
               <h4 className="mb-0 text-[18px] font-semibold text-[#666]">
-                {item?.title}
+                {item?.title || "No Title"}
               </h4>
               <h4 className="mb-0 text-[12px] text-text">
-                {item?.description}
+                {item?.description || "No Description"}
               </h4>
             </div>
           </CardLayoutHeader>
@@ -66,25 +56,23 @@ const Announcement = () => {
 
   return (
     <div className="flex flex-col items-center justify-center w-full">
-      {loading && <Spinner className="mx-auto text-primary" />}
+      {isLoadingAnnouncements && <Spinner className="mx-auto text-primary" />}
 
-      {AnnouncementData?.length > 0 ? (
+      {announcements?.length > 0 ? (
         <List
-          height={600} // Set the height of the viewport
-          itemCount={AnnouncementData.length} // Number of items to render
-          itemSize={100} // Height of each item in pixels (adjust as needed)
-          width="100%" // Set the width of the list
+          height={600}
+          itemCount={announcements.length}
+          itemSize={100}
+          width="100%"
         >
           {renderRow}
         </List>
       ) : (
-        <>
-          {!loading && (
-            <h2 className="text-center capitalize text-text">
-              No Notifications Found
-            </h2>
-          )}
-        </>
+        !isLoadingAnnouncements && (
+          <h2 className="text-center capitalize text-text">
+            No Notifications Found
+          </h2>
+        )
       )}
     </div>
   );

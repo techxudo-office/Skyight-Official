@@ -2,13 +2,17 @@
 
 "use client";
 
-import authReducer from '../features/authSlice';
-import counterReducer from "../features/counterSlice";
-import { combineReducers } from "@reduxjs/toolkit";
 import storage from "redux-persist/lib/storage";
+import { combineReducers } from "@reduxjs/toolkit";
+import authReducer from '../features/authSlice';
+import userReducer from '../features/userSlice';
+import roleReducer from '../features/roleSlice';
+import notificationReducer from '../features/notificationSlice';
 const appReducer = combineReducers({
   auth: authReducer,
-  counter: counterReducer,
+  user: userReducer,
+  role: roleReducer,
+  notification: notificationReducer,
 });
 
 const rootReducer = (state, action) => {

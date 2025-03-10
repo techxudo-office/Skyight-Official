@@ -5,9 +5,10 @@ import {
   CardLayoutBody,
   CardLayoutFooter,
 } from "../../components/CardLayout/CardLayout";
-import { Input, Button, Switch, Spinner } from "../../components/components";
+import { Input, Button, Spinner } from "../../components/components";
 import toast, { Toaster } from "react-hot-toast";
-import { createRole } from "../../utils/api_handler";
+import { createRole } from "../../_core/features/roleSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const initialRolesData = {
   name: "",
@@ -60,9 +61,10 @@ const Checkbox = ({ label, checked, onChange }) => {
 };
 
 const CreateRole = () => {
+  const dispatch = useDispatch();
   const [rolesData, setRolesData] = useState(initialRolesData);
-  const [isActive, setIsActive] = useState(true);
-  const [loading, setLoading] = useState(false);
+  const userData = useSelector((state) => state.auth.userData);
+  const { isLoadingCreateRole } = useSelector((state) => state.role);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -84,29 +86,17 @@ const CreateRole = () => {
       toast.error("Please fill in all fields");
       return;
     }
-    setLoading(true);
 
     const payload = {
       name: rolesData.name,
       description: rolesData.description,
       page_permission: rolesData.page_permission,
       action_permission: rolesData.action_permission,
-      // status: isActive ? "active" : "inactive",
     };
 
-    try {
-      let response = await createRole(payload);
-      if (response.status) {
-        toast.success("Role created successfully");
-        setRolesData(initialRolesData);
-      } else {
-        toast.error(response.message || "Failed to create role");
-      }
-    } catch (error) {
-      toast.error(error.response.data.message || "Failed to create role");
-    } finally {
-      setLoading(false);
-    }
+    const action = await dispatch(
+      createRole({ data: payload, token: userData?.token })
+    ).then(() => setRolesData(initialRolesData));
   };
 
   return (
@@ -115,7 +105,8 @@ const CreateRole = () => {
       <CardLayoutContainer>
         <CardLayoutHeader
           heading="Create Role"
-          className="flex items-center justify-between">
+          className="flex items-center justify-between"
+        >
           {/* <span onClick={() => setIsActive(!isActive)}>
             <Switch switchStatus={isActive} />
           </span> */}
@@ -170,8 +161,8 @@ const CreateRole = () => {
         </CardLayoutBody>
         <CardLayoutFooter>
           <Button
-            text={loading ? <Spinner /> : "Create Role"}
-            disabled={loading}
+            text={isLoadingCreateRole ? <Spinner /> : "Create Role"}
+            disabled={isLoadingCreateRole}
             onClick={handleSubmit}
           />
         </CardLayoutFooter>
