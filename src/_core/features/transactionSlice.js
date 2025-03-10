@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { BASE_URL } from "../../utils/ApiBaseUrl";
+import toast from "react-hot-toast";
 
 const initialState = {
   transactions: [],
@@ -61,13 +62,13 @@ export const createTransaction = createAsyncThunk(
       );
 
       if (response.status === 200) {
+        toast.success("Transaction created successfully!");
         return response.data;
-      } else {
-        throw new Error("Failed to create transaction");
       }
     } catch (error) {
       const errorMessage =
         error?.response?.data?.message || "Failed to create transaction";
+      toast.error(errorMessage);
       return thunkAPI.rejectWithValue(errorMessage);
     }
   }
@@ -89,6 +90,7 @@ export const getTransactions = createAsyncThunk(
     } catch (error) {
       const errorMessage =
         error?.response?.data?.message || "Failed to fetch transactions";
+      toast.error(errorMessage);
       return thunkAPI.rejectWithValue(errorMessage);
     }
   }

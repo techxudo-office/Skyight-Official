@@ -29,15 +29,10 @@ const Transactions = () => {
   };
 
   const [activeIndex, setActiveIndex] = useState(null);
-  const [transactionsData, setTransactionsData] = useState([]);
-  const [modalStatus, setModalStatus] = useState(false);
   const { userData } = useSelector((state) => state.auth);
   const { transactions, isLoadingTransactions } = useSelector(
     (state) => state.transaction
   );
-  useEffect(() => {
-    console.log(transactions, "transactions");
-  }, [transactions]);
 
   const actionsData = [
     {
