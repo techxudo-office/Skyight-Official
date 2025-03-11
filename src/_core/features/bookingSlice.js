@@ -11,6 +11,14 @@ const initialState = {
   pnrData: null,
   isLoadingPNR: false,
   pnrError: null,
+
+  banks: [],
+  isLoadingBanks: false,
+  banksError: null,
+
+  credits: null,
+  isLoadingCredits: false,
+  creditsError: null,
 };
 
 const bookingSlice = createSlice({
@@ -42,12 +50,36 @@ const bookingSlice = createSlice({
       .addCase(getPNR.rejected, (state, action) => {
         state.isLoadingPNR = false;
         state.pnrError = action.payload;
+      })
+      .addCase(getBanks.pending, (state) => {
+        state.isLoadingBanks = true;
+        state.banksError = null;
+      })
+      .addCase(getBanks.fulfilled, (state, action) => {
+        state.isLoadingBanks = false;
+        state.banks = action.payload;
+      })
+      .addCase(getBanks.rejected, (state, action) => {
+        state.isLoadingBanks = false;
+        state.banksError = action.payload;
+      })
+      .addCase(getCredits.pending, (state) => {
+        state.isLoadingCredits = true;
+        state.creditsError = null;
+      })
+      .addCase(getCredits.fulfilled, (state, action) => {
+        state.isLoadingCredits = false;
+        state.credits = action.payload;
+      })
+      .addCase(getCredits.rejected, (state, action) => {
+        state.isLoadingCredits = false;
+        state.creditsError = action.payload;
       });
   },
 });
 
 export const getTravelers = createAsyncThunk(
-  "traveler/getTravelers",
+  "booking/getTravelers",
   async ({ passengerType, token }, thunkAPI) => {
     try {
       const response = await axios.get(
@@ -60,7 +92,6 @@ export const getTravelers = createAsyncThunk(
       );
 
       if (response.status === 200) {
-        toast.success("Travelers fetched successfully!");
         return response.data.data;
       } else {
         throw new Error("Failed to fetch travelers");
@@ -75,7 +106,7 @@ export const getTravelers = createAsyncThunk(
 );
 
 export const getPNR = createAsyncThunk(
-  "traveler/getPNR",
+  "booking/getPNR",
   async ({ id, token }, thunkAPI) => {
     try {
       const response = await axios.post(
@@ -102,6 +133,53 @@ export const getPNR = createAsyncThunk(
       const errorMessage =
         Object.values(error?.response?.data?.data?.errors || {}).join(", ") ||
         "Failed to fetch PNR";
+      toast.error(errorMessage);
+      return thunkAPI.rejectWithValue(errorMessage);
+    }
+  }
+);
+
+export const getBanks = createAsyncThunk(
+  "booking/getBanks",
+  async (token, thunkAPI) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/api/bank`, {
+        headers: {
+          Authorization: token,
+        },
+      });
+      if (response.data.data[0]?.length > 0) {
+        const extractedData = response.data.data[0].map(({ id, bank }) => ({
+          value: id,
+          label: bank,
+        }));
+        return extractedData;
+      } else {
+        throw new Error("No Banks Found");
+      }
+    } catch (error) {
+      const errorMessage =
+        error?.response?.data?.message || "Failed to fetch banks";
+      toast.error(errorMessage);
+      return thunkAPI.rejectWithValue(errorMessage);
+    }
+  }
+);
+
+export const getCredits = createAsyncThunk(
+  "booking/getCredits",
+  async (token, thunkAPI) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/api/booking-credits`, {
+        headers: {
+          Authorization: token,
+        },
+      });
+      return response.data.data;
+    } catch (error) {
+      const errorMessage =
+        error?.response?.data?.message ||
+        "Something went wrong. Please try again.";
       toast.error(errorMessage);
       return thunkAPI.rejectWithValue(errorMessage);
     }
