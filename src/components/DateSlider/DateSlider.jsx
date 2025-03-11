@@ -1,9 +1,15 @@
-import dayjs from 'dayjs';
-import React from 'react'
-import { TbArrowsExchange2 } from 'react-icons/tb';
-import Slider from 'react-slick'
+import dayjs from "dayjs";
+import React from "react";
+import { TbArrowsExchange2 } from "react-icons/tb";
 
-export default function DateSlider({ className, ref, selectedDate, handleDateSelect, dateOptions, differenceInDates }) {
+export default function DateSlider({
+  className,
+  ref,
+  selectedDate,
+  handleDateSelect,
+  dateOptions,
+  differenceInDates,
+}) {
   var settings = {
     dots: false,
     infinite: true,
@@ -15,14 +21,13 @@ export default function DateSlider({ className, ref, selectedDate, handleDateSel
     autoplaySpeed: 2000,
     arrows: false,
     responsive: [
-
       {
         breakpoint: 768, // Tablets
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
           autoplaySpeed: 2500, // Adjust speed for smaller screens
-          dots: false
+          dots: false,
         },
       },
       {
@@ -31,45 +36,45 @@ export default function DateSlider({ className, ref, selectedDate, handleDateSel
           slidesToShow: 1,
           slidesToScroll: 1,
           autoplaySpeed: 3000,
-          dots: false
-
+          dots: false,
         },
       },
     ],
   };
   return (
-    <div ref={ref} className={`${className} date-slider flex justify-between bg-white rounded-md p-3 mb-4`}>
+    <div
+      ref={ref}
+      className={`${className} date-slider flex justify-between bg-white rounded-md p-3 mb-4`}>
       {dateOptions.map((date, index) => (
         <div key={index} className="px-2">
           <button
             onClick={() => handleDateSelect(date, index)}
-            className={`py-2 px-4 flex gap-1 flex-col items-center rounded-lg text-center w-32 ${selectedDate === date
-              ? "bg-primary text-white"
-              : "bg-gray-200 text-text"
-              }`}
-          >
+            className={`py-2 px-4 flex gap-1 flex-col items-center rounded-lg text-center w-32 ${
+              selectedDate === date
+                ? "bg-primary text-white"
+                : "bg-gray-200 text-text"
+            }`}>
             <p>{date}</p>
-            {(differenceInDates >0) &&
+            {differenceInDates > 0 && (
               <>
-                <TbArrowsExchange2 className={`text-xl ${selectedDate === date
-                  ? "bg-primary text-white"
-                  : "bg-gray-200 text-text"
-                  }`} />
-
+                <TbArrowsExchange2
+                  className={`text-xl ${
+                    selectedDate === date
+                      ? "bg-primary text-white"
+                      : "bg-gray-200 text-text"
+                  }`}
+                />
 
                 <p>
-                  {
-
-                    dayjs(date, "ddd, DD MMM", "en").add(differenceInDates, "day").format(`ddd,DD MMM`)}
+                  {dayjs(date, "ddd, DD MMM", "en")
+                    .add(differenceInDates, "day")
+                    .format(`ddd,DD MMM`)}
                 </p>
               </>
-            }
-
-
+            )}
           </button>
         </div>
       ))}
     </div>
-
-  )
+  );
 }
