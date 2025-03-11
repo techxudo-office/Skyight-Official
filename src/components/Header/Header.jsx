@@ -8,7 +8,6 @@ import { CreditsDropdown, CustomTooltip, Dropdown } from "../components";
 import { HiOutlineRefresh } from "react-icons/hi";
 import { PiCoinsFill } from "react-icons/pi";
 import { PiHandCoinsFill } from "react-icons/pi";
-import { getCredits } from "../../utils/api_handler";
 import { IoHome } from "react-icons/io5";
 import { skyightLogo } from "../../assets/Index";
 import { GiHamburgerMenu } from "react-icons/gi";
@@ -23,6 +22,7 @@ import { motion } from "framer-motion";
 import Announcement from "../../pages/Anouncement/Anouncement";
 import { logout } from "../../_core/features/authSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { getCredits } from "../../_core/features/bookingSlice";
 
 const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
   const navigate = useNavigate();
@@ -30,10 +30,11 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
 
   const [dropdownStatus, setDropDownStatus] = useState(false);
   const [isActive, setIsActive] = useState(false);
-  const [credits, setCredits] = useState(null);
-  const [CreditsDropdownOpen, setCreditsDropdownOpen] = useState(false);
   const [isAnnHovered, setIsAnnHovered] = useState(false);
   const [isNotiHovered, setIsNotiHovered] = useState(false);
+  const [CreditsDropdownOpen, setCreditsDropdownOpen] = useState(false);
+  const { userData } = useSelector((state) => state.auth);
+  const { credits, isLoadingCredits } = useSelector((state) => state.booking);
 
   const dropdownHandler = () => {
     setDropDownStatus(!dropdownStatus);
@@ -113,8 +114,6 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
     },
   ];
 
-  const userData = useSelector((state) => state.auth.userData);
-
   const logoutHandler = () => {
     if (!userData?.token) return;
 
@@ -132,32 +131,16 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
     setSidebarStatusHandler(!sidebarStatus);
   };
 
-  const [loading, setLoading] = useState(false);
-
-  const getCreditsHandler = useCallback(async () => {
+  useEffect(() => {
     if (!credits) {
-      setLoading(true);
-      let response = await getCredits();
-      setLoading(false);
-
-      if (response?.status) {
-        setCredits(response.data.amount);
-      } else {
-        toast.error(response?.message || "Failed to fetch credits.");
-      }
+      dispatch(getCredits(userData?.token));
     }
-  }, [credits]);
+    console.log(credits,"credits")
+  }, [credits, dispatch, userData?.token]);
 
   const refreshCredits = () => {
-    setCredits("");
-    setTimeout(() => {
-      getCreditsHandler();
-    }, 2000);
+    dispatch(getCredits(userData?.token));
   };
-
-  useEffect(() => {
-    getCreditsHandler();
-  }, [getCreditsHandler]);
 
   return (
     <>
@@ -173,7 +156,8 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
               <CustomTooltip content={"Open / close"}>
                 <button
                   className="text-gray-700 transition hover:text-gray-900"
-                  onClick={sidebarHandler}>
+                  onClick={sidebarHandler}
+                >
                   <GiHamburgerMenu size={22} />{" "}
                   {/* Consistent size for mobile and desktop */}
                 </button>
@@ -193,7 +177,8 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
               <div
                 className="relative py-2"
                 onMouseEnter={() => setIsAnnHovered(true)}
-                onMouseLeave={() => setIsAnnHovered(false)}>
+                onMouseLeave={() => setIsAnnHovered(false)}
+              >
                 {" "}
                 <CustomTooltip content={"Announcement"}>
                   <div className="max-md:hidden">
@@ -206,7 +191,8 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.3 }}
-                    className="absolute top-10 right-0 w-[300px] bg-white shadow-lg rounded-lg p-3 z-50">
+                    className="absolute top-10 right-0 w-[300px] bg-white shadow-lg rounded-lg p-3 z-50"
+                  >
                     <Announcement />
                   </motion.div>
                 )}
@@ -214,7 +200,8 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
               <div
                 className="relative py-2"
                 onMouseEnter={() => setIsNotiHovered(true)}
-                onMouseLeave={() => setIsNotiHovered(false)}>
+                onMouseLeave={() => setIsNotiHovered(false)}
+              >
                 <CustomTooltip content={"Notifications"}>
                   <div className="max-md:hidden">
                     <MdNotificationsNone className="text-2xl cursor-pointer text-text" />
@@ -227,7 +214,8 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.3 }}
-                    className="absolute top-10 right-0 w-[500px] bg-white shadow-lg rounded-lg p-3 z-50">
+                    className="absolute top-10 right-0 w-[500px] bg-white shadow-lg rounded-lg p-3 z-50"
+                  >
                     <Notifications />
                   </motion.div>
                 )}
@@ -246,7 +234,7 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
                     //   setIsActive(!isActive);
                     // }}
                   >
-                    {loading ? (
+                    {isLoadingCredits ? (
                       <span className="flex items-center gap-2">
                         <HiOutlineRefresh className="animate-spin max-sm:hidden" />
                         <span>Refreshing...</span>
@@ -254,9 +242,10 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
                     ) : credits ? (
                       <span
                         onClick={refreshCredits}
-                        className="flex items-center gap-2">
+                        className="flex items-center gap-2"
+                      >
                         <HiOutlineRefresh className="max-sm:hidden" />
-                        <span>PKR {credits?.toLocaleString("en-US")}</span>
+                        <span>PKR {credits?.amount}</span>
                       </span>
                     ) : (
                       <span className="flex items-center gap-2">
@@ -273,7 +262,7 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
                     <div className="absolute right-0 top-14">
                       {CreditsDropdownOpen && (
                         <CreditsDropdown
-                          credits={credits}
+                          credits={credits?.amount}
                           onClose={() => setCreditsDropdownOpen(false)}
                         />
                       )}

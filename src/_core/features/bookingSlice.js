@@ -15,6 +15,10 @@ const initialState = {
   banks: [],
   isLoadingBanks: false,
   banksError: null,
+
+  credits: null,
+  isLoadingCredits: false,
+  creditsError: null,
 };
 
 const bookingSlice = createSlice({
@@ -58,6 +62,18 @@ const bookingSlice = createSlice({
       .addCase(getBanks.rejected, (state, action) => {
         state.isLoadingBanks = false;
         state.banksError = action.payload;
+      })
+      .addCase(getCredits.pending, (state) => {
+        state.isLoadingCredits = true;
+        state.creditsError = null;
+      })
+      .addCase(getCredits.fulfilled, (state, action) => {
+        state.isLoadingCredits = false;
+        state.credits = action.payload;
+      })
+      .addCase(getCredits.rejected, (state, action) => {
+        state.isLoadingCredits = false;
+        state.creditsError = action.payload;
       });
   },
 });
@@ -144,6 +160,26 @@ export const getBanks = createAsyncThunk(
     } catch (error) {
       const errorMessage =
         error?.response?.data?.message || "Failed to fetch banks";
+      toast.error(errorMessage);
+      return thunkAPI.rejectWithValue(errorMessage);
+    }
+  }
+);
+
+export const getCredits = createAsyncThunk(
+  "booking/getCredits",
+  async (token, thunkAPI) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/api/booking-credits`, {
+        headers: {
+          Authorization: token,
+        },
+      });
+      return response.data.data;
+    } catch (error) {
+      const errorMessage =
+        error?.response?.data?.message ||
+        "Something went wrong. Please try again.";
       toast.error(errorMessage);
       return thunkAPI.rejectWithValue(errorMessage);
     }

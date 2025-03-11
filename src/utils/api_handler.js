@@ -310,29 +310,3 @@ export const getRoutes = async () => {
     };
   }
 };
-
-//! Banks
-export const getBanks = async () => {
-  try {
-    let response = await axios({
-      method: "GET",
-      url: `${BASE_URL}/api/bank`,
-      headers: {
-        Authorization: getToken(),
-      },
-    });
-
-    if (response.status === 200) {
-      if (response.data.data[0].length > 0) {
-        const extractedData = response.data.data[0].map(({ id, bank }) => ({
-          value: id,
-          label: bank,
-        }));
-        return { status: true, data: extractedData };
-      }
-    }
-  } catch (error) {
-    return { status: false, data: "No Banks" };
-
-  }
-};
