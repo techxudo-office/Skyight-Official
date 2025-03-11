@@ -209,7 +209,7 @@ const TicketDetails = () => {
 
               className=" py-14 px-14 text-xl "
               text={bookingDetails?.booking_status !== "booked"
-                || now.format("M/D/YYYY h:m:s a") > timeLimit.format("M/D/YYYY h:m:s a")
+                // || now.format("M/D/YYYY h:m:s a") > timeLimit.format("M/D/YYYY h:m:s a")
                 ? (bookingDetails?.booking_status === "confirmed" ? "Get PNR" : "PNR Expired")
                 : "Order Ticket"}
 

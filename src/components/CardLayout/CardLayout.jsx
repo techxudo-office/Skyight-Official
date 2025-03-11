@@ -9,24 +9,22 @@ export const CardLayoutHeader = ({
 }) => {
   return (
     <div
-      className={`px-5 ${
-        removeBorder ? "py-2" : "border-b py-5"
-      } border-slate-200 ${className}`}
+      className={`px-5 ${removeBorder ? "py-2" : "border-b py-5"
+        } border-slate-200 ${className || "text-text"}`}
     >
       {heading && (
-        <h2 className="text-3xl font-semibold text-text">{heading}</h2>
+        <h2 className="text-3xl font-semibold">{heading}</h2>
       )}
       {children}
     </div>
   );
 };
 
-export const CardLayoutBody = ({ children, removeBorder, className,padding }) => {
+export const CardLayoutBody = ({ children, removeBorder, className, padding }) => {
   return (
     <div
-      className={`${padding ? padding : "p-5"} ${
-        removeBorder ? "" : "border-b"
-      } border-slate-200 ${className}`}
+      className={`${padding ? padding : "p-5"} ${removeBorder ? "" : "border-b"
+        } border-slate-200 ${className}`}
     >
       {children}
     </div>
@@ -58,9 +56,8 @@ export const CardLayoutContainer = ({
       }}
     >
       <div
-        className={`w-full rounded-lg ${
-          removeBg ? "bg-none" : "bg-white shadow-sm"
-        } ${className}`}
+        className={`w-full rounded-lg ${removeBg ? "bg-none" : "bg-white shadow-sm"
+          } ${className}`}
       >
         {children}
       </div>
