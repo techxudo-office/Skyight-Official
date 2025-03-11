@@ -1,16 +1,7 @@
 import React, { useEffect, useState } from "react";
-import {
-  Table,
-  SecondaryButton,
-  ConfirmModal,
-  TableNew,
-} from "../../components/components";
+import { SecondaryButton, TableNew } from "../../components/components";
 import { FaEye } from "react-icons/fa";
-import { MdAdd, MdEditSquare } from "react-icons/md";
-import { MdAutoDelete } from "react-icons/md";
-import { FaRegCircleCheck } from "react-icons/fa6";
-
-import { getTransactions } from "../../utils/api_handler";
+import { MdAdd } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import {
   CardLayoutContainer,
@@ -19,18 +10,22 @@ import {
   CardLayoutFooter,
 } from "../../components/CardLayout/CardLayout";
 import { transactionColumns } from "../../data/columns";
-import { successToastify, errorToastify } from "../../helper/toast";
+import { getTransactions } from "../../_core/features/transactionSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const Transactions = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const navigationHandler = () => {
     navigate("/dashboard/create-transaction");
   };
 
   const [activeIndex, setActiveIndex] = useState(null);
-  const [transactionsData, setTransactionsData] = useState([]);
-  const [modalStatus, setModalStatus] = useState(false);
+  const { userData } = useSelector((state) => state.auth);
+  const { transactions, isLoadingTransactions } = useSelector(
+    (state) => state.transaction
+  );
 
   const actionsData = [
     {
@@ -44,18 +39,8 @@ const Transactions = () => {
     },
   ];
 
-  const gettingTransactions = async () => {
-    const response = await getTransactions();
-    if (response.status) {
-      setTransactionsData(response.data);
-    } else {
-      toast.error(response.message);
-    }
-  };
-
-
   useEffect(() => {
-    gettingTransactions();
+    dispatch(getTransactions({ token: userData?.token }));
   }, []);
 
   return (
@@ -69,20 +54,19 @@ const Transactions = () => {
           <div className="relative">
             <SecondaryButton
               text={"Create New Transaction"}
-              icon={<MdAdd/>}
+              icon={<MdAdd />}
               onClick={navigationHandler}
             />
           </div>
         </CardLayoutHeader>
         <CardLayoutBody removeBorder={true}>
           <TableNew
-            columnsToView={transactionColumns}
-            tableData={transactionsData}
             actions={actionsData}
+            tableData={transactions}
             activeIndex={activeIndex}
-            extraRows={['comment', 'account_holder_name','document_url']}
-
-
+            loader={isLoadingTransactions}
+            columnsToView={transactionColumns}
+            extraRows={["comment", "account_holder_name", "document_url"]}
           />
         </CardLayoutBody>
         <CardLayoutFooter></CardLayoutFooter>

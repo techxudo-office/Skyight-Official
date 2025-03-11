@@ -22,9 +22,10 @@ const Announcement = () => {
     }
   }, [dispatch, userData?.token]);
 
-  // Render function for each item in the list
+  const announcementData = announcements?.data?.[0] || [];
+
   const renderRow = ({ index, style }) => {
-    const item = announcements[index];
+    const item = announcementData[index];
     return (
       <div style={style} key={item?.id || index}>
         <CardLayoutContainer className="w-full mb-5">
@@ -56,23 +57,21 @@ const Announcement = () => {
 
   return (
     <div className="flex flex-col items-center justify-center w-full">
-      {isLoadingAnnouncements && <Spinner className="mx-auto text-primary" />}
-
-      {announcements?.length > 0 ? (
+      {isLoadingAnnouncements ? (
+        <Spinner className="mx-auto text-primary" />
+      ) : announcementData.length > 0 ? (
         <List
           height={600}
-          itemCount={announcements.length}
+          itemCount={announcementData.length}
           itemSize={100}
           width="100%"
         >
           {renderRow}
         </List>
       ) : (
-        !isLoadingAnnouncements && (
-          <h2 className="text-center capitalize text-text">
-            No Notifications Found
-          </h2>
-        )
+        <h2 className="text-center capitalize text-text">
+          No Notifications Found
+        </h2>
       )}
     </div>
   );

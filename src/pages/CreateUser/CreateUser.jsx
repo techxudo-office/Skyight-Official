@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { createUser } from "../../_core/features/userSlice";
 import { getRoles } from "../../_core/features/roleSlice";
 
-let inputFields = [
+const inputFields = [
   {
     name: "first_name",
     label: "First Name*",

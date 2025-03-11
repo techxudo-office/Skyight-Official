@@ -271,7 +271,7 @@ const TravelersDetails = () => {
     setSuccessPopup({
       status: true,
       message: 'Traveler Added',
-      icon: <MdCheck className="text-greenColor text-sm" />
+      icon: <MdCheck className="text-sm text-greenColor" />
     })
 
   };
@@ -377,10 +377,10 @@ const TravelersDetails = () => {
   return (
     <>
       <PopupMessage icon={successPopup.icon} onClose={() => setSuccessPopup((prev) => ({ ...prev, status: false }))} active={successPopup.status} message={successPopup.message} />
-      <div className="w-full flex flex-col">
+      <div className="flex flex-col w-full">
         <TravelersQuantity flightSegments={location.state.data.AirItinerary.OriginDestinationOptions} travelers={travelersData} />
 
-        <div className="flex flex-col lg:flex-row w-full">
+        <div className="flex flex-col w-full lg:flex-row">
           <div className="flex flex-wrap w-full lg:w-2/3">
 
             {
@@ -388,7 +388,7 @@ const TravelersDetails = () => {
                 return (
                   <CardLayoutContainer key={index} className={"mb-5"}>
                     <CardLayoutHeader>
-                      <h2 className="text-text capitalize text-2xl font-semibold">Travelers Detail {DocType}</h2>
+                      <h2 className="text-2xl font-semibold capitalize text-text">Travelers Detail {DocType}</h2>
                     </CardLayoutHeader>
                     <CardLayoutHeader
                       className={
@@ -397,16 +397,16 @@ const TravelersDetails = () => {
                     >
                       <div
                         onClick={() => toogleFormHandler(index)}
-                        className="w-full flex items-end justify-between"
+                        className="flex items-end justify-between w-full"
                       >
                         <div>
 
-                          <h2 className="text-xl font-semibold text-primary capitalize">
+                          <h2 className="text-xl font-semibold capitalize text-primary">
                             {`Traveller ${index + 1}. ${travelertype == 'ADT' ? 'adult' : travelertype == 'CHD' ? 'child' : 'infants'}`}
                           </h2>
                         </div>
 
-                        <span className="text-2xl transition-all hover:scale-110 text-primary hover:text-secondary cursor-pointer">
+                        <span className="text-2xl transition-all cursor-pointer hover:scale-110 text-primary hover:text-secondary">
                           {toogleForm !== index ? (
                             <FaChevronCircleDown />
                           ) : (
@@ -480,8 +480,8 @@ const TravelersDetails = () => {
                         return (
 
                           <>
-                            <div className="  max-w-full md:w-80 mx-3 lg:mx-auto  py-10 flex flex-col gap-6">
-                              <div className=" flex items-center gap-2">
+                            <div className="flex flex-col max-w-full gap-6 py-10 mx-3  md:w-80 lg:mx-auto">
+                              <div className="flex items-center gap-2 ">
                                 <Select
                                   onClick={() => gettingTravellers(travelertype)}
                                   id={'passengers'}
@@ -497,7 +497,7 @@ const TravelersDetails = () => {
                                   options={Passengers}
                                 />
                                 {oldTraveller.includes(index) &&
-                                  <MdCancel className="text-primary text-2xl cursor-pointer"
+                                  <MdCancel className="text-2xl cursor-pointer text-primary"
                                     onClick={() => {
                                       setOldTraveller((prev) => prev.filter((item) => item != index))
                                       formikRefs.current[index]?.resetForm()
@@ -508,12 +508,12 @@ const TravelersDetails = () => {
                               </div>
                               {!oldTraveller.includes(index) &&
                                 <>
-                                  <div className="flex gap-3 w-full items-center text-primary">
+                                  <div className="flex items-center w-full gap-3 text-primary">
                                     <span className="h-0.5 w-2/5 bg-primary"></span>
-                                    <p className="text-2xl w-1/5 text-center" >OR</p>
+                                    <p className="w-1/5 text-2xl text-center" >OR</p>
                                     <span className="h-0.5 w-2/5 bg-primary"></span>
                                   </div>
-                                  <h1 onClick={() => toogleFormHandler(index)} className="capitalize text-text text-center font-semibold text-xl cursor-pointer hover:underline hover:text-primary">Add a new traveler</h1>
+                                  <h1 onClick={() => toogleFormHandler(index)} className="text-xl font-semibold text-center capitalize cursor-pointer text-text hover:underline hover:text-primary">Add a new traveler</h1>
                                 </>
                               }
                             </div>
@@ -524,7 +524,7 @@ const TravelersDetails = () => {
                               (toogleForm === index || oldTraveller.includes(index)) &&
                               <>
                                 <Form>
-                                  <div className="flex flex-col md:flex-row items-center ">
+                                  <div className="flex flex-col items-center md:flex-row ">
                                     <CardLayoutBody
                                       className={
                                         `w-full md:w-1/2 }`
@@ -629,7 +629,7 @@ const TravelersDetails = () => {
 
                                             }
                                             {touched[input.name] && errors[input.name] && (
-                                              <div className="text-red-500 text-sm mt-2 absolute left-0">
+                                              <div className="absolute left-0 mt-2 text-sm text-red-500">
                                                 {errors[input.name]}
                                               </div>
                                             )}
@@ -641,8 +641,8 @@ const TravelersDetails = () => {
                                       </div>
 
                                     </CardLayoutBody>
-                                    <div className="px-4 w-full md:w-1/2 filledfields">
-                                      <div className="flex gap-6 justify-end items-center">
+                                    <div className="w-full px-4 md:w-1/2 filledfields">
+                                      <div className="flex items-center justify-end gap-6">
                                         {disableAddTraveler.includes(index) && <button
                                           // onClick={() => handleEditData(setValues, values, index)}
                                           onClick={() => {
@@ -686,7 +686,7 @@ const TravelersDetails = () => {
 
 
                                           }}
-                                            className="text-primary cursor-pointer hover:text-secondary underline ">
+                                            className="underline cursor-pointer text-primary hover:text-secondary ">
                                             Clear Data</button>
                                         </div>
 
@@ -694,16 +694,16 @@ const TravelersDetails = () => {
                                       </div>
 
                                       <div className=" mt-5 rounded-xl p-7 bg-bluebg shadow-lg border-primary border-[1px] h-fit">
-                                        <h1 className="text-text font-semibold text-2xl pb-3">Travelers Detail</h1>
-                                        <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-text ">title <span>{values.title}</span></p>
-                                        <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-text ">First name <span>{values.first_name}</span></p>
-                                        <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-text ">last name <span>{values.last_name}</span></p>
-                                        <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-text ">date of birth <span>{values.date_of_birth}</span></p>
-                                        <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-text ">gender <span>{values.gender}</span></p>
-                                        <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-text ">nationality <span>{values.country}</span></p>
-                                        <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold  text-text">Passport no. <span>{values.passport_number}</span>
+                                        <h1 className="pb-3 text-2xl font-semibold text-text">Travelers Detail</h1>
+                                        <p className="flex justify-between py-4 font-semibold capitalize border-b  border-lightgray text-text">title <span>{values.title}</span></p>
+                                        <p className="flex justify-between py-4 font-semibold capitalize border-b  border-lightgray text-text">First name <span>{values.first_name}</span></p>
+                                        <p className="flex justify-between py-4 font-semibold capitalize border-b  border-lightgray text-text">last name <span>{values.last_name}</span></p>
+                                        <p className="flex justify-between py-4 font-semibold capitalize border-b  border-lightgray text-text">date of birth <span>{values.date_of_birth}</span></p>
+                                        <p className="flex justify-between py-4 font-semibold capitalize border-b  border-lightgray text-text">gender <span>{values.gender}</span></p>
+                                        <p className="flex justify-between py-4 font-semibold capitalize border-b  border-lightgray text-text">nationality <span>{values.country}</span></p>
+                                        <p className="flex justify-between py-4 font-semibold capitalize border-b  border-lightgray text-text">Passport no. <span>{values.passport_number}</span>
                                         </p>
-                                        <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold  text-text">Passport Expiry <span>{values.passport_expiry_date}</span>
+                                        <p className="flex justify-between py-4 font-semibold capitalize border-b  border-lightgray text-text">Passport Expiry <span>{values.passport_expiry_date}</span>
                                         </p>
                                       </div>
                                     </div>
@@ -743,9 +743,9 @@ const TravelersDetails = () => {
             }
           </div>
 
-          <div className="px-3 w-full lg:w-1/3 flex flex-col gap-3 ">
+          <div className="flex flex-col w-full gap-3 px-3 lg:w-1/3 ">
             <PriceSummary pricingInfo={pricingInfo} travelers={travelersData} totalTravelers={result} />
-            <h2 className="text-2xl font-semibold text-text pl-1 pt-4">Trip Summary</h2>
+            <h2 className="pt-4 pl-1 text-2xl font-semibold text-text">Trip Summary</h2>
 
             <FlightInfoCard origin_destination={location.state.data.AirItinerary.OriginDestinationOptions} />
           </div>

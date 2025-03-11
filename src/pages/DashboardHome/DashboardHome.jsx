@@ -3,6 +3,7 @@ import {
   DashboardCards,
   TableNew,
   Searchbar,
+  Table,
 } from "../../components/components";
 import { getRoutes, getFlightBookings } from "../../utils/api_handler";
 import { useNavigate } from "react-router-dom";
@@ -168,10 +169,6 @@ const DashboardHome = () => {
           heading={"Flight Bookings"}
           className="flex items-center justify-between"></CardLayoutHeader>
         <CardLayoutBody removeBorder={true}>
-          {/* <Table
-            columns={columnsData}
-            data={bookingsData}
-          /> */}
           <Searchbar className={"mb-7"} />
 
           <TableNew
@@ -180,6 +177,7 @@ const DashboardHome = () => {
             downloadBtn={true}
             actions={actionsData}
           />
+          {/* <Table /> */}
         </CardLayoutBody>
         <CardLayoutFooter></CardLayoutFooter>
       </CardLayoutContainer>

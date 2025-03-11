@@ -19,29 +19,32 @@ import {
   TextArea,
 } from "../../components/components";
 
-import { createTransaction, getBanks } from "../../utils/api_handler";
+import { getBanks } from "../../utils/api_handler";
 
 import { useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
 import { transactionInitialValues, transactionSchema } from "../../validations";
 import { allowedTypes } from "../../helper/allowedTypes";
-import { successToastify, errorToastify } from "../../helper/toast"
+import { successToastify, errorToastify } from "../../helper/toast";
 import toast from "react-hot-toast";
-
+import { useDispatch, useSelector } from "react-redux";
+import { createTransaction } from "../../_core/features/transactionSlice";
 
 const CreateTransaction = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [banksData, setBanksData] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const { userData } = useSelector((state) => state.auth);
+  const { isCreatingTransaction } = useSelector((state) => state.transaction);
 
   useEffect(() => {
     const fetchBanks = async () => {
       const response = await getBanks();
       if (response.status) {
         setBanksData(response.data);
-        console.log('bank', response.data)
+        console.log("bank", response.data);
       }
     };
 
@@ -62,24 +65,11 @@ const CreateTransaction = () => {
     }
   };
 
-  const createTransactionHandler = async (payload) => {
-    console.log("payload",payload)
-    setLoading(true);
-    const response = await createTransaction(payload);
-    console.log(response);
-    setLoading(false);
-
-    if (response.status) {
-      successToastify(response.message);
-      setTimeout(() => {
-        navigate("/dashboard/transactions");
-      }, 2000);
-    } else {
-      toast.error(response.message);
-    }
-  };
-
   const handleSubmit = (values) => {
+    if (!selectedFile) {
+      errorToastify("Please upload transaction receipt");
+      return;
+    }
 
     const formData = new FormData();
     formData.append("bank_name", values.bank_name);
@@ -89,21 +79,13 @@ const CreateTransaction = () => {
     formData.append("payment_date", values.payment_date);
     formData.append("amount", values.amount);
     formData.append("comment", values.comment);
-   
-   
-   
-    if (!selectedFile) {
-      errorToastify("Please upload transaction receipt");
-    } else {
-      formData.append("document", selectedFile);
-      createTransactionHandler(formData);
-    //   for (let pair of formData.entries()) {
-    //     console.log(pair[0] + ": " + pair[1]);
-    // }
-    }
-    // console.log("selectedfile",selectedFile)
-  //   console.log("Form Values: ", formData);
-    
+    formData.append("document", selectedFile);
+
+    dispatch(
+      createTransaction({ data: formData, token: userData?.token })
+    ).then(() => {
+      navigate("/dashboard/transactions");
+    });
   };
 
   return (
@@ -184,24 +166,6 @@ const CreateTransaction = () => {
                         </div>
                       )}
                     </div>
-                    {/* <div className="relative mb-5">
-                      <Input
-                        id={"bank_name"}
-                        name={"bank_name"}
-                        label={"Bank Name"}
-                        type={"text"}
-                        value={values.bank_name}
-                        placeholder={"Enter Bank Name"}
-                        onChange={(e) =>
-                          setFieldValue("bank_name", e.target.value)
-                        }
-                      />
-                      {touched.bank_name && errors.bank_name && (
-                        <div className="absolute left-0 mt-2 text-sm text-red-500">
-                          {errors.bank_name}
-                        </div>
-                      )}
-                    </div> */}
                     <div className="relative mb-5">
                       <Input
                         id={"bank_number"}
@@ -277,25 +241,13 @@ const CreateTransaction = () => {
                     </div>
 
                     <div className="relative mb-5">
-                      {/* <Input
-                        id={"payment_date"}
-                        name={"payment_date"}
-                        label={"Transaction Date"}
-                        type={"datetime-local"}
-                        value={values.payment_date}
-                        placeholder={"Select Transaction Date"}
-                        onChange={(e) =>
-                          setFieldValue("payment_date", e.target.value)
-                        }
-                      /> */}
                       <CustomDate
-                        label={'Transaction Date'}
+                        label={"Transaction Date"}
                         isTimePicker={true}
                         value={values.payment_date}
                         onChange={(e) =>
                           setFieldValue("payment_date", e.target.value)
                         }
-
                       />
                       {touched.payment_date && errors.payment_date && (
                         <div className="absolute left-0 mt-2 text-sm text-red-500">
@@ -303,7 +255,6 @@ const CreateTransaction = () => {
                         </div>
                       )}
                     </div>
-
                   </div>
                   <div className="relative mb-5">
                     <TextArea
@@ -312,9 +263,7 @@ const CreateTransaction = () => {
                       label={"Comment"}
                       value={values.comment}
                       placeholder={"Enter Comment"}
-                      onChange={(e) =>
-                        setFieldValue("comment", e.target.value)
-                      }
+                      onChange={(e) => setFieldValue("comment", e.target.value)}
                     />
                     {touched.comment && errors.comment && (
                       <div className="absolute left-0 mt-2 text-sm text-red-500">
@@ -334,9 +283,15 @@ const CreateTransaction = () => {
                   </div>
                   <div>
                     <Button
-                      text={loading ? <Spinner /> : "Create Transaction"}
+                      text={
+                        isCreatingTransaction ? (
+                          <Spinner />
+                        ) : (
+                          "Create Transaction"
+                        )
+                      }
                       type="submit"
-                      disabled={loading}
+                      disabled={isCreatingTransaction}
                     />
                   </div>
                 </CardLayoutFooter>

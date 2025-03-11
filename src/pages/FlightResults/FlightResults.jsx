@@ -1,11 +1,13 @@
-
-
-
-
 import React, { useState, useEffect, useRef } from "react";
-import { AvailableFlights, Button, ChangeSearch, DateSlider, FlightCard, Spinner } from "../../components/components";
+import {
+  AvailableFlights,
+  Button,
+  ChangeSearch,
+  DateSlider,
+  FlightCard,
+  Spinner,
+} from "../../components/components";
 import { useLocation, useNavigate } from "react-router-dom";
-import Slider from "react-slick";
 import toast, { Toaster } from "react-hot-toast";
 
 import dayjs from "dayjs";
@@ -28,30 +30,39 @@ const FlightResults = () => {
   const [originalDates, setOriginalDates] = useState([]);
   const [noFlight, setNoFlight] = useState(false);
   const [filteredFlightsData, setFilteredFlightsData] = useState([]);
-  const [pricingInfo, setPricingInfo] = useState()
-  const [DifferenceInDates, setDifferenceInDates] = useState()
-  const [TripDetail, setTripDetail] = useState({})
+  const [pricingInfo, setPricingInfo] = useState();
+  const [DifferenceInDates, setDifferenceInDates] = useState();
+  const [TripDetail, setTripDetail] = useState({});
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   useEffect(() => {
     if (location.state) {
-      console.log("state", location.state)
-      console.log("payload", location.state.payload)
+      console.log("state", location.state);
+      console.log("payload", location.state.payload);
 
-      const flights = location.state.flightsData.PricedItineraries.PricedItinerary;
+      const flights =
+        location.state.flightsData.PricedItineraries.PricedItinerary;
       const travelers = location.state.travelersData;
-      const priceInfo = location.state.flightsData.PricedItineraries
-      setPricingInfo(location.state.flightsData.PricedItineraries.PricedItinerary[0].AirItineraryPricingInfo)
+      const priceInfo = location.state.flightsData.PricedItineraries;
+      setPricingInfo(
+        location.state.flightsData.PricedItineraries.PricedItinerary[0]
+          .AirItineraryPricingInfo
+      );
       setFlightsData(flights);
       setTravelersData(travelers);
-      setTripDetail(location.state.payload)
+      setTripDetail(location.state.payload);
 
       if (flights.length > 0) {
-        let departureDate = flights[0].AirItinerary.OriginDestinationOptions[0].FlightSegment[0].DepartureDate;
-        let returnDate = flights[0].AirItinerary.OriginDestinationOptions[1]?.FlightSegment[0].DepartureDate;
+        let departureDate =
+          flights[0].AirItinerary.OriginDestinationOptions[0].FlightSegment[0]
+            .DepartureDate;
+        let returnDate =
+          flights[0].AirItinerary.OriginDestinationOptions[1]?.FlightSegment[0]
+            .DepartureDate;
         if (dayjs(returnDate).diff(dayjs(departureDate), "days") > 0) {
-          setDifferenceInDates(dayjs(returnDate).diff(dayjs(departureDate), "days"))
-
+          setDifferenceInDates(
+            dayjs(returnDate).diff(dayjs(departureDate), "days")
+          );
         }
         generateDateOptions(departureDate, flights);
       }
@@ -60,14 +71,12 @@ const FlightResults = () => {
 
   const searchFlightHandler = async (date, index) => {
     // console.log("olddate", dateOptions)
-    const original = dayjs(originalDates[index])
-
-
+    const original = dayjs(originalDates[index]);
 
     const payload = {
       ...location.state.payload,
       departureDate: original.format("YYYY-MM-DD"),
-      returnDate: original.add(DifferenceInDates, "day").format("YYYY-MM-DD")
+      returnDate: original.add(DifferenceInDates, "day").format("YYYY-MM-DD"),
     };
     const response = await searchFlight(payload);
     if (response) {
@@ -83,15 +92,14 @@ const FlightResults = () => {
                 childs: payload.child,
                 infants: payload.infant,
               },
-
             },
           });
-          setNoFlight(false)
+          setNoFlight(false);
         }
       } else {
         if (Array.isArray(response.message)) {
           response.message.map((error) => {
-            setNoFlight(true)
+            setNoFlight(true);
             return toast.error(error.toUpperCase());
           });
         } else {
@@ -107,16 +115,19 @@ const FlightResults = () => {
     const originalDates = [];
     for (let i = -3; i <= 3; i++) {
       dates.push(baseDate.add(i, "day").format("ddd, DD MMM"));
-      originalDates.push(baseDate.add(i, "day"))
+      originalDates.push(baseDate.add(i, "day"));
     }
     setDateOptions(dates);
-    setOriginalDates(originalDates)
+    setOriginalDates(originalDates);
     // Set the default selected date to be the center date
     setSelectedDate(dates[3]);
 
     // Filter the flights by the default selected date
     const filteredFlights = flights.filter((flight) => {
-      const flightDate = dayjs(flight.AirItinerary.OriginDestinationOptions[0].FlightSegment[0].DepartureDate).format("ddd, DD MMM");
+      const flightDate = dayjs(
+        flight.AirItinerary.OriginDestinationOptions[0].FlightSegment[0]
+          .DepartureDate
+      ).format("ddd, DD MMM");
       return flightDate === dates[3];
     });
 
@@ -125,10 +136,13 @@ const FlightResults = () => {
 
   const handleDateSelect = (date, index) => {
     setSelectedDate(date);
-    searchFlightHandler(date, index)
+    searchFlightHandler(date, index);
     // Filter flights based on the selected date
     const filteredFlights = flightsData.filter((flight) => {
-      const flightDate = dayjs(flight.AirItinerary.OriginDestinationOptions[0].FlightSegment[0].DepartureDate).format("ddd, DD MMM");
+      const flightDate = dayjs(
+        flight.AirItinerary.OriginDestinationOptions[0].FlightSegment[0]
+          .DepartureDate
+      ).format("ddd, DD MMM");
       return flightDate === date;
     });
 
@@ -147,38 +161,63 @@ const FlightResults = () => {
     },
   };
   const onChangeSearch = () => {
-    setChangeFlight((Prev) => !Prev)
-  }
+    setChangeFlight((Prev) => !Prev);
+  };
 
   return (
     <div className="flex relative flex-col w-fit">
       {/* <Toaster /> */}
-      {ChangeFlight ?
+      {ChangeFlight ? (
         <div className="fixed top-0 flex justify-center items-center p-32 backdrop-blur-sm left-0 w-full h-screen z-[999]">
           <div className="shadow-xl w-[1000px] rounded-md relative">
-            <Button onClick={() => setChangeFlight(false)} text={"Close"} className="absolute right-3 top-3" />
-            <SearchFlights OnlySearch={true}
-            //  onSearch={()=>setChangeFlight(false)} 
+            <Button
+              onClick={() => setChangeFlight(false)}
+              text={"Close"}
+              className="absolute right-3 top-3"
+            />
+            <SearchFlights
+              OnlySearch={true}
+              //  onSearch={()=>setChangeFlight(false)}
             />
           </div>
         </div>
-        : ''}
+      ) : (
+        ""
+      )}
 
       {/* flight info  */}
-      <ChangeSearch tripDetail={TripDetail} flights={filteredFlightsData.length} onclick={onChangeSearch} />
+      <ChangeSearch
+        tripDetail={TripDetail}
+        flights={filteredFlightsData.length}
+        onclick={onChangeSearch}
+      />
       <AvailableFlights flights={flightsData} />
       {/* Date Slider */}
-      <DateSlider ref={sliderRef} selectedDate={selectedDate} handleDateSelect={handleDateSelect}
-        dateOptions={dateOptions} differenceInDates={DifferenceInDates} />
+      <DateSlider
+        ref={sliderRef}
+        selectedDate={selectedDate}
+        handleDateSelect={handleDateSelect}
+        dateOptions={dateOptions}
+        differenceInDates={DifferenceInDates}
+      />
       {/* Filtered Flights Data */}
       {filteredFlightsData.length > 0 ? (
         filteredFlightsData.map((item, index) => (
-          <FlightCard key={index} data={item} doc_type={TripDetail.flightRoute} pricingInfo={pricingInfo} travelers={travelersData} />
-
-
+          <FlightCard
+            key={index}
+            data={item}
+            doc_type={TripDetail.flightRoute}
+            pricingInfo={pricingInfo}
+            travelers={travelersData}
+          />
         ))
-      ) : noFlight ? <p className="capitalize py-5 text-text w-full text-center">no flight found</p> :
-        <Spinner className={'border-primary'} />}
+      ) : noFlight ? (
+        <p className="capitalize py-5 text-text w-full text-center">
+          no flight found
+        </p>
+      ) : (
+        <Spinner className={"border-primary"} />
+      )}
     </div>
   );
 };
