@@ -177,9 +177,9 @@ const TicketDetails = () => {
       />
       <div ref={printRef} className="flex flex-col w-full gap-5">
         <CardLayoutContainer>
-          <CardLayoutBody className={"flex justify-between"}>
+          <CardLayoutBody className={"flex flex-col md:flex-row justify-between"}>
             <div className="flex flex-col gap-3">
-              <div className="py-4 text-3xl font-semibold text-text">
+              <div className="py-4 text-xl md:text-3xl font-semibold text-text">
                 <h1>
                   PNR:{" "}
                   <span className="text-primary">
@@ -253,7 +253,7 @@ const TicketDetails = () => {
                 // || now.format("M/D/YYYY h:m:s a") > timeLimit.format("M/D/YYYY h:m:s a")
               }
 
-              className=" py-14 px-14 text-xl "
+              className=" py-14 w-full md:w-56 text-xl max-md:mt-6 "
               text={bookingDetails?.booking_status !== "booked"
                 // || now.format("M/D/YYYY h:m:s a") > timeLimit.format("M/D/YYYY h:m:s a")
                 ? (bookingDetails?.booking_status === "confirmed" ? "Get PNR" : "PNR Expired")
@@ -319,7 +319,7 @@ const TicketDetails = () => {
           </CardLayoutBody>
         </CardLayoutContainer>
         <CardLayoutContainer>
-          <div className="flex justify-between p-4 text-text">
+          <div className="flex flex-col md:flex-row justify-between p-4 text-text">
             <div>
               <span className="font-semibold">Booked On: </span>
               {dayjs
