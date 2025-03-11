@@ -352,6 +352,8 @@ const TravelersDetails = () => {
         label: item.email,
       }));
       setPassengers(passengerOptions);
+      setPassengersInfo(travelers)
+
     });
   };
 
@@ -421,13 +423,12 @@ const TravelersDetails = () => {
                     >
                       <div>
                         <h2 className="text-xl font-semibold capitalize text-primary">
-                          {`Traveller ${index + 1}. ${
-                            travelertype == "ADT"
-                              ? "adult"
-                              : travelertype == "CHD"
+                          {`Traveller ${index + 1}. ${travelertype == "ADT"
+                            ? "adult"
+                            : travelertype == "CHD"
                               ? "child"
                               : "infants"
-                          }`}
+                            }`}
                         </h2>
                       </div>
 
@@ -567,87 +568,87 @@ const TravelersDetails = () => {
 
                           {(toogleForm === index ||
                             oldTraveller.includes(index)) && (
-                            <>
-                              <Form>
-                                <div className="flex flex-col items-center md:flex-row ">
-                                  <CardLayoutBody
-                                    className={`w-full md:w-1/2 }`}
-                                    removeBorder={true}
-                                  >
-                                    <div className="flex flex-col gap-5 ">
-                                      {/* Title */}
-                                      {travelersDetailsInputs.map((input) => (
-                                        <div
-                                          key={input.id}
-                                          className="relative mb-5"
-                                        >
-                                          {input.type === "select" ? (
-                                            <Select
-                                              id={input.id}
-                                              name={input.name}
-                                              label={input.label}
-                                              options={input.options}
-                                              disabled={
-                                                disableAddTraveler.includes(
-                                                  index
-                                                ) || input.disabled
-                                              }
-                                              placeholder={input.placeholder}
-                                              value={
-                                                input.id === "country"
-                                                  ? DocType === "Domestic"
-                                                    ? "IRN"
+                              <>
+                                <Form>
+                                  <div className="flex flex-col items-center md:flex-row ">
+                                    <CardLayoutBody
+                                      className={`w-full md:w-1/2 }`}
+                                      removeBorder={true}
+                                    >
+                                      <div className="flex flex-col gap-5 ">
+                                        {/* Title */}
+                                        {travelersDetailsInputs.map((input) => (
+                                          <div
+                                            key={input.id}
+                                            className="relative mb-5"
+                                          >
+                                            {input.type === "select" ? (
+                                              <Select
+                                                id={input.id}
+                                                name={input.name}
+                                                label={input.label}
+                                                options={input.options}
+                                                disabled={
+                                                  disableAddTraveler.includes(
+                                                    index
+                                                  ) || input.disabled
+                                                }
+                                                placeholder={input.placeholder}
+                                                value={
+                                                  input.id === "country"
+                                                    ? DocType === "Domestic"
+                                                      ? "IRN"
+                                                      : values[input.name]
                                                     : values[input.name]
-                                                  : values[input.name]
-                                              }
-                                              optionIcons={input.optionIcons}
-                                              onChange={(option) =>
-                                                setFieldValue(
-                                                  input.name,
-                                                  option.value
-                                                )
-                                              }
-                                            />
-                                          ) : input.type === "date" ? (
-                                            <CustomDate
-                                              id={input.id}
-                                              name={input.name}
-                                              pastDate={input.pastDate}
-                                              futureDate={input.futureDate}
-                                              label={input.label}
-                                              disabled={disableAddTraveler.includes(
-                                                index
-                                              )}
-                                              value={values[input.name]}
-                                              onChange={(e) =>
-                                                setFieldValue(
-                                                  input.name,
-                                                  e.target.value
-                                                )
-                                              }
-                                            />
-                                          ) : input.type === "number" ? (
-                                            <Input
-                                              id={input.id}
-                                              className={input.className}
-                                              name={input.name}
-                                              label={input.label}
-                                              type={input.type}
-                                              placeholder={input.placeholder}
-                                              disabled={
-                                                input.disabled != null
-                                                  ? input.disabled
-                                                  : disableAddTraveler.includes(
+                                                }
+                                                optionIcons={input.optionIcons}
+                                                onChange={(option) =>
+                                                  setFieldValue(
+                                                    input.name,
+                                                    option.value
+                                                  )
+                                                }
+                                              />
+                                            ) : input.type === "date" ? (
+                                              <CustomDate
+                                                id={input.id}
+                                                name={input.name}
+                                                pastDate={input.pastDate}
+                                                futureDate={input.futureDate}
+                                                label={input.label}
+                                                disabled={disableAddTraveler.includes(
+                                                  index
+                                                )}
+                                                value={values[input.name]}
+                                                onChange={(e) =>
+                                                  setFieldValue(
+                                                    input.name,
+                                                    e.target.value
+                                                  )
+                                                }
+                                              />
+                                            ) : input.type === "number" ? (
+                                              <Input
+                                                id={input.id}
+                                                className={input.className}
+                                                name={input.name}
+                                                label={input.label}
+                                                type={input.type}
+                                                placeholder={input.placeholder}
+                                                disabled={
+                                                  input.disabled != null
+                                                    ? input.disabled
+                                                    : disableAddTraveler.includes(
                                                       index
                                                     )
-                                              }
-                                              value={
-                                                input.name === "mobile" ||
-                                                input.name == "telephone"
-                                                  ? typeof values[
+                                                }
+                                                value={
+                                                  input.name === "mobile" ||
+                                                    input.name == "telephone"
+                                                    ? typeof values[
                                                       input.name
                                                     ] === "object"
-                                                    ? Number(
+                                                      ? Number(
                                                         [
                                                           values[input.name]
                                                             .country_code,
@@ -659,263 +660,262 @@ const TravelersDetails = () => {
                                                           .filter(Boolean) // Empty values hata dega
                                                           .join("")
                                                       )
-                                                    : typeof values[
+                                                      : typeof values[
                                                         input.name
                                                       ] === "string"
-                                                    ? Number(
-                                                        String(
-                                                          values[input.name]
-                                                        ).replace(/\D/g, "")
-                                                      )
-                                                    : parseInt(
-                                                        String(
-                                                          values[input.name]
-                                                        ).replace(/\D/g, ""),
-                                                        10
-                                                      )
-                                                  : values[input.name]
-                                              }
-                                              onChange={(e) => {
-                                                const newValue =
-                                                  e.target.value.replace(
-                                                    /\D/g,
-                                                    ""
-                                                  ); // Remove non-numeric characters
-                                                setValues((prev) => ({
-                                                  ...prev,
-                                                  [input.name]: newValue
-                                                    ? Number(newValue)
-                                                    : "", // Convert back to number
-                                                }));
-                                              }}
-                                            />
-                                          ) : (
-                                            // (
-                                            //   <PhoneNumberInput
-                                            //     id={input.id}
-                                            //     className={input.className}
-                                            //     name={input.name}
-                                            //     label={input.label}
-                                            //     placeholder={input.placeholder}
-                                            //     disabled={input.disabled != null ? input.disabled : disableAddTraveler.includes(index)}
-                                            //     value={values[input.name]}
-                                            //     onChange={(e) => {
-                                            //       setValues((prev) => ({
-                                            //         ...prev,
-                                            //         [input.name]: e.target.value, // Store structured phone data
-                                            //       }));
-                                            //     }}
-                                            //   />
+                                                        ? Number(
+                                                          String(
+                                                            values[input.name]
+                                                          ).replace(/\D/g, "")
+                                                        )
+                                                        : parseInt(
+                                                          String(
+                                                            values[input.name]
+                                                          ).replace(/\D/g, ""),
+                                                          10
+                                                        )
+                                                    : values[input.name]
+                                                }
+                                                onChange={(e) => {
+                                                  const newValue =
+                                                    e.target.value.replace(
+                                                      /\D/g,
+                                                      ""
+                                                    ); // Remove non-numeric characters
+                                                  setValues((prev) => ({
+                                                    ...prev,
+                                                    [input.name]: newValue
+                                                      ? Number(newValue)
+                                                      : "", // Convert back to number
+                                                  }));
+                                                }}
+                                              />
+                                            ) : (
+                                              // (
+                                              //   <PhoneNumberInput
+                                              //     id={input.id}
+                                              //     className={input.className}
+                                              //     name={input.name}
+                                              //     label={input.label}
+                                              //     placeholder={input.placeholder}
+                                              //     disabled={input.disabled != null ? input.disabled : disableAddTraveler.includes(index)}
+                                              //     value={values[input.name]}
+                                              //     onChange={(e) => {
+                                              //       setValues((prev) => ({
+                                              //         ...prev,
+                                              //         [input.name]: e.target.value, // Store structured phone data
+                                              //       }));
+                                              //     }}
+                                              //   />
 
-                                            // )
-                                            <Input
-                                              id={input.id}
-                                              className={input.className}
-                                              name={input.name}
-                                              label={input.label}
-                                              type={input.type}
-                                              placeholder={input.placeholder}
-                                              disabled={
-                                                input.disabled != null
-                                                  ? input.disabled
-                                                  : disableAddTraveler.includes(
+                                              // )
+                                              <Input
+                                                id={input.id}
+                                                className={input.className}
+                                                name={input.name}
+                                                label={input.label}
+                                                type={input.type}
+                                                placeholder={input.placeholder}
+                                                disabled={
+                                                  input.disabled != null
+                                                    ? input.disabled
+                                                    : disableAddTraveler.includes(
                                                       index
                                                     )
-                                              }
-                                              value={values[input.name]}
-                                              onChange={(e) => {
-                                                setFieldValue(
-                                                  input.name,
-                                                  e.target.value
-                                                );
-                                              }}
-                                            />
-                                          )}
-                                          {touched[input.name] &&
-                                            errors[input.name] && (
-                                              <div className="absolute left-0 mt-2 text-sm text-red-500">
-                                                {errors[input.name]}
-                                              </div>
-                                            )}
-                                        </div>
-                                      ))}
-                                    </div>
-                                  </CardLayoutBody>
-                                  <div className="w-full px-4 md:w-1/2 filledfields">
-                                    <div className="flex items-center justify-end gap-6">
-                                      {disableAddTraveler.includes(index) && (
-                                        <button
-                                          // onClick={() => handleEditData(setValues, values, index)}
-                                          onClick={() => {
-                                            const newValues =
-                                              formikRefs.current[index]
-                                                ?.values || {}; // Ensure it's not undefined
-                                            console.log(
-                                              "Setting values:",
-                                              newValues
-                                            );
-
-                                            setAllTravelersData((prev) =>
-                                              prev.map((item) => {
-                                                if (item) {
-                                                  return item.email ==
-                                                    values.email
-                                                    ? false
-                                                    : item;
                                                 }
-                                              })
-                                            );
-                                            setDisableAddTraveler((prev) =>
-                                              prev.map((item, i) =>
-                                                item == index ? false : item
-                                              )
-                                            );
-                                            setValues(newValues);
-                                            // handleEditData(setValues, newValues)
-                                          }}
-                                          className={`${
-                                            disableAddTraveler.includes(index)
+                                                value={values[input.name]}
+                                                onChange={(e) => {
+                                                  setFieldValue(
+                                                    input.name,
+                                                    e.target.value
+                                                  );
+                                                }}
+                                              />
+                                            )}
+                                            {touched[input.name] &&
+                                              errors[input.name] && (
+                                                <div className="absolute left-0 mt-2 text-sm text-red-500">
+                                                  {errors[input.name]}
+                                                </div>
+                                              )}
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </CardLayoutBody>
+                                    <div className="w-full px-4 md:w-1/2 filledfields">
+                                      <div className="flex items-center justify-end gap-6">
+                                        {disableAddTraveler.includes(index) && (
+                                          <button
+                                            // onClick={() => handleEditData(setValues, values, index)}
+                                            onClick={() => {
+                                              const newValues =
+                                                formikRefs.current[index]
+                                                  ?.values || {}; // Ensure it's not undefined
+                                              console.log(
+                                                "Setting values:",
+                                                newValues
+                                              );
+
+                                              setAllTravelersData((prev) =>
+                                                prev.map((item) => {
+                                                  if (item) {
+                                                    return item.email ==
+                                                      values.email
+                                                      ? false
+                                                      : item;
+                                                  }
+                                                })
+                                              );
+                                              setDisableAddTraveler((prev) =>
+                                                prev.map((item, i) =>
+                                                  item == index ? false : item
+                                                )
+                                              );
+                                              setValues(newValues);
+                                              // handleEditData(setValues, newValues)
+                                            }}
+                                            className={`${disableAddTraveler.includes(index)
                                               ? "cursor-pointer"
                                               : "cursor-not-allowed"
-                                          } text-primary hover:text-secondary underline `}
-                                        >
-                                          Edit Data
-                                        </button>
-                                      )}
-                                      <div>
-                                        <button
-                                          onClick={() => {
-                                            // handleClearData((values) => {
-                                            //   setValues(values, false);
-                                            //   setTouched({}); // `false` means no validation trigger
-                                            // });
-                                            setOldTraveller((prev) =>
-                                              prev.filter(
-                                                (item) => item != index
-                                              )
-                                            );
-                                            formikRefs.current[
-                                              index
-                                            ]?.resetForm();
-                                            // setValues((prev)=>({...prev,previousPassenger:""}))
+                                              } text-primary hover:text-secondary underline `}
+                                          >
+                                            Edit Data
+                                          </button>
+                                        )}
+                                        <div>
+                                          <button
+                                            onClick={() => {
+                                              // handleClearData((values) => {
+                                              //   setValues(values, false);
+                                              //   setTouched({}); // `false` means no validation trigger
+                                              // });
+                                              setOldTraveller((prev) =>
+                                                prev.filter(
+                                                  (item) => item != index
+                                                )
+                                              );
+                                              formikRefs.current[
+                                                index
+                                              ]?.resetForm();
+                                              // setValues((prev)=>({...prev,previousPassenger:""}))
 
-                                            setAllTravelersData((prev) =>
-                                              prev.map((item) => {
-                                                if (item) {
-                                                  return item.email ==
-                                                    values.email
-                                                    ? null
-                                                    : item;
-                                                }
-                                              })
-                                            );
-                                            setDisableAddTraveler((prev) =>
-                                              prev.map((item, i) =>
-                                                item == index ? null : item
-                                              )
-                                            );
-                                          }}
-                                          className="underline cursor-pointer text-primary hover:text-secondary "
-                                        >
-                                          Clear Data
-                                        </button>
+                                              setAllTravelersData((prev) =>
+                                                prev.map((item) => {
+                                                  if (item) {
+                                                    return item.email ==
+                                                      values.email
+                                                      ? null
+                                                      : item;
+                                                  }
+                                                })
+                                              );
+                                              setDisableAddTraveler((prev) =>
+                                                prev.map((item, i) =>
+                                                  item == index ? null : item
+                                                )
+                                              );
+                                            }}
+                                            className="underline cursor-pointer text-primary hover:text-secondary "
+                                          >
+                                            Clear Data
+                                          </button>
+                                        </div>
+                                      </div>
+
+                                      <div className=" mt-5 rounded-xl p-7 bg-bluebg shadow-lg border-primary border-[1px] h-fit">
+                                        <h1 className="pb-3 text-2xl font-semibold text-text">
+                                          Travelers Detail
+                                        </h1>
+                                        <p className="flex justify-between py-4 font-semibold capitalize border-b border-lightgray text-text">
+                                          title <span>{values.title}</span>
+                                        </p>
+                                        <p className="flex justify-between py-4 font-semibold capitalize border-b border-lightgray text-text">
+                                          First name{" "}
+                                          <span>{values.first_name}</span>
+                                        </p>
+                                        <p className="flex justify-between py-4 font-semibold capitalize border-b border-lightgray text-text">
+                                          last name{" "}
+                                          <span>{values.last_name}</span>
+                                        </p>
+                                        <p className="flex justify-between py-4 font-semibold capitalize border-b border-lightgray text-text">
+                                          date of birth{" "}
+                                          <span>{values.date_of_birth}</span>
+                                        </p>
+                                        <p className="flex justify-between py-4 font-semibold capitalize border-b border-lightgray text-text">
+                                          gender <span>{values.gender}</span>
+                                        </p>
+                                        <p className="flex justify-between py-4 font-semibold capitalize border-b border-lightgray text-text">
+                                          nationality{" "}
+                                          <span>{values.country}</span>
+                                        </p>
+                                        <p className="flex justify-between py-4 font-semibold capitalize border-b border-lightgray text-text">
+                                          Passport no.{" "}
+                                          <span>{values.passport_number}</span>
+                                        </p>
+                                        <p className="flex justify-between py-4 font-semibold capitalize border-b border-lightgray text-text">
+                                          Passport Expiry{" "}
+                                          <span>
+                                            {values.passport_expiry_date}
+                                          </span>
+                                        </p>
                                       </div>
                                     </div>
-
-                                    <div className=" mt-5 rounded-xl p-7 bg-bluebg shadow-lg border-primary border-[1px] h-fit">
-                                      <h1 className="pb-3 text-2xl font-semibold text-text">
-                                        Travelers Detail
-                                      </h1>
-                                      <p className="flex justify-between py-4 font-semibold capitalize border-b border-lightgray text-text">
-                                        title <span>{values.title}</span>
-                                      </p>
-                                      <p className="flex justify-between py-4 font-semibold capitalize border-b border-lightgray text-text">
-                                        First name{" "}
-                                        <span>{values.first_name}</span>
-                                      </p>
-                                      <p className="flex justify-between py-4 font-semibold capitalize border-b border-lightgray text-text">
-                                        last name{" "}
-                                        <span>{values.last_name}</span>
-                                      </p>
-                                      <p className="flex justify-between py-4 font-semibold capitalize border-b border-lightgray text-text">
-                                        date of birth{" "}
-                                        <span>{values.date_of_birth}</span>
-                                      </p>
-                                      <p className="flex justify-between py-4 font-semibold capitalize border-b border-lightgray text-text">
-                                        gender <span>{values.gender}</span>
-                                      </p>
-                                      <p className="flex justify-between py-4 font-semibold capitalize border-b border-lightgray text-text">
-                                        nationality{" "}
-                                        <span>{values.country}</span>
-                                      </p>
-                                      <p className="flex justify-between py-4 font-semibold capitalize border-b border-lightgray text-text">
-                                        Passport no.{" "}
-                                        <span>{values.passport_number}</span>
-                                      </p>
-                                      <p className="flex justify-between py-4 font-semibold capitalize border-b border-lightgray text-text">
-                                        Passport Expiry{" "}
-                                        <span>
-                                          {values.passport_expiry_date}
-                                        </span>
-                                      </p>
-                                    </div>
                                   </div>
-                                </div>
-                              </Form>
-                              <div className="flex items-center justify-end p-3">
-                                <CustomTooltip
-                                  content={
-                                    errorsValue.length === 0 ? (
-                                      <p>Add</p>
-                                    ) : (
-                                      errorsValue
-                                    )
-                                  }
-                                >
-                                  <div
-                                    onMouseEnter={() =>
-                                      setErrorsValue(
-                                        Object.values(errors).map((err) => (
-                                          <p>{err}</p>
-                                        ))
+                                </Form>
+                                <div className="flex items-center justify-end p-3">
+                                  <CustomTooltip
+                                    content={
+                                      errorsValue.length === 0 ? (
+                                        <p>Add</p>
+                                      ) : (
+                                        errorsValue
                                       )
                                     }
                                   >
-                                    <SecondaryButton
-                                      text={
-                                        disableAddTraveler.includes(index)
-                                          ? "Traveler Added"
-                                          : "Add Traveler"
-                                      }
-                                      onClick={() => {
-                                        setClickedIndex(index);
-                                        setConfirmStatus(true);
-                                      }}
-                                      disabled={
-                                        disableAddTraveler.includes(index) ||
-                                        !isFormValid.includes(index)
-                                      }
-                                      icon={
-                                        disableAddTraveler.includes(index) ? (
-                                          ""
-                                        ) : (
-                                          <MdAdd />
+                                    <div
+                                      onMouseEnter={() =>
+                                        setErrorsValue(
+                                          Object.values(errors).map((err) => (
+                                            <p>{err}</p>
+                                          ))
                                         )
                                       }
-                                    />
-                                    <ConfirmModal
-                                      status={confirmStatus}
-                                      onAbort={() => setConfirmStatus(false)}
-                                      onConfirm={handleSubmit}
-                                      text={
-                                        "Is the traveler data you provided is correct"
-                                      }
-                                    />
-                                  </div>
-                                </CustomTooltip>
-                              </div>
-                            </>
-                          )}
+                                    >
+                                      <SecondaryButton
+                                        text={
+                                          disableAddTraveler.includes(index)
+                                            ? "Traveler Added"
+                                            : "Add Traveler"
+                                        }
+                                        onClick={() => {
+                                          setClickedIndex(index);
+                                          setConfirmStatus(true);
+                                        }}
+                                        disabled={
+                                          disableAddTraveler.includes(index) ||
+                                          !isFormValid.includes(index)
+                                        }
+                                        icon={
+                                          disableAddTraveler.includes(index) ? (
+                                            ""
+                                          ) : (
+                                            <MdAdd />
+                                          )
+                                        }
+                                      />
+                                      <ConfirmModal
+                                        status={confirmStatus}
+                                        onAbort={() => setConfirmStatus(false)}
+                                        onConfirm={handleSubmit}
+                                        text={
+                                          "Is the traveler data you provided is correct"
+                                        }
+                                      />
+                                    </div>
+                                  </CustomTooltip>
+                                </div>
+                              </>
+                            )}
                         </>
                       );
                     }}
