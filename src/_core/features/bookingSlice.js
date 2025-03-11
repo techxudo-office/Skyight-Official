@@ -60,7 +60,7 @@ export const getTravelers = createAsyncThunk(
       );
 
       if (response.status === 200) {
-        toast.success("Travelers fetched successfully!");
+        // toast.success("Travelers fetched successfully!");
         return response.data.data;
       } else {
         throw new Error("Failed to fetch travelers");
