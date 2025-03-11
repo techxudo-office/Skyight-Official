@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Spinner } from "../components";
 import DataTable from "react-data-table-component";
 

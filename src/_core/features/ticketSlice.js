@@ -34,7 +34,6 @@ const ticketSlice = createSlice({
         state.isCreatingTicket = false;
         state.createTicketError = action.payload;
       })
-
       .addCase(getTickets.pending, (state) => {
         state.isLoadingTickets = true;
         state.loadTicketsError = null;
@@ -47,7 +46,6 @@ const ticketSlice = createSlice({
         state.isLoadingTickets = false;
         state.loadTicketsError = action.payload;
       })
-
       .addCase(deleteTicket.pending, (state) => {
         state.isDeletingTicket = true;
         state.deleteTicketError = null;

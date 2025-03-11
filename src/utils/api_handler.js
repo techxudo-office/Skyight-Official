@@ -86,86 +86,6 @@ export const searchFlight = async (payload) => {
   }
 };
 
-//! Transactions...
-export const createTransaction = async (payload) => {
-  try {
-    let response = await axios({
-      method: "POST",
-      url: `${BASE_URL}/api/company/create-transaction`,
-      data: payload,
-      headers: {
-        Accept: "multipart/form-data",
-        "Content-Type": "multipart/form-data",
-        Authorization: getToken(),
-      },
-    });
-    if (response.status === 200) {
-      return {
-        status: true,
-        message: "Transaction Created Successfully",
-      };
-    }
-  } catch (error) {
-    return {
-      status: false,
-      message:
-        error?.response?.data?.message || "Failed to create user transactions",
-    };
-  }
-};
-
-export const getTransactions = async () => {
-  try {
-    let response = await axios({
-      method: "GET",
-      url: `${BASE_URL}/api/company/user-transactions`,
-      headers: {
-        Authorization: getToken(),
-      },
-    });
-    if (response.status === 200) {
-      if (response.data.data[0].length > 0) {
-        const extractedData = response.data.data[0].map(
-          ({
-            id,
-            company_id,
-            bank_name,
-            bank_number,
-            account_holder_name,
-            document_number,
-            payment_date,
-            amount,
-            document_url,
-            comment,
-            status,
-            reasonIds,
-          }) => ({
-            id,
-            company_id,
-            bank_name,
-            bank_number,
-            account_holder_name,
-            document_number,
-            payment_date,
-            amount,
-            document_url,
-            comment,
-            status,
-            reasonIds,
-          })
-        );
-        return { status: true, data: extractedData };
-      }
-    }
-  } catch (error) {
-    return {
-      status: false,
-      message:
-        error?.response?.data?.message || "Failed to fetch User Transactions.",
-    };
-  }
-};
-
 //! Bookings
 export const getFlightBookings = async (id) => {
   try {
@@ -436,6 +356,7 @@ export const getTravelers = async (passengerType) => {
   } catch (error) {
   }
 };
+
 export const getPNR = async (id) => {
   try {
     let response = await axios({
