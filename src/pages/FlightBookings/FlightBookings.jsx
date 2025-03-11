@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { SecondaryButton, TableNew } from "../../components/components";
-import { getFlightBookings } from "../../utils/api_handler";
-
 import { useNavigate } from "react-router-dom";
 import {
   CardLayoutContainer,
@@ -9,16 +7,18 @@ import {
   CardLayoutBody,
   CardLayoutFooter,
 } from "../../components/CardLayout/CardLayout";
-import toast from "react-hot-toast";
-
 import { FaEye } from "react-icons/fa";
 import { MdAdd } from "react-icons/md";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getFlightBookings } from "../../_core/features/bookingSlice";
 
 const FlightBookings = () => {
   const navigate = useNavigate();
-  const [bookingsData, setBookingsData] = useState([]);
-  const userData = useSelector((state) => state.auth.userData);
+  const dispatch = useDispatch();
+  const { userData } = useSelector((state) => state.auth);
+  const { flightBookings, isLoadingFlightBookings } = useSelector(
+      (state) => state.booking
+    );
 
   const navigationHandler = () => {
     navigate("/dashboard/search-flights");
@@ -49,19 +49,16 @@ const FlightBookings = () => {
     },
   ];
 
-  const gettingFlightBookings = async () => {
-    const id = userData?.user?.company_id;
-    const response = await getFlightBookings(id);
-    if (response?.status) {
-      setBookingsData(response.data);
-    } else {
-      toast.error(response.message);
-    }
-  };
-
   useEffect(() => {
-    gettingFlightBookings();
-  }, []);
+    if (userData?.user?.company_id) {
+      dispatch(
+        getFlightBookings({
+          id: userData.user.company_id,
+          token: userData.token,
+        })
+      );
+    }
+  }, [dispatch, userData?.user?.company_id]);
 
   return (
     <>
@@ -69,7 +66,8 @@ const FlightBookings = () => {
         <CardLayoutHeader
           removeBorder={true}
           heading={"Flight Bookings"}
-          className="flex items-center justify-between">
+          className="flex items-center justify-between"
+        >
           <div className="relative">
             <SecondaryButton
               text={"Create New Booking"}
@@ -81,9 +79,10 @@ const FlightBookings = () => {
         <CardLayoutBody removeBorder={true}>
           <TableNew
             columnsToView={columnsData}
-            tableData={bookingsData}
+            tableData={flightBookings}
             downloadBtn={true}
             actions={actionsData}
+            loader={isLoadingFlightBookings}
           />
         </CardLayoutBody>
         <CardLayoutFooter></CardLayoutFooter>

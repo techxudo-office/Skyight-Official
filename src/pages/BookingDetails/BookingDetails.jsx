@@ -20,7 +20,6 @@ import toast, { Toaster } from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   cancelFlightBooking,
-  getBookingDetails,
   issueBooking,
   refundRequest,
 } from "../../utils/api_handler";
@@ -29,15 +28,15 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc"; // Import UTC plugin
 import { MdCheck } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import { getPNR } from "../../_core/features/bookingSlice";
+import { getBookingDetails, getPNR } from "../../_core/features/bookingSlice";
 
 dayjs.extend(utc); // Extend dayjs with UTC support
 
 const TicketDetails = () => {
+  const printRef = useRef();
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [bookingDetails, setBookingDetails] = useState();
   const [getPnr, setGetPnr] = useState(null);
   const [confirmObject, setConfirmObject] = useState({
     onAbort: "",
@@ -45,10 +44,9 @@ const TicketDetails = () => {
     status: false,
     text: "",
   });
-  const [booking, setBooking] = useState();
   const userData = useSelector((state) => state.auth.userData);
+  const { bookingDetails } = useSelector((state) => state.booking);
 
-  const printRef = useRef();
 
   const downloadAsPDF = async () => {
     const element = printRef.current;
@@ -71,13 +69,6 @@ const TicketDetails = () => {
     // downloadAsPDF();
   };
 
-  const getBookingDetailsHandler = async (id) => {
-    if (id) {
-      const response = await getBookingDetails(id);
-      console.log("booking-details", response);
-      setBookingDetails(response.data);
-    }
-  };
   const handleIssue = async (pnr) => {
     const response = await issueBooking(pnr);
     if (response.status) {
@@ -87,17 +78,7 @@ const TicketDetails = () => {
       setConfirmObject((prev) => ({ ...prev, status: false }));
     }
   };
-  // const handleGetPnr = async (pnr) => {
-  //   const response = await getPNR(pnr);
-  //   console.log("getPnr", response);
-  //   if (response.status) {
-  //     navigate("/dashboard/ticket-info", { state: response.data });
-  //     setGetPnr(response.data);
-  //     toast.success("Your PNR Retrieve");
-  //   } else {
-  //     response.data.map((error) => toast.error(error));
-  //   }
-  // };
+
   const handleGetPnr = (pnr) => {
     dispatch(getPNR({ id: pnr, token: userData?.token }))
       .unwrap()
@@ -145,11 +126,14 @@ const TicketDetails = () => {
   useEffect(() => {
     if (location.state) {
       const refId = location.state.id;
-      setBooking(location.state);
-      getBookingDetailsHandler(refId);
-      console.log("refId", refId);
+      dispatch(getBookingDetails({ id: refId, token: userData?.token }));
     }
-  }, [location.state]);
+  }, [location.state, userData?.token]);
+
+  useEffect(() => {
+    console.log(bookingDetails, "bookingDetails from state"); // ✅ Should log the correct value now
+  }, [bookingDetails]);
+
   const now = dayjs.utc();
   const timeLimit = dayjs(bookingDetails?.Timelimit);
   // const timeLimitLocal = (bookingDetails?.Timelimit).toISOString();
@@ -252,13 +236,15 @@ const TicketDetails = () => {
                 bookingDetails?.booking_status === "expired"
                 // || now.format("M/D/YYYY h:m:s a") > timeLimit.format("M/D/YYYY h:m:s a")
               }
-
-              className=" py-14 px-14 text-xl "
-              text={bookingDetails?.booking_status !== "booked"
-                // || now.format("M/D/YYYY h:m:s a") > timeLimit.format("M/D/YYYY h:m:s a")
-                ? (bookingDetails?.booking_status === "confirmed" ? "Get PNR" : "PNR Expired")
-                : "Order Ticket"}
-
+              className="text-xl py-14 px-14"
+              text={
+                bookingDetails?.booking_status !== "booked"
+                  ? // || now.format("M/D/YYYY h:m:s a") > timeLimit.format("M/D/YYYY h:m:s a")
+                    bookingDetails?.booking_status === "confirmed"
+                    ? "Get PNR"
+                    : "PNR Expired"
+                  : "Order Ticket"
+              }
               onClick={() => {
                 if (bookingDetails?.booking_status === "confirmed") {
                   handleGetPnr(bookingDetails?.booking_reference_id);
