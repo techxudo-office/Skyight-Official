@@ -16,11 +16,13 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "./FlightResult.css";
 import SearchFlights from "../SearchFlights/SearchFlights";
-import { searchFlight } from "../../utils/api_handler";
 import TravelersDetails from "../TravelersDetails/TravelersDetails";
+import { searchFlight } from "../../_core/features/bookingSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const FlightResults = () => {
   const location = useLocation();
+  const dispatch = useDispatch();
   const sliderRef = useRef(null);
   const [flightsData, setFlightsData] = useState([]);
   const [travelersData, setTravelersData] = useState(null);
@@ -33,6 +35,7 @@ const FlightResults = () => {
   const [pricingInfo, setPricingInfo] = useState();
   const [DifferenceInDates, setDifferenceInDates] = useState();
   const [TripDetail, setTripDetail] = useState({});
+  const { userData } = useSelector((state) => state.auth);  
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -70,7 +73,6 @@ const FlightResults = () => {
   }, [location.state]); // Add location.state as a dependency to trigger useEffect on reload
 
   const searchFlightHandler = async (date, index) => {
-    // console.log("olddate", dateOptions)
     const original = dayjs(originalDates[index]);
 
     const payload = {
@@ -78,33 +80,38 @@ const FlightResults = () => {
       departureDate: original.format("YYYY-MM-DD"),
       returnDate: original.add(DifferenceInDates, "day").format("YYYY-MM-DD"),
     };
-    const response = await searchFlight(payload);
-    if (response) {
-      if (response.status) {
-        if (response.data.PricedItineraries.PricedItinerary.length > 0) {
-          navigate("/dashboard/flight-results", {
-            state: {
-              payload: payload,
-              pricingData: pricingInfo,
-              flightsData: response.data,
-              travelersData: {
-                adults: payload.adult,
-                childs: payload.child,
-                infants: payload.infant,
-              },
+
+    try {
+      const response = await dispatch(
+        searchFlight({ payload, token: userData?.token })
+      ).unwrap();
+
+      if (
+        response?.PricedItineraries?.PricedItinerary &&
+        response.PricedItineraries.PricedItinerary.length > 0
+      ) {
+        navigate("/dashboard/flight-results", {
+          state: {
+            payload,
+            pricingData: pricingInfo,
+            flightsData: response,
+            travelersData: {
+              adults: payload.adult,
+              childs: payload.child,
+              infants: payload.infant,
             },
-          });
-          setNoFlight(false);
-        }
+          },
+        });
+        setNoFlight(false);
       } else {
-        if (Array.isArray(response.message)) {
-          response.message.map((error) => {
-            setNoFlight(true);
-            return toast.error(error.toUpperCase());
-          });
-        } else {
-          toast.error(response.message);
-        }
+        setNoFlight(true);
+      }
+    } catch (error) {
+      setNoFlight(true);
+      if (Array.isArray(error)) {
+        error.forEach((msg) => toast.error(msg.toUpperCase()));
+      } else {
+        toast.error(error || "Failed to search flights");
       }
     }
   };
@@ -165,7 +172,7 @@ const FlightResults = () => {
   };
 
   return (
-    <div className="flex relative flex-col w-fit">
+    <div className="relative flex flex-col w-fit">
       {/* <Toaster /> */}
       {ChangeFlight ? (
         <div className="fixed top-0 flex justify-center items-center p-32 backdrop-blur-sm left-0 w-full h-screen z-[999]">
@@ -212,7 +219,7 @@ const FlightResults = () => {
           />
         ))
       ) : noFlight ? (
-        <p className="capitalize py-5 text-text w-full text-center">
+        <p className="w-full py-5 text-center capitalize text-text">
           no flight found
         </p>
       ) : (

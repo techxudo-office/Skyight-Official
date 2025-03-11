@@ -27,6 +27,13 @@ const initialState = {
   bookingDetails: null,
   isLoadingBookingDetails: false,
   bookingDetailsError: null,
+
+  isIssuingBooking: false,
+  issueBookingError: null,
+
+  searchResults: [],
+  isLoadingSearchResults: false,
+  searchResultsError: null,
 };
 
 const bookingSlice = createSlice({
@@ -106,6 +113,29 @@ const bookingSlice = createSlice({
       .addCase(getBookingDetails.rejected, (state, action) => {
         state.isLoadingBookingDetails = false;
         state.bookingDetailsError = action.payload;
+      })
+      .addCase(issueBooking.pending, (state) => {
+        state.isIssuingBooking = true;
+        state.issueBookingError = null;
+      })
+      .addCase(issueBooking.fulfilled, (state, action) => {
+        state.isIssuingBooking = false;
+      })
+      .addCase(issueBooking.rejected, (state, action) => {
+        state.isIssuingBooking = false;
+        state.issueBookingError = action.payload;
+      })
+      .addCase(searchFlight.pending, (state) => {
+        state.isLoadingSearchResults = true;
+        state.searchResultsError = null;
+      })
+      .addCase(searchFlight.fulfilled, (state, action) => {
+        state.isLoadingSearchResults = false;
+        state.searchResults = action.payload;
+      })
+      .addCase(searchFlight.rejected, (state, action) => {
+        state.isLoadingSearchResults = false;
+        state.searchResultsError = action.payload;
       });
   },
 });
@@ -122,7 +152,6 @@ export const getTravelers = createAsyncThunk(
           },
         }
       );
-
       if (response.status === 200) {
         return response.data.data;
       } else {
@@ -303,6 +332,85 @@ export const getBookingDetails = createAsyncThunk(
     } catch (error) {
       const errorMessage =
         error?.response?.data?.message || "Failed to fetch booking details";
+      return thunkAPI.rejectWithValue(errorMessage);
+    }
+  }
+);
+
+export const issueBooking = createAsyncThunk(
+  "booking/issueBooking",
+  async ({ id, token }, thunkAPI) => {
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/api/booking-issue`,
+        { pnr: id },
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        return response.data.data;
+      } else {
+        throw new Error(response.data.message || "Failed to issue booking");
+      }
+    } catch (error) {
+      const errorMessage =
+        error?.response?.data?.message || "Failed to issue booking";
+      return thunkAPI.rejectWithValue(errorMessage);
+    }
+  }
+);
+
+export const searchFlight = createAsyncThunk(
+  "booking/searchFlight",
+  async ({ payload, token }, thunkAPI) => {
+    try {
+      const apiUrl = `${BASE_URL}/api/search`;
+
+      const requestBody = {
+        trip_type: payload.tripType,
+        origin_destinations: [
+          {
+            departure_date_time: payload.departureDate,
+            origin_location_code: payload.originCode,
+            destination_location_code: payload.destinationCode,
+          },
+        ],
+        adult_quantity: payload.adult,
+        child_quantity: payload.child,
+        infant_quantity: payload.infant,
+      };
+
+      // Handle round trip
+      if (payload.tripType === "Return" && payload.returnDate) {
+        requestBody.origin_destinations.push({
+          departure_date_time: payload.returnDate,
+          origin_location_code: payload.destinationCode,
+          destination_location_code: payload.originCode,
+        });
+      }
+
+      const response = await axios.post(apiUrl, requestBody, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      });
+
+      if (response.status === 200) {
+        if (!response.data.data || response.data.data.length === 0) {
+          throw new Error("No Flight Found!");
+        }
+        return response.data.data;
+      } else {
+        throw new Error(response.data.message || "Failed to search Flights");
+      }
+    } catch (error) {
+      const errorMessage =
+        error?.response?.data?.message || "Failed to search Flights";
       return thunkAPI.rejectWithValue(errorMessage);
     }
   }

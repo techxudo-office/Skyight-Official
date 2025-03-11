@@ -23,7 +23,6 @@ import {
 } from "../../components/components";
 
 import { iranianCities } from "../../data/iranianCities";
-import { searchFlight } from "../../utils/api_handler";
 
 import { FaPlaneDeparture } from "react-icons/fa6";
 import { FaUser } from "react-icons/fa";
@@ -34,6 +33,8 @@ import toast, { Toaster } from "react-hot-toast";
 import { FlightsBanner, forBackArrows } from "../../assets/Index";
 import RadioButtons from "../../components/RadioButtons/RadioButtons";
 import { internationalCities } from "../../data/InternationalCities";
+import { useDispatch, useSelector } from "react-redux";
+import { searchFlight } from "../../_core/features/bookingSlice";
 
 const adultOptions = [
   { value: "1", label: "1 Adult" },
@@ -75,6 +76,7 @@ const validationSchema = Yup.object().shape({
 
 const SearchFlights = ({ OnlySearch, onSearch }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState();
   const [storedValues, setStoredValues] = useState(
     localStorage.getItem("flightSearchForm") &&
@@ -83,11 +85,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
   const [flightRoute, setFlightRoute] = useState("Domestic");
   const [loading, setLoading] = useState(false);
   const [Triptype, setTriptype] = useState("One-Way");
-  // useEffect(() => {
-  //   if (flightRoute == 'Domestic') {
-  //     setTriptype("One-Way")
-  //   }
-  // }, [flightRoute])
+  const { userData } = useSelector((state) => state.auth);
   const [activeField, setActiveField] = useState({
     departure: false,
     arrival: false,
@@ -129,47 +127,47 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
   };
 
   const searchFlightHandler = async (values) => {
-    console.log("submitting", values);
     const payload = {
       flightRoute: values.flightRoute,
-      tripType: values.tripType == "Round-Trip" ? "Return" : "OneWay",
+      tripType: values.tripType === "Round-Trip" ? "Return" : "OneWay",
       originCode: values.departure,
       destinationCode: values.arrival,
       departureDate: values.departureDate,
       returnDate: values.returnDate,
-
       adult: Number(values.adult),
       child: Number(values.child),
       infant: Number(values.infant),
     };
-    console.log("values", values);
-    setLoading(true);
-    const response = await searchFlight(payload);
-    setLoading(false);
-    if (!response) return;
-    if (
-      response.status &&
-      response.data?.PricedItineraries?.PricedItinerary?.length > 0
-    ) {
-      navigate("/dashboard/flight-results", {
-        state: {
-          payload,
-          flightsData: response.data,
-          travelersData: {
-            adults: payload.adult,
-            childs: payload.child,
-            infants: payload.infant,
-          },
-        },
-      });
-    } else {
-      console.log(response,"Search Flights")
-      toast.error(response.message);
-      // const errorMessages = Array.isArray(response.message)
-      //   ? response.message.map((error) => error.toUpperCase())
-      //   : [response.message];
 
-      // errorMessages.forEach((msg) => toast.error(msg));
+    try {
+      const response = await dispatch(
+        searchFlight({ payload, token: userData?.token })
+      ).unwrap();
+
+      if (
+        response?.PricedItineraries?.PricedItinerary &&
+        response.PricedItineraries.PricedItinerary.length > 0
+      ) {
+        navigate("/dashboard/flight-results", {
+          state: {
+            payload,
+            flightsData: response,
+            travelersData: {
+              adults: payload.adult,
+              childs: payload.child,
+              infants: payload.infant,
+            },
+          },
+        });
+      } else {
+        toast.error(response?.message || "No flights found");
+      }
+    } catch (error) {
+      if (Array.isArray(error)) {
+        error.forEach((msg) => toast.error(msg.toUpperCase()));
+      } else {
+        toast.error(error || "Failed to search flights");
+      }
     }
   };
 
