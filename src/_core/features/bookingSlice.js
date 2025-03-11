@@ -19,6 +19,10 @@ const initialState = {
   credits: null,
   isLoadingCredits: false,
   creditsError: null,
+
+  flightBookings: [],
+  isLoadingFlightBookings: false,
+  flightBookingsError: null,
 };
 
 const bookingSlice = createSlice({
@@ -74,6 +78,18 @@ const bookingSlice = createSlice({
       .addCase(getCredits.rejected, (state, action) => {
         state.isLoadingCredits = false;
         state.creditsError = action.payload;
+      })
+      .addCase(getFlightBookings.pending, (state) => {
+        state.isLoadingFlightBookings = true;
+        state.flightBookingsError = null;
+      })
+      .addCase(getFlightBookings.fulfilled, (state, action) => {
+        state.isLoadingFlightBookings = false;
+        state.flightBookings = action.payload;
+      })
+      .addCase(getFlightBookings.rejected, (state, action) => {
+        state.isLoadingFlightBookings = false;
+        state.flightBookingsError = action.payload;
       });
   },
 });
@@ -181,6 +197,74 @@ export const getCredits = createAsyncThunk(
         error?.response?.data?.message ||
         "Something went wrong. Please try again.";
       toast.error(errorMessage);
+      return thunkAPI.rejectWithValue(errorMessage);
+    }
+  }
+);
+
+export const getFlightBookings = createAsyncThunk(
+  "booking/getFlightBookings",
+  async ({ id, token }, thunkAPI) => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/api/booking/company/${id}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+
+      if (response.data.status === "success") {
+        let responseData = response.data.data;
+        if (!Array.isArray(responseData)) {
+          responseData = [responseData];
+        }
+
+        if (responseData.length > 0) {
+          const extractedData = responseData.map(
+            ({
+              origin,
+              destination,
+              booking_reference_id,
+              total_fare,
+              currency,
+              booking_status,
+              created_at,
+              actions,
+              updated_at,
+              transaction_identifier,
+              Timelimit,
+              id,
+              rate,
+              persantage,
+              canceled_at,
+            }) => ({
+              origin,
+              destination,
+              booking_reference_id,
+              total_fare,
+              currency,
+              booking_status,
+              created_at,
+              actions,
+              updated_at,
+              transaction_identifier,
+              Timelimit,
+              id,
+              rate,
+              persantage,
+              canceled_at,
+            })
+          );
+          return extractedData;
+        } else {
+          throw new Error("No bookings found.");
+        }
+      }
+    } catch (error) {
+      const errorMessage =
+        error?.response?.data?.message || "Failed to fetch flight bookings.";
       return thunkAPI.rejectWithValue(errorMessage);
     }
   }

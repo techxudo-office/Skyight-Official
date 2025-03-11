@@ -6,32 +6,6 @@ export const getToken = () => {
 
 };
 
-//! Credits...
-export const getCredits = async () => {
-  try {
-    let response = await axios({
-      method: "GET",
-      url: `${BASE_URL}/api/booking-credits`,
-      headers: {
-        Authorization: getToken(),
-      },
-    });
-    if (response.status === 200) {
-      return {
-        status: true,
-        data: response.data.data,
-      };
-    }
-  } catch (error) {
-    return {
-      status: false,
-      message:
-        error?.response?.data?.message ||
-        "Something went wrong. Please try again.",
-    };
-  }
-};
-
 //! Flight...
 export const searchFlight = async (payload) => {
   const apiUrl = `${BASE_URL}/api/search`;
@@ -87,70 +61,6 @@ export const searchFlight = async (payload) => {
 };
 
 //! Bookings
-export const getFlightBookings = async (id) => {
-  try {
-    let response = await axios({
-      method: "GET",
-      url: `${BASE_URL}/api/booking/company/${id}`,
-      headers: {
-        Authorization: getToken(),
-      },
-    });
-    if (response.data.status === "success") {
-      let responseData = response.data.data
-      if (!Array.isArray(response.data.data)) {
-        responseData = [response.data.data]
-      }
-      if (responseData.length > 0) {
-        const extractedData = responseData.map(
-          ({
-            origin,
-            destination,
-            booking_reference_id,
-            total_fare,
-            currency,
-            booking_status,
-            created_at,
-            actions,
-            updated_at,
-            transaction_identifier,
-            Timelimit,
-            id,
-            rate,
-            persantage,
-            canceled_at,
-          }) => ({
-            origin,
-            destination,
-            booking_reference_id,
-            total_fare,
-            currency,
-            booking_status,
-            created_at,
-            actions,
-            updated_at,
-            transaction_identifier,
-            Timelimit,
-            id,
-            rate,
-            persantage,
-            canceled_at,
-          })
-        );
-        return { status: true, data: extractedData };
-      } else {
-        return { status: false, message: "No bookings found." };
-      }
-    }
-  } catch (error) {
-    return {
-      status: false,
-      message:
-        error?.response?.data?.message || "Failed to fetch flight bookings.",
-    };
-  }
-};
-
 export const issueBooking = async (id) => {
   try {
     let response = await axios({
