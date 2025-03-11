@@ -24,7 +24,7 @@ const initialState = {
   isLoadingFlightBookings: false,
   flightBookingsError: null,
 
-  bookingDetails: [],
+  bookingDetails: null,
   isLoadingBookingDetails: false,
   bookingDetailsError: null,
 };

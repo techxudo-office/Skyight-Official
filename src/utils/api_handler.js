@@ -81,22 +81,6 @@ export const issueBooking = async (id) => {
   } catch (error) {
   }
 };
-export const getBookingDetails = async (id) => {
-  try {
-    let response = await axios({
-      method: "GET",
-      url: `${BASE_URL}/api/booking/${id}`,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: getToken(),
-      },
-    });
-    if (response.status === 200) {
-      return { status: true, data: response.data.data };
-    }
-  } catch (error) {
-  }
-};
 
 export const cancelFlightBooking = async (payload) => {
 
