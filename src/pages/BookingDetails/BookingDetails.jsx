@@ -33,7 +33,6 @@ import { getBookingDetails, getPNR } from "../../_core/features/bookingSlice";
 dayjs.extend(utc); // Extend dayjs with UTC support
 
 const TicketDetails = () => {
-  const printRef = useRef();
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -45,8 +44,12 @@ const TicketDetails = () => {
     text: "",
   });
   const userData = useSelector((state) => state.auth.userData);
-  const { bookingDetails } = useSelector((state) => state.booking);
+  // const { bookingDetails, isLoadingBookingDetails } = useSelector(
+  //   (state) => state.booking
+  // );
+  const [bookingDetails, setBookingDetails] = useState();
 
+  const printRef = useRef();
 
   const downloadAsPDF = async () => {
     const element = printRef.current;
@@ -126,13 +129,14 @@ const TicketDetails = () => {
   useEffect(() => {
     if (location.state) {
       const refId = location.state.id;
-      dispatch(getBookingDetails({ id: refId, token: userData?.token }));
+      dispatch(getBookingDetails({ id: refId, token: userData?.token })).then(
+        (resp) => {
+          console.log(resp, "bookingDetails");
+          setBookingDetails(resp.payload);
+        }
+      );
     }
   }, [location.state, userData?.token]);
-
-  useEffect(() => {
-    console.log(bookingDetails, "bookingDetails from state"); // ✅ Should log the correct value now
-  }, [bookingDetails]);
 
   const now = dayjs.utc();
   const timeLimit = dayjs(bookingDetails?.Timelimit);
@@ -161,9 +165,9 @@ const TicketDetails = () => {
       />
       <div ref={printRef} className="flex flex-col w-full gap-5">
         <CardLayoutContainer>
-          <CardLayoutBody className={"flex flex-col md:flex-row justify-between"}>
+          <CardLayoutBody className={"flex justify-between"}>
             <div className="flex flex-col gap-3">
-              <div className="py-4 text-xl md:text-3xl font-semibold text-text">
+              <div className="py-4 text-3xl font-semibold text-text">
                 <h1>
                   PNR:{" "}
                   <span className="text-primary">
@@ -236,13 +240,15 @@ const TicketDetails = () => {
                 bookingDetails?.booking_status === "expired"
                 // || now.format("M/D/YYYY h:m:s a") > timeLimit.format("M/D/YYYY h:m:s a")
               }
-
-              className=" py-14 w-full md:w-56 text-xl max-md:mt-6 "
-              text={bookingDetails?.booking_status !== "booked"
-                // || now.format("M/D/YYYY h:m:s a") > timeLimit.format("M/D/YYYY h:m:s a")
-                ? (bookingDetails?.booking_status === "confirmed" ? "Get PNR" : "PNR Expired")
-                : "Order Ticket"}
-
+              className="text-xl py-14 px-14"
+              text={
+                bookingDetails?.booking_status !== "booked"
+                  ? // || now.format("M/D/YYYY h:m:s a") > timeLimit.format("M/D/YYYY h:m:s a")
+                    bookingDetails?.booking_status === "confirmed"
+                    ? "Get PNR"
+                    : "PNR Expired"
+                  : "Order Ticket"
+              }
               onClick={() => {
                 if (bookingDetails?.booking_status === "confirmed") {
                   handleGetPnr(bookingDetails?.booking_reference_id);
@@ -303,7 +309,7 @@ const TicketDetails = () => {
           </CardLayoutBody>
         </CardLayoutContainer>
         <CardLayoutContainer>
-          <div className="flex flex-col md:flex-row justify-between p-4 text-text">
+          <div className="flex justify-between p-4 text-text">
             <div>
               <span className="font-semibold">Booked On: </span>
               {dayjs
