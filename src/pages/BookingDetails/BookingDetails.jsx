@@ -109,9 +109,7 @@ const TicketDetails = () => {
     const bookingId = {
       booking_id: flight.id,
     };
-
     console.log(bookingId);
-
     let response = await refundRequest(bookingId);
     if (response.status) {
       toast.success(response.message);
@@ -180,7 +178,7 @@ const TicketDetails = () => {
                       status: true,
                       text: "Are you really want to Refund?",
                       onAbort: () => setConfirmObject((prev) => ({ ...prev, status: false })),
-                      onConfirm: () => refundRequestHandler(booking)
+                      onConfirm: () => refundRequestHandler(bookingDetails)
                     }))}
                     text={"Request Refund"}
                     disabled={bookingDetails?.booking_status !== "confirmed"}
@@ -194,7 +192,7 @@ const TicketDetails = () => {
                       status: true,
                       text: "Are you really want to Cancel this Booking?",
                       onAbort: () => setConfirmObject((prev) => ({ ...prev, status: false })),
-                      onConfirm: () => cancelFlightBookingHandler(booking)
+                      onConfirm: () => cancelFlightBookingHandler(bookingDetails)
                     }))}
                     text={"Request Cancellation"}
                     disabled={bookingDetails?.booking_status !== "confirmed"}
