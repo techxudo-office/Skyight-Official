@@ -5,7 +5,6 @@ import {
   Searchbar,
   Table,
 } from "../../components/components";
-import { getRoutes } from "../../utils/api_handler";
 import { useNavigate } from "react-router-dom";
 import {
   CardLayoutContainer,
@@ -20,7 +19,10 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useDispatch, useSelector } from "react-redux";
-import { getFlightBookings } from "../../_core/features/bookingSlice";
+import {
+  getFlightBookings,
+  getRoutes,
+} from "../../_core/features/bookingSlice";
 
 const DashboardHome = () => {
   const navigate = useNavigate();
@@ -66,18 +68,9 @@ const DashboardHome = () => {
     navigate("/dashboard/search-flights");
   };
 
-  const getActiveRoutes = async () => {
-    let response = await getRoutes();
-    if (response?.status) {
-      setFlightsData(response.data.slice(0, 3));
-    } else {
-      toast.error(response.message);
-    }
-  };
-
   useEffect(() => {
-    getActiveRoutes();
-  }, []);
+    dispatch(getRoutes(userData?.token));
+  }, [userData?.token, dispatch]);
 
   useEffect(() => {
     console.log(flightBookings, "flightBookings");

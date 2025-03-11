@@ -34,6 +34,10 @@ const initialState = {
   searchResults: [],
   isLoadingSearchResults: false,
   searchResultsError: null,
+
+  routes: [],
+  loadingRoutes: false,
+  routesError: null,
 };
 
 const bookingSlice = createSlice({
@@ -136,6 +140,18 @@ const bookingSlice = createSlice({
       .addCase(searchFlight.rejected, (state, action) => {
         state.isLoadingSearchResults = false;
         state.searchResultsError = action.payload;
+      })
+      .addCase(getRoutes.pending, (state) => {
+        state.loadingRoutes = true;
+        state.routesError = null;
+      })
+      .addCase(getRoutes.fulfilled, (state, action) => {
+        state.loadingRoutes = false;
+        state.routes = action.payload;
+      })
+      .addCase(getRoutes.rejected, (state, action) => {
+        state.loadingRoutes = false;
+        state.routesError = action.payload;
       });
   },
 });
@@ -411,6 +427,32 @@ export const searchFlight = createAsyncThunk(
     } catch (error) {
       const errorMessage =
         error?.response?.data?.message || "Failed to search Flights";
+      return thunkAPI.rejectWithValue(errorMessage);
+    }
+  }
+);
+
+export const getRoutes = createAsyncThunk(
+  "flight/getRoutes",
+  async (token, thunkAPI) => {
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/api/booking-all-active-routes`,
+        {},
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        return response.data.data.Routes || [];
+      }
+    } catch (error) {
+      const errorMessage =
+        error?.response?.data?.message ||
+        "Failed to fetch routes. Please try again.";
       return thunkAPI.rejectWithValue(errorMessage);
     }
   }
