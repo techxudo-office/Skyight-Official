@@ -1,9 +1,9 @@
 import React from 'react';
 
 const statusClasses = {
-  pending: 'text-yellowColor border-yellowColor bg-yellowbg',
+  booked: 'text-yellowColor border-yellowColor bg-yellowbg',
   'requested-cancellation': 'text-redColor border-redColor bg-redbg',
-  inactive: 'text-redColor border-redColor bg-redbg',
+  expired: 'text-redColor border-redColor bg-redbg',
 };
 
 export default function Tag({ value }) {

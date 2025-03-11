@@ -44,7 +44,7 @@ const TicketDetails = () => {
     status: false,
     text: "",
   });
-  const userData = useSelector((state) => state.auth.userData);
+  const { userData } = useSelector((state) => state.auth);
   const { bookingDetails } = useSelector((state) => state.booking);
 
 
