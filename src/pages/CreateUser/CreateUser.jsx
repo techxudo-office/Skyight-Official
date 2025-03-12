@@ -1,250 +1,190 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   CardLayoutContainer,
   CardLayoutHeader,
   CardLayoutBody,
   CardLayoutFooter,
 } from "../../components/CardLayout/CardLayout";
-import { Input, Button, Switch, Spinner } from "../../components/components";
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import { useNavigate } from "react-router-dom";
+import { Input, Button, Spinner } from "../../components/components";
 import toast, { Toaster } from "react-hot-toast";
-import { createUser } from "../../utils/api_handler";
+import { FaCaretDown } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import { createUser } from "../../_core/features/userSlice";
+import { getRoles } from "../../_core/features/roleSlice";
 
+const inputFields = [
+  {
+    name: "first_name",
+    label: "First Name*",
+    type: "text",
+    placeholder: "Enter First Name",
+  },
+  {
+    name: "last_name",
+    label: "Last Name*",
+    type: "text",
+    placeholder: "Enter Last Name",
+  },
+  { name: "email", label: "Email*", type: "email", placeholder: "Enter Email" },
+  {
+    name: "mobile_number",
+    label: "Mobile Number*",
+    type: "text",
+    placeholder: "Enter Mobile Number",
+  },
+  {
+    name: "password",
+    label: "Password*",
+    type: "password",
+    placeholder: "Enter Password",
+  },
+];
 const CreateUser = () => {
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [errors, setErrors] = useState({});
+  const [formData, setFormData] = useState({
+    first_name: "",
+    last_name: "",
+    email: "",
+    mobile_number: "",
+    password: "",
+    role_id: "",
+  });
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [selectedRole, setSelectedRole] = useState(null);
+  const userData = useSelector((state) => state.auth.userData);
+  const { roles, isLoadingRoles, rolesError } = useSelector(
+    (state) => state.role
+  );
 
-  const [isActive, setIsActive] = useState(true);
-  const [loading, setLoading] = useState(false);
+  const validateForm = () => {
+    let newErrors = {};
 
-  const createUserHandler = async (payload, resetForm) => {
-    try {
-      setLoading(true);
+    if (!formData.first_name.trim())
+      newErrors.first_name = "First name is required";
+    if (!formData.last_name.trim())
+      newErrors.last_name = "Last name is required";
 
-      const response = await createUser(payload);
-      if (response) {
-        if (response.status) {
-          toast.success(response.message);
-          resetForm();
-          setTimeout(() => {
-            navigate("/dashboard/users");
-          }, 1000);
-        } else {
-          if (Array.isArray(response.message)) {
-            response.message.map((error) => {
-              return toast.error(error);
-            });
-          } else {
-            toast.error(response.message);
-          }
-        }
-      }
-    } catch (error) {
-      toast.error(error.message);
-    } finally {
-      setLoading(false);
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = "Invalid email format";
     }
+
+    if (!formData.mobile_number.trim()) {
+      newErrors.mobile_number = "Mobile number is required";
+    } else if (!/^\d{10}$/.test(formData.mobile_number)) {
+      newErrors.mobile_number = "Mobile number must be 10 digits";
+    }
+
+    if (!formData.password.trim()) {
+      newErrors.password = "Password is required";
+    } else if (formData.password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters";
+    }
+
+    if (!formData.role_id) newErrors.role_id = "Role is required";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
-  const validationSchema = Yup.object({
-    first_name: Yup.string().required("Please enter first name"),
-    last_name: Yup.string().required("Please enter last name"),
-    email: Yup.string().required("Please enter email address"),
-    mobile_number: Yup.string().required("Please enter mobile number"),
-    password: Yup.string().required("Please set a password"),
-    role: Yup.string().required("Please enter role"),
-  });
+  useEffect(() => {
+    dispatch(getRoles({ page: 0, limit: 10, token: userData?.token }));
+  }, [dispatch]);
 
-  const formik = useFormik({
-    initialValues: {
-      first_name: "",
-      last_name: "",
-      email: "",
-      mobile_number: "",
-      password: "",
-      role: "",
-    },
-    validationSchema,
-    onSubmit: (values, { resetForm }) => {
-      createUserHandler(values, resetForm);
-    },
-  });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
-  const handleFormSubmit = (e) => {
+  const handleRoleSelect = (role) => {
+    setSelectedRole(role);
+    setFormData((prev) => ({
+      ...prev,
+      role_id: role.id,
+    }));
+    setDropdownOpen(false);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!loading) {
-      formik.handleSubmit();
+
+    if (!validateForm()) {
+      toast.error("Please fix the errors before submitting.");
+      return;
     }
+    dispatch(createUser({ token: userData.token, data: formData }));
   };
 
   return (
     <>
       <Toaster />
       <CardLayoutContainer>
-        <CardLayoutHeader
-          heading="Create User"
-          className={"flex items-center justify-between"}
-        >
-          <span
-            onClick={() => {
-              setIsActive(!isActive);
-            }}
-          >
-            <Switch switchStatus={isActive} />
-          </span>
-        </CardLayoutHeader>
-        <form onSubmit={handleFormSubmit} noValidate>
+        <CardLayoutHeader heading="Create User" />
+        <form onSubmit={handleSubmit} noValidate>
           <CardLayoutBody>
-            <div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-5 mb-7">
-                <div
-                  className={`relative ${
-                    formik.touched.first_name && formik.errors.first_name
-                      ? "mb-5"
-                      : ""
-                  }`}
-                >
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3 md:gap-5 mb-7">
+              {inputFields.map(({ name, label, type }) => (
+                <div key={name} className="relative">
                   <Input
-                    placeholder={"Enter First Name"}
-                    id={"first_name"}
-                    name={"first_name"}
-                    label={"First Name*"}
-                    type={"text"}
-                    value={formik.values.first_name}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
+                    id={name}
+                    name={name}
+                    label={label}
+                    type={type}
+                    placeholder={`Enter ${label}`}
+                    value={formData[name]}
+                    onChange={handleChange}
                   />
-                  {formik.touched.first_name && formik.errors.first_name && (
-                    <div className="text-red-500 text-sm mt-2 absolute left-0">
-                      {formik.errors.first_name}
-                    </div>
+                  {errors[name] && (
+                    <p className="mt-1 text-sm text-red-500">{errors[name]}</p>
                   )}
                 </div>
+              ))}
+              <div className="relative">
+                {/* <label className="block mb-2 font-medium text-md">Role</label> */}
                 <div
-                  className={`relative ${
-                    formik.touched.last_name && formik.errors.last_name
-                      ? "mb-5"
-                      : ""
-                  }`}
+                  className="relative flex items-center justify-between w-full p-3 bg-white border border-gray-300 rounded-md cursor-pointer"
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
                 >
-                  <Input
-                    placeholder={"Enter Last Name"}
-                    id={"last_name"}
-                    name={"last_name"}
-                    label={"Last Name*"}
-                    type={"text"}
-                    value={formik.values.last_name}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                  />
-                  {formik.touched.last_name && formik.errors.last_name && (
-                    <div className="text-red-500 text-sm mt-2 absolute left-0">
-                      {formik.errors.last_name}
-                    </div>
-                  )}
+                  <span>
+                    {selectedRole ? selectedRole.name : "Select a Role"}
+                  </span>
+                  <FaCaretDown className="text-gray-500" />
                 </div>
-                <div
-                  className={`relative ${
-                    formik.touched.email && formik.errors.email ? "mb-5" : ""
-                  }`}
-                >
-                  <Input
-                    placeholder={"Enter Email"}
-                    id={"email"}
-                    name={"email"}
-                    label={"Email*"}
-                    type={"email"}
-                    value={formik.values.email}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                  />
-                  {formik.touched.email && formik.errors.email && (
-                    <div className="text-red-500 text-sm mt-2 absolute left-0">
-                      {formik.errors.email}
-                    </div>
-                  )}
-                </div>
-                <div
-                  className={`relative ${
-                    formik.touched.mobile_number && formik.errors.mobile_number
-                      ? "mb-5"
-                      : ""
-                  }`}
-                >
-                  <Input
-                    placeholder={"Enter Mobile Number"}
-                    id={"mobile_number"}
-                    name={"mobile_number"}
-                    label={"Mobile Number*"}
-                    type={"mobile_number"}
-                    value={formik.values.mobile_number}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                  />
-                  {formik.touched.mobile_number &&
-                    formik.errors.mobile_number && (
-                      <div className="text-red-500 text-sm mt-2 absolute left-0">
-                        {formik.errors.mobile_number}
-                      </div>
+                {dropdownOpen && (
+                  <ul className="absolute z-10 w-full mt-1 overflow-y-auto bg-white border border-gray-300 rounded-md shadow-md max-h-40">
+                    {roles.roles.length > 0 ? (
+                      roles.roles.map((role) => (
+                        <li
+                          key={role.id}
+                          className="p-3 cursor-pointer hover:bg-gray-100"
+                          onClick={() => handleRoleSelect(role)}
+                        >
+                          {role.name}
+                        </li>
+                      ))
+                    ) : (
+                      <li className="p-3 text-gray-500">No roles found</li>
                     )}
-                </div>
-                <div
-                  className={`relative ${
-                    formik.touched.password && formik.errors.password
-                      ? "mb-5"
-                      : ""
-                  }`}
-                >
-                  <Input
-                    placeholder={"Enter Password"}
-                    id={"password"}
-                    name={"password"}
-                    label={"Password*"}
-                    type={"password"}
-                    value={formik.values.password}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                  />
-                  {formik.touched.password && formik.errors.password && (
-                    <div className="text-red-500 text-sm mt-2 absolute left-0">
-                      {formik.errors.password}
-                    </div>
-                  )}
-                </div>
-                <div
-                  className={`relative ${
-                    formik.touched.role && formik.errors.role ? "mb-5" : ""
-                  }`}
-                >
-                  <Input
-                    placeholder={"Enter Role"}
-                    id={"role"}
-                    name={"role"}
-                    label={"Role*"}
-                    type={"role"}
-                    value={formik.values.role}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                  />
-                  {formik.touched.role && formik.errors.role && (
-                    <div className="text-red-500 text-sm mt-2 absolute left-0">
-                      {formik.errors.role}
-                    </div>
-                  )}
-                </div>
+                  </ul>
+                )}
+                {errors.role_id && (
+                  <p className="mt-1 text-sm text-red-500">{errors.role_id}</p>
+                )}
               </div>
             </div>
           </CardLayoutBody>
+
           <CardLayoutFooter>
-            <div>
-              <Button
-                text={loading ? <Spinner /> : "Create User"}
-                disabled={loading}
-                onClick={formik.handleSubmit}
-                type="submit"
-              />
-            </div>
+            <Button
+              text={isLoadingRoles ? <Spinner /> : "Create User"}
+              disabled={isLoadingRoles}
+              type="submit"
+            />
           </CardLayoutFooter>
         </form>
       </CardLayoutContainer>

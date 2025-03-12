@@ -3,9 +3,9 @@ import {
   Table,
   SecondaryButton,
   ConfirmModal,
+  TableNew,
 } from "../../components/components";
-import { getUsers, deleteUser } from "../../utils/api_handler";
-import { MdEditSquare } from "react-icons/md";
+import { MdAdd, MdEditSquare } from "react-icons/md";
 import { MdAutoDelete } from "react-icons/md";
 
 import { useNavigate } from "react-router-dom";
@@ -15,37 +15,30 @@ import {
   CardLayoutBody,
   CardLayoutFooter,
 } from "../../components/CardLayout/CardLayout";
-import toast from "react-hot-toast";
+import { userColumns } from "../../data/columns";
+import { successToastify, errorToastify } from "../../helper/toast";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteUser, getUsers } from "../../_core/features/userSlice";
 
 const Users = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [modalStatus, setModalStatus] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+  const userData = useSelector((state) => state.auth.userData);
+  const { users, isLoadingUsers, isCreatingUser, isDeletingUser } = useSelector(
+    (state) => state.user
+  );
 
   const navigationHandler = () => {
     navigate("/dashboard/create-user");
   };
-
-  const [usersData, setUsersData] = useState([]);
-  const [modalStatus, setModalStatus] = useState(false);
-  const [deleteId, setDeleteId] = useState(null);
-
-  const columnsData = [
-    { columnName: "No.", fieldName: "no.", type: "no." },
-    // { columnName: "User", fieldName: "image", type: 'img' },
-    { columnName: "First Name", fieldName: "first_name", type: "text" },
-    { columnName: "Last Name", fieldName: "last_name", type: "text" },
-    { columnName: "Email", fieldName: "email", type: "text" },
-    { columnName: "Mobile Number", fieldName: "mobile_number", type: "text" },
-    { columnName: "Id", fieldName: "id", type: "id" },
-    { columnName: "Role", fieldName: "role", type: "text" },
-    { columnName: "Status", fieldName: "status", type: "status" },
-    { columnName: "Actions", fieldName: "actions", type: "actions" },
-  ];
-
   const actionsData = [
     {
       name: "Edit",
       icon: <MdEditSquare title="Edit" className="text-blue-500" />,
       handler: (index, item) => {
+        console.log("item", item);
         navigate("/dashboard/update-reason", { state: item });
       },
     },
@@ -59,28 +52,19 @@ const Users = () => {
     },
   ];
 
-  const gettingUsers = async () => {
-    const response = await getUsers();
-    if (response.status) {
-      setUsersData(response.data);
-    }
-  };
-
-  const deleteUserHandler = async () => {
+  const deleteUserHandler = () => {
+    console.log(deleteId, "deleteId TABLE");
     if (!deleteId) {
-      toast.error("Failed to delete this user");
+      errorToastify("Failed to delete this user");
       setModalStatus(false);
-    } else {
-      const response = await deleteUser(deleteId);
-      if (response.status) {
-        setUsersData(usersData.filter(({ id }) => id !== deleteId));
+      return;
+    }
+
+    dispatch(deleteUser({ id: deleteId, token: userData?.token }))
+      .then(() => {
         setModalStatus(false);
         setDeleteId(null);
-        toast.success(response.message);
-      } else {
-        toast.error(response.message);
-      }
-    }
+      });
   };
 
   const abortDeleteHandler = () => {
@@ -89,34 +73,36 @@ const Users = () => {
   };
 
   useEffect(() => {
-    gettingUsers();
+    dispatch(getUsers(userData?.token));
   }, []);
 
   return (
     <>
       <ConfirmModal
         status={modalStatus}
-        abortDelete={abortDeleteHandler}
-        deleteHandler={deleteUserHandler}
+        onAbort={abortDeleteHandler}
+        onConfirm={deleteUserHandler}
       />
       <CardLayoutContainer removeBg={true}>
         <CardLayoutHeader
           removeBorder={true}
           heading={"Users"}
-          className="flex justify-between items-center"
+          className="flex items-center justify-between"
         >
           <div className="relative">
             <SecondaryButton
+              icon={<MdAdd />}
               text={"Create New User"}
               onClick={navigationHandler}
             />
           </div>
         </CardLayoutHeader>
         <CardLayoutBody removeBorder={true}>
-          <Table
-            columns={columnsData}
-            data={usersData}
+          <TableNew
+            columnsToView={userColumns}
+            tableData={users}
             actions={actionsData}
+            loader={isLoadingUsers}
           />
         </CardLayoutBody>
         <CardLayoutFooter></CardLayoutFooter>

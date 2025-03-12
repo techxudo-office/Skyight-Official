@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { PiBankBold } from "react-icons/pi";
 
@@ -15,71 +15,47 @@ import {
   Button,
   SecondaryButton,
   Select,
+  CustomDate,
+  TextArea,
 } from "../../components/components";
-
-import { createTransaction, getBanks } from "../../utils/api_handler";
-import {
-  validationSchema,
-  initialValues,
-} from "../../schema/validationSchema";
-import { allowedTypes } from "../../helper/allowedTypes";
 import { useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
-import toast, { Toaster } from "react-hot-toast";
+import { transactionInitialValues, transactionSchema } from "../../validations";
+import { allowedTypes } from "../../helper/allowedTypes";
+import { errorToastify } from "../../helper/toast";
+import { useDispatch, useSelector } from "react-redux";
+import { createTransaction } from "../../_core/features/transactionSlice";
+import { getBanks } from "../../_core/features/bookingSlice";
 
 const CreateTransaction = () => {
   const navigate = useNavigate();
-
-  const [banksData, setBanksData] = useState([]);
+  const dispatch = useDispatch();
   const [selectedFile, setSelectedFile] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [isBanksLoading, setIsBanksLoading] = useState(false);
+  const { userData } = useSelector((state) => state.auth);
+  const banksData = useSelector((state) => state.booking.banks);
+  const { isCreatingTransaction } = useSelector((state) => state.transaction);
 
-  const getBanksHandler = async () => {
-    setIsBanksLoading(true);
-    try {
-      const response = await getBanks();
-      setBanksData(response);
-    } catch (error) {
-      toast.error("Failed to fetch banks");
-    } finally {
-      setIsBanksLoading(false);
-    }
-  };
+  useEffect(() => {
+    dispatch(getBanks(userData?.token));
+  }, [dispatch]);
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       if (allowedTypes.includes(file.type)) {
         setSelectedFile(file);
       } else {
-        toast.error("Only JPG, JPEG, and PNG formats are allowed.");
-      }
-    }
-  };
-
-  const createTransactionHandler = async (payload) => {
-    setLoading(true);
-    const response = await createTransaction(payload);
-    console.log(response);
-    setLoading(false);
-
-    if (response.status) {
-      toast.success(response.message);
-      setTimeout(() => {
-        navigate("/dashboard/transactions");
-      }, 2000);
-    } else {
-      if (Array.isArray(response.message)) {
-        response.message.map((error) => {
-          return toast.error(error.toUpperCase());
-        });
-      } else {
-        toast.error(response.message);
+        errorToastify("Only JPG, JPEG, and PNG formats are allowed.");
       }
     }
   };
 
   const handleSubmit = (values) => {
+    if (!selectedFile) {
+      errorToastify("Please upload transaction receipt");
+      return;
+    }
+
     const formData = new FormData();
     formData.append("bank_name", values.bank_name);
     formData.append("bank_number", values.bank_number);
@@ -88,43 +64,38 @@ const CreateTransaction = () => {
     formData.append("payment_date", values.payment_date);
     formData.append("amount", values.amount);
     formData.append("comment", values.comment);
+    formData.append("document", selectedFile);
 
-    if (!selectedFile) {
-      toast.error("Please upload transaction receipt");
-    } else {
-      formData.append("document", selectedFile);
-      createTransactionHandler(formData);
-    }
+    dispatch(
+      createTransaction({ data: formData, token: userData?.token })
+    ).then(() => {
+      navigate("/dashboard/transactions");
+    });
   };
-
-  useEffect(() => {
-    getBanksHandler();
-  }, []);
 
   return (
     <>
-      <Toaster />
-      <div className="w-full flex flex-col">
+      <div className="flex flex-col w-full">
         <CardLayoutContainer className={"mb-5"}>
           <CardLayoutHeader
             heading="Transaction Receipt"
             className={"flex items-center justify-between"}
           />
           <CardLayoutBody>
-            <div className="flex flex-col justify-center items-center gap-4 mt-2">
+            <div className="flex flex-col items-center justify-center gap-4 mt-2">
               {selectedFile ? (
                 <img
                   src={URL.createObjectURL(selectedFile)}
                   alt="Uploaded Preview"
-                  className=" object-cover rounded-xl border-2 border-slate-100"
+                  className="object-cover border-2 rounded-xl border-slate-100"
                 />
               ) : (
                 <label
                   htmlFor="image-upload"
-                  className="p-16 flex flex-col items-center justify-center"
+                  className="flex flex-col items-center justify-center p-16"
                 >
-                  <FaCloudUploadAlt className="text-5xl text-slate-400 transition-all mb-3 cursor-pointer upload-icon" />
-                  <h2 className="text-md text-center text-slate-500">
+                  <FaCloudUploadAlt className="mb-3 text-5xl transition-all cursor-pointer text-slate-400 upload-icon" />
+                  <h2 className="text-center text-md text-slate-500">
                     Upload Transaction Receipt
                   </h2>
                 </label>
@@ -134,7 +105,7 @@ const CreateTransaction = () => {
           <CardLayoutFooter>
             <label
               htmlFor="image-upload"
-              className="cursor-pointer bg-blue-100 hover:bg-secondary text-primary hover:text-white py-2 font-semibold px-4 rounded-full transition duration-300"
+              className="px-4 py-2 font-semibold transition duration-300 bg-blue-100 rounded-full cursor-pointer hover:bg-secondary text-primary hover:text-white"
             >
               Upload Image
             </label>
@@ -153,51 +124,33 @@ const CreateTransaction = () => {
             className={"flex items-center justify-between"}
           />
           <Formik
-            initialValues={initialValues}
-            validationSchema={validationSchema}
+            initialValues={transactionInitialValues}
+            validationSchema={transactionSchema}
             onSubmit={handleSubmit}
           >
             {({ values, errors, touched, setFieldValue }) => (
               <Form>
                 <CardLayoutBody>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-5 mb-7">
+                  <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3 md:gap-5 mb-7">
                     <div className="relative mb-5">
                       <Select
                         id="bank_name"
                         label="Bank Name"
                         name="bank_name"
-                        options={isBanksLoading ? [] : banksData}
+                        options={banksData}
                         value={values.bank_name}
                         placeholder="Select Bank"
                         onChange={(option) =>
-                          setFieldValue("bank_name", option.bank)
+                          setFieldValue("bank_name", option.label)
                         }
                         optionIcons={<PiBankBold />}
                       />
                       {touched.bank_name && errors.bank_name && (
-                        <div className="text-red-500 text-sm mt-2 absolute left-0">
+                        <div className="absolute left-0 mt-2 text-sm text-red-500">
                           {errors.bank_name}
                         </div>
                       )}
                     </div>
-                    {/* <div className="relative mb-5">
-                      <Input
-                        id={"bank_name"}
-                        name={"bank_name"}
-                        label={"Bank Name"}
-                        type={"text"}
-                        value={values.bank_name}
-                        placeholder={"Enter Bank Name"}
-                        onChange={(e) =>
-                          setFieldValue("bank_name", e.target.value)
-                        }
-                      />
-                      {touched.bank_name && errors.bank_name && (
-                        <div className="text-red-500 text-sm mt-2 absolute left-0">
-                          {errors.bank_name}
-                        </div>
-                      )}
-                    </div> */}
                     <div className="relative mb-5">
                       <Input
                         id={"bank_number"}
@@ -211,7 +164,7 @@ const CreateTransaction = () => {
                         }
                       />
                       {touched.bank_number && errors.bank_number && (
-                        <div className="text-red-500 text-sm mt-2 absolute left-0">
+                        <div className="absolute left-0 mt-2 text-sm text-red-500">
                           {errors.bank_number}
                         </div>
                       )}
@@ -230,7 +183,7 @@ const CreateTransaction = () => {
                       />
                       {touched.account_holder_name &&
                         errors.account_holder_name && (
-                          <div className="text-red-500 text-sm mt-2 absolute left-0">
+                          <div className="absolute left-0 mt-2 text-sm text-red-500">
                             {errors.account_holder_name}
                           </div>
                         )}
@@ -239,16 +192,16 @@ const CreateTransaction = () => {
                       <Input
                         id={"document_number"}
                         name={"document_number"}
-                        label={"Document Number"}
+                        label={"Account Number"}
                         type={"text"}
                         value={values.document_number}
-                        placeholder={"Enter Document Number"}
+                        placeholder={"Enter Account Number"}
                         onChange={(e) =>
                           setFieldValue("document_number", e.target.value)
                         }
                       />
                       {touched.document_number && errors.document_number && (
-                        <div className="text-red-500 text-sm mt-2 absolute left-0">
+                        <div className="absolute left-0 mt-2 text-sm text-red-500">
                           {errors.document_number}
                         </div>
                       )}
@@ -266,47 +219,42 @@ const CreateTransaction = () => {
                         }
                       />
                       {touched.amount && errors.amount && (
-                        <div className="text-red-500 text-sm mt-2 absolute left-0">
+                        <div className="absolute left-0 mt-2 text-sm text-red-500">
                           {errors.amount}
                         </div>
                       )}
                     </div>
+
                     <div className="relative mb-5">
-                      <Input
-                        id={"comment"}
-                        name={"comment"}
-                        label={"Comment"}
-                        type={"text"}
-                        value={values.comment}
-                        placeholder={"Enter Comment"}
-                        onChange={(e) =>
-                          setFieldValue("comment", e.target.value)
-                        }
-                      />
-                      {touched.comment && errors.comment && (
-                        <div className="text-red-500 text-sm mt-2 absolute left-0">
-                          {errors.comment}
-                        </div>
-                      )}
-                    </div>
-                    <div className="relative mb-5">
-                      <Input
-                        id={"payment_date"}
-                        name={"payment_date"}
+                      <CustomDate
                         label={"Transaction Date"}
-                        type={"datetime-local"}
+                        isTimePicker={true}
                         value={values.payment_date}
-                        placeholder={"Select Transaction Date"}
                         onChange={(e) =>
                           setFieldValue("payment_date", e.target.value)
                         }
                       />
                       {touched.payment_date && errors.payment_date && (
-                        <div className="text-red-500 text-sm mt-2 absolute left-0">
+                        <div className="absolute left-0 mt-2 text-sm text-red-500">
                           {errors.payment_date}
                         </div>
                       )}
                     </div>
+                  </div>
+                  <div className="relative mb-5">
+                    <TextArea
+                      id={"comment"}
+                      name={"comment"}
+                      label={"Comment"}
+                      value={values.comment}
+                      placeholder={"Enter Comment"}
+                      onChange={(e) => setFieldValue("comment", e.target.value)}
+                    />
+                    {touched.comment && errors.comment && (
+                      <div className="absolute left-0 mt-2 text-sm text-red-500">
+                        {errors.comment}
+                      </div>
+                    )}
                   </div>
                 </CardLayoutBody>
                 <CardLayoutFooter className={"gap-1"}>
@@ -320,9 +268,15 @@ const CreateTransaction = () => {
                   </div>
                   <div>
                     <Button
-                      text={loading ? <Spinner /> : "Create Transaction"}
+                      text={
+                        isCreatingTransaction ? (
+                          <Spinner />
+                        ) : (
+                          "Create Transaction"
+                        )
+                      }
                       type="submit"
-                      disabled={loading}
+                      disabled={isCreatingTransaction}
                     />
                   </div>
                 </CardLayoutFooter>

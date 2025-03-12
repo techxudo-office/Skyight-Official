@@ -7,13 +7,13 @@ import {
 } from "../../components/CardLayout/CardLayout";
 import { Button, SecondaryButton } from "../components";
 
-const ConfirmModal = ({ status, abortDelete, deleteHandler }) => {
+const ConfirmModal = ({ status, onAbort, onConfirm, text, loading }) => {
   const modalRef = useRef();
 
   useEffect(() => {
     const outsideClickHandler = (e) => {
       if (modalRef.current && !modalRef.current.contains(e.target)) {
-        abortDelete();
+        onAbort;
       }
     };
 
@@ -27,32 +27,28 @@ const ConfirmModal = ({ status, abortDelete, deleteHandler }) => {
     <>
       <div
         ref={modalRef}
-        className={`transition-all absolute z-10 ${
-          status ? "top-3" : "top-[-100%]"
-        } left-[50%] translate-x-[-50%]`}
+        className={`transition-all absolute z-10 ${status ? "top-16" : "top-[-100%]"
+          } left-[50%] translate-x-[-50%]`}
       >
-        <CardLayoutContainer className={"shadow-xl"}>
-          <CardLayoutHeader className="flex justify-between items-center rounded-t-3xl">
-            <h2 className="text-xl font-semibold text-text">Confirmation</h2>
-          </CardLayoutHeader>
-          <CardLayoutBody>
-            <h2 className="text-xl text-text">
-              Are you sure you want to delete this record?
-            </h2>
-          </CardLayoutBody>
-          <CardLayoutFooter className={"gap-1"}>
+        <div className={"shadow-2xl min-w-[450px] border bg-primary  pt-5 pb-3 rounded-b-2xl flex flex-col gap-3 "}>
+          <h2 className="text-2xl font-semibold text-white px-4 ">Confirmation</h2>
+
+          <h2 className="text-xl text-white py-3 px-4 border-t border-b border-background">{text}</h2>
+
+          <div className={"gap-2 flex justify-end px-4 "}>
             <div>
-              <SecondaryButton text="Cancel" onClick={abortDelete} />
+              <SecondaryButton text="Confirm" onClick={onConfirm} />
             </div>
             <div>
               <Button
-                text="Delete"
+                text="Cancel"
+                loading={loading}
                 className="bg-red-500 hover:bg-red-700"
-                onClick={deleteHandler}
+                onClick={onAbort}
               />
             </div>
-          </CardLayoutFooter>
-        </CardLayoutContainer>
+          </div>
+        </div>
       </div>
     </>
   );

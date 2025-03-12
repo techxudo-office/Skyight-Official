@@ -1,4 +1,5 @@
 import {
+  Finalticket,
   Home,
   About,
   Contact,
@@ -34,7 +35,10 @@ import {
   Login,
   Registration,
   Verification,
-  ForgetPassword
+  ForgetPassword,
+  Anouncement,
+  BookingHistory,
+  OrderHistory
 } from "../pages/pages";
 
 export const routesData = [
@@ -49,7 +53,7 @@ export const routesData = [
   {
     path: "/dashboard",
     element: <Dashboard />,
-    protected: true, 
+    protected: true,
     children: [
       { index: true, element: <DashboardHome />, protected: true },
       { path: "search-flights", element: <SearchFlights />, protected: true },
@@ -64,6 +68,8 @@ export const routesData = [
       { path: "create-transaction", element: <CreateTransaction />, protected: true },
       { path: "search-history", element: <SearchHistory />, protected: true },
       { path: "transactions-history", element: <TransactionHistory />, protected: true },
+      { path: "booking-history", element: <BookingHistory />, protected: true },
+      { path: "order-history", element: <OrderHistory />, protected: true },
       { path: "roles", element: <Roles />, protected: true },
       { path: "create-role", element: <CreateRole />, protected: true },
       { path: "users", element: <Users />, protected: true },
@@ -77,6 +83,8 @@ export const routesData = [
       { path: "flight-details", element: <FlightDetails />, protected: true },
       { path: "travelers-details", element: <TravelersDetails />, protected: true },
       { path: "confirm-booking", element: <ConfirmBooking />, protected: true },
+      { path: "announcement", element: <Anouncement />, protected: true },
+      { path: "ticket-info", element: <Finalticket />, protected: true },
     ],
   },
   { path: "*", element: <NotFound /> },

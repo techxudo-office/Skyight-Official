@@ -5,5 +5,4 @@ export const successToastify = (message) =>
     duration: 5000,
   });
 
-export const errorToastify = (message) =>
-  toast.error(message);
+export const errorToastify = (message) => toast.error(message);

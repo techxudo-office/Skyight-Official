@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   CardLayoutContainer,
   CardLayoutHeader,
@@ -7,62 +7,63 @@ import {
 } from "../../components/CardLayout/CardLayout";
 
 import { FaEye } from "react-icons/fa";
-import { MdEditSquare } from "react-icons/md";
-import { FaRegCircleCheck } from "react-icons/fa6";
+import { MdEditSquare, MdFilterList } from "react-icons/md";
+import { FaRegCircleCheck, FaPlus } from "react-icons/fa6";
 import { MdAutoDelete } from "react-icons/md";
 
-import { Table, Dropdown, SecondaryButton } from "../../components/components";
+import {
+  Dropdown,
+  SecondaryButton,
+  TableNew,
+} from "../../components/components";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getRoles } from "../../_core/features/roleSlice";
 
 const Roles = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [activeIndex, setActiveIndex] = useState(null);
   const [dropdownStatus, setDropdownStatus] = useState(false);
+  const [rolesData, setRolesData] = useState([]);
+  const { roles, isLoadingRoles, rolesError } = useSelector(
+    (state) => state.role
+  );
+  const userData = useSelector((state) => state.auth.userData);
 
-  const data = [
-    {
-      id: "64c3f3f4e4b0f1a1d2c3b3e1",
-      role: "Admin",
-      roleRights: "Full Access",
-      status: "active",
-    },
-    {
-      id: "64c3f3f4e4b0f1a1d2c3b3e2",
-      role: "Editor",
-      roleRights: "Create, Update, View",
-      status: "active",
-    },
-    {
-      id: "64c3f3f4e4b0f1a1d2c3b3e3",
-      role: "Viewer",
-      roleRights: "View Only",
-      status: "inactive",
-    },
-    {
-      id: "64c3f3f4e4b0f1a1d2c3b3e4",
-      role: "Manager",
-      roleRights: "Create, Update, View",
-      status: "active",
-    },
-    {
-      id: "64c3f3f4e4b0f1a1d2c3b3e5",
-      role: "Support",
-      roleRights: "Limited Access",
-      status: "inactive",
-    },
-  ];
+  useEffect(() => {
+    dispatch(getRoles({ page: 0, limit: 10, token: userData?.token }))
+      .then(() => {
+        if (roles) {
+          const formattedData = roles.roles.map((item) => ({
+            id: item.id.toString(),
+            role: item.name || "Unknown",
+            roleRights: item.page_permission
+              ? Object.keys(item.page_permission)
+                  .filter((key) => item.page_permission[key])
+                  .map((key) => key.replace(/_/g, " "))
+                  .join(", ")
+              : "No Permissions",
+            status: item.is_deleted ? "inactive" : "active",
+          }));
+          setRolesData(formattedData);
+        } else {
+          setRolesData([]);
+        }
+      })
+      .catch(() => {
+        setRolesData([]);
+      });
+  }, [dispatch]);
 
   const columnsData = [
-    { columnName: "No.", fieldName: "no.", type: "no." },
+    // { columnName: "No.", fieldName: "no.", type: "no." },
     // { columnName: "Role Img", fieldName: "image", type: 'img' },
     { columnName: "Role", fieldName: "role", type: "text" },
     { columnName: "Role ID", fieldName: "id", type: "id" },
     { columnName: "Status", fieldName: "status", type: "status" },
-    { columnName: "Actions", fieldName: "actions", type: "actions" },
+    // { columnName: "Actions", fieldName: "actions", type: "actions" },
   ];
-
-  const viewColumns = [
-    { columnName: "Role Rights", fieldName: "roleRights", type: "text" },
-  ];
-
   const actionsData = [
     {
       name: "View",
@@ -83,7 +84,7 @@ const Roles = () => {
     {
       name: "Rights",
       icon: (
-        <FaRegCircleCheck title="Rights" className="text-orange-500 text-sm" />
+        <FaRegCircleCheck title="Rights" className="text-sm text-orange-500" />
       ),
       handler: () => {
         alert("Hello Im Rights Alert !");
@@ -125,11 +126,20 @@ const Roles = () => {
         <CardLayoutHeader
           removeBorder={true}
           heading={"Roles"}
-          className="flex justify-between items-center"
+          className="flex items-center justify-between"
         >
           <div className="relative">
             <SecondaryButton
+              text={"Create New Role"}
+              icon={<FaPlus />}
+              onClick={() => {
+                navigate("/dashboard/create-role");
+              }}
+              className="mb-4"
+            />
+            <SecondaryButton
               text={"Filters"}
+              icon={<MdFilterList />}
               onClick={() => {
                 setDropdownStatus(!dropdownStatus);
               }}
@@ -143,12 +153,13 @@ const Roles = () => {
           </div>
         </CardLayoutHeader>
         <CardLayoutBody removeBorder={true}>
-          <Table
-            columns={columnsData}
-            viewColumns={viewColumns}
-            data={data}
+          <TableNew
+            columnsToView={columnsData}
+            tableData={rolesData}
             actions={actionsData}
+            extraRows={["roleRights"]}
             activeIndex={activeIndex}
+            loader={isLoadingRoles}
           />
         </CardLayoutBody>
         <CardLayoutFooter></CardLayoutFooter>

@@ -3,9 +3,15 @@ import { GiCommercialAirplane } from "react-icons/gi";
 import { IoIosArrowForward } from "react-icons/io";
 
 import { useNavigate, useLocation } from "react-router-dom";
-import { sidebarLinks } from "../../data/sidebarData";
+import {
+  CardLayoutContainer,
+  CardLayoutHeader,
+} from "../CardLayout/CardLayout";
+import { MdEdit } from "react-icons/md";
+import { useSidebarLinks } from "../../data/sidebarData";
 
 const Sidebar = ({ status, updateStatus }) => {
+  const sidebarLinks = useSidebarLinks();
   const navigate = useNavigate();
   const location = useLocation();
   const sidebarRef = useRef();
@@ -17,16 +23,22 @@ const Sidebar = ({ status, updateStatus }) => {
   const navigationHandler = (path) => {
     navigate(path);
   };
+  useEffect(() => {
+    if (!status) {
+      setActiveMenu(null);
+    }
+    if (activeMenu != null || status) {
+      updateStatus(true);
+    }
+  }, [activeMenu, status]);
 
   const menuItemHandler = (index, link) => {
-    if (activeMenu !== index) {
-      if (link.sublinks && link.sublinks.length > 0) {
-        navigationHandler(link.sublinks[0].path);
-      } else if (link.path) {
-        navigationHandler(link.path);
-      }
+    if (link.sublinks && link.sublinks.length > 0) {
+      // navigationHandler(link.sublinks[0].path);
+      setActiveMenu((prevIndex) => (prevIndex === index ? null : index));
+    } else if (link.path) {
+      navigationHandler(link.path);
     }
-    setActiveMenu((prevIndex) => (prevIndex === index ? null : index));
   };
 
   useEffect(() => {
@@ -70,81 +82,146 @@ const Sidebar = ({ status, updateStatus }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, [updateStatus]);
 
-  useEffect(() => {
-    if (mobileView) {
-      const handleClickOutside = (e) => {
-        if (sidebarRef.current && !sidebarRef.current.contains(e.target)) {
-          updateStatus(false);
-        }
-      };
+  // useEffect(() => {
+  //   if (mobileView) {
+  //     const handleClickOutside = (e) => {
+  //       if (sidebarRef.current && !sidebarRef.current.contains(e.target)) {
+  //         updateStatus(false);
+  //       }
+  //     };
 
-      document.addEventListener("mousedown", handleClickOutside);
-      return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
-      };
+  //     document.addEventListener("mousedown", handleClickOutside);
+  //     return () => {
+  //       document.removeEventListener("mousedown", handleClickOutside);
+  //     };
+  //   }
+  // }, [sidebarRef, mobileView]);
+
+  const [profileImage, setProfileImage] = useState(
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjUuYcnZ-xqlGZiDZvuUy_iLx3Nj6LSaZSzQ&s"
+  );
+
+  const fileInputRef = useRef(null);
+
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setProfileImage(imageUrl);
     }
-  }, [sidebarRef, mobileView]);
+  };
 
   return (
     <div
       id="sidebar-container"
       ref={sidebarRef}
-      className={`transition-all z-10 bg-white  ${
-        status ? "w-64 shadow-md" : "w-0 overflow-hidden"
-      } flex flex-col justify-between ${
-        mobileView && "absolute h-screen shadow-2xl"
-      }`}
+      className={`transition-all z-10  bg-white   shadow-md ${!mobileView
+        ? status
+          ? "w-1/5 pt-20 "
+          : "w-28  items-center pt-20"
+        : status
+          ? "w-60 shadow-md fixed left-0 h-screen"
+          : "w-0 p-0"
+        } flex flex-col justify-between  transition-all duration-300 overflow-auto overflow-x-hidden`}
     >
       <div>
-        <div className="p-5 flex items-center">
+        {/* <div className={`py-3 items-center  flex ${status ? 'px-5' : 'justify-center'} `}>
           <h3
             onClick={() => navigationHandler("/")}
-            className="text-2xl font-semibold flex items-center gap-3 text-text cursor-pointer"
+            className="flex items-center gap-3 text-2xl font-semibold cursor-pointer text-text"
           >
             <GiCommercialAirplane />
-            Skyight
+            {status ? 'Skyight' : ''}
           </h3>
-        </div>
-
-        <div className="p-5 px-3">
-          <ul className="w-full flex flex-col">
+        </div> */}
+        <CardLayoutContainer className="w-full shadow-none">
+          <CardLayoutHeader
+            className="flex flex-col flex-wrap items-center justify-start py-3 gap-x-5"
+            removeBorder={true}
+          >
+            {" "}
+            <div
+              className={`relative ${!mobileView ? (status ? "w-24 h-24" : "w-16 h-16") : "w-20 h-20"
+                } overflow-hidden rounded-full cursor-pointer group`}
+            >
+              <img
+                src={profileImage}
+                alt="profile-img"
+                className="object-cover w-full h-full rounded-full"
+              />
+              <div
+                className="absolute inset-0 flex items-center justify-center transition-opacity bg-black bg-opacity-50 opacity-0 group-hover:opacity-100"
+                onClick={() => fileInputRef.current.click()}
+              >
+                <MdEdit className="text-xl text-white" />
+              </div>
+              <input
+                type="file"
+                accept="image/png, image/jpeg, image/jpg"
+                className="hidden"
+                ref={fileInputRef}
+                onChange={handleImageChange}
+              />
+            </div>
+            <div>
+              <h3
+                className={`font-semibold text-text ${!mobileView ? (status ? "text-lg" : "text-sm") : ""
+                  }`}
+              >
+                @techxudo
+              </h3>
+            </div>
+          </CardLayoutHeader>
+        </CardLayoutContainer>
+        <div className="px-3">
+          <ul className="flex flex-col items-center ">
             {sidebarLinks.map((link, linkIndex) => (
-              <div key={linkIndex} className="flex flex-col w-full">
+              <div
+                key={linkIndex}
+                className={`flex flex-col    ${status ? "w-full" : "items-center"
+                  }`}
+              >
                 <li
                   onClick={() => menuItemHandler(linkIndex, link)}
-                  className={`mb-2 w-full flex items-center justify-between gap-2 p-2 cursor-pointer transition-all hover:bg-slate-100 ${
-                    activeMenu === linkIndex && !activeSubmenu
-                      ? "text-primary bg-slate-100"
-                      : "text-slate-500"
-                  } rounded-full px-3 text-md font-semibold`}
+                  className={`mb-2 flex items-center  gap-4 ${status ? "px-4" : ""
+                    }  py-4 cursor-pointer transition-all hover:text-primary hover:bg-background text-text rounded-full   text-base `}
                 >
-                  <span className="flex items-center gap-3">
-                    <span className="text-lg">{link.icon}</span>
-                    <span className="text-sm">{link.title}</span>
-                  </span>
-                  {link.sublinks && (
+                  {link.sublinks && status && (
                     <IoIosArrowForward
-                      className={`text-sm transition-transform ${
-                        activeMenu === linkIndex ? "rotate-90" : "rotate-0"
-                      }`}
+                      className={`text-xl transition-transform duration-300 ${activeMenu === linkIndex ? "-rotate-90" : "rotate-90"
+                        }`}
                     />
                   )}
+                  <span
+                    className={`flex ${status ? "flex-row" : "flex-col"
+                      } font-semibold  items-center gap-3`}
+                  >
+                    {link.title == "Dashboard" && status ? (
+                      <span className="text-2xl">{link.icon}</span>
+                    ) : (
+                      ""
+                    )}
+                    <span className={`${status ? "hidden" : "text-3xl"}`}>
+                      {link.icon}
+                    </span>
+                    <span className={`${status ? "text-base" : "text-sm"}`}>
+                      {link.title}
+                    </span>
+                  </span>
                 </li>
 
-                {activeMenu === linkIndex &&
-                  link.sublinks &&
+                {link.sublinks &&
                   link.sublinks.map((sublink, sublinkIndex) => (
                     <li
                       key={sublinkIndex}
                       onClick={() => navigationHandler(sublink.path)}
-                      className={`mb-3 py-1 w-full flex items-center gap-2 px-5 cursor-pointer transition-all ${
-                        activeMenu === linkIndex &&
-                        activeSubmenu === sublinkIndex
-                          ? "text-primary"
-                          : "text-slate-400"
-                      } hover:text-primary rounded-full text-sm font-semibold`}
+                      className={`  w-full flex items-center gap-4 ${status ? "px-3" : ""
+                        } cursor-pointer transition-all  ${activeMenu === linkIndex && link.sublinks
+                          ? "h-auto py-4 "
+                          : "h-0 overflow-hidden "
+                        } text-text rounded-full text-base  transition-all duration-300 hover:text-primary`}
                     >
-                      <span className="text-sm">{sublink.icon}</span>
+                      <span className="text-3xl">{sublink.icon}</span>
                       {sublink.title}
                     </li>
                   ))}

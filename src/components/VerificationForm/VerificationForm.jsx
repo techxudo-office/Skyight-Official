@@ -5,33 +5,27 @@ import {
 } from "../../components/CardLayout/CardLayout";
 import { Button, Spinner } from "../../components/components";
 import toast, { Toaster } from "react-hot-toast";
-import { verifyOTP, resendCode } from "../../utils/api_handler";
 import { useLocation, useNavigate, Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { resendCode, verifyOTP } from "../../_core/features/authSlice";
 
 const VerificationForm = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const location = useLocation();
-
-  const [loading, setLoading] = useState(false);
+  const loading = useSelector((state) => state.auth.isLoadingVerifyOTP);
 
   const [email, setEmail] = useState("");
   const [verificationCode, setVerificationCode] = useState(["", "", "", ""]);
   const inputRefs = useRef([]);
 
-  const verificationHandler = async (payload) => {
-    setLoading(true);
-    let response = await verifyOTP(payload);
-    if (response.status) {
-      toast.success(response.message);
-      setLoading(false);
-      setVerificationCode(["", "", "", ""]);
-      setTimeout(() => {
+  const verificationHandler = (payload) => {
+    dispatch(verifyOTP(payload)).then((action) => {
+      if (verifyOTP.fulfilled.match(action)) {
+        setVerificationCode(["", "", "", ""]);
         navigate("/login");
-      }, 3000);
-    } else {
-      toast.error(response.message);
-      setLoading(false);
-    }
+      }
+    });
   };
 
   const onChangeHandler = (e, index) => {
@@ -75,13 +69,8 @@ const VerificationForm = () => {
     }
   };
 
-  const resendCodeHandler = async () => {
-    let response = await resendCode({ email: email });
-    if (response.status) {
-      toast.success(response.message);
-    } else {
-      toast.error(response.message);
-    }
+  const resendCodeHandler = () => {
+    dispatch(resendCode({ email }));
   };
 
   useEffect(() => {
@@ -105,8 +94,7 @@ const VerificationForm = () => {
               fill="none"
               viewBox="0 0 395 274"
               width={395}
-              height={200}
-            >
+              height={200}>
               <g filter="url(#password_svg__a)">
                 <path
                   fill="#fff"
@@ -201,8 +189,7 @@ const VerificationForm = () => {
                   x2="234.94"
                   y1="198.71"
                   y2="164.95"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#9076C9" />
                   <stop offset="0.77" stopColor="#CBD0E3" />
                   <stop offset={1} stopColor="#E1E7FF" />
@@ -213,8 +200,7 @@ const VerificationForm = () => {
                   x2="214.44"
                   y1="-31.54"
                   y2="152.33"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#E6E5F7" />
                   <stop offset="0.34" stopColor="#F5EBF4" />
                   <stop offset="0.57" stopColor="#FBCBD7" />
@@ -227,8 +213,7 @@ const VerificationForm = () => {
                   x2="163.37"
                   y1="156.49"
                   y2="186.05"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F55F30" />
                   <stop offset="0.63" stopColor="#FF9A9A" />
                   <stop offset={1} stopColor="#FFC93D" />
@@ -239,8 +224,7 @@ const VerificationForm = () => {
                   x2="294.63"
                   y1="170.7"
                   y2="66.94"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F55F30" />
                   <stop offset={1} stopColor="#FFC93D" />
                 </linearGradient>
@@ -251,8 +235,7 @@ const VerificationForm = () => {
                   x="0.59"
                   y="151.05"
                   colorInterpolationFilters="sRGB"
-                  filterUnits="userSpaceOnUse"
-                >
+                  filterUnits="userSpaceOnUse">
                   <feFlood floodOpacity={0} result="BackgroundImageFix" />
                   <feColorMatrix
                     in="SourceAlpha"
@@ -280,8 +263,7 @@ const VerificationForm = () => {
                   x="188.89"
                   y="138.14"
                   colorInterpolationFilters="sRGB"
-                  filterUnits="userSpaceOnUse"
-                >
+                  filterUnits="userSpaceOnUse">
                   <feFlood floodOpacity={0} result="BackgroundImageFix" />
                   <feColorMatrix
                     in="SourceAlpha"
@@ -335,8 +317,7 @@ const VerificationForm = () => {
               <div className="flex items-center justify-end px-10 mt-[-10px]">
                 <Link
                   onClick={resendCodeHandler}
-                  className="text-end text-primary hover:text-secondary transition-all"
-                >
+                  className="text-end text-primary hover:text-secondary transition-all">
                   Resend code
                 </Link>
               </div>

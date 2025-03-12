@@ -1,54 +1,51 @@
-import React, { useEffect, useState, useCallback } from "react";
-import { FixedSizeList as List } from "react-window"; // Import List from react-window
+import React, { useEffect } from "react";
+import { FixedSizeList as List } from "react-window";
 import {
   CardLayoutContainer,
   CardLayoutHeader,
 } from "../../components/CardLayout/CardLayout";
-import { getNotifications } from "../../utils/api_handler";
 import { IoNotificationsOutline } from "react-icons/io5";
+import { Spinner, BellIcon } from "../../components/components";
+import { useDispatch, useSelector } from "react-redux";
+import { getNotifications } from "../../_core/features/notificationSlice";
 
 const Notifications = () => {
-  const [notificationsData, setNotificationsData] = useState([]);
+  const dispatch = useDispatch();
 
-  const getNotificationsHandler = useCallback(async () => {
-    let response = await getNotifications();
-    if (response.status) {
-      setNotificationsData(response.data);
-    }
-  }, []);
+  const { notifications, isLoadingNotifications } = useSelector(
+    (state) => state.notification
+  );
+  const userData = useSelector((state) => state.auth.userData);
 
   useEffect(() => {
-    getNotificationsHandler();
-  }, [getNotificationsHandler]);
+    if (userData?.token) {
+      dispatch(getNotifications(userData.token));
+    }
+  }, [dispatch, userData?.token]);
 
-  // Render function for each item in the list
   const renderRow = ({ index, style }) => {
-    const item = notificationsData[index];
+    const item = notifications[index];
     return (
-      <div style={style} key={index}>
+      <div style={style} key={item?.id || index}>
         <CardLayoutContainer className="w-full mb-5">
           <CardLayoutHeader
-            className="flex items-center justify-start flex-wrap gap-5 py-3"
+            className="flex flex-wrap items-center justify-start gap-5 py-3"
             removeBorder={true}
           >
-            {/* <img
-              src={
-                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjUuYcnZ-xqlGZiDZvuUy_iLx3Nj6LSaZSzQ&s"
+            <BellIcon
+              icon={
+                <IoNotificationsOutline className="text-[46px] text-[#5372D8]" />
               }
-              alt="profile-img"
-              className="rounded-full h-16 w-16 me-3"
-            /> */}
-            <IoNotificationsOutline  className="text-[46px] text-[#4B9E33]"/>
+            />
             <div>
               <h3 className="text-[12px] text-[#333]">
                 {new Date(item?.created_at).toISOString().split("T")[0]}
-                {/* {item?.created_at} */}
               </h3>
               <h4 className="mb-0 text-[18px] font-semibold text-[#666]">
-                {item?.title}
+                {item?.title || "No Title"}
               </h4>
               <h4 className="mb-0 text-[12px] text-text">
-                {item?.description}
+                {item?.description || "No Description"}
               </h4>
             </div>
           </CardLayoutHeader>
@@ -58,18 +55,22 @@ const Notifications = () => {
   };
 
   return (
-    <div className="flex flex-col w-full items-center justify-center">
-      {notificationsData.length > 0 ? (
+    <div className="flex flex-col items-center justify-center w-full">
+      {isLoadingNotifications ? (
+        <Spinner className="mx-auto text-primary" />
+      ) : notifications?.length > 0 ? (
         <List
-          height={600} // Set the height of the viewport
-          itemCount={notificationsData.length} // Number of items to render
-          itemSize={100} // Height of each item in pixels (adjust as needed)
-          width="100%" // Set the width of the list
+          height={600}
+          itemCount={notifications.length}
+          itemSize={100}
+          width="100%"
         >
           {renderRow}
         </List>
       ) : (
-        <p>No notifications found</p>
+        <h2 className="text-center capitalize text-text">
+          No Notifications Found
+        </h2>
       )}
     </div>
   );

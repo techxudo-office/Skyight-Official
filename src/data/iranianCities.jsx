@@ -1,11 +1,10 @@
 export const iranianCities = [
-  // { label: "Tehran", value: "THR" },
-  { label: "Tehran", value: "IKA" },
+  { label: "Tehran", value: "THR" },
+  { label: "Tabriz", value: "TBZ" },
   { label: "Mashhad", value: "MHD" },
   { label: "Isfahan", value: "IFN" },
   { label: "Karaj", value: "KRJ" },
   { label: "Shiraz", value: "SYZ" },
-  { label: "Tabriz", value: "TBZ" },
   { label: "Qom", value: "QOM" },
   { label: "Ahvaz", value: "AWZ" },
   { label: "Kermanshah", value: "KSH" },
@@ -20,5 +19,4 @@ export const iranianCities = [
   { label: "Sanandaj", value: "SDG" },
   { label: "Qazvin", value: "GZN" },
   { label: "Zanjan", value: "ZAN" },
-  { label: "Istanbul", value: "IST" },
 ];

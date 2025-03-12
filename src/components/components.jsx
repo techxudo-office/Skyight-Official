@@ -14,7 +14,7 @@ export { default as Spinner } from "./Spinner/Spinner";
 export { default as Switch } from "./Switch/Switch";
 export { default as Dropdown } from "./Dropdown/Dropdown";
 export { default as FlightCard } from "./FlightCard/FlightCard";
-export { default as Textarea } from "./Textarea/Textarea";
+export { default as Tag } from "./Tag/Tag";
 
 export { default as DashboardCards } from "./DashboardCards/DashboardCards";
 export { default as ConfirmModal } from "./ConfirmModal/ConfirmModal";
@@ -22,3 +22,26 @@ export { default as LoginForm } from "./LoginForm/LoginForm";
 export { default as RegistrationForm } from "./RegistrationForm/RegistrationForm";
 export { default as VerificationForm } from "./VerificationForm/VerificationForm";
 export { default as ForgetPassForm } from "./ForgetPassForm/ForgetPassForm";
+export { default as ChangeSearch } from "./ChangeSearch/ChangeSearch";
+export { default as DateSlider } from "./DateSlider/DateSlider";
+export { default as CustomDate } from "./CustomDate/CustomDate";
+export { default as TableNew } from "./TableNew/TableNew";
+export { default as CustomTooltip } from "./CustomTooltip/CustomTooltip";
+export { default as Backbutton } from "./Backbutton/Backbutton";
+export { default as FlightInfoCard } from "./FlightInfoCard/FlightInfoCard";
+export { default as PriceSummary } from "./PriceSummary/PriceSummary";
+export { default as Modal } from "./Modal/Modal";
+export { default as PopupModal } from "./Modal/PopupModal";
+export { default as BellIcon } from "./BellIcon/BellIcon"
+export { default as TextArea } from "./TextArea/TextArea"
+export { default as Searchbar } from "./Searchbar/Searchbar"
+export { default as MultiCity } from "./MultiCity/MultiCity"
+export { default as TravelersQuantity } from "./TravelersQuantity/TravelersQuantity"
+export { default as PopupMessage } from "./PopupMessage/PopupMessage"
+export { default as FlightDetailCard } from "./FlightDetailCard/FlightDetailCard"
+export { default as PassengerDetail } from "./PassengerDetail/PassengerDetail"
+export { default as DownloadButton } from "./DownloadButton/DownloadButton"
+export { default as AvailableFlights } from "./AvailableFlights/AvailableFlights"
+export { default as CreditsDropdown } from "./CreditsDropdown/CreditsDropdown"
+export { default as AnnouncementCard } from "./AnnouncementCard/AnnouncementCard"
+export { default as PhoneNumberInput } from "./PhoneNumberInput/PhoneNumberInput"

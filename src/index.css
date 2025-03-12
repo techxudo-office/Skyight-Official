@@ -1,21 +1,26 @@
+@import "slick-carousel/slick/slick.css";
+@import "slick-carousel/slick/slick-theme.css";
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
-
 * {
-  font-family: "Poppins", sans-serif;
+  font-family: "Roboto", sans-serif;
   -webkit-user-select: none;
   -webkit-user-drag: none;
 }
-
+.react-tel-input .form-control,.react-tel-input .flag-dropdown {
+  border: none !important;
+  background-color: transparent !important;
+}
 :root {
   --primary-color: #3b82f7;
   /* Custom primary color */
   --secondary-color: #1d4ed8;
   /* Custom secondary color */
-  --text-color: #333333;
+  --text-color: #49454f;
   /* Custom text color */
   --background-color: #f9fafb;
   /* Custom background color */
@@ -26,8 +31,8 @@
 }
 
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 4px;
+  height: 4px;
   scroll-behavior: smooth;
 }
 
@@ -39,18 +44,24 @@
 ::-webkit-scrollbar-thumb {
   background-color: var(--lightgray);
   border-radius: 10px;
+  cursor: pointer;
+  transition-property: all  ;
+  transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+  transition-duration: 700ms;
+
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background-color: var(--text-color);
+
+
 }
 
-.hide-scrollbar {
-  scrollbar-width: none;
-}
 
-.hide-scrollbar::-webkit-scrollbar {
+
+.hide-scrollbar::-webkit-scrollbar{
   display: none;
+  opacity: 0;
 }
 
 input[type="number"]::-webkit-inner-spin-button,

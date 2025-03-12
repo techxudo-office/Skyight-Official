@@ -1,389 +1,202 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import { FaPlane } from "react-icons/fa";
-import { FaUser } from "react-icons/fa";
-import { FaSuitcase } from "react-icons/fa";
-import { FaMoneyBillAlt } from "react-icons/fa";
-
-import {
-  CardLayoutContainer,
-  CardLayoutHeader,
-  CardLayoutBody,
-} from "../../components/CardLayout/CardLayout";
-
-import { Button, SecondaryButton, Spinner } from "../../components/components";
+import { Button, FlightDetailCard, PassengerDetail, SecondaryButton, Spinner } from "../../components/components";
 import toast, { Toaster } from "react-hot-toast";
 import { confirmBooking } from "../../utils/api_handler";
+import { MdArrowBack, MdBookmark } from "react-icons/md";
 
 const FlightDetails = () => {
   const location = useLocation();
-  console.log(`Page Location: ${JSON.stringify(location)}`)
-  console.log(`Page Location: ${JSON.stringify(location.state)}`)
   const navigate = useNavigate();
 
   const [flightData, setFlightData] = useState(null);
+  const [Loading, setLoading] = useState(null);
   const [travelers, setTravelers] = useState(null);
   const [allTravelersData, setAllTravelersData] = useState([]);
 
-  const flightSegment =
-    flightData &&
-    flightData.AirItinerary.OriginDestinationOptions[0].FlightSegment[0];
-  const referenceNumber =
-    flightData && flightData.AirItinerary.OriginDestinationOptions[0].RefNumber;
-  const directionId =
-    flightData &&
-    flightData.AirItinerary.OriginDestinationOptions[0].DirectionId;
-  const elapsedTime =
-    flightData &&
-    flightData.AirItinerary.OriginDestinationOptions[0].ElapsedTime;
-  const cabinClass =
-    flightData &&
-    flightData.AirItinerary.OriginDestinationOptions[0].CabinClass;
-  const AirItineraryPricingInfo =
-    flightData && flightData.AirItineraryPricingInfo;
-
-  const confirmBookingHandler = async () => {
-    const payLoad = {
-      origin_location_code: flightSegment.DepartureAirport.LocationCode,
-      destination_location_code: flightSegment.ArrivalAirport.LocationCode,
-      // "origin_location_terminal": flightSegment.DepartureAirport.Terminal,
-      // "destination_location_terminal": flightSegment.ArrivalAirport.Terminal,
-      airline_code: flightSegment.OperatingAirline.Code,
-      air_equip_type: flightSegment.Equipment.AirEquipType,
-      departure_date_time: flightSegment.DepartureDateTime,
-      arrival_date_time: flightSegment.ArrivalDateTime,
-      departure_date: flightSegment.DepartureDate,
-      departure_time: flightSegment.DepartureTime,
-      arrival_date: flightSegment.ArrivalDate,
-      arrival_time: flightSegment.DepartureTime,
-      // "flight_duration": flightSegment.FlightDuration,
-      flight_number: flightSegment.FlightNumber,
-      res_book_design_Code: flightSegment.ResBookDesigCode,
-      rph: flightSegment.RPH,
-      ref_number: referenceNumber,
-      direction_id: directionId,
-      elapsed_time: elapsedTime,
-      // "cabin_class": cabinClass,
-      // "transaction_identifier": "TXN123456", // fix
-      transaction_identifier: "", // fix
-      travellers: allTravelersData,
-      booking_class_avails: flightSegment.BookingClassAvails.map(
-        (item, index) => {
-          return {
-            res_book_desig_code: item.ResBookDesigCode,
-            res_book_desig_quantity: item.ResBookDesigQuantity,
-            rph: item.RPH,
-            // "available_ptc": item.AvailablePTC,
-            res_book_desig_cabin_code: item.ResBookDesigCabinCode,
-            fare_basis: item.FareBasis,
-          };
-        }
-      ),
-      priceInfo: {
-        itin_total_fare: {
-          base_fare: {
-            amount: AirItineraryPricingInfo.ItinTotalFare.BaseFare.Amount,
-            currency_code:
-              AirItineraryPricingInfo.ItinTotalFare.BaseFare.CurrencyCode,
-            decimal_places:
-              AirItineraryPricingInfo.ItinTotalFare.BaseFare.DecimalPlaces,
-          },
-          total_fare: {
-            amount: AirItineraryPricingInfo.ItinTotalFare.TotalFare.Amount,
-            currency_code:
-              AirItineraryPricingInfo.ItinTotalFare.TotalFare.CurrencyCode,
-            decimal_places:
-              AirItineraryPricingInfo.ItinTotalFare.TotalFare.DecimalPlaces,
-          },
-          // "markup_fare": {
-          //     "amount": AirItineraryPricingInfo.ItinTotalFare.MarkupFare.Amount,
-          //     "currency_code": AirItineraryPricingInfo.ItinTotalFare.MarkupFare.CurrencyCode,
-          //     "decimal_places": AirItineraryPricingInfo.ItinTotalFare.MarkupFare.DecimalPlaces
-          // }
-          total_equiv_fare: {
-            amount: AirItineraryPricingInfo.ItinTotalFare.MarkupFare.Amount,
-            currency_code:
-              AirItineraryPricingInfo.ItinTotalFare.MarkupFare.CurrencyCode,
-            decimal_places:
-              AirItineraryPricingInfo.ItinTotalFare.MarkupFare.DecimalPlaces,
-          },
-        },
-        ptc_fare_break_downs: AirItineraryPricingInfo.PTC_FareBreakdowns.map(
-          (item, index) => {
-            return {
-              passenger_type_quantity: {
-                code: item.PassengerTypeQuantity.Code,
-                quantity: item.PassengerTypeQuantity.Quantity,
-              },
-              // "fare_basis_code": "SOMEFARE", //fix
-              fare_basis_code: "", //fix
-              passenger_fare: {
-                base_fare: {
-                  amount: item.PassengerFare.BaseFare.Amount,
-                  currency_code: item.PassengerFare.BaseFare.CurrencyCode,
-                  decimal_places: item.PassengerFare.BaseFare.DecimalPlaces,
-                },
-                total_fare: {
-                  amount: item.PassengerFare.TotalFare.Amount,
-                  currency_code: item.PassengerFare.TotalFare.CurrencyCode,
-                  decimal_places: item.PassengerFare.TotalFare.DecimalPlaces,
-                },
-                // "markup_fare": {
-                //     "amount": item.PassengerFare.MarkupFare.Amount,
-                //     "currency_code": item.PassengerFare.MarkupFare.CurrencyCode,
-                //     "decimal_places": item.PassengerFare.MarkupFare.DecimalPlaces
-                // },
-                fees: item.PassengerFare.Fees,
-                taxes: item.PassengerFare.Taxes.Tax.map((tax, key) => {
-                  return {
-                    name: tax.Name,
-                    amount: tax.Amount,
-                  };
-                }),
-              },
-              traveler_ref_number: flightSegment.RPH, //fix
-              // "pricing_source": "SYSTEM" //fix
-              pricing_source: "", //fix
-            };
-          }
-        ),
-      },
-    };
-    let response = await confirmBooking(payLoad);
-    if (response.status) {
-      toast.success(response.message);
-      setTimeout(() => {
-        navigate("/dashboard/flight-bookings");
-      }, 2000);
-    }
-  };
-
   useEffect(() => {
     if (location.state) {
-      console.log(location.state);
+      console.log('state', location.state);
 
       setFlightData(location.state.flightData);
       setTravelers(location.state.travelersData);
       setAllTravelersData(location.state.allTravelersData);
     }
-  }, []);
+  }, [location.state]);
+
+  console.log('all-travellers', allTravelersData);
+
+  const confirmBookingHandler = async () => {
+    const tripType = JSON.parse(localStorage.getItem("flightSearchForm")).tripType;
+    const isRoundTrip = tripType === "Round-Trip";
+    const flights = flightData.AirItinerary.OriginDestinationOptions;
+    const pricing = flightData.AirItineraryPricingInfo
+    let payLoad = {
+      flight_duration: flights[0].FlightSegment[0].FlightDuration,
+      origin_location_code: flights[0].FlightSegment[0].DepartureAirport.LocationCode,
+      departure_terminal: flights[0].FlightSegment[0].DepartureAirport.Terminal || "",
+      destination_location_code: flights[0].FlightSegment[0].ArrivalAirport.LocationCode,
+      arrival_terminal: flights[0].FlightSegment[0].ArrivalAirport.Terminal || "",
+      airline_code: flights[0].FlightSegment[0].OperatingAirline.Code,
+      air_equip_type: flights[0].FlightSegment[0].Equipment.AirEquipType,
+      departure_date_time: flights[0].FlightSegment[0].DepartureDateTime,
+      arrival_date_time: flights[0].FlightSegment[0].ArrivalDateTime,
+      departure_date: flights[0].FlightSegment[0].DepartureDate,
+      departure_time: flights[0].FlightSegment[0].DepartureTime,
+      arrival_date: flights[0].FlightSegment[0].ArrivalDate,
+      arrival_time: flights[0].FlightSegment[0].ArrivalTime,
+      flight_number: flights[0].FlightSegment[0].FlightNumber,
+      res_book_design_Code: flights[0].FlightSegment[0].ResBookDesigCode,
+      rph: flights[0].FlightSegment[0].RPH,
+      ref_number: flights[0].RefNumber,
+      direction_id: flights[0].DirectionId,
+      elapsed_time: flights[0].ElapsedTime,
+      free_baggages: flights[0]?.FlightSegment[0].FreeBaggages,
+      booking_class_avails: flights[0].FlightSegment[0].BookingClassAvails.map(item => ({
+        available_PTC: item.AvailablePTC,
+        res_book_desig_code: item.ResBookDesigCode,
+        res_book_desig_quantity: item.ResBookDesigQuantity,
+        rph: item.RPH,
+        res_book_desig_cabin_code: item.ResBookDesigCabinCode,
+        fare_basis: item.FareBasis,
+      })),
+      cabin_class: null,
+      trip_type: isRoundTrip ? "Return" : "OneWay",
+      travellers: allTravelersData,
+      transaction_identifier: '',
+      priceInfo: {
+
+        itin_total_fare: {
+          base_fare: {
+            amount: pricing.ItinTotalFare.BaseFare.Amount,
+            currency_code: pricing.ItinTotalFare.BaseFare.CurrencyCode,
+            decimal_places: pricing.ItinTotalFare.BaseFare.DecimalPlaces
+          },
+          total_equiv_fare: {
+            amount: pricing.ItinTotalFare.MarkupFare.Amount,
+            currency_code: pricing.ItinTotalFare.MarkupFare.CurrencyCode,
+            decimal_places: pricing.ItinTotalFare.MarkupFare.DecimalPlaces
+          },
+          total_fare: {
+            amount: pricing.ItinTotalFare.TotalFare.Amount,
+            currency_code: pricing.ItinTotalFare.TotalFare.CurrencyCode,
+            decimal_places: pricing.ItinTotalFare.TotalFare.DecimalPlaces
+          }
+        },
+        ptc_fare_break_downs: pricing.PTC_FareBreakdowns.map((passenger, index) => ({
+          passenger_type_quantity: {
+            code: passenger.PassengerTypeQuantity.Code,
+            quantity: passenger.PassengerTypeQuantity.Quantity
+          },
+          fare_basis_code: "",
+          passenger_fare: {
+            base_fare: {
+              amount: passenger.PassengerFare.BaseFare.Amount,
+              currency_code: passenger.PassengerFare.BaseFare.CurrencyCode,
+              decimal_places: passenger.PassengerFare.BaseFare.DecimalPlaces
+            },
+            total_fare: {
+              amount: passenger.PassengerFare.TotalFare.Amount,
+              currency_code: passenger.PassengerFare.TotalFare.CurrencyCode,
+              decimal_places: passenger.PassengerFare.TotalFare.DecimalPlaces
+            },
+            fees: passenger.PassengerFare.Fees,
+            taxes: passenger.PassengerFare.Taxes.Tax.map(tax => ({
+              name: tax.Name,
+              amount: tax.Amount
+            }))
+          },
+          traveler_ref_number: "",
+          pricing_source: ""
+        }))
+      }
+
+    };
+
+    if (flights.length === 2 || isRoundTrip) {
+      payLoad = {
+        ...payLoad,
+
+
+
+        flight_duration_return: flights[1]?.FlightSegment[0].FlightDuration,
+        origin_location_code_return: flights[1]?.FlightSegment[0].DepartureAirport.LocationCode,
+        departure_terminal_return: flights[1]?.FlightSegment[0].DepartureAirport.Terminal || "",
+        destination_location_code_return: flights[1]?.FlightSegment[0].ArrivalAirport.LocationCode,
+        arrival_terminal_return: flights[1]?.FlightSegment[0].ArrivalAirport.Terminal || "",
+        airline_code_return: flights[1]?.FlightSegment[0].OperatingAirline.Code,
+        air_equip_type_return: flights[1]?.FlightSegment[0].Equipment.AirEquipType,
+        departure_date_time_return: flights[1]?.FlightSegment[0].DepartureDateTime,
+        arrival_date_time_return: flights[1]?.FlightSegment[0].ArrivalDateTime,
+        departure_date_return: flights[1]?.FlightSegment[0].DepartureDate,
+        departure_time_return: flights[1]?.FlightSegment[0].DepartureTime,
+        arrival_date_return: flights[1]?.FlightSegment[0].ArrivalDate,
+        arrival_time_return: flights[1]?.FlightSegment[0].ArrivalTime,
+        flight_number_return: flights[1]?.FlightSegment[0].FlightNumber,
+        res_book_design_Code_return: flights[1]?.FlightSegment[0].ResBookDesigCode,
+        rph_return: flights[1]?.FlightSegment[0].RPH,
+        ref_number_return: flights[1]?.RefNumber,
+        direction_id_return: flights[1]?.DirectionId,
+        elapsed_time_return: flights[1]?.ElapsedTime,
+        free_baggages_return: flights[1]?.FlightSegment[0].FreeBaggages,
+        booking_class_avails_return: flights[1]?.FlightSegment[0].BookingClassAvails.map(item => ({
+          available_PTC: item.AvailablePTC,
+          res_book_desig_code: item.ResBookDesigCode,
+          res_book_desig_quantity: item.ResBookDesigQuantity,
+          rph: item.RPH,
+          res_book_desig_cabin_code: item.ResBookDesigCabinCode,
+          fare_basis: item.FareBasis,
+        })),
+        cabin_class_return: null,
+
+      };
+    }
+
+    console.log('confirm-booking', payLoad);
+    setLoading(true)
+    let response = await confirmBooking(payLoad);
+    console.log("ERRors res", response)
+
+    if (response.status) {
+      toast.success(response.message);
+      setTimeout(() => {
+        navigate("/dashboard/flight-bookings");
+        setLoading(false)
+      }, 2000);
+    } else {
+      setLoading(false)
+      if (typeof response.message == 'string') {
+        toast.error(response.message)
+      }else{
+        response.message.map(message => toast.error(message));
+      }
+    }
+  };
 
   if (!flightData) {
     return <Spinner className={"text-primary"} />;
   }
 
-  const {
-    AirItinerary: { OriginDestinationOptions },
-    AirItineraryPricingInfo: { ItinTotalFare, PTC_FareBreakdowns },
-    Currency,
-  } = flightData;
-
-  const renderPassengerDetails = () => {
-    return (
-      <>
-        {PTC_FareBreakdowns.map((passenger, index) => (
-          <div
-            key={index}
-            className="flex flex-wrap gap-3 py-3 border-b border-slate-200 items-center justify-between"
-          >
-            <h2 className="text-sm font-semibold text-slate-600 flex items-center justify-center gap-1">
-              <span className="text-primary">
-                <FaUser />
-              </span>
-              <span>
-                {passenger.PassengerTypeQuantity.Quantity}{" "}
-                {passenger.PassengerTypeQuantity.Code}
-              </span>
-            </h2>
-            <h2 className="text-sm font-semibold text-slate-500 flex items-center justify-center gap-1">
-              <span className="text-primary">
-                <FaMoneyBillAlt />
-              </span>
-              <span>Base Fare: {passenger.PassengerFare.BaseFare.Amount}</span>
-            </h2>
-            <h2 className="text-sm font-semibold text-slate-500 flex items-center justify-center gap-1">
-              <span className="text-primary">
-                <FaMoneyBillAlt />
-              </span>
-              <span>
-                Taxes:{" "}
-                {passenger.PassengerFare.Taxes.Tax.reduce(
-                  (total, tax) => total + tax.Amount,
-                  0
-                )}
-              </span>
-            </h2>
-          </div>
-        ))}
-      </>
-    );
-  };
-
   return (
     <>
       <Toaster />
       <div className="w-full flex flex-col">
-        <CardLayoutContainer className={"mb-5"}>
-          <CardLayoutHeader
-            heading={"Flight Details"}
-            className={"flex items-center flex-wrap gap-5 justify-between"}
-          >
-            <div>
-              <div className="flex items-center justify-center gap-5">
-                <h2 className="text-xl font-semibold text-text">
-                  {flightSegment.DepartureAirport.Terminal} (
-                  {flightSegment.DepartureAirport.LocationCode})
-                </h2>
-                <div className="w-[24px] bg-primary rounded-full h-[2px]"></div>
-                <FaPlane className="text-primary" />
-                <div className="w-[24px] bg-primary rounded-full h-[2px]"></div>
-                <h2 className="text-xl font-semibold text-text">
-                  {flightSegment.ArrivalAirport.Terminal} (
-                  {flightSegment.ArrivalAirport.LocationCode})
-                </h2>
-              </div>
-            </div>
-          </CardLayoutHeader>
-          <CardLayoutBody>
-            <div className="flex flex-wrap gap-5 justify-between items-center">
-              <div>
-                <h2 className="text-xl font-semibold text-primary mb-2">
-                  Departure Information
-                </h2>
-                <h2 className="text-sm font-semibold text-text">
-                  Date: {flightSegment.DepartureDate}
-                </h2>
-                <h2 className="text-sm font-semibold text-text">
-                  Time: {flightSegment.DepartureTime}
-                </h2>
-              </div>
-              <div>
-                <h2 className="text-xl font-semibold text-primary mb-2">
-                  Arrival Information
-                </h2>
-                <h2 className="text-sm font-semibold text-text">
-                  Date: {flightSegment.ArrivalDate}
-                </h2>
-                <h2 className="text-sm font-semibold text-text">
-                  Time: {flightSegment.ArrivalTime}
-                </h2>
-              </div>
-              <div>
-                <h2 className="text-xl font-semibold text-primary mb-2">
-                  Flight Information
-                </h2>
-                <h2 className="text-sm font-semibold text-text">
-                  Flight Number:
-                  {flightSegment.FlightNumber}
-                </h2>
-                <h2 className="text-sm font-semibold text-text">
-                  Flight Duration:
-                  {flightSegment.FlightDuration}
-                </h2>
-              </div>
-              <div>
-                <h2 className="text-xl font-semibold text-primary mb-2">
-                  Airline Information
-                </h2>
-                <h2 className="text-sm font-semibold text-text">
-                  Airline Code: {flightSegment.OperatingAirline.Code}
-                </h2>
-                <h2 className="text-sm font-semibold text-text">
-                  Equipment: {flightSegment.Equipment.AirEquipType}
-                </h2>
-              </div>
-            </div>
-          </CardLayoutBody>
-        </CardLayoutContainer>
+        <FlightDetailCard flights={flightData} />
+        <PassengerDetail travelersData={allTravelersData} />
 
-        <CardLayoutContainer className={"mb-5"}>
-          <CardLayoutHeader
-            heading={"Travelers Details"}
-            className={"flex items-center flex-wrap gap-5 justify-between"}
-          />
-          <CardLayoutBody removeBorder={true}>
-            <div className="flex flex-wrap gap-5 justify-between items-center">
-              <div>
-                <h2 className="text-xl font-semibold text-primary mb-2">
-                  Adults
-                </h2>
-                <h2 className="text-4xl text-text font-semibold">
-                  {travelers.adults}
-                </h2>
-              </div>
-              <div>
-                <h2 className="text-xl font-semibold text-primary mb-2">
-                  Childs
-                </h2>
-                <h2 className="text-4xl text-text font-semibold">
-                  {travelers.childs}
-                </h2>
-              </div>
-              <div>
-                <h2 className="text-xl font-semibold text-primary mb-2">
-                  Infants
-                </h2>
-                <h2 className="text-4xl text-text font-semibold">
-                  {travelers.infants}
-                </h2>
-              </div>
-            </div>
-          </CardLayoutBody>
-        </CardLayoutContainer>
-
-        <CardLayoutContainer className={"flex  flex-col mb-5"}>
-          <CardLayoutHeader heading={"Pricing Details"} />
-          <CardLayoutBody removeBorder={true}>
-            <div className="w-full flex flex-col">
-              {renderPassengerDetails()}
-            </div>
-          </CardLayoutBody>
-        </CardLayoutContainer>
-
-        <CardLayoutContainer className={"flex  flex-col mb-5"}>
-          <CardLayoutHeader heading={"Baggage"} />
-          <CardLayoutBody removeBorder={true}>
-            <div className="flex flex-col">
-              {flightSegment.FreeBaggages &&
-                flightSegment.FreeBaggages.map((item, index) => {
-                  return (
-                    <div
-                      key={index}
-                      className="flex flex-wrap gap-3 py-3 border-b border-slate-200 items-center justify-between"
-                    >
-                      <h2 className="text-sm font-semibold text-slate-600 flex  items-center justify-center gap-1">
-                        <span className="text-primary">
-                          <FaUser />
-                        </span>
-                        <span>Type:{item.PassengerType}</span>
-                      </h2>
-                      <h2 className="text-sm font-semibold text-slate-500 flex  items-center justify-center gap-1">
-                        <span className="text-primary">
-                          <FaSuitcase />
-                        </span>
-                        <span>
-                          Baggage {item.Quantity} {item.Unit}
-                        </span>
-                      </h2>
-                    </div>
-                  );
-                })}
-            </div>
-          </CardLayoutBody>
-        </CardLayoutContainer>
-
-        <div className="flex items-center justify-end gap-3">
+        <div className="flex items-center justify-end gap-3 my-4">
           <div>
             <SecondaryButton
-              text="Cancel Booking"
-              onClick={() => {
-                navigate("/dashboard");
-              }}
+              icon={<MdArrowBack />}
+              text="Back"
+              onClick={() => navigate(-1)}
             />
           </div>
           <div>
-            <Button text="Confirm Booking" onClick={confirmBookingHandler} />
+            <Button icon={<MdBookmark />}
+              text={Loading ? <Spinner /> : "Confirm Booking"}
+              onClick={confirmBookingHandler} />
           </div>
         </div>
       </div>

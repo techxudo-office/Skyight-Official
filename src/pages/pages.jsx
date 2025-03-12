@@ -25,6 +25,8 @@ export { default as CreateTransaction } from "./CreateTransaction/CreateTransact
 
 export { default as SearchHistory } from "./SearchHistory/SearchHistory";
 export { default as TransactionHistory } from "./TransactionHistory/TransactionHistory";
+export { default as BookingHistory } from "./BookingHistory/BookingHistory";
+export { default as OrderHistory } from "./OrderHistory/OrderHistory";
 
 export { default as Roles } from "./Roles/Roles";
 export { default as CreateRole } from "./CreateRole/CreateRole";
@@ -48,3 +50,7 @@ export { default as Login } from "./Login/Login";
 export { default as Registration } from "./Registration/Registration";
 export { default as Verification } from "./Verification/Verification";
 export { default as ForgetPassword } from "./ForgetPassword/ForgetPassword";
+export { default as Anouncement } from "./Anouncement/Anouncement";
+export { default as Finalticket } from "../pages/FinalTicket/Finalticket"
+
+

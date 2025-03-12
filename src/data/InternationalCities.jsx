@@ -1,0 +1,23 @@
+export const internationalCities = [
+    { label: "Tehran", value: "IKA" },
+    { label: "Istanbul", value: "IST" },
+    { label: "Dubai", value: "DXB" },
+    { label: "Bushehr", value: "BUZ" },
+    { label: "Dubai", value: "DWC" },
+    { label: "Rasht", value: "RAS" },
+    { label: "Arak", value: "AJK" },
+    { label: "Bandar Abbas", value: "BND" },
+    { label: "Ahvaz", value: "AWZ" },
+    { label: "Shiraz", value: "SYZ" },
+    { label: "Mashhad", value: "MHD" },
+    { label: "Tabriz", value: "TBZ" },
+    { label: "Isfahan", value: "IFN" },
+    { label: "Urmia", value: "OMH" },
+    { label: "Bodrum Milas", value: "BJV" },
+    { label: "Najaf", value: "NJF" },
+    { label: "Yerevan", value: "EVN" },
+    { label: "Denizli", value: "DNZ" },
+    { label: "Erbil", value: "EBL" },
+    { label: "Rostov", value: "ROV" },
+    { label: "Paris", value: "CDG" } 
+  ];
