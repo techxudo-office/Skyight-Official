@@ -40,11 +40,11 @@ const TableNew = ({
     .filter(
       ({ fieldName }) => fieldName !== "origin" && fieldName !== "destination"
     )
-    .map(({ columnName, fieldName, type }) => ({
+    .map(({ columnName, fieldName, type }, i) => ({
       Header: columnName,
       accessor: fieldName,
       Cell: ({ value }) => (
-        <p className="text-sm text-text">{formatCell(type, value)}</p>
+        <p key={i} className="text-sm text-text">{formatCell(type, value)}</p>
       ),
     }));
 
@@ -54,8 +54,8 @@ const TableNew = ({
         id: "no",
         Header: "No.",
         accessor: (_row, i) => i + 1,
-        Cell: ({ row }) => (
-          <span className="w-12 text-sm text-text">{row.index + 1}</span>
+        Cell: ({ row, i }) => (
+          <span key={i} className="w-12 text-sm text-text">{row.index + 1}</span>
         ),
       },
     ];
@@ -77,21 +77,21 @@ const TableNew = ({
     }
     const actionColumn = actions?.length
       ? {
-          Header: "Actions",
-          Cell: ({ row: { original, index } }) => (
-            <span className="relative flex items-center justify-center gap-2 text-lg text-text">
-              {actions.map(({ name, handler, icon }, idx) => (
-                <CustomTooltip key={idx} content={name}>
-                  <div
-                    className="cursor-pointer"
-                    onClick={() => handler(index, original)}>
-                    {icon}
-                  </div>
-                </CustomTooltip>
-              ))}
-            </span>
-          ),
-        }
+        Header: "Actions",
+        Cell: ({ row: { original, index } }) => (
+          <span className="relative flex items-center justify-center gap-2 text-lg text-text">
+            {actions.map(({ name, handler, icon }, idx) => (
+              <CustomTooltip key={idx} content={name}>
+                <div
+                  className="cursor-pointer"
+                  onClick={() => handler(index, original)}>
+                  {icon}
+                </div>
+              </CustomTooltip>
+            ))}
+          </span>
+        ),
+      }
       : null;
 
     return [

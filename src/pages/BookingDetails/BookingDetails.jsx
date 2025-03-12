@@ -204,7 +204,8 @@ const TicketDetails = () => {
                       }))
                     }
                     text={"Request Refund"}
-                    disabled={bookingDetails?.booking_status !== "confirmed"}
+                    disabled={["requested-refund", "booked", "requested-cancellation"].includes(bookingDetails?.booking_status)
+                    }
                   />
                 </div>
                 <div>
@@ -224,7 +225,8 @@ const TicketDetails = () => {
                       }))
                     }
                     text={"Request Cancellation"}
-                    disabled={bookingDetails?.booking_status !== "confirmed"}
+                    disabled={["requested-refund", "booked", "requested-cancellation"].includes(bookingDetails?.booking_status)
+                    }
                   />
                 </div>
               </div>
@@ -232,17 +234,13 @@ const TicketDetails = () => {
 
             <Button
               disabled={
-                bookingDetails?.booking_status === "expired"
+                ["requested-refund", "expired", "requested-cancellation"].includes(bookingDetails?.booking_status)
+
                 // || now.format("M/D/YYYY h:m:s a") > timeLimit.format("M/D/YYYY h:m:s a")
               }
               className="text-xl py-14 px-14"
               text={
-                bookingDetails?.booking_status !== "booked"
-                  ? // || now.format("M/D/YYYY h:m:s a") > timeLimit.format("M/D/YYYY h:m:s a")
-                    bookingDetails?.booking_status === "confirmed"
-                    ? "Get PNR"
-                    : "PNR Expired"
-                  : "Order Ticket"
+                bookingDetails?.booking_status === "confirmed" ? "Get PNR" : "Order Ticket"
               }
               onClick={() => {
                 if (bookingDetails?.booking_status === "confirmed") {
