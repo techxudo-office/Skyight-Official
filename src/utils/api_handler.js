@@ -35,33 +35,3 @@ export const cancelFlightBooking = async (payload) => {
     }
   }
 };
-
-export const refundRequest = async (payload) => {
-
-  try {
-    let response = await axios({
-      method: "POST",
-      url: `${BASE_URL}/api/request-booking-refund`,
-      data: payload,
-      headers: {
-        Authorization: getToken(),
-      },
-    });
-
-    if (response.status === 200) {
-      return { status: true, message: "Refund Requested" };
-    }
-  } catch (error) {
-    if (error.response) {
-      return {
-        status: false,
-        message: "Failed while sending booking refund request",
-      };
-    } else {
-      return {
-        status: false,
-        message: "Server Connection Error!",
-      };
-    }
-  }
-};

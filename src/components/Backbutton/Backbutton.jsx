@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom"; // Import useNaviga
 import { Button, CustomTooltip } from "../components";
 import { IoArrowBack } from "react-icons/io5";
 const Backbutton = () => {
-    const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate(); // Initialize useNavigate
   const location = useLocation(); // Initialize useLocation to get the current location/path
 
   // Function to navigate to the previous page
@@ -18,27 +18,19 @@ const Backbutton = () => {
     return null; // Don't render the button if we're on the dashboard home page
   }
 
-    return (
-        <div className="mb-4 w-full flex justify-end pr-6">
-
-            <CustomTooltip content={"go Back"}>
-                <div className="">
-                    <button
-                        onClick={goBack}
-                        className="text-xl px-4 py-1 rounded-lg bg-bluebg hover:bg-blue-300  text-primary border-[1px] border-primary"
-                    >
-                        <IoArrowBack />
-                    </button>
-
-                </div>
-            </CustomTooltip>
+  return (
+    <div className="mb-4 w-full flex justify-end pr-6">
+      <CustomTooltip content={"go Back"}>
+        <div className="">
+          <button
+            onClick={goBack}
+            className="text-xl px-4 py-1 rounded-lg bg-bluebg hover:bg-blue-300  text-primary border-[1px] border-primary">
+            <IoArrowBack />
+          </button>
         </div>
-
-
-
-
-
-    );
+      </CustomTooltip>
+    </div>
+  );
 };
 
 export default Backbutton;

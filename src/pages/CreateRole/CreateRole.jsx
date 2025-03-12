@@ -63,7 +63,7 @@ const Checkbox = ({ label, checked, onChange }) => {
 const CreateRole = () => {
   const dispatch = useDispatch();
   const [rolesData, setRolesData] = useState(initialRolesData);
-  const userData = useSelector((state) => state.auth.userData);
+  const { userData } = useSelector((state) => state.auth);
   const { isLoadingCreateRole } = useSelector((state) => state.role);
 
   const handleInputChange = (e) => {
@@ -105,8 +105,7 @@ const CreateRole = () => {
       <CardLayoutContainer>
         <CardLayoutHeader
           heading="Create Role"
-          className="flex items-center justify-between"
-        >
+          className="flex items-center justify-between">
           {/* <span onClick={() => setIsActive(!isActive)}>
             <Switch switchStatus={isActive} />
           </span> */}

@@ -9,8 +9,6 @@ import {
 } from "../../components/CardLayout/CardLayout";
 import {
   Button,
-  Spinner,
-  SecondaryButton,
   TableNew,
   ConfirmModal,
   Tag,
@@ -18,13 +16,12 @@ import {
 } from "../../components/components";
 import toast, { Toaster } from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
-import { cancelFlightBooking, refundRequest } from "../../utils/api_handler";
 import { IoIosAirplane, IoMdClock } from "react-icons/io";
 import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc"; // Import UTC plugin
-import { MdCheck } from "react-icons/md";
+import utc from "dayjs/plugin/utc";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  cancelFlightBooking,
   getBookingDetails,
   getPNR,
   issueBooking,
@@ -39,8 +36,8 @@ const TicketDetails = () => {
   const dispatch = useDispatch();
   const [getPnr, setGetPnr] = useState(null);
   const [confirmObject, setConfirmObject] = useState({
-    onAbort: "",
-    onConfirm: "",
+    onAbort: () => {},
+    onConfirm: () => {},
     status: false,
     text: "",
   });
@@ -95,21 +92,17 @@ const TicketDetails = () => {
   };
 
   const cancelFlightBookingHandler = async (flight) => {
-    console.log(flight);
-
     const bookingId = {
       booking_id: flight.id,
     };
-
-    console.log(bookingId);
-
-    let response = await cancelFlightBooking(bookingId);
-    if (response.status) {
-      toast.success(response.message);
-    } else {
-      toast.error(response.message);
-    }
-    setConfirmObject((prev) => ({ ...prev, status: false }));
+    dispatch(cancelFlightBooking({ data: bookingId, token: userData?.token }))
+      .unwrap()
+      .then(() => {
+        setConfirmObject((prev) => ({ ...prev, status: false }));
+      })
+      .catch((error) => {
+        console.log("Request Refund Failed:", error);
+      });
   };
 
   const refundRequestHandler = async (flight) => {
@@ -211,8 +204,11 @@ const TicketDetails = () => {
                       }))
                     }
                     text={"Request Refund"}
-                    disabled={["requested-refund", "booked", "requested-cancellation"].includes(bookingDetails?.booking_status)
-                    }
+                    disabled={[
+                      "requested-refund",
+                      "booked",
+                      "requested-cancellation",
+                    ].includes(bookingDetails?.booking_status)}
                   />
                 </div>
                 <div>
@@ -232,8 +228,11 @@ const TicketDetails = () => {
                       }))
                     }
                     text={"Request Cancellation"}
-                    disabled={["requested-refund", "booked", "requested-cancellation"].includes(bookingDetails?.booking_status)
-                    }
+                    disabled={[
+                      "requested-refund",
+                      "booked",
+                      "requested-cancellation",
+                    ].includes(bookingDetails?.booking_status)}
                   />
                 </div>
               </div>
@@ -241,13 +240,19 @@ const TicketDetails = () => {
 
             <Button
               disabled={
-                ["requested-refund", "expired", "requested-cancellation"].includes(bookingDetails?.booking_status)
+                [
+                  "requested-refund",
+                  "expired",
+                  "requested-cancellation",
+                ].includes(bookingDetails?.booking_status)
 
                 // || now.format("M/D/YYYY h:m:s a") > timeLimit.format("M/D/YYYY h:m:s a")
               }
               className="text-xl py-14 px-14"
               text={
-                bookingDetails?.booking_status === "confirmed" ? "Get PNR" : "Order Ticket"
+                bookingDetails?.booking_status === "confirmed"
+                  ? "Get PNR"
+                  : "Order Ticket"
               }
               onClick={() => {
                 if (bookingDetails?.booking_status === "confirmed") {

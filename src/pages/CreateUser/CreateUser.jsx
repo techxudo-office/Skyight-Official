@@ -11,6 +11,7 @@ import { FaCaretDown } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { createUser } from "../../_core/features/userSlice";
 import { getRoles } from "../../_core/features/roleSlice";
+import { useNavigate } from "react-router-dom";
 
 const inputFields = [
   {
@@ -39,23 +40,26 @@ const inputFields = [
     placeholder: "Enter Password",
   },
 ];
+
+const initialState = {
+  first_name: "",
+  last_name: "",
+  email: "",
+  mobile_number: "",
+  password: "",
+  role_id: "",
+};
+
 const CreateUser = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [errors, setErrors] = useState({});
-  const [formData, setFormData] = useState({
-    first_name: "",
-    last_name: "",
-    email: "",
-    mobile_number: "",
-    password: "",
-    role_id: "",
-  });
+  const [formData, setFormData] = useState(initialState);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [selectedRole, setSelectedRole] = useState(null);
-  const userData = useSelector((state) => state.auth.userData);
-  const { roles, isLoadingRoles, rolesError } = useSelector(
-    (state) => state.role
-  );
+  const { userData } = useSelector((state) => state.auth);
+  const { roles } = useSelector((state) => state.role);
+  const { isCreatingUser } = useSelector((state) => state.user);
 
   const validateForm = () => {
     let newErrors = {};
@@ -117,7 +121,12 @@ const CreateUser = () => {
       toast.error("Please fix the errors before submitting.");
       return;
     }
-    dispatch(createUser({ token: userData.token, data: formData }));
+    dispatch(createUser({ token: userData.token, data: formData }))
+      .unwrap()
+      .then(() => {
+        setFormData(initialState);
+        navigate(-1);
+      });
   };
 
   return (
@@ -145,11 +154,9 @@ const CreateUser = () => {
                 </div>
               ))}
               <div className="relative">
-                {/* <label className="block mb-2 font-medium text-md">Role</label> */}
                 <div
                   className="relative flex items-center justify-between w-full p-3 bg-white border border-gray-300 rounded-md cursor-pointer"
-                  onClick={() => setDropdownOpen(!dropdownOpen)}
-                >
+                  onClick={() => setDropdownOpen(!dropdownOpen)}>
                   <span>
                     {selectedRole ? selectedRole.name : "Select a Role"}
                   </span>
@@ -162,8 +169,7 @@ const CreateUser = () => {
                         <li
                           key={role.id}
                           className="p-3 cursor-pointer hover:bg-gray-100"
-                          onClick={() => handleRoleSelect(role)}
-                        >
+                          onClick={() => handleRoleSelect(role)}>
                           {role.name}
                         </li>
                       ))
@@ -181,8 +187,8 @@ const CreateUser = () => {
 
           <CardLayoutFooter>
             <Button
-              text={isLoadingRoles ? <Spinner /> : "Create User"}
-              disabled={isLoadingRoles}
+              text={isCreatingUser ? <Spinner /> : "Create User"}
+              disabled={isCreatingUser}
               type="submit"
             />
           </CardLayoutFooter>
