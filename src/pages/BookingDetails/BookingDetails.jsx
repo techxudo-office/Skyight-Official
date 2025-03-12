@@ -18,17 +18,17 @@ import {
 } from "../../components/components";
 import toast, { Toaster } from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
-import {
-  cancelFlightBooking,
-  issueBooking,
-  refundRequest,
-} from "../../utils/api_handler";
+import { cancelFlightBooking, refundRequest } from "../../utils/api_handler";
 import { IoIosAirplane, IoMdClock } from "react-icons/io";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc"; // Import UTC plugin
 import { MdCheck } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import { getBookingDetails, getPNR } from "../../_core/features/bookingSlice";
+import {
+  getBookingDetails,
+  getPNR,
+  issueBooking,
+} from "../../_core/features/bookingSlice";
 
 dayjs.extend(utc); // Extend dayjs with UTC support
 
@@ -73,13 +73,14 @@ const TicketDetails = () => {
   };
 
   const handleIssue = async (pnr) => {
-    const response = await issueBooking(pnr);
-    if (response.status) {
-      toast.success(
-        `Ordered Successfully Total Fare: ${bookingDetails?.total_fare}`
-      );
-      setConfirmObject((prev) => ({ ...prev, status: false }));
-    }
+    dispatch(issueBooking({ pnr, token: userData?.token }))
+      .unwrap()
+      .then(() => {
+        setConfirmObject((prev) => ({ ...prev, status: false }));
+      })
+      .catch((error) => {
+        console.log("Booking Failed:", error);
+      });
   };
 
   const handleGetPnr = (pnr) => {
@@ -244,7 +245,7 @@ const TicketDetails = () => {
               text={
                 bookingDetails?.booking_status !== "booked"
                   ? // || now.format("M/D/YYYY h:m:s a") > timeLimit.format("M/D/YYYY h:m:s a")
-                  bookingDetails?.booking_status === "confirmed"
+                    bookingDetails?.booking_status === "confirmed"
                     ? "Get PNR"
                     : "PNR Expired"
                   : "Order Ticket"
@@ -271,8 +272,7 @@ const TicketDetails = () => {
               bookingDetails.flightSegments.map((item, idx) => (
                 <div
                   key={idx}
-                  className="flex items-center justify-between gap-5 max-sm:flex-wrap text-text"
-                >
+                  className="flex items-center justify-between gap-5 max-sm:flex-wrap text-text">
                   <div className="flex flex-col items-start">
                     <h2 className="mb-2 text-2xl font-semibold text-primary">
                       Departure

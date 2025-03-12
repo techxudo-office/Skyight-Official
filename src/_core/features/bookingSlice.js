@@ -370,11 +370,11 @@ export const getBookingDetails = createAsyncThunk(
 
 export const issueBooking = createAsyncThunk(
   "booking/issueBooking",
-  async ({ id, token }, thunkAPI) => {
+  async ({ pnr, token }, thunkAPI) => {
     try {
       const response = await axios.post(
         `${BASE_URL}/api/booking-issue`,
-        { pnr: id },
+        { pnr },
         {
           headers: {
             Authorization: token,
@@ -383,6 +383,7 @@ export const issueBooking = createAsyncThunk(
       );
 
       if (response.status === 200) {
+        toast.success("Booking issued successfully")
         return response.data.data;
       } else {
         throw new Error(response.data.message || "Failed to issue booking");
@@ -390,6 +391,7 @@ export const issueBooking = createAsyncThunk(
     } catch (error) {
       const errorMessage =
         error?.response?.data?.message || "Failed to issue booking";
+      toast.error(errorMessage);
       return thunkAPI.rejectWithValue(errorMessage);
     }
   }
