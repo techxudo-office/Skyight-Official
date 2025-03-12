@@ -38,6 +38,10 @@ const initialState = {
   routes: [],
   loadingRoutes: false,
   routesError: null,
+
+  isBookingLoading: false,
+  bookingMessage: null,
+  bookingError: null,
 };
 
 const bookingSlice = createSlice({
@@ -152,6 +156,17 @@ const bookingSlice = createSlice({
       .addCase(getRoutes.rejected, (state, action) => {
         state.loadingRoutes = false;
         state.routesError = action.payload;
+      })
+      .addCase(confirmBooking.pending, (state) => {
+        state.isBookingLoading = true;
+      })
+      .addCase(confirmBooking.fulfilled, (state, action) => {
+        state.isBookingLoading = false;
+        state.bookingMessage = action.payload.message;
+      })
+      .addCase(confirmBooking.rejected, (state, action) => {
+        state.isBookingLoading = false;
+        state.bookingError = action.payload;
       });
   },
 });
@@ -457,5 +472,36 @@ export const getRoutes = createAsyncThunk(
     }
   }
 );
+
+export const confirmBooking = createAsyncThunk(
+  "booking/confirmBooking",
+  async ({ data, token }, thunkAPI) => {
+    try {
+      let response = await axios({
+        method: "POST",
+        url: `${BASE_URL}/api/booking`,
+        data: data,
+        headers: {
+          Authorization: token,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.status === 200) {
+        toast.success("Booking created successfully");
+        return { status: true, message: "Booking Created" };
+      } else {
+        return thunkAPI.rejectWithValue(response.data?.message || "Unexpected response");
+      }
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message || "An error occurred";
+      toast.error(errorMessage);
+      return thunkAPI.rejectWithValue(errorMessage);
+    }
+  }
+);
+
+
 
 export default bookingSlice.reducer;
