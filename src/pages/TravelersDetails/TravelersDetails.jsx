@@ -1,11 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-
 import { FaChevronCircleUp, FaUser } from "react-icons/fa";
-
 import { FaPlaneDeparture } from "react-icons/fa6";
 import { FaChevronCircleDown } from "react-icons/fa";
-
 import { countries } from "../../data/countriesData";
 import { iranianCities } from "../../data/iranianCities";
 import {
@@ -13,9 +10,7 @@ import {
   CardLayoutHeader,
   CardLayoutBody,
 } from "../../components/CardLayout/CardLayout";
-
 import { Formik, Form } from "formik";
-
 import {
   Button,
   SecondaryButton,
@@ -30,7 +25,13 @@ import {
   PopupMessage,
   CustomTooltip,
 } from "../../components/components";
-import { MdAdd, MdArrowBack, MdArrowForward, MdCancel } from "react-icons/md";
+import {
+  MdAdd,
+  MdArrowBack,
+  MdArrowForward,
+  MdCancel,
+  MdCheck,
+} from "react-icons/md";
 import { travelerDetailScehma } from "../../validations";
 import { getTravelers } from "../../_core/features/bookingSlice";
 import { useDispatch, useSelector } from "react-redux";
