@@ -44,7 +44,9 @@ const TableNew = ({
       Header: columnName,
       accessor: fieldName,
       Cell: ({ value }) => (
-        <p key={i} className="text-sm text-text">{formatCell(type, value)}</p>
+        <p key={i} className="text-sm text-text">
+          {formatCell(type, value)}
+        </p>
       ),
     }));
 
@@ -55,7 +57,9 @@ const TableNew = ({
         Header: "No.",
         accessor: (_row, i) => i + 1,
         Cell: ({ row, i }) => (
-          <span key={i} className="w-12 text-sm text-text">{row.index + 1}</span>
+          <span key={i} className="w-12 text-sm text-text">
+            {row.index + 1}
+          </span>
         ),
       },
     ];
@@ -77,21 +81,21 @@ const TableNew = ({
     }
     const actionColumn = actions?.length
       ? {
-        Header: "Actions",
-        Cell: ({ row: { original, index } }) => (
-          <span className="relative flex items-center justify-center gap-2 text-lg text-text">
-            {actions.map(({ name, handler, icon }, idx) => (
-              <CustomTooltip key={idx} content={name}>
-                <div
-                  className="cursor-pointer"
-                  onClick={() => handler(index, original)}>
-                  {icon}
-                </div>
-              </CustomTooltip>
-            ))}
-          </span>
-        ),
-      }
+          Header: "Actions",
+          Cell: ({ row: { original, index } }) => (
+            <span className="relative flex items-center justify-center gap-2 text-lg text-text">
+              {actions.map(({ name, handler, icon }, idx) => (
+                <CustomTooltip key={idx} content={name}>
+                  <div
+                    className="cursor-pointer"
+                    onClick={() => handler(index, original)}>
+                    {icon}
+                  </div>
+                </CustomTooltip>
+              ))}
+            </span>
+          ),
+        }
       : null;
 
     return [
@@ -168,21 +172,19 @@ const TableNew = ({
               {page.map((row, key) => {
                 prepareRow(row);
                 return (
-                  <>
-                    <tr
-                      {...row.getRowProps()}
-                      key={key + 1}
-                      className="transition-colors hover:bg-slate-50">
-                      {row.cells.map((cell, i) => (
-                        <td
-                          {...cell.getCellProps()}
-                          className="px-4 py-5 text-lg text-center border-t min-w-32 lg:px-6 text-text border-slate-100 "
-                          key={i}>
-                          {cell.render("Cell")}
-                        </td>
-                      ))}
-                    </tr>
-                  </>
+                  <tr
+                    {...row.getRowProps()}
+                    key={key + 1}
+                    className="transition-colors hover:bg-slate-50">
+                    {row.cells.map((cell, i) => (
+                      <td
+                        {...cell.getCellProps()}
+                        className="px-4 py-5 text-lg text-center border-t min-w-32 lg:px-6 text-text border-slate-100 "
+                        key={i}>
+                        {cell.render("Cell")}
+                      </td>
+                    ))}
+                  </tr>
                 );
               })}
             </tbody>

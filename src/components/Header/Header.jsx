@@ -116,7 +116,6 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
 
   const logoutHandler = () => {
     if (!userData?.token) return;
-
     dispatch(logout(userData?.token)).then(() => {
       dispatch({ type: "user/logout" });
       dropdownHandler();
