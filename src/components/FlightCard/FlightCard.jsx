@@ -16,25 +16,33 @@ import { IoIosAirplane, IoMdEye } from "react-icons/io";
 import { MdChildCare, MdChildFriendly, MdPerson } from "react-icons/md";
 
 const FlightCard = ({ data, doc_type, travelers, pricingInfo }) => {
-  const [flightSegment, setFlightSegment] = useState(data.AirItinerary.OriginDestinationOptions.map((item) => (item.FlightSegment[0])))
+  const [flightSegment, setFlightSegment] = useState(
+    data.AirItinerary.OriginDestinationOptions.map(
+      (item) => item.FlightSegment[0]
+    )
+  );
   const navigate = useNavigate();
   const totalTravelers = [];
   Object.entries(travelers).forEach(([key, value]) => {
     if (value > 0) {
-      totalTravelers.push(key.replace('s', ''))
+      totalTravelers.push(key.replace("s", ""));
     }
-  })
+  });
 
   const viewDetails = () => {
-    navigate("/dashboard/travelers-details", { state: { data, doc_type, travelers, pricingInfo } });
+    navigate("/dashboard/travelers-details", {
+      state: { data, doc_type, travelers, pricingInfo },
+    });
   };
 
   return (
     <>
       <CardLayoutContainer className={"mb-5"}>
         <CardLayoutHeader className={""}>
-          {flightSegment.map((flights, idx) => {
-            return (<div key={idx} className="w-full mb-4 flex flex-wrap gap-5 justify-between items-center">
+          {flightSegment.map((flights, idx) => (
+            <div
+              key={idx}
+              className="w-full mb-4 flex flex-wrap gap-5 justify-between items-center">
               <div>
                 <h2 className="text-xl font-semibold text-text">
                   {flights.OperatingAirline.Code}
@@ -84,61 +92,66 @@ const FlightCard = ({ data, doc_type, travelers, pricingInfo }) => {
               <div>
                 <SecondaryButton text={"AIRBLUEAPI (Fix)"} />
               </div>
-            </div>)
-          })}
-
+            </div>
+          ))}
         </CardLayoutHeader>
         <CardLayoutBody>
           <div className="flex flex-col">
             {totalTravelers.length &&
-              totalTravelers.map((item, index) => {
-                return (
-                  <div
-                    key={index}
-                    className={`flex justify-between items-center py-3 ${index == totalTravelers.length - 1 ? '' : 'border-b'}  border-slate-200`}
-                  >
-                    <div>
-
-
-                      <h2 className="text-sm font-semibold text-text flex items-center  gap-1">
-                        <span className="text-lg">
-                          {item == 'adult' ? <MdPerson /> : item == 'child' ? <MdChildCare /> : <MdChildFriendly />}
-                        </span>
-                        <span className="capitalize"> {item}</span>
-                      </h2>
-                    </div>
-                    <div className="pr-16">
-                      {flightSegment.map((item, idx) => {
-                        return (
-                          <h2 className="text-sm mb-1 font-semibold text-text  flex items-center gap-1">
-                            <span>
-                              <FaSuitcase />
-                            </span>
-
-
-                            <span key={idx}>
-                              Flight-{idx + 1}: {item.FreeBaggages[index].Quantity} {item.FreeBaggages[index].Unit}
-                            </span>
-
-                          </h2>
-                        )
-                      })}
-                    </div>
-
-                    <h2 className="text-sm font-semibold text-text flex items-center justify-end gap-1">
-                      <span>
-                        <FaMoneyBillAlt />
+              totalTravelers.map((item, index) => (
+                <div
+                  key={index}
+                  className={`flex justify-between items-center py-3 ${
+                    index == totalTravelers.length - 1 ? "" : "border-b"
+                  }  border-slate-200`}>
+                  <div>
+                    <h2 className="text-sm font-semibold text-text flex items-center  gap-1">
+                      <span className="text-lg">
+                        {item == "adult" ? (
+                          <MdPerson />
+                        ) : item == "child" ? (
+                          <MdChildCare />
+                        ) : (
+                          <MdChildFriendly />
+                        )}
                       </span>
-                      <span>20,000 (Fix)</span>
+                      <span className="capitalize"> {item}</span>
                     </h2>
                   </div>
-                );
-              })}
+                  <div className="pr-16">
+                    {flightSegment.map((item, idx) => (
+                      <h2
+                        key={idx}
+                        className="text-sm mb-1 font-semibold text-text  flex items-center gap-1">
+                        <span>
+                          <FaSuitcase />
+                        </span>
+
+                        <span>
+                          Flight-{idx + 1}: {item.FreeBaggages[index].Quantity}{" "}
+                          {item.FreeBaggages[index].Unit}
+                        </span>
+                      </h2>
+                    ))}
+                  </div>
+
+                  <h2 className="text-sm font-semibold text-text flex items-center justify-end gap-1">
+                    <span>
+                      <FaMoneyBillAlt />
+                    </span>
+                    <span>20,000 (Fix)</span>
+                  </h2>
+                </div>
+              ))}
           </div>
         </CardLayoutBody>
         <CardLayoutFooter>
           <div>
-            <Button icon={<IoMdEye />} onClick={viewDetails} text={"View Details"} />
+            <Button
+              icon={<IoMdEye />}
+              onClick={viewDetails}
+              text={"View Details"}
+            />
           </div>
         </CardLayoutFooter>
       </CardLayoutContainer>
