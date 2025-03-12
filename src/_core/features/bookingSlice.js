@@ -42,6 +42,10 @@ const initialState = {
   isBookingLoading: false,
   bookingMessage: null,
   bookingError: null,
+
+  isRefundLoading: false,
+  refundMessage: null,
+  refundError: null,
 };
 
 const bookingSlice = createSlice({
@@ -167,6 +171,17 @@ const bookingSlice = createSlice({
       .addCase(confirmBooking.rejected, (state, action) => {
         state.isBookingLoading = false;
         state.bookingError = action.payload;
+      })
+      .addCase(requestRefund.pending, (state) => {
+        state.isRefundLoading = true;
+      })
+      .addCase(requestRefund.fulfilled, (state, action) => {
+        state.isRefundLoading = false;
+        state.refundMessage = action.payload.message;
+      })
+      .addCase(requestRefund.rejected, (state, action) => {
+        state.isRefundLoading = false;
+        state.refundError = action.payload;
       });
   },
 });
@@ -492,6 +507,34 @@ export const confirmBooking = createAsyncThunk(
       if (response.status === 200) {
         toast.success("Booking created successfully");
         return { status: true, message: "Booking Created" };
+      } else {
+        return thunkAPI.rejectWithValue(response.data?.message || "Unexpected response");
+      }
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message || "An error occurred";
+      toast.error(errorMessage);
+      return thunkAPI.rejectWithValue(errorMessage);
+    }
+  }
+);
+
+export const requestRefund = createAsyncThunk(
+  "booking/requestRefund",
+  async ({ data, token }, thunkAPI) => {
+    try {
+      let response = await axios({
+        method: "POST",
+        url: `${BASE_URL}/api/request-booking-refund`,
+        data: data,
+        headers: {
+          Authorization: token,
+        },
+      });
+
+      if (response.status === 200) {
+        toast.success("Requested refund successfully");
+        return { status: true, message: "Refund Requested" };
       } else {
         return thunkAPI.rejectWithValue(response.data?.message || "Unexpected response");
       }

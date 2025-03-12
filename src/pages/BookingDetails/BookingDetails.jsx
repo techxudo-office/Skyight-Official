@@ -28,6 +28,7 @@ import {
   getBookingDetails,
   getPNR,
   issueBooking,
+  requestRefund,
 } from "../../_core/features/bookingSlice";
 
 dayjs.extend(utc); // Extend dayjs with UTC support
@@ -117,14 +118,14 @@ const TicketDetails = () => {
     const bookingId = {
       booking_id: flight.id,
     };
-    console.log(bookingId);
-    let response = await refundRequest(bookingId);
-    if (response.status) {
-      toast.success(response.message);
-    } else {
-      toast.error(response.message);
-    }
-    setConfirmObject((prev) => ({ ...prev, status: false }));
+    dispatch(requestRefund({ data: bookingId, token: userData?.token }))
+      .unwrap()
+      .then(() => {
+        setConfirmObject((prev) => ({ ...prev, status: false }));
+      })
+      .catch((error) => {
+        console.log("Request Refund Failed:", error);
+      });
   };
 
   useEffect(() => {

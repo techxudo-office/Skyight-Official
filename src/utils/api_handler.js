@@ -6,28 +6,6 @@ export const getToken = () => {
 
 };
 
-//! Bookings
-export const issueBooking = async (id) => {
-  try {
-    let response = await axios({
-      method: "POST",
-      url: `${BASE_URL}/api/booking-issue`,
-      data: {
-        pnr: id,
-      },
-      headers: {
-        Authorization: getToken(),
-      },
-    });
-    if (response.status === 200) {
-      return { status: true, data: response.data.data };
-    } else {
-      return { status: false, data: response.data };
-    }
-  } catch (error) {
-  }
-};
-
 export const cancelFlightBooking = async (payload) => {
 
   try {
