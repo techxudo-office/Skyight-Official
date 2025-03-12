@@ -117,7 +117,8 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
   const logoutHandler = () => {
     if (!userData?.token) return;
 
-    dispatch(logout(userData.token)).then(() => {
+    dispatch(logout(userData?.token)).then(() => {
+      dispatch({ type: "user/logout" });
       dropdownHandler();
     });
   };
@@ -135,7 +136,7 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
     if (!credits) {
       dispatch(getCredits(userData?.token));
     }
-    console.log(credits,"credits")
+    console.log(credits, "credits");
   }, [credits, dispatch, userData?.token]);
 
   const refreshCredits = () => {
@@ -156,8 +157,7 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
               <CustomTooltip content={"Open / close"}>
                 <button
                   className="text-gray-700 transition hover:text-gray-900"
-                  onClick={sidebarHandler}
-                >
+                  onClick={sidebarHandler}>
                   <GiHamburgerMenu size={22} />{" "}
                   {/* Consistent size for mobile and desktop */}
                 </button>
@@ -177,8 +177,7 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
               <div
                 className="relative py-2"
                 onMouseEnter={() => setIsAnnHovered(true)}
-                onMouseLeave={() => setIsAnnHovered(false)}
-              >
+                onMouseLeave={() => setIsAnnHovered(false)}>
                 {" "}
                 <CustomTooltip content={"Announcement"}>
                   <div className="max-md:hidden">
@@ -191,8 +190,7 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.3 }}
-                    className="absolute top-10 right-0 w-[300px] bg-white shadow-lg rounded-lg p-3 z-50"
-                  >
+                    className="absolute top-10 right-0 w-[300px] bg-white shadow-lg rounded-lg p-3 z-50">
                     <Announcement />
                   </motion.div>
                 )}
@@ -200,8 +198,7 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
               <div
                 className="relative py-2"
                 onMouseEnter={() => setIsNotiHovered(true)}
-                onMouseLeave={() => setIsNotiHovered(false)}
-              >
+                onMouseLeave={() => setIsNotiHovered(false)}>
                 <CustomTooltip content={"Notifications"}>
                   <div className="max-md:hidden">
                     <MdNotificationsNone className="text-2xl cursor-pointer text-text" />
@@ -214,8 +211,7 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.3 }}
-                    className="absolute top-10 right-0 w-[500px] bg-white shadow-lg rounded-lg p-3 z-50"
-                  >
+                    className="absolute top-10 right-0 w-[500px] bg-white shadow-lg rounded-lg p-3 z-50">
                     <Notifications />
                   </motion.div>
                 )}
@@ -242,8 +238,7 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
                     ) : credits ? (
                       <span
                         onClick={refreshCredits}
-                        className="flex items-center gap-2"
-                      >
+                        className="flex items-center gap-2">
                         <HiOutlineRefresh className="max-sm:hidden" />
                         <span>PKR {credits?.amount}</span>
                       </span>

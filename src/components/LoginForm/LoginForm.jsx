@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 import {
   CardLayoutContainer,
   CardLayoutBody,
@@ -12,10 +12,8 @@ import {
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate, Link } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
-// import { login } from "../../utils/api_handler";
+import { Toaster } from "react-hot-toast";
 import { FaCheck } from "react-icons/fa6";
-import { AuthContext } from "../../context/AuthContext";
 import { login } from "../../_core/features/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -63,7 +61,6 @@ const LoginForm = () => {
       <Toaster />
       <CardLayoutContainer className="max-w-[900px] m-auto p-0 shadow-3xl">
         <CardLayoutBody removeBorder padding="p-0" className="flex">
-          {/* Login Form */}
           <div className="flex-1 p-16">
             <h3 className="mb-10 text-4xl font-extrabold text-center">Login</h3>
             <form
@@ -126,8 +123,6 @@ const LoginForm = () => {
               />
             </form>
           </div>
-
-          {/* Register Section */}
           <div className="flex-1 p-16 register-component-bg rounded-r-3xl">
             <h3 className="mb-10 text-4xl font-extrabold text-center">
               Registration

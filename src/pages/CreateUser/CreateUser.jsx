@@ -52,7 +52,7 @@ const CreateUser = () => {
   });
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [selectedRole, setSelectedRole] = useState(null);
-  const userData = useSelector((state) => state.auth.userData);
+  const { userData } = useSelector((state) => state.auth);
   const { roles, isLoadingRoles, rolesError } = useSelector(
     (state) => state.role
   );
@@ -148,8 +148,7 @@ const CreateUser = () => {
                 {/* <label className="block mb-2 font-medium text-md">Role</label> */}
                 <div
                   className="relative flex items-center justify-between w-full p-3 bg-white border border-gray-300 rounded-md cursor-pointer"
-                  onClick={() => setDropdownOpen(!dropdownOpen)}
-                >
+                  onClick={() => setDropdownOpen(!dropdownOpen)}>
                   <span>
                     {selectedRole ? selectedRole.name : "Select a Role"}
                   </span>
@@ -162,8 +161,7 @@ const CreateUser = () => {
                         <li
                           key={role.id}
                           className="p-3 cursor-pointer hover:bg-gray-100"
-                          onClick={() => handleRoleSelect(role)}
-                        >
+                          onClick={() => handleRoleSelect(role)}>
                           {role.name}
                         </li>
                       ))
