@@ -86,6 +86,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
   const [loading, setLoading] = useState(false);
   const [Triptype, setTriptype] = useState("One-Way");
   const { userData } = useSelector((state) => state.auth);
+  const { isLoadingSearchResults } = useSelector((state) => state.booking);
   const [activeField, setActiveField] = useState({
     departure: false,
     arrival: false,
@@ -229,8 +230,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
           <Formik
             initialValues={storedValues || initialValues}
             validationSchema={validationSchema}
-            onSubmit={handleSubmit}
-          >
+            onSubmit={handleSubmit}>
             {({
               values,
               setValues,
@@ -493,8 +493,8 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                             icon={<MdSearch />}
                             text={"Search Flight"}
                             type="submit"
-                            disabled={loading}
-                            loading={loading}
+                            disabled={isLoadingSearchResults}
+                            loading={isLoadingSearchResults}
                           />
                         </div>
                       </CardLayoutFooter>
