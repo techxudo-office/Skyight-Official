@@ -1,43 +1,12 @@
 import React, { createContext, useState, useEffect } from "react";
-<<<<<<< HEAD
-=======
 import { jwtDecode } from "jwt-decode"; // Install using: npm install jwt-decode
 import Modal from "../components/Modal/Modal"; // Import your modal component
 import { useNavigate } from "react-router-dom";
->>>>>>> Saad/Features
 
 export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [authToken, setAuthToken] = useState(null);
-<<<<<<< HEAD
-  const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(true);
-
-  const updateAuthToken = (token) => {
-    if (token) {
-      localStorage.setItem("auth_token", token);
-      localStorage.setItem("user", user);
-      setAuthToken(token);
-      setUser(user)
-    } else {
-      localStorage.removeItem("auth_token");
-      localStorage.removeItem("user")
-      localStorage.removeItem("userData")
-      setAuthToken(null);
-      setUser(null)
-    }
-  };
-
-  useEffect(() => {
-    const token = localStorage.getItem("auth_token");
-    const user = localStorage.getItem("user")
-    if (token) {
-      setAuthToken(token);
-      setUser(user)
-      setLoading(false);
-    }
-=======
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false); // Modal state
@@ -102,14 +71,11 @@ const AuthProvider = ({ children }) => {
     return () => {
       clearTimeout(logoutTimer); // Cleanup on unmount
     };
->>>>>>> Saad/Features
   }, []);
 
   return (
     <AuthContext.Provider value={{ authToken, updateAuthToken, loading }}>
       {children}
-<<<<<<< HEAD
-=======
 
       {/* Logout Warning Modal */}
       {showModal && (
@@ -123,7 +89,6 @@ const AuthProvider = ({ children }) => {
           onClose={() => setShowModal(false)} // Close modal on cancel
         />
       )}
->>>>>>> Saad/Features
     </AuthContext.Provider>
   );
 };
