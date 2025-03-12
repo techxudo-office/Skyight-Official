@@ -36,8 +36,8 @@ const TicketDetails = () => {
   const dispatch = useDispatch();
   const [getPnr, setGetPnr] = useState(null);
   const [confirmObject, setConfirmObject] = useState({
-    onAbort: "",
-    onConfirm: "",
+    onAbort: () => {},
+    onConfirm: () => {},
     status: false,
     text: "",
   });
@@ -204,8 +204,11 @@ const TicketDetails = () => {
                       }))
                     }
                     text={"Request Refund"}
-                    disabled={["requested-refund", "booked", "requested-cancellation"].includes(bookingDetails?.booking_status)
-                    }
+                    disabled={[
+                      "requested-refund",
+                      "booked",
+                      "requested-cancellation",
+                    ].includes(bookingDetails?.booking_status)}
                   />
                 </div>
                 <div>
@@ -225,8 +228,11 @@ const TicketDetails = () => {
                       }))
                     }
                     text={"Request Cancellation"}
-                    disabled={["requested-refund", "booked", "requested-cancellation"].includes(bookingDetails?.booking_status)
-                    }
+                    disabled={[
+                      "requested-refund",
+                      "booked",
+                      "requested-cancellation",
+                    ].includes(bookingDetails?.booking_status)}
                   />
                 </div>
               </div>
@@ -234,13 +240,19 @@ const TicketDetails = () => {
 
             <Button
               disabled={
-                ["requested-refund", "expired", "requested-cancellation"].includes(bookingDetails?.booking_status)
+                [
+                  "requested-refund",
+                  "expired",
+                  "requested-cancellation",
+                ].includes(bookingDetails?.booking_status)
 
                 // || now.format("M/D/YYYY h:m:s a") > timeLimit.format("M/D/YYYY h:m:s a")
               }
               className="text-xl py-14 px-14"
               text={
-                bookingDetails?.booking_status === "confirmed" ? "Get PNR" : "Order Ticket"
+                bookingDetails?.booking_status === "confirmed"
+                  ? "Get PNR"
+                  : "Order Ticket"
               }
               onClick={() => {
                 if (bookingDetails?.booking_status === "confirmed") {
