@@ -16,7 +16,7 @@ import {
 import { Select, Input, Spinner, Button, CustomDate } from "../../components/components";
 
 import { iranianCities } from "../../data/iranianCities";
-import { searchFlight } from "../../utils/api_handler";
+// import { searchFlight } from "../../utils/api_handler";
 
 import { FaPlaneDeparture } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
@@ -134,57 +134,57 @@ const MultiCity = ({ OnlySearch, onSearch }) => {
 
 
 
-    const searchFlightHandler = async (values) => {
-        const payload = {
-            tripType: "MultiCity",
-            flights: [
-                {
-                    departureDate: values.departureDate,
-                    originCode: values.departure,
-                    destinationCode: values.arrival,
-                },
-                {
-                    departureDate: values.departureDate,
-                    originCode: values.departure,
-                    destinationCode: values.arrival,
-                }
-            ],
+    // const searchFlightHandler = async (values) => {
+    //     const payload = {
+    //         tripType: "MultiCity",
+    //         flights: [
+    //             {
+    //                 departureDate: values.departureDate,
+    //                 originCode: values.departure,
+    //                 destinationCode: values.arrival,
+    //             },
+    //             {
+    //                 departureDate: values.departureDate,
+    //                 originCode: values.departure,
+    //                 destinationCode: values.arrival,
+    //             }
+    //         ],
 
-            adult: values.adult,
-            child: values.child,
-            infant: values.infant,
-        };
-        console.log('values', values)
-        setLoading(true);
-        const response = await searchFlight(payload);
-        setLoading(false);
-        if (response) {
-            if (response.status) {
-                if (response.data.PricedItineraries.PricedItinerary.length > 0) {
-                    navigate("/dashboard/flight-results", {
-                        state: {
-                            payload: payload,
-                            flightsData: response.data,
-                            travelersData: {
-                                adults: payload.adult,
-                                childs: payload.child,
-                                infants: payload.infant,
-                            },
+    //         adult: values.adult,
+    //         child: values.child,
+    //         infant: values.infant,
+    //     };
+    //     console.log('values', values)
+    //     setLoading(true);
+    //     const response = await searchFlight(payload);
+    //     setLoading(false);
+    //     if (response) {
+    //         if (response.status) {
+    //             if (response.data.PricedItineraries.PricedItinerary.length > 0) {
+    //                 navigate("/dashboard/flight-results", {
+    //                     state: {
+    //                         payload: payload,
+    //                         flightsData: response.data,
+    //                         travelersData: {
+    //                             adults: payload.adult,
+    //                             childs: payload.child,
+    //                             infants: payload.infant,
+    //                         },
 
-                        },
-                    });
-                }
-            } else {
-                if (Array.isArray(response.message)) {
-                    response.message.map((error) => {
-                        return toast.error(error.toUpperCase());
-                    });
-                } else {
-                    toast.error(response.message);
-                }
-            }
-        }
-    };
+    //                     },
+    //                 });
+    //             }
+    //         } else {
+    //             if (Array.isArray(response.message)) {
+    //                 response.message.map((error) => {
+    //                     return toast.error(error.toUpperCase());
+    //                 });
+    //             } else {
+    //                 toast.error(response.message);
+    //             }
+    //         }
+    //     }
+    // };
 
     const handleSubmit = (values) => {
         // console.log("handleSubmit");
@@ -262,10 +262,10 @@ const MultiCity = ({ OnlySearch, onSearch }) => {
                             <CardLayoutBody>
                                 {Array.from({ length: noOfFlights }, (_, i) => (
                                     <>
-                                        <p className="mb-4 font-semibold text-text text-base">Flight {i + 1}</p>
+                                        <p className="mb-4 text-base font-semibold text-text">Flight {i + 1}</p>
                                         <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 `}>
 
-                                            <div className="relative mb-5 flex md:flex-row flex-col max-md:items-center ">
+                                            <div className="relative flex flex-col mb-5 md:flex-row max-md:items-center ">
                                                 <Select
                                                     id="departure"
                                                     label="Departure From"
@@ -284,12 +284,12 @@ const MultiCity = ({ OnlySearch, onSearch }) => {
                                                     selectIcon={<FaPlaneDeparture />}
                                                 />
                                                 {touched.departure && errors.departure && (
-                                                    <div className="text-red-500 text-sm mt-2 absolute -bottom-6 left-0">
+                                                    <div className="absolute left-0 mt-2 text-sm text-red-500 -bottom-6">
                                                         {errors.departure}
                                                     </div>
                                                 )}
                                                 <div className=" rounded-full border-gray border-[1px] w-fit h-fit pt-3 pl-3 p-2 z-10 -mt-3 md:-ml-3 md:mt-2 -mb-11 md:-mr-8  bg-white" >
-                                                    <img src={forBackArrows} alt="" className="p-0 w-8 md:w-6 bg-white " />
+                                                    <img src={forBackArrows} alt="" className="w-8 p-0 bg-white md:w-6 " />
 
                                                 </div>
                                             </div>
@@ -317,12 +317,12 @@ const MultiCity = ({ OnlySearch, onSearch }) => {
                                                     }
                                                 />
                                                 {touched.arrival && errors.arrival && (
-                                                    <div className="text-red-500 text-sm mt-2 absolute left-0">
+                                                    <div className="absolute left-0 mt-2 text-sm text-red-500">
                                                         {errors.arrival}
                                                     </div>
                                                 )}
                                             </div>
-                                            <div className="relative mb-5 select flex gap-2 items-center">
+                                            <div className="relative flex items-center gap-2 mb-5 select">
                                                 <CustomDate
                                                     onChange={(e) => {
                                                         setFieldValue(`flights.${i}.departureDate`, e.target.value)
@@ -337,14 +337,14 @@ const MultiCity = ({ OnlySearch, onSearch }) => {
                                                 />
 
                                                 {touched.departureDate && errors.departureDate && (
-                                                    <div className="text-red-500 text-sm mt-2 absolute left-0">
+                                                    <div className="absolute left-0 mt-2 text-sm text-red-500">
                                                         {errors.departureDate}
                                                     </div>
                                                 )}
                                                 {
                                                     i > 1 &&
                                                     <div onClick={() => handleDeleteFlight(setValues, i)}>
-                                                        <MdCancel className="text-gray hover:text-text text-xl" />
+                                                        <MdCancel className="text-xl text-gray hover:text-text" />
                                                     </div>
                                                 }
                                             </div>
@@ -355,7 +355,7 @@ const MultiCity = ({ OnlySearch, onSearch }) => {
                                     </>
                                 ))
                                 }
-                                <p className="text-primary text-sm underline mb-10 cursor-pointer hover:text-secondary w-fit" onClick={() => handleAddFlight(setValues)}>+Add another flight</p>
+                                <p className="mb-10 text-sm underline cursor-pointer text-primary hover:text-secondary w-fit" onClick={() => handleAddFlight(setValues)}>+Add another flight</p>
                                 <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 mb-7`}>
                                     <div className="relative mb-5 select">
                                         <Select
@@ -375,7 +375,7 @@ const MultiCity = ({ OnlySearch, onSearch }) => {
                                             selectIcon={<IoIosMan />}
                                         />
                                         {touched.adult && errors.adult && (
-                                            <div className="text-red-500 text-sm mt-2 absolute left-0">
+                                            <div className="absolute left-0 mt-2 text-sm text-red-500">
                                                 {errors.adult}
                                             </div>
                                         )}
@@ -396,7 +396,7 @@ const MultiCity = ({ OnlySearch, onSearch }) => {
                                             selectIcon={<FaChild />}
                                         />
                                         {touched.child && errors.child && (
-                                            <div className="text-red-500 text-sm mt-2 absolute left-0">
+                                            <div className="absolute left-0 mt-2 text-sm text-red-500">
                                                 {errors.child}
                                             </div>
                                         )}
@@ -417,12 +417,12 @@ const MultiCity = ({ OnlySearch, onSearch }) => {
                                             selectIcon={<MdChildFriendly />}
                                         />
                                         {touched.infant && errors.infant && (
-                                            <div className="text-red-500 text-sm mt-2 absolute left-0">
+                                            <div className="absolute left-0 mt-2 text-sm text-red-500">
                                                 {errors.infant}
                                             </div>
                                         )}
                                     </div>
-                                    <div className="relative mb-5  select">
+                                    <div className="relative mb-5 select">
                                         <Select
                                             id="cabinClass"
                                             label="Cabin Class"
@@ -436,7 +436,7 @@ const MultiCity = ({ OnlySearch, onSearch }) => {
                                             optionIcons={<MdChildFriendly />}
                                         />
                                         {touched.cabinClass && errors.cabinClass && (
-                                            <div className="text-red-500 text-sm mt-2 absolute left-0">
+                                            <div className="absolute left-0 mt-2 text-sm text-red-500">
                                                 {errors.infant}
                                             </div>
                                         )}

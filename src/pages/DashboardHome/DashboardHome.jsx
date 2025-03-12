@@ -5,7 +5,6 @@ import {
   Searchbar,
   Table,
 } from "../../components/components";
-import { getRoutes, getFlightBookings } from "../../utils/api_handler";
 import { useNavigate } from "react-router-dom";
 import {
   CardLayoutContainer,
@@ -19,13 +18,19 @@ import { FaEye } from "react-icons/fa";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getFlightBookings,
+  getRoutes,
+} from "../../_core/features/bookingSlice";
 
 const DashboardHome = () => {
   const navigate = useNavigate();
-  const [flightsData, setFlightsData] = useState([]);
-  const [bookingsData, setBookingsData] = useState([]);
-  const userData = useSelector((state) => state.auth.userData);
+  const dispatch = useDispatch();
+  const { userData } = useSelector((state) => state.auth);
+  const { flightBookings, isLoadingFlightBookings } = useSelector(
+    (state) => state.booking
+  );
 
   var settings = {
     dots: false,
@@ -63,18 +68,13 @@ const DashboardHome = () => {
     navigate("/dashboard/search-flights");
   };
 
-  const getActiveRoutes = async () => {
-    let response = await getRoutes();
-    if (response?.status) {
-      setFlightsData(response.data.slice(0, 3));
-    } else {
-      toast.error(response.message);
-    }
-  };
+  useEffect(() => {
+    dispatch(getRoutes(userData?.token));
+  }, [userData?.token, dispatch]);
 
   useEffect(() => {
-    getActiveRoutes();
-  }, []);
+    console.log(flightBookings, "flightBookings");
+  }, [flightBookings]);
 
   const columnsData = [
     // { columnName: "No.", fieldName: "no.", type: "no." },
@@ -118,19 +118,16 @@ const DashboardHome = () => {
     //   },
     // },
   ];
-  const gettingFlightBookings = async () => {
-    const id = userData?.user?.company_id;
-    const response = await getFlightBookings(id);
-    if (response?.status) {
-      setBookingsData(response.data);
-    } else {
-      toast.error(response.message);
-    }
-  };
-
   useEffect(() => {
-    gettingFlightBookings();
-  }, []);
+    if (userData?.user?.company_id) {
+      dispatch(
+        getFlightBookings({
+          id: userData.user.company_id,
+          token: userData.token,
+        })
+      );
+    }
+  }, [dispatch, userData?.user?.company_id]);
 
   return (
     <div className="flex flex-col w-full">
@@ -149,9 +146,9 @@ const DashboardHome = () => {
           Featured Flights
         </h2>
         <div className="w-full overflow-x-hidden">
-          {flightsData.length > 0 ? (
+          {flightBookings?.length > 0 ? (
             <Slider {...settings} className="flex gap-3 ">
-              {flightsData.map((item, index) => (
+              {flightBookings.map((item, index) => (
                 <DashboardCards key={index} index={index} data={item} />
               ))}
             </Slider>
@@ -173,9 +170,10 @@ const DashboardHome = () => {
 
           <TableNew
             columnsToView={columnsData}
-            tableData={[]}
+            tableData={flightBookings}
             downloadBtn={true}
             actions={actionsData}
+            loader={isLoadingFlightBookings}
           />
           <Table />
         </CardLayoutBody>

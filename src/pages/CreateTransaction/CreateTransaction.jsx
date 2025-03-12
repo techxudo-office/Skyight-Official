@@ -18,41 +18,26 @@ import {
   CustomDate,
   TextArea,
 } from "../../components/components";
-
-import { getBanks } from "../../utils/api_handler";
-
 import { useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
 import { transactionInitialValues, transactionSchema } from "../../validations";
 import { allowedTypes } from "../../helper/allowedTypes";
-import { successToastify, errorToastify } from "../../helper/toast";
-import toast from "react-hot-toast";
+import { errorToastify } from "../../helper/toast";
 import { useDispatch, useSelector } from "react-redux";
 import { createTransaction } from "../../_core/features/transactionSlice";
+import { getBanks } from "../../_core/features/bookingSlice";
 
 const CreateTransaction = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  const [banksData, setBanksData] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
   const { userData } = useSelector((state) => state.auth);
+  const banksData = useSelector((state) => state.booking.banks);
   const { isCreatingTransaction } = useSelector((state) => state.transaction);
 
   useEffect(() => {
-    const fetchBanks = async () => {
-      const response = await getBanks();
-      if (response.status) {
-        setBanksData(response.data);
-        console.log("bank", response.data);
-      }
-    };
-
-    if (banksData.length === 0) {
-      fetchBanks();
-    }
-  }, [banksData]);
-  const memoizedBanks = useMemo(() => banksData, [banksData]);
+    dispatch(getBanks(userData?.token));
+  }, [dispatch]);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -152,7 +137,7 @@ const CreateTransaction = () => {
                         id="bank_name"
                         label="Bank Name"
                         name="bank_name"
-                        options={memoizedBanks}
+                        options={banksData}
                         value={values.bank_name}
                         placeholder="Select Bank"
                         onChange={(option) =>

@@ -75,7 +75,7 @@ const TableNew = ({
         ),
       });
     }
-    const actionColumn = actions.length
+    const actionColumn = actions?.length
       ? {
           Header: "Actions",
           Cell: ({ row: { original, index } }) => (

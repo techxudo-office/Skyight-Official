@@ -5,6 +5,9 @@ import {
     CardLayoutContainer,
     CardLayoutHeader,
 } from "../../components/CardLayout/CardLayout";
+import { logo } from "../../assets/Index.js";
+import { Spinner } from "../../components/components";
+
 
 const Finalticket = () => {
     const location = useLocation();
@@ -14,16 +17,15 @@ const Finalticket = () => {
         setData(location.state);
     }, [location.state]);
 
-    if (!data) return <p>Loading...</p>;
+    if (!data) return <Spinner />;
 
     const { AirReservation } = data;
     const travelers = AirReservation?.TravelerInfo || [];
-    const flightSegment =
-        AirReservation?.AirItinerary?.OriginDestinationOptions?.[0]?.FlightSegment?.[0];
-
-    const priceInfo = AirReservation?.PriceInfo?.ItinTotalFare;
+    const originDestinationOptions =
+        AirReservation?.AirItinerary?.OriginDestinationOptions || [];
+    const priceInfo = AirReservation?.PriceInfo?.PTC_FareBreakDowns;
     const bookingInfo = AirReservation?.bookingReferenceID;
-
+    console.log("final data", data)
     return (
         <div className="p-4 w-full text-text mx-auto text-sm">
             {travelers.map((travelerInfo, index) => {
@@ -31,9 +33,9 @@ const Finalticket = () => {
                 const ticketInfo = travelerInfo?.ETicketInfos?.[0];
 
                 return (
-                    <CardLayoutContainer key={index} className="mb-6 shadow-md">
+                    <CardLayoutContainer key={index} className="mb-10 shadow-md">
                         {/* Header */}
-                        <CardLayoutHeader heading={`Electronic Ticket - Traveler ${index + 1}`} />
+                        <CardLayoutHeader className={"bg-primary text-white rounded-t-md"} heading={`Electronic Ticket - Traveler ${index + 1}`} />
                         <CardLayoutBody>
                             <div className="pb-2">
                                 <p>
@@ -50,65 +52,76 @@ const Finalticket = () => {
                         </CardLayoutBody>
 
                         {/* Flight Details */}
-                        <CardLayoutBody>
-                            <div className="pb-2">
-                                <h3 className="font-bold">Flight Details</h3>
-                                <p>
-                                    {flightSegment?.DepartureAirport?.LocationCode} to{" "}
-                                    {flightSegment?.ArrivalAirport?.LocationCode} on{" "}
-                                    {flightSegment?.DepartureDate} | Airline PNR: {bookingInfo?.Id}
-                                </p>
-                                <div className="flex items-center gap-2 my-2">
-                                    <img
-                                        src="https://upload.wikimedia.org/wikipedia/commons/3/3b/Iran_Air_logo.svg"
-                                        alt="Iran Air"
-                                        className="w-12 h-12"
-                                    />
-                                    <div>
-                                        <p>
-                                            <strong>Airline:</strong> {flightSegment?.OperatingAirline?.Code}
-                                        </p>
-                                        <p>
-                                            <strong>Flight No / Aircraft Type:</strong> {flightSegment?.FlightNumber} /{" "}
-                                            {flightSegment?.Equipment?.AirEquipType}
-                                        </p>
-                                        <p>
-                                            <strong>Cabin / Stop:</strong> Economy / 0 stop
-                                        </p>
-                                        <p>
-                                            <strong>Baggage:</strong>{" "}
-                                            {flightSegment?.FreeBaggages ? flightSegment?.FreeBaggages : "N/A"}
-                                        </p>
-                                    </div>
+                        {originDestinationOptions.map((option, optionIndex) => (
+                            <CardLayoutBody key={optionIndex}>
+                                <div className="pb-2">
+                                    <h3 className="font-bold p-2 bg-background mb-2 text-xl">
+                                        Flight Details {originDestinationOptions.length > 1 && ` (Segment ${optionIndex + 1})`}</h3>
+                                    {option.FlightSegment.map((flightSegment, segmentIndex) => (
+                                        <div key={segmentIndex} className="">
+                                            <p>
+                                                {flightSegment?.DepartureAirport?.LocationCode} to{" "}
+                                                {flightSegment?.ArrivalAirport?.LocationCode} on{" "}
+                                                {flightSegment?.DepartureDate} | Airline PNR: {bookingInfo?.Id}
+                                            </p>
+                                            <div className="flex items-center gap-2 my-2">
+                                                <img
+                                                    src={logo}
+                                                    alt="Airline Logo"
+                                                    className=" h-12"
+                                                />
+                                                <div>
+                                                    <p>
+                                                        <strong>Airline:</strong> {flightSegment?.OperatingAirline?.Code}
+                                                    </p>
+                                                    <p>
+                                                        <strong>Flight No / Aircraft Type:</strong>{" "}
+                                                        {flightSegment?.FlightNumber} /{" "}
+                                                        {flightSegment?.Equipment?.AirEquipType}
+                                                    </p>
+                                                    <p>
+                                                        <strong>Cabin / Stop:</strong> Economy /{" "}
+                                                        {flightSegment?.StopQuantity || "0"} stop
+                                                    </p>
+                                                    <p>
+                                                        <strong>Baggage:</strong>{" "}
+                                                        {flightSegment?.FreeBaggages || "N/A"}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <p>
+                                                <strong>Depart:</strong> {flightSegment?.DepartureAirport?.Terminal} (
+                                                {flightSegment?.DepartureAirport?.LocationCode})
+                                            </p>
+                                            <p>
+                                                <strong>Date:</strong> {flightSegment?.DepartureDate} |{" "}
+                                                <strong>Time:</strong> {flightSegment?.DepartureTime}
+                                            </p>
+                                            <p>
+                                                <strong>Arrive:</strong> {flightSegment?.ArrivalAirport?.Terminal} (
+                                                {flightSegment?.ArrivalAirport?.LocationCode})
+                                            </p>
+                                            <p>
+                                                <strong>Date:</strong> {flightSegment?.ArrivalDate} |{" "}
+                                                <strong>Time:</strong> {flightSegment?.ArrivalTime}
+                                            </p>
+                                        </div>
+                                    ))}
                                 </div>
-                                <p>
-                                    <strong>Depart:</strong> {flightSegment?.DepartureAirport?.Terminal} (
-                                    {flightSegment?.DepartureAirport?.LocationCode})
-                                </p>
-                                <p>
-                                    <strong>Date:</strong> {flightSegment?.DepartureDate} |{" "}
-                                    <strong>Time:</strong> {flightSegment?.DepartureTime}
-                                </p>
-                                <p>
-                                    <strong>Arrive:</strong> {flightSegment?.ArrivalAirport?.Terminal} (
-                                    {flightSegment?.ArrivalAirport?.LocationCode})
-                                </p>
-                                <p>
-                                    <strong>Date:</strong> {flightSegment?.ArrivalDate} |{" "}
-                                    <strong>Time:</strong> {flightSegment?.ArrivalTime}
-                                </p>
-                            </div>
-                        </CardLayoutBody>
+                            </CardLayoutBody>
+                        ))}
 
                         {/* Price Details */}
                         <CardLayoutBody>
                             <div className="pb-2">
-                                <h3 className="font-bold">Price Details</h3>
+                                <h3 className="font-bold p-2 bg-background mb-2 text-xl">Price Details</h3>
                                 <p>
-                                    <strong>Adult Base Price:</strong> {priceInfo?.BaseFare?.Amount} IRR
+                                    <strong>{travelerInfo.PassengerTypeCode} Base Price:</strong> {(priceInfo[index]?.PassengerFare.BaseFare?.Amount).toLocaleString()}{" "}
+                                    {priceInfo[index].PassengerFare.BaseFare.CurrencyCode || "IRR"}
                                 </p>
                                 <p>
-                                    <strong>Adult Total Price:</strong> {priceInfo?.TotalFare?.Amount} IRR
+                                    <strong>{travelerInfo.PassengerTypeCode} Total Price:</strong> {(priceInfo[index]?.PassengerFare.TotalFare?.Amount).toLocaleString()}{" "}
+                                    {priceInfo[index].PassengerFare.TotalFare.CurrencyCode || "IRR"}
                                 </p>
                             </div>
 
