@@ -173,11 +173,11 @@ const DashboardHome = () => {
 
           <TableNew
             columnsToView={columnsData}
-            tableData={bookingsData}
+            tableData={[]}
             downloadBtn={true}
             actions={actionsData}
           />
-          {/* <Table /> */}
+          <Table />
         </CardLayoutBody>
         <CardLayoutFooter></CardLayoutFooter>
       </CardLayoutContainer>

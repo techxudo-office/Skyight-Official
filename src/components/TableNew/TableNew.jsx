@@ -84,8 +84,7 @@ const TableNew = ({
                 <CustomTooltip key={idx} content={name}>
                   <div
                     className="cursor-pointer"
-                    onClick={() => handler(index, original)}
-                  >
+                    onClick={() => handler(index, original)}>
                     {icon}
                   </div>
                 </CustomTooltip>
@@ -139,8 +138,7 @@ const TableNew = ({
       <div className="container mx-auto overflow-x-auto shadow-md max-w- scrollbar-hide">
         <table
           className="min-w-full overflow-hidden bg-white rounded-lg "
-          {...getTableProps()}
-        >
+          {...getTableProps()}>
           {columnsToView.length > 0 && (
             <thead className="bg-primary">
               {headerGroups.map((headerGroup, index) => (
@@ -150,8 +148,7 @@ const TableNew = ({
                       <th
                         {...column.getHeaderProps()}
                         key={idx}
-                        className="px-4 py-5 mx-5 text-sm font-bold tracking-wider text-center text-white uppercase"
-                      >
+                        className="px-4 py-5 mx-5 text-sm font-bold tracking-wider text-center text-white uppercase">
                         {column.render("Header")}
                       </th>
                     );
@@ -175,14 +172,12 @@ const TableNew = ({
                     <tr
                       {...row.getRowProps()}
                       key={key + 1}
-                      className="transition-colors hover:bg-slate-50"
-                    >
+                      className="transition-colors hover:bg-slate-50">
                       {row.cells.map((cell, i) => (
                         <td
                           {...cell.getCellProps()}
                           className="px-4 py-5 text-lg text-center border-t min-w-32 lg:px-6 text-text border-slate-100 "
-                          key={i}
-                        >
+                          key={i}>
                           {cell.render("Cell")}
                         </td>
                       ))}
@@ -252,8 +247,7 @@ const TableNew = ({
                 key={idx}
                 onClick={onClick}
                 disabled={disabled}
-                className="px-3 py-1 text-sm font-semibold bg-white border rounded-md text-text hover:bg-slate-50 border-gray disabled:opacity-50 hover:text-primary focus:outline-none focus:border-primary"
-              >
+                className="px-3 py-1 text-sm font-semibold bg-white border rounded-md text-text hover:bg-slate-50 border-gray disabled:opacity-50 hover:text-primary focus:outline-none focus:border-primary">
                 {icon}
               </button>
             ))}

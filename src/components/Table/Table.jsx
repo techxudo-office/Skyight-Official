@@ -125,16 +125,17 @@ const Table = ({
         customStyles={{
           headRow: {
             style: {
-              backgroundColor: "#eaf3fd",
-              borderRadius: "10px",
+              backgroundColor: "#008585",
+              borderTopLeftRadius: "10px",
+              borderTopRightRadius: "10px",
               borderBottomWidth: "0px",
             },
           },
           headCells: {
             style: {
               fontFamily: "Poppins",
-              color: "#404040",
-              fontSize: "13px",
+              color: "#fff",
+              fontSize: "16px",
               fontWeight: "bold",
             },
           },
