@@ -128,7 +128,7 @@ const Roles = () => {
             columnsData={roleColumns}
             tableData={roles}
             progressPending={isLoadingRoles}
-            paginationTotalRows={rolesData.length}
+            paginationTotalRows={roles.length}
             paginationComponentOptions={{ noRowsPerPage: "10" }}
           />
         </CardLayoutBody>
