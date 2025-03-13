@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import {
-  Table,
   SecondaryButton,
   ConfirmModal,
   TableNew,
@@ -16,7 +15,7 @@ import {
   CardLayoutFooter,
 } from "../../components/CardLayout/CardLayout";
 import { userColumns } from "../../data/columns";
-import { successToastify, errorToastify } from "../../helper/toast";
+import { errorToastify } from "../../helper/toast";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteUser, getUsers } from "../../_core/features/userSlice";
 
@@ -25,10 +24,8 @@ const Users = () => {
   const dispatch = useDispatch();
   const [modalStatus, setModalStatus] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
-  const userData = useSelector((state) => state.auth.userData);
-  const { users, isLoadingUsers, isCreatingUser, isDeletingUser } = useSelector(
-    (state) => state.user
-  );
+  const { userData } = useSelector((state) => state.auth);
+  const { users, isLoadingUsers } = useSelector((state) => state.user);
 
   const navigationHandler = () => {
     navigate("/dashboard/create-user");
@@ -60,11 +57,10 @@ const Users = () => {
       return;
     }
 
-    dispatch(deleteUser({ id: deleteId, token: userData?.token }))
-      .then(() => {
-        setModalStatus(false);
-        setDeleteId(null);
-      });
+    dispatch(deleteUser({ id: deleteId, token: userData?.token })).then(() => {
+      setModalStatus(false);
+      setDeleteId(null);
+    });
   };
 
   const abortDeleteHandler = () => {
@@ -87,8 +83,7 @@ const Users = () => {
         <CardLayoutHeader
           removeBorder={true}
           heading={"Users"}
-          className="flex items-center justify-between"
-        >
+          className="flex items-center justify-between">
           <div className="relative">
             <SecondaryButton
               icon={<MdAdd />}

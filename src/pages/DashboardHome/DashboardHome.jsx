@@ -21,6 +21,8 @@ import {
   getFlightBookings,
   getRoutes,
 } from "../../_core/features/bookingSlice";
+import { IoIosAirplane } from "react-icons/io";
+import dayjs from "dayjs";
 
 const DashboardHome = () => {
   const navigate = useNavigate();
@@ -66,23 +68,63 @@ const DashboardHome = () => {
     dispatch(getRoutes(userData?.token));
   }, [userData?.token, dispatch]);
 
-  const columnsData = [
-    { columnName: "Origin", fieldName: "origin", type: "text" },
-    { columnName: "Destination", fieldName: "destination", type: "text" },
-    { columnName: "PNR", fieldName: "booking_reference_id", type: "text" },
-    { columnName: "Total Fare", fieldName: "total_fare", type: "number" },
-    { columnName: "Status", fieldName: "booking_status", type: "status" },
-    { columnName: "Created At", fieldName: "created_at", type: "date" },
-  ];
-  const actionsData = [
+  const columns = [
     {
-      name: "View",
-      icon: <FaEye title="View" className="text-green-500 " />,
-      handler: (_, item) => {
-        navigate("/dashboard/booking-details", {
-          state: item,
-        });
-      },
+      name: "ROUTE",
+      selector: (row) => (
+        <span className="flex items-center justify-center gap-2 text-sm text-text">
+          {row.origin}
+          <div className="flex items-center gap-1">
+            <span className="h-0.5 w-3 bg-primary"></span>
+            <IoIosAirplane className="text-lg text-primary" />
+            <span className="h-0.5 w-3 bg-primary"></span>
+          </div>
+          {row.destination}
+        </span>
+      ),
+      sortable: false,
+      center: "yes",
+    },
+    {
+      name: "PNR",
+      selector: (row) => row.booking_reference_id,
+      sortable: false,
+      minwidth: "150px",
+      center: "yes",
+    },
+    {
+      name: "Total Fare",
+      selector: (row) => row.total_fare,
+      sortable: false,
+      center: "yes",
+    },
+    {
+      name: "Status",
+      selector: (row) => row.booking_status,
+      sortable: false,
+      center: "yes",
+    },
+    {
+      name: "Created at",
+      selector: (row) => dayjs(row.created_at).format("MMM-DD-YYYY"),
+      sortable: false,
+      center: "yes",
+    },
+    {
+      name: "Actions",
+      selector: (row) => (
+        <span
+          className="text-lg cursor-pointer"
+          onClick={() => {
+            navigate("/dashboard/booking-details", {
+              state: row,
+            });
+          }}>
+          <FaEye title="View" className="text-green-500 " />
+        </span>
+      ),
+      sortable: false,
+      center: "yes",
     },
   ];
   useEffect(() => {
@@ -123,15 +165,14 @@ const DashboardHome = () => {
           className="flex items-center justify-between"></CardLayoutHeader>
         <CardLayoutBody removeBorder={true}>
           <Searchbar className={"mb-7"} />
-
-          <TableNew
-            columnsToView={columnsData}
+          <Table
+            pagination={true}
+            columnsData={columns}
             tableData={flightBookings}
-            downloadBtn={true}
-            actions={actionsData}
-            loader={isLoadingFlightBookings}
+            progressPending={isLoadingFlightBookings}
+            paginationTotalRows={flightBookings.length}
+            paginationComponentOptions={{ noRowsPerPage: "10" }}
           />
-          <Table />
         </CardLayoutBody>
         <CardLayoutFooter></CardLayoutFooter>
       </CardLayoutContainer>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Spinner } from "../components";
 import DataTable from "react-data-table-component";
 
@@ -7,119 +7,54 @@ const Table = ({
   tableData,
   pagination,
   paginationTotalRows,
-  onChangeRowsPerPage,
-  onChangePage,
-  noRowsPerPage,
   paginationComponentOptions,
+  noRowsPerPage,
   progressPending,
 }) => {
-  const columns = [
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [paginatedData, setPaginatedData] = useState([]);
+
+  useEffect(() => {
+    const startIndex = (currentPage - 1) * rowsPerPage;
+    const endIndex = startIndex + rowsPerPage;
+    setPaginatedData(tableData.slice(startIndex, endIndex));
+  }, [tableData, currentPage, rowsPerPage]);
+
+  const handlePageChange = (page) => {
+    console.log("Page Changed to:", page);
+    setCurrentPage(page);
+  };
+
+  const modifiedColumns = [
     {
-      name: "Project",
-      selector: (row) => row.name,
+      name: "NO",
+      selector: (_, index) => (currentPage - 1) * rowsPerPage + index + 1,
       sortable: false,
-      minwidth: "450px",
+      minWidth: "70px",
+      center: true,
     },
-    {
-      name: "Start Date",
-      selector: (row) => row.date,
-      sortable: false,
-    },
-    {
-      name: "Est.Completion Date",
-      selector: (row) => row.date,
-      sortable: false,
-      minwidth: "150px",
-    },
-    {
-      name: "Status",
-      selector: (row) => (
-        // <StatusButton color={row.color} text={row.statusText} />
-        <div>Saad</div>
-      ),
-      sortable: false,
-    },
+    ...columnsData,
   ];
 
-  const data = [
-    {
-      id: 1,
-      name: "Lorem ipsum dolor sit amet ",
-      date: "Dec 14, 2021",
-      statusText: "In Progress",
-      color: "bg-green",
-    },
-    {
-      id: 2,
-      name: "Lorem ipsum dolor sit amet ",
-      date: "Dec 14, 2021",
-      statusText: "In Progress",
-      color: "bg-green",
-    },
-    {
-      id: 3,
-      name: "Lorem ipsum dolor sit amet ",
-      date: "Dec 14, 2021",
-      statusText: "In Progress",
-      color: "bg-green",
-    },
-    {
-      id: 4,
-      name: "Lorem ipsum dolor sit amet ",
-      date: "Dec 14, 2021",
-      statusText: "In Progress",
-      color: "bg-green",
-    },
-    {
-      id: 5,
-      name: "Lorem ipsum dolor sit amet ",
-      date: "Dec 14, 2021",
-      statusText: "In Progress",
-      color: "bg-green",
-    },
-    {
-      id: 6,
-      name: "Lorem ipsum dolor sit amet ",
-      date: "Dec 14, 2021",
-      statusText: "In Progress",
-      color: "bg-green",
-    },
-    {
-      id: 7,
-      name: "Lorem ipsum dolor sit amet ",
-      date: "Dec 14, 2021",
-      statusText: "In Progress",
-      color: "bg-green",
-    },
-    {
-      id: 8,
-      name: "Lorem ipsum dolor sit amet ",
-      date: "Dec 14, 2021",
-      statusText: "In Progress",
-      color: "bg-green",
-    },
-  ];
   return (
     <div className="overflow-x-auto">
       <DataTable
-        // columns={columnsData ? columnsData : [""]}
-        // data={tableData ? tableData : [""]}
-        columns={columns}
-        data={data}
+        columns={modifiedColumns}
+        data={paginatedData}
         pagination={pagination}
+        paginationTotalRows={paginationTotalRows || tableData.length}
         paginationComponentOptions={paginationComponentOptions}
-        paginationTotalRows={paginationTotalRows}
-        onChangeRowsPerPage={onChangeRowsPerPage}
-        onChangePage={onChangePage}
+        onChangePage={handlePageChange}
+        paginationServer={true}
         noRowsPerPage={noRowsPerPage}
         noDataComponent={
-          columnsData || tableData ? (
+          tableData.length > 0 ? (
             <Spinner />
           ) : (
             <div>There are no records to display</div>
           )
         }
-        paginationServer
         progressPending={progressPending}
         progressComponent={<Spinner />}
         customStyles={{
