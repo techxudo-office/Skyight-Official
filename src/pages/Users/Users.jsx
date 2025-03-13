@@ -4,8 +4,7 @@ import {
   ConfirmModal,
   Table,
 } from "../../components/components";
-import { MdAdd, MdEditSquare } from "react-icons/md";
-import { MdAutoDelete } from "react-icons/md";
+import { MdAdd, MdEditSquare, MdAutoDelete } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import {
   CardLayoutContainer,

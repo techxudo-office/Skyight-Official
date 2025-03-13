@@ -3,8 +3,10 @@ import {
   SecondaryButton,
   ConfirmModal,
   TableNew,
+  Table,
 } from "../../components/components";
-import { MdAutoDelete } from "react-icons/md";
+
+import { MdAdd, MdEditSquare, MdAutoDelete } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import {
   CardLayoutContainer,
@@ -14,8 +16,7 @@ import {
 } from "../../components/CardLayout/CardLayout";
 import { FaEye } from "react-icons/fa";
 import { ticketColumns } from "../../data/columns";
-import { successToastify, errorToastify } from "../../helper/toast";
-import { MdAdd } from "react-icons/md";
+import { errorToastify } from "../../helper/toast";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteTicket, getTickets } from "../../_core/features/ticketSlice";
 
@@ -35,6 +36,52 @@ const ViewTickets = () => {
   const { tickets, isLoadingTickets, isDeletingTicket } = useSelector(
     (state) => state.ticket
   );
+
+  const columns = [
+    {
+      name: "TITLE",
+      selector: (row) => row.title,
+      sortable: false,
+      minwidth: "150px",
+      center: true,
+    },
+    {
+      name: "DESCRIPTION",
+      selector: (row) => row.description,
+      sortable: false,
+      minwidth: "150px",
+      center: true,
+    },
+    {
+      name: "STATUS",
+      selector: (row) => row.status,
+      sortable: false,
+      minwidth: "150px",
+      center: true,
+    },
+    {
+      name: "",
+      selector: (row) => (
+        <div className="flex items-center gap-x-4">
+          <span className="text-xl cursor-pointer">
+            <FaEye title="View" className="text-green-500" />
+          </span>
+          <span
+            className="text-xl cursor-pointer"
+            onClick={() => {
+              setModalStatus(true);
+              setDeleteId(row.id);
+            }}
+          >
+            <MdAutoDelete title="Delete" className="text-red-500" />
+          </span>
+        </div>
+      ),
+      sortable: false,
+      minwidth: "150px",
+      center: true,
+    },
+  ];
 
   const actionsData = [
     {
@@ -106,13 +153,21 @@ const ViewTickets = () => {
           </div>
         </CardLayoutHeader>
         <CardLayoutBody removeBorder={true}>
-          <TableNew
+          {/* <TableNew
             columnsToView={ticketColumns}
             tableData={tickets}
             actions={actionsData}
             activeIndex={activeIndex}
             extraRows={["title", "description"]}
             loader={isLoadingTickets}
+          /> */}
+          <Table
+            pagination={true}
+            columnsData={columns}
+            tableData={tickets}
+            progressPending={isLoadingTickets}
+            paginationTotalRows={tickets.length}
+            paginationComponentOptions={{ noRowsPerPage: "10" }}
           />
         </CardLayoutBody>
         <CardLayoutFooter></CardLayoutFooter>
