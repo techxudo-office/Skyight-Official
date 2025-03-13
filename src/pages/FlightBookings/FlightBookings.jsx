@@ -42,32 +42,32 @@ const FlightBookings = () => {
       ),
       sortable: false,
       minwidth: "150px",
-      center: "yes",
+      center: true,
     },
     {
       name: "PNR",
       selector: (row) => row.booking_reference_id,
       sortable: false,
       minwidth: "150px",
-      center: "yes",
+      center: true,
     },
     {
       name: "TOTAL FARE",
       selector: (row) => row.total_fare,
       sortable: false,
-      center: "yes",
+      center: true,
     },
     {
       name: "STATUS",
       selector: (row) => row.booking_status,
       sortable: false,
-      center: "yes",
+      center: true,
     },
     {
       name: "CREATED AT",
       selector: (row) => dayjs(row.created_at).format("MMM-DD-YYYY"),
       sortable: false,
-      center: "yes",
+      center: true,
     },
     {
       name: "",
@@ -84,7 +84,7 @@ const FlightBookings = () => {
         </span>
       ),
       sortable: false,
-      center: "yes",
+      center: true,
     },
   ];
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { SecondaryButton, TableNew } from "../../components/components";
+import { SecondaryButton, Table, TableNew } from "../../components/components";
 import { FaEye } from "react-icons/fa";
 import { MdAdd } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
@@ -26,6 +26,49 @@ const Transactions = () => {
   const { transactions, isLoadingTransactions } = useSelector(
     (state) => state.transaction
   );
+  const columns = [
+    {
+      name: "BANK",
+      selector: (row) => row.bank_name,
+      sortable: false,
+      minwidth: "150px",
+      center: true,
+    },
+    {
+      name: "BANK NO.",
+      selector: (row) => row.bank_number,
+      sortable: false,
+      center: true,
+    },
+    {
+      name: "PAYMENT NO.",
+      selector: (row) => row.payment_date,
+      sortable: false,
+      center: true,
+    },
+    {
+      name: "AMOUNT",
+      selector: (row) => row.amount,
+      sortable: false,
+      center: true,
+    },
+    {
+      name: "STATUS",
+      selector: (row) => row.status,
+      sortable: false,
+      center: true,
+    },
+    {
+      name: "",
+      selector: () => (
+        <span className="text-xl cursor-pointer">
+          <FaEye title="View" className="text-green-500" />
+        </span>
+      ),
+      sortable: false,
+      center: true,
+    },
+  ];
 
   const actionsData = [
     {
@@ -60,13 +103,13 @@ const Transactions = () => {
           </div>
         </CardLayoutHeader>
         <CardLayoutBody removeBorder={true}>
-          <TableNew
-            actions={actionsData}
+          <Table
+            pagination={true}
+            columnsData={columns}
             tableData={transactions}
-            activeIndex={activeIndex}
-            loader={isLoadingTransactions}
-            columnsToView={transactionColumns}
-            extraRows={["comment", "account_holder_name", "document_url"]}
+            progressPending={isLoadingTransactions}
+            paginationTotalRows={transactions.length}
+            paginationComponentOptions={{ noRowsPerPage: "10" }}
           />
         </CardLayoutBody>
         <CardLayoutFooter></CardLayoutFooter>
