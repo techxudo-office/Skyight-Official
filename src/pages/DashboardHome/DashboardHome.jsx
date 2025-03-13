@@ -83,6 +83,7 @@ const DashboardHome = () => {
         </span>
       ),
       sortable: false,
+      minwidth: "150px",
       center: "yes",
     },
     {
