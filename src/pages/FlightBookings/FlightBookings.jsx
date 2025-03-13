@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { SecondaryButton, TableNew } from "../../components/components";
+import React, { useEffect } from "react";
+import { SecondaryButton, Table } from "../../components/components";
 import { useNavigate } from "react-router-dom";
 import {
   CardLayoutContainer,
@@ -11,41 +11,80 @@ import { FaEye } from "react-icons/fa";
 import { MdAdd } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { getFlightBookings } from "../../_core/features/bookingSlice";
+import { IoIosAirplane } from "react-icons/io";
+import dayjs from "dayjs";
 
 const FlightBookings = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { userData } = useSelector((state) => state.auth);
   const { flightBookings, isLoadingFlightBookings } = useSelector(
-      (state) => state.booking
-    );
+    (state) => state.booking
+  );
 
   const navigationHandler = () => {
     navigate("/dashboard/search-flights");
   };
 
-  const columnsData = [
-    // { columnName: "No.", fieldName: "no.", type: "no." },
-    { columnName: "Origin", fieldName: "origin", type: "text" },
-    { columnName: "Destination", fieldName: "destination", type: "text" },
-    { columnName: "PNR", fieldName: "booking_reference_id", type: "text" },
-    { columnName: "Total Fare", fieldName: "total_fare", type: "number" },
-    // { columnName: "Currency", fieldName: "currency", type: "text" },
-    { columnName: "Status", fieldName: "booking_status", type: "status" },
-    { columnName: "Created At", fieldName: "created_at", type: "date" },
-    // { columnName: "Actions", fieldName: "actions", type: "actions" },
-  ];
-
-  const actionsData = [
+  const columns = [
     {
-      name: "View",
-      icon: <FaEye title="View" className="text-green-500 " />,
-      handler: (_, item) => {
-        console.log("item", item);
-        navigate("/dashboard/booking-details", {
-          state: item,
-        });
-      },
+      name: "ROUTE",
+      selector: (row) => (
+        <span className="flex items-center justify-center gap-2 text-sm text-text">
+          {row.origin}
+          <div className="flex items-center gap-1">
+            <span className="h-0.5 w-3 bg-primary"></span>
+            <IoIosAirplane className="text-lg text-primary" />
+            <span className="h-0.5 w-3 bg-primary"></span>
+          </div>
+          {row.destination}
+        </span>
+      ),
+      sortable: false,
+      minwidth: "150px",
+      center: "yes",
+    },
+    {
+      name: "PNR",
+      selector: (row) => row.booking_reference_id,
+      sortable: false,
+      minwidth: "150px",
+      center: "yes",
+    },
+    {
+      name: "TOTAL FARE",
+      selector: (row) => row.total_fare,
+      sortable: false,
+      center: "yes",
+    },
+    {
+      name: "STATUS",
+      selector: (row) => row.booking_status,
+      sortable: false,
+      center: "yes",
+    },
+    {
+      name: "CREATED AT",
+      selector: (row) => dayjs(row.created_at).format("MMM-DD-YYYY"),
+      sortable: false,
+      center: "yes",
+    },
+    {
+      name: "",
+      selector: (row) => (
+        <span
+          className="text-lg cursor-pointer"
+          onClick={() => {
+            navigate("/dashboard/booking-details", {
+              state: row,
+            });
+          }}
+        >
+          <FaEye title="View" className="text-green-500 " />
+        </span>
+      ),
+      sortable: false,
+      center: "yes",
     },
   ];
 
@@ -77,12 +116,13 @@ const FlightBookings = () => {
           </div>
         </CardLayoutHeader>
         <CardLayoutBody removeBorder={true}>
-          <TableNew
-            columnsToView={columnsData}
+          <Table
+            pagination={true}
+            columnsData={columns}
             tableData={flightBookings}
-            downloadBtn={true}
-            actions={actionsData}
-            loader={isLoadingFlightBookings}
+            progressPending={isLoadingFlightBookings}
+            paginationTotalRows={flightBookings.length}
+            paginationComponentOptions={{ noRowsPerPage: "10" }}
           />
         </CardLayoutBody>
         <CardLayoutFooter></CardLayoutFooter>
