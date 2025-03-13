@@ -1,3 +1,68 @@
+
+// import { IoIosAirplane } from "react-icons/io";
+// import dayjs from "dayjs";
+// import { FaEye } from "react-icons/fa";
+
+// export const bookingColumns = [
+//     {
+//         name: "ROUTE",
+//         selector: (row) => (
+//             <span className="flex items-center justify-center gap-2 text-sm text-text">
+//                 {row.origin}
+//                 <div className="flex items-center gap-1">
+//                     <span className="h-0.5 w-3 bg-primary"></span>
+//                     <IoIosAirplane className="text-lg text-primary" />
+//                     <span className="h-0.5 w-3 bg-primary"></span>
+//                 </div>
+//                 {row.destination}
+//             </span>
+//         ),
+//         sortable: false,
+//         center: "yes",
+//     },
+//     {
+//         name: "PNR",
+//         selector: (row) => row.booking_reference_id,
+//         sortable: false,
+//         minwidth: "150px",
+//         center: "yes",
+//     },
+//     {
+//         name: "TOTAL FARE",
+//         selector: (row) => row.total_fare,
+//         sortable: false,
+//         center: "yes",
+//     },
+//     {
+//         name: "STATUS",
+//         selector: (row) => row.booking_status,
+//         sortable: false,
+//         center: "yes",
+//     },
+//     {
+//         name: "CREATED AT",
+//         selector: (row) => dayjs(row.created_at).format("MMM-DD-YYYY"),
+//         sortable: false,
+//         center: "yes",
+//     },
+//     {
+//         name: "",
+//         selector: (row) => (
+//             <span
+//                 className="text-lg cursor-pointer"
+//                 onClick={() => {
+//                     navigate("/dashboard/booking-details", {
+//                         state: row,
+//                     });
+//                 }}>
+//                 <FaEye title="View" className="text-green-500 " />
+//             </span>
+//         ),
+//         sortable: false,
+//         center: "yes",
+//     },
+// ];
+
 export const ticketColumns = [
     // { columnName: "No.", fieldName: "no.", type: "no." },
     { columnName: "Title", fieldName: "title", type: "text" },
@@ -32,12 +97,64 @@ export const transactionViewColumns = [
     },
 ];
 
+export const roleColumns = [
+    {
+        name: "ROLE",
+        selector: (row) => row.role,
+        sortable: false,
+        minwidth: "150px",
+        center: "yes",
+    },
+    {
+        name: "ROLE ID",
+        selector: (row) => row.id,
+        sortable: false,
+        minwidth: "150px",
+        center: "yes",
+    },
+    {
+        name: "STATUS",
+        selector: (row) => row.status,
+        sortable: false,
+        minwidth: "150px",
+        center: "yes",
+    },
+];
 
 export const userColumns = [
-    { columnName: "User Id", fieldName: "id", type: "id" },
-    { columnName: "First Name", fieldName: "first_name", type: "text" },
-    { columnName: "Last Name", fieldName: "last_name", type: "text" },
-    { columnName: "Email", fieldName: "email", type: "email" },
-    { columnName: "Mobile Number", fieldName: "mobile_number", type: "text" },
-    { columnName: "Role", fieldName: "temp_role", type: "text" },
+    {
+        name: "USER ID",
+        selector: (row) => row.id,
+        sortable: false,
+        minwidth: "150px",
+        center: "yes",
+    },
+    {
+        name: "FIRST NAME",
+        selector: (row) => row.first_name,
+        sortable: false,
+        minwidth: "150px",
+        center: "yes",
+    },
+    {
+        name: "LAST NAME",
+        selector: (row) => row.last_name,
+        sortable: false,
+        minwidth: "150px",
+        center: "yes",
+    },
+    {
+        name: "EMAIL",
+        selector: (row) => row.email,
+        sortable: false,
+        minwidth: "150px",
+        center: "yes",
+    },
+    {
+        name: "ROLE",
+        selector: (row) => row.temp_role,
+        sortable: false,
+        minwidth: "150px",
+        center: "yes",
+    },
 ];

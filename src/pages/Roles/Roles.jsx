@@ -20,6 +20,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getRoles } from "../../_core/features/roleSlice";
+import { roleColumns } from "../../data/columns";
 
 const Roles = () => {
   const navigate = useNavigate();
@@ -117,29 +118,6 @@ const Roles = () => {
       },
     },
   ];
-  const columns = [
-    {
-      name: "ROLE",
-      selector: (row) => row.role,
-      sortable: false,
-      minwidth: "150px",
-      center: "yes",
-    },
-    {
-      name: "ROLE ID",
-      selector: (row) => row.id,
-      sortable: false,
-      minwidth: "150px",
-      center: "yes",
-    },
-    {
-      name: "STATUS",
-      selector: (row) => row.status,
-      sortable: false,
-      minwidth: "150px",
-      center: "yes",
-    },
-  ];
 
   return (
     <>
@@ -183,14 +161,13 @@ const Roles = () => {
           /> */}
           <Table
             pagination={true}
-            columnsData={columns}
+            columnsData={roleColumns}
             tableData={rolesData}
             progressPending={isLoadingRoles}
             paginationTotalRows={rolesData.length}
             paginationComponentOptions={{ noRowsPerPage: "10" }}
           />
         </CardLayoutBody>
-        <CardLayoutFooter></CardLayoutFooter>
       </CardLayoutContainer>
     </>
   );

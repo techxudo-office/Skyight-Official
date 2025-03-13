@@ -3,6 +3,7 @@ import {
   SecondaryButton,
   ConfirmModal,
   TableNew,
+  Table,
 } from "../../components/components";
 import { MdAdd, MdEditSquare } from "react-icons/md";
 import { MdAutoDelete } from "react-icons/md";
@@ -93,11 +94,19 @@ const Users = () => {
           </div>
         </CardLayoutHeader>
         <CardLayoutBody removeBorder={true}>
-          <TableNew
+          {/* <TableNew
             columnsToView={userColumns}
             tableData={users}
             actions={actionsData}
             loader={isLoadingUsers}
+          /> */}
+          <Table
+            pagination={true}
+            columnsData={userColumns}
+            tableData={users}
+            progressPending={isLoadingUsers}
+            paginationTotalRows={users.length}
+            paginationComponentOptions={{ noRowsPerPage: "10" }}
           />
         </CardLayoutBody>
         <CardLayoutFooter></CardLayoutFooter>
