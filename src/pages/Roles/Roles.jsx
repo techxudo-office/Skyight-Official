@@ -14,6 +14,7 @@ import { MdAutoDelete } from "react-icons/md";
 import {
   Dropdown,
   SecondaryButton,
+  Table,
   TableNew,
 } from "../../components/components";
 import { useNavigate } from "react-router-dom";
@@ -57,12 +58,9 @@ const Roles = () => {
   }, [dispatch]);
 
   const columnsData = [
-    // { columnName: "No.", fieldName: "no.", type: "no." },
-    // { columnName: "Role Img", fieldName: "image", type: 'img' },
     { columnName: "Role", fieldName: "role", type: "text" },
     { columnName: "Role ID", fieldName: "id", type: "id" },
     { columnName: "Status", fieldName: "status", type: "status" },
-    // { columnName: "Actions", fieldName: "actions", type: "actions" },
   ];
   const actionsData = [
     {
@@ -119,6 +117,29 @@ const Roles = () => {
       },
     },
   ];
+  const columns = [
+    {
+      name: "ROLE",
+      selector: (row) => row.role,
+      sortable: false,
+      minwidth: "150px",
+      center: "yes",
+    },
+    {
+      name: "ROLE ID",
+      selector: (row) => row.id,
+      sortable: false,
+      minwidth: "150px",
+      center: "yes",
+    },
+    {
+      name: "STATUS",
+      selector: (row) => row.status,
+      sortable: false,
+      minwidth: "150px",
+      center: "yes",
+    },
+  ];
 
   return (
     <>
@@ -126,8 +147,7 @@ const Roles = () => {
         <CardLayoutHeader
           removeBorder={true}
           heading={"Roles"}
-          className="flex items-center justify-between"
-        >
+          className="flex items-center justify-between">
           <div className="relative">
             <SecondaryButton
               text={"Create New Role"}
@@ -153,13 +173,21 @@ const Roles = () => {
           </div>
         </CardLayoutHeader>
         <CardLayoutBody removeBorder={true}>
-          <TableNew
+          {/* <TableNew
             columnsToView={columnsData}
             tableData={rolesData}
             actions={actionsData}
             extraRows={["roleRights"]}
             activeIndex={activeIndex}
             loader={isLoadingRoles}
+          /> */}
+          <Table
+            pagination={true}
+            columnsData={columns}
+            tableData={rolesData}
+            progressPending={isLoadingRoles}
+            paginationTotalRows={rolesData.length}
+            paginationComponentOptions={{ noRowsPerPage: "10" }}
           />
         </CardLayoutBody>
         <CardLayoutFooter></CardLayoutFooter>

@@ -93,25 +93,25 @@ const DashboardHome = () => {
       center: "yes",
     },
     {
-      name: "Total Fare",
+      name: "TOTAL FARE",
       selector: (row) => row.total_fare,
       sortable: false,
       center: "yes",
     },
     {
-      name: "Status",
+      name: "STATUS",
       selector: (row) => row.booking_status,
       sortable: false,
       center: "yes",
     },
     {
-      name: "Created at",
+      name: "CREATED AT",
       selector: (row) => dayjs(row.created_at).format("MMM-DD-YYYY"),
       sortable: false,
       center: "yes",
     },
     {
-      name: "Actions",
+      name: "",
       selector: (row) => (
         <span
           className="text-lg cursor-pointer"
