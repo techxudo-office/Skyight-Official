@@ -23,7 +23,11 @@ const Finalticket = () => {
     const travelers = AirReservation?.TravelerInfo || [];
     const originDestinationOptions =
         AirReservation?.AirItinerary?.OriginDestinationOptions || [];
-    const priceInfo = AirReservation?.PriceInfo?.PTC_FareBreakDowns;
+    const priceInfo = travelers.map((passenger, i) => {
+        let pricing = AirReservation?.PriceInfo?.PTC_FareBreakDowns.filter((item) => (item.PassengerTypeQuantity.Code == passenger.PassengerTypeCode))
+        return (pricing[0])
+    });
+    console.log("pricing", priceInfo)
     const bookingInfo = AirReservation?.bookingReferenceID;
     console.log("final data", data)
     return (
@@ -116,12 +120,16 @@ const Finalticket = () => {
                             <div className="pb-2">
                                 <h3 className="font-bold p-2 bg-background mb-2 text-xl">Price Details</h3>
                                 <p>
-                                    <strong>{travelerInfo.PassengerTypeCode} Base Price:</strong> {(priceInfo[index]?.PassengerFare.BaseFare?.Amount).toLocaleString()}{" "}
-                                    {priceInfo[index].PassengerFare.BaseFare.CurrencyCode || "IRR"}
+                                    <strong>{travelerInfo.PassengerTypeCode} Base Price:</strong> {(priceInfo[index]?.PassengerFare.BaseFare?.Amount 
+                                        /priceInfo[index]?.PassengerTypeQuantity?.Quantity 
+                                        )?.toLocaleString()}{" "}
+                                    {priceInfo[index]?.PassengerFare.BaseFare.CurrencyCode || "IRR"}
                                 </p>
                                 <p>
-                                    <strong>{travelerInfo.PassengerTypeCode} Total Price:</strong> {(priceInfo[index]?.PassengerFare.TotalFare?.Amount).toLocaleString()}{" "}
-                                    {priceInfo[index].PassengerFare.TotalFare.CurrencyCode || "IRR"}
+                                    <strong>{travelerInfo.PassengerTypeCode} Total Price:</strong> {(priceInfo[index]?.PassengerFare.TotalFare?.Amount 
+                                        /priceInfo[index]?.PassengerTypeQuantity?.Quantity
+                                        )?.toLocaleString()}{" "}
+                                    {priceInfo[index]?.PassengerFare.TotalFare.CurrencyCode || "IRR"}
                                 </p>
                             </div>
 
