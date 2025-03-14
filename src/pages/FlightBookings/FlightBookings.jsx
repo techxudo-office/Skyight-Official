@@ -78,8 +78,7 @@ const FlightBookings = () => {
             navigate("/dashboard/booking-details", {
               state: row,
             });
-          }}
-        >
+          }}>
           <FaEye title="View" className="text-green-500 " />
         </span>
       ),
@@ -105,8 +104,7 @@ const FlightBookings = () => {
         <CardLayoutHeader
           removeBorder={true}
           heading={"Flight Bookings"}
-          className="flex items-center justify-between"
-        >
+          className="flex items-center justify-between">
           <div className="relative">
             <SecondaryButton
               text={"Create New Booking"}
@@ -119,7 +117,7 @@ const FlightBookings = () => {
           <Table
             pagination={true}
             columnsData={columns}
-            tableData={flightBookings}
+            tableData={flightBookings || []}
             progressPending={isLoadingFlightBookings}
             paginationTotalRows={flightBookings.length}
             paginationComponentOptions={{ noRowsPerPage: "10" }}

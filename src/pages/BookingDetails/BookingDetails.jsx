@@ -14,7 +14,7 @@ import {
   DownloadButton,
   Table,
 } from "../../components/components";
-import  { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
 import { IoIosAirplane, IoMdClock } from "react-icons/io";
 import dayjs from "dayjs";
@@ -202,7 +202,7 @@ const TicketDetails = () => {
                       }))
                     }
                     text={"Request Refund"}
-                    disabled={bookingDetails?.booking_status!=="confirmed"}
+                    disabled={bookingDetails?.booking_status !== "confirmed"}
                   />
                 </div>
                 <div>
@@ -222,7 +222,7 @@ const TicketDetails = () => {
                       }))
                     }
                     text={"Request Cancellation"}
-                    disabled={bookingDetails?.booking_status!=="confirmed"}
+                    disabled={bookingDetails?.booking_status !== "confirmed"}
                   />
                 </div>
               </div>
@@ -266,8 +266,7 @@ const TicketDetails = () => {
               bookingDetails.flightSegments.map((item, idx) => (
                 <div
                   key={idx}
-                  className="flex items-center justify-between gap-5 max-sm:flex-wrap text-text"
-                >
+                  className="flex items-center justify-between gap-5 max-sm:flex-wrap text-text">
                   <div className="flex flex-col items-start">
                     <h2 className="mb-2 text-2xl font-semibold text-primary">
                       Departure
@@ -354,7 +353,8 @@ const TicketDetails = () => {
                 },
                 {
                   name: "EXPIRY",
-                  selector: (row) => dayjs(row.expire_date).format("D-MMM-YYYY"),
+                  selector: (row) =>
+                    dayjs(row.expire_date).format("D-MMM-YYYY"),
                   sortable: false,
                   minWidth: "150px",
                   center: true,
@@ -374,7 +374,7 @@ const TicketDetails = () => {
                   center: true,
                 },
               ]}
-              tableData={bookingDetails?.passengers}
+              tableData={bookingDetails?.passengers || []}
               progressPending={isLoadingBookingDetails}
               paginationTotalRows={bookingDetails?.passengers.length}
               paginationComponentOptions={{ noRowsPerPage: "10" }}

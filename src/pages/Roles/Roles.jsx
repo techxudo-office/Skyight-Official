@@ -31,7 +31,7 @@ const Roles = () => {
   const userData = useSelector((state) => state.auth.userData);
 
   useEffect(() => {
-    dispatch(getRoles({ page: 0, limit: 10, token: userData?.token }))
+    dispatch(getRoles({ page: 0, limit: 10, token: userData?.token }));
   }, [dispatch, userData?.token]);
 
   const actionsData = [
@@ -96,8 +96,7 @@ const Roles = () => {
         <CardLayoutHeader
           removeBorder={true}
           heading={"Roles"}
-          className="flex items-center justify-between"
-        >
+          className="flex items-center justify-between">
           <div className="relative">
             <SecondaryButton
               text={"Create New Role"}
@@ -126,7 +125,7 @@ const Roles = () => {
           <Table
             pagination={true}
             columnsData={roleColumns}
-            tableData={roles}
+            tableData={roles || []}
             progressPending={isLoadingRoles}
             paginationTotalRows={roles.length}
             paginationComponentOptions={{ noRowsPerPage: "10" }}

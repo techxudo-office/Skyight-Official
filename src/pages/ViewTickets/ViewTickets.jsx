@@ -71,8 +71,7 @@ const ViewTickets = () => {
             onClick={() => {
               setModalStatus(true);
               setDeleteId(row.id);
-            }}
-          >
+            }}>
             <MdAutoDelete title="Delete" className="text-red-500" />
           </span>
         </div>
@@ -142,8 +141,7 @@ const ViewTickets = () => {
         <CardLayoutHeader
           removeBorder={true}
           heading={"Tickets"}
-          className="flex items-center justify-between"
-        >
+          className="flex items-center justify-between">
           <div className="relative">
             <SecondaryButton
               icon={<MdAdd />}
@@ -153,18 +151,10 @@ const ViewTickets = () => {
           </div>
         </CardLayoutHeader>
         <CardLayoutBody removeBorder={true}>
-          {/* <TableNew
-            columnsToView={ticketColumns}
-            tableData={tickets}
-            actions={actionsData}
-            activeIndex={activeIndex}
-            extraRows={["title", "description"]}
-            loader={isLoadingTickets}
-          /> */}
           <Table
             pagination={true}
             columnsData={columns}
-            tableData={tickets}
+            tableData={tickets || []}
             progressPending={isLoadingTickets}
             paginationTotalRows={tickets.length}
             paginationComponentOptions={{ noRowsPerPage: "10" }}

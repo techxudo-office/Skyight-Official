@@ -79,8 +79,7 @@ const Transactions = () => {
       selector: (row) => (
         <span
           className="text-xl cursor-pointer"
-          onClick={() => handleView(row)}
-        >
+          onClick={() => handleView(row)}>
           <FaEye title="View" className="text-green-500" />
         </span>
       ),
@@ -95,8 +94,7 @@ const Transactions = () => {
         <CardLayoutHeader
           removeBorder={true}
           heading={"Transactions"}
-          className="flex items-center justify-between"
-        >
+          className="flex items-center justify-between">
           <div className="relative">
             <SecondaryButton
               text={"Create New Transaction"}
@@ -110,7 +108,7 @@ const Transactions = () => {
           <Table
             pagination={true}
             columnsData={columns}
-            tableData={transactions}
+            tableData={transactions || []}
             progressPending={isLoadingTransactions}
             paginationTotalRows={transactions.length}
             paginationComponentOptions={{ noRowsPerPage: "10" }}
@@ -125,8 +123,7 @@ const Transactions = () => {
         contentLabel="Transaction Details"
         className="modal-container"
         overlayClassName="modal-overlay"
-        closeTimeoutMS={400}
-      >
+        closeTimeoutMS={400}>
         {selectedTransaction && (
           <div className="p-6">
             <h2 className="mb-4 text-xl font-semibold">Transaction Details</h2>
@@ -146,8 +143,7 @@ const Transactions = () => {
             </p>
             <button
               onClick={closeModal}
-              className="px-4 py-2 mt-4 text-white bg-red-500 rounded-md"
-            >
+              className="px-4 py-2 mt-4 text-white bg-red-500 rounded-md">
               Close
             </button>
           </div>

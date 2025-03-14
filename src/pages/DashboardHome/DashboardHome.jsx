@@ -169,7 +169,7 @@ const DashboardHome = () => {
           <Table
             pagination={true}
             columnsData={columns}
-            tableData={flightBookings}
+            tableData={flightBookings || []}
             progressPending={isLoadingFlightBookings}
             paginationTotalRows={flightBookings.length}
             paginationComponentOptions={{ noRowsPerPage: "10" }}

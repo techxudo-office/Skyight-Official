@@ -68,8 +68,9 @@ const Users = () => {
         <div className="flex items-center gap-x-4">
           <span
             className="text-xl cursor-pointer"
-            onClick={() => navigate("/dashboard/update-reason", { state: row })}
-          >
+            onClick={() =>
+              navigate("/dashboard/update-reason", { state: row })
+            }>
             <MdEditSquare title="Edit" className="text-blue-500" />
           </span>
           <span
@@ -77,8 +78,7 @@ const Users = () => {
             onClick={() => {
               setModalStatus(true);
               setDeleteId(row.id);
-            }}
-          >
+            }}>
             <MdAutoDelete title="Delete" className="text-red-500" />
           </span>
         </div>
@@ -128,8 +128,7 @@ const Users = () => {
         <CardLayoutHeader
           removeBorder={true}
           heading={"Users"}
-          className="flex items-center justify-between"
-        >
+          className="flex items-center justify-between">
           <div className="relative">
             <SecondaryButton
               icon={<MdAdd />}
@@ -142,7 +141,7 @@ const Users = () => {
           <Table
             pagination={true}
             columnsData={userColumns}
-            tableData={users}
+            tableData={users || []}
             progressPending={isLoadingUsers}
             paginationTotalRows={users.length}
             paginationComponentOptions={{ noRowsPerPage: "10" }}
