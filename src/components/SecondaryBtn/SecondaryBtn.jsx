@@ -18,7 +18,7 @@ const SecondaryButton = ({
       type={type}
       onClick={onClick}
       disabled={disabled || loading}
-      className={`w-full py-2 px-5 ${
+      className={`w-fit py-2 px-5 ${
         disabled || loading
           ? "bg-lightgray cursor-not-allowed text-text"
           : "bg-blue-100 hover:text-secondary text-primary"

@@ -1,59 +1,110 @@
-import React from "react";
+import React, { useRef, useState,useEffect } from "react";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
+import { parsePhoneNumberFromString } from "libphonenumber-js";
+import { MdEdit } from "react-icons/md";
 
 const PhoneNumberInput = ({
   id,
-  className,
   name,
   label,
   value,
-  placeholder,
-  disabled,
+  profile,
   onChange,
+  disabled,
+  className,
+  isSelected,
+  onEditClick,
+  placeholder,
+  autoComplete,
+  setEditingField,
+  onKeyPressHandler,
 }) => {
-  // Convert object value to a full phone number string
-  const getPhoneNumber = (val) => {
-    if (typeof val === "object" && val !== null) {
-      return [val.country_code, val.area_code, val.number].filter(Boolean).join("");
+  const [phone, setPhone] = useState(value||"");
+  const inputRef = useRef();
+
+  const handlePhoneChange = (value, country) => {
+    setPhone(value);
+    console.log("value",value)
+    const phoneNumber = parsePhoneNumberFromString(`+${value}`);
+
+    let parsedData = {
+      area_code: '',
+      country_code: '',
+      number: '',
+    };
+
+    if (phoneNumber) {
+      // Extract country code
+      const countryCode = phoneNumber.countryCallingCode;
+
+      // Extract national number (without country code)
+      const nationalNumber = phoneNumber.nationalNumber;
+
+      // Extract area code and subscriber number
+      const areaCode = phoneNumber.extensions?.[0]?.ext || nationalNumber.slice(0, 3); // Fallback to first 3 digits
+      const number = nationalNumber.slice(areaCode.length); // Subscriber number
+
+      parsedData = {
+        area_code: areaCode,
+        country_code: countryCode,
+        number: number,
+      };
     }
-    return (typeof val ==="string"? Number(String(val).replace(/\D/g, "")) : 
-    parseInt(String(val).replace(/\D/g, "") ))
-               
+
+    // Pass the parsed data to the parent component
+    if (onChange) {
+      onChange(parsedData);
+    }
   };
+
+  useEffect(() => {
+    if (isSelected) {
+      inputRef.current.focus();
+    }
+  }, [isSelected]);
 
   return (
     <div className={`flex flex-col w-full ${className}`}>
-      <label
-        htmlFor={id}
-        className="px-1 mb-2 text-base font-medium bg-white rounded-md text-text"
+      <div
+        className={`relative flex items-center rounded-lg border border-gray text-text ${
+          disabled ? "bg-slate-100" : "bg-white"
+        }`}
       >
-        {label}
-      </label>
-
-      <PhoneInput
-        id={id}
-        country={"us"} // Default country
-        value={getPhoneNumber(value)}
-        placeholder={placeholder}
-        disabled={disabled}
-        onChange={(phone) => {
-            if (typeof phone !== "string") return; // Prevent errors
-          const cleanedNumber = (phone).replace(/\D/g, ""); // Remove non-numeric characters
-
-          // Set values in structured format
-          const formattedValue = {
-            country_code: cleanedNumber.slice(0, 3) || "", // First 3 digits as country code
-            area_code: cleanedNumber.slice(3, 6) || "", // Next 3 digits as area code
-            number: cleanedNumber.slice(6) || "", // Remaining digits as number
-          };
-
-          onChange({
-            target: { name, value: formattedValue },
-          });
-        }}
-        inputClass="custom-phone-input"
-      />
+        <label
+          htmlFor={id}
+          className="absolute px-1 mb-2 text-base font-medium bg-white rounded-md -top-3 left-3 text-text"
+        >
+          {label}
+        </label>
+        <PhoneInput
+          ref={inputRef}
+          country={"us"} // Default country
+          value={value||phone}
+          onChange={handlePhoneChange}
+          inputProps={{
+            className:"w-full px-3 pt-3 bg-transparent outline-none text-base flex item-center pl-10",
+            id: id,
+            name: name,
+            disabled: disabled,
+            placeholder: placeholder,
+            autoComplete: autoComplete,
+            onBlur: () => setEditingField && setEditingField(null),
+          }}
+          inputClass="w-full  px-3 pt-3 bg-transparent outline-none"
+          containerClass="w-full h-12 "
+          
+          
+        />
+        {disabled && profile && (
+          <span
+            className="absolute text-xl  cursor-pointer right-3 text-primary"
+            onClick={onEditClick}
+          >
+            <MdEdit className="text-xl text-black" />
+          </span>
+        )}
+      </div>
     </div>
   );
 };
