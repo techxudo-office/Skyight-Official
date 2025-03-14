@@ -59,7 +59,7 @@ export const getNotifications = createAsyncThunk(
       );
 
       if (response.status === 200) {
-        return response.data.data;
+        return response.data;
       } else {
         throw new Error("Failed to fetch notifications");
       }

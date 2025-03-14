@@ -360,12 +360,10 @@ const TravelersDetails = () => {
                           if (allFormData) {
                             setAllTravelersData(allFormData);
                             console.log("formikRefs", formikRefs.current);
-                            // formikRefs.current?.forEach((item, idx) => {
-                            //   const persistValues=allFormData[idx]
-                            //   item?.setValues({...persistValues
-
-                            //   })
-                            // })
+                            formikRefs.current?.forEach((item, idx) => {
+                              const persistValues = allFormData[idx];
+                              item?.setValues({ ...persistValues });
+                            });
                           }
                         }, [location.state]);
                         return (

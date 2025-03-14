@@ -11,7 +11,7 @@ import ticketReducer from "../features/ticketSlice";
 import bookingReducer from "../features/bookingSlice";
 import transactionReducer from "../features/transactionSlice";
 import notificationReducer from "../features/notificationSlice";
-
+import historyReducer from "../features/historySlice"
 const appReducer = combineReducers({
   auth: authReducer,
   user: userReducer,
@@ -20,6 +20,7 @@ const appReducer = combineReducers({
   booking: bookingReducer,
   transaction: transactionReducer,
   notification: notificationReducer,
+  history:historyReducer
 });
 
 const rootReducer = (state, action) => {

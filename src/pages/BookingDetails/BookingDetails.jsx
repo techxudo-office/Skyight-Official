@@ -202,11 +202,7 @@ const TicketDetails = () => {
                       }))
                     }
                     text={"Request Refund"}
-                    disabled={[
-                      "requested-refund",
-                      "booked",
-                      "requested-cancellation",
-                    ].includes(bookingDetails?.booking_status)}
+                    disabled={bookingDetails?.booking_status!=="confirmed"}
                   />
                 </div>
                 <div>
@@ -226,11 +222,7 @@ const TicketDetails = () => {
                       }))
                     }
                     text={"Request Cancellation"}
-                    disabled={[
-                      "requested-refund",
-                      "booked",
-                      "requested-cancellation",
-                    ].includes(bookingDetails?.booking_status)}
+                    disabled={bookingDetails?.booking_status!=="confirmed"}
                   />
                 </div>
               </div>
@@ -348,7 +340,7 @@ const TicketDetails = () => {
                 },
                 {
                   name: "BIRTH DATE",
-                  selector: (row) => row.passenger_type_code,
+                  selector: (row) => dayjs(row.birth_date).format("D-MMM-YYYY"),
                   sortable: false,
                   minWidth: "150px",
                   center: true,
@@ -362,7 +354,7 @@ const TicketDetails = () => {
                 },
                 {
                   name: "EXPIRY",
-                  selector: (row) => row.expire_date,
+                  selector: (row) => dayjs(row.expire_date).format("D-MMM-YYYY"),
                   sortable: false,
                   minWidth: "150px",
                   center: true,
