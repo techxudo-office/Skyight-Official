@@ -91,7 +91,7 @@ const PhoneNumberInput = ({
             autoComplete: autoComplete,
             onBlur: () => setEditingField && setEditingField(null),
           }}
-          inputClass="w-full  px-3 pt-3 bg-transparent outline-none"
+          inputClass="w-full  px-3 bg-transparent outline-none"
           containerClass="w-full h-12 "
           
           

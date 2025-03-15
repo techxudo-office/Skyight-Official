@@ -13,8 +13,8 @@ const CustomDate = ({
     onChange,
     disabled,
     isSelected,
-    pastDate,
-    futureDate,
+    pastDate=true,
+    futureDate=true,
     isTimePicker // Toggle between DatePicker and DateTimePicker
 }) => {
     const handleDateChange = (newValue) => {
