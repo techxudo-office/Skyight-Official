@@ -1,4 +1,3 @@
-/* Overlay styling */
 .modal-overlay {
     background-color: rgba(0, 0, 0, 0.6);
     position: fixed;
@@ -9,7 +8,6 @@
     z-index: 1000;
   }
   
-  /* Modal container with slide-from-top animation */
   .modal-container {
     background: white;
     padding: 20px;
@@ -24,13 +22,11 @@
     z-index: 1001;
   }
   
-  /* When modal is open, slide down and fade in */
   .ReactModal__Overlay--after-open .modal-container {
     transform: translate(-50%, 20px);
     opacity: 1;
   }
   
-  /* When modal is closing, slide up and fade out */
   .ReactModal__Overlay--before-close .modal-container {
     transform: translate(-50%, -100%);
     opacity: 0;
