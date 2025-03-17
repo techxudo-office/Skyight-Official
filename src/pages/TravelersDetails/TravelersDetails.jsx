@@ -86,16 +86,6 @@ const TravelersDetails = () => {
     console.log("formValues", values)
     const payload = {
       ...values,
-      // mobile: {
-      //   area_code: String(values.mobile).slice(0, 2),
-      //   country_code: String(values.mobile).slice(0, 3),
-      //   number: String(values.mobile).slice(0, 7),
-      // },
-      // telephone: {
-      //   area_code: String(values.telephone).slice(0, 2),
-      //   country_code: String(values.telephone).slice(0, 3),
-      //   number: String(values.telephone).slice(0, 7),
-      // },
       country: docType === "Domestic" ? "IRN" : values.country,
       doc_type: docType === "Domestic" ? "N" : "P",
     };
@@ -140,20 +130,6 @@ const TravelersDetails = () => {
       setValues((prev) => ({
         ...prev,
         ...formValues
-        // title: formValues.title,
-        // first_name: formValues.given_name,
-        // last_name: formValues.surname,
-        // email: formValues.email,
-        // telephone: formValues.phone_number.replace(/[-\s]/g, ''),
-        // mobile: formValues.phone_number.replace(/[-\s]/g, ''),
-        // country: docType === "Domestic" ? "IRN" : formValues.nationality,
-        // city: formValues.address.split(",")[0],
-        // date_of_birth: formValues.birth_date,
-        // passenger_type: formValues.travelertype,
-        // gender: genderOptions[0].value,
-        // passport_number: formValues.doc_id,
-        // passport_expiry_date: formValues.expire_date,
-        // passenger_type: formValues.passenger_type_code,
       }));
     }
   };
@@ -320,16 +296,6 @@ const TravelersDetails = () => {
                                               />
                                             ) :
                                               input.type === "number" ? (
-                                                // <Input
-                                                //   id={input.id}
-                                                //   name={input.name}
-                                                //   label={input.label}
-                                                //   type={input.type}
-                                                //   placeholder={input.placeholder}
-                                                //   disabled={disableAddTraveler.includes(travelerIndex)}
-                                                //   value={values[input.name]}
-                                                //   onChange={(e) => setFieldValue(input.name, e.target.value.replace(/\D/g, ""))}
-                                                // />
                                                 <PhoneNumberInput
 
                                                   id={input.id}
