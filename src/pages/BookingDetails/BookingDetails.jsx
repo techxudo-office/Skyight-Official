@@ -266,7 +266,7 @@ const TicketDetails = () => {
               bookingDetails.flightSegments.map((item, idx) => (
                 <div
                   key={idx}
-                  className="flex items-center justify-between gap-5 max-sm:flex-wrap text-text">
+                  className="flex items-center justify-between gap-5 max-sm:flex-wrap text-text py-5">
                   <div className="flex flex-col items-start">
                     <h2 className="mb-2 text-2xl font-semibold text-primary">
                       Departure
@@ -277,7 +277,7 @@ const TicketDetails = () => {
                     <p className="flex items-center gap-2">
                       <IoMdClock className="text-lg text-primary" />
                       {dayjs(item.departure_datetime).format(
-                        "MMM-DD-YYYY, hh:mm"
+                        "MMM-DD-YYYY, hh:mm a"
                       )}
                     </p>
                   </div>
@@ -294,7 +294,7 @@ const TicketDetails = () => {
                     <p className="flex items-center gap-2">
                       <IoMdClock className="text-lg text-primary" />
                       {dayjs(item.arrival_datetime).format(
-                        "MMM-DD-YYYY, hh:mm"
+                        "MMM-DD-YYYY, hh:mm a"
                       )}
                     </p>
                   </div>
@@ -386,103 +386,6 @@ const TicketDetails = () => {
             className={"mb-2"}
             heading={"Pricing Information"}
           />
-          {/* {bookingDetails && (
-            // <TableNew
-            //   pagination={false}
-            //   tableData={bookingDetails?.passengers}
-            //   columnsToView={[
-            //     { columnName: "Name", fieldName: "given_name", type: "text" },
-            //     {
-            //       columnName: "Type",
-            //       fieldName: "passenger_type_code",
-            //       type: "text",
-            //     },
-            //     {
-            //       columnName: "Birth Date",
-            //       fieldName: "birth_date",
-            //       type: "date",
-            //     },
-            //     {
-            //       columnName: "Passport Number",
-            //       fieldName: "doc_id",
-            //       type: "text",
-            //     },
-            //     {
-            //       columnName: "Expiry",
-            //       fieldName: "expire_date",
-            //       type: "date",
-            //     },
-            //     {
-            //       columnName: "Issuance",
-            //       fieldName: "doc_issue_country",
-            //       type: "text",
-            //     },
-            //     {
-            //       columnName: "Nationality",
-            //       fieldName: "nationality",
-            //       type: "text",
-            //     },
-            //   ]}
-            // />
-            // <Table
-            //   pagination={true}
-            //   columnsData={[
-            //     {
-            //       name: "NAME",
-            //       selector: (row) => row.given_name,
-            //       sortable: false,
-            //       minWidth: "150px",
-            //       center: true,
-            //     },
-            //     {
-            //       name: "TYPE",
-            //       selector: (row) => row.passenger_type_code,
-            //       sortable: false,
-            //       minWidth: "150px",
-            //       center: true,
-            //     },
-            //     {
-            //       name: "BIRTH DATE",
-            //       selector: (row) => row.passenger_type_code,
-            //       sortable: false,
-            //       minWidth: "150px",
-            //       center: true,
-            //     },
-            //     {
-            //       name: "PASSPORT NUMBER",
-            //       selector: (row) => row.doc_id,
-            //       sortable: false,
-            //       minWidth: "150px",
-            //       center: true,
-            //     },
-            //     {
-            //       name: "EXPIRY",
-            //       selector: (row) => row.expire_date,
-            //       sortable: false,
-            //       minWidth: "150px",
-            //       center: true,
-            //     },
-            //     {
-            //       name: "ISSUANCE",
-            //       selector: (row) => row.doc_issue_country,
-            //       sortable: false,
-            //       minWidth: "150px",
-            //       center: true,
-            //     },
-            //     {
-            //       name: "NATIONALITY",
-            //       selector: (row) => row.nationality,
-            //       sortable: false,
-            //       minWidth: "150px",
-            //       center: true,
-            //     },
-            //   ]}
-            //   tableData={bookingDetails?.passengers}
-            //   // progressPending={isLoadingUsers}
-            //   paginationTotalRows={bookingDetails?.passengers.length}
-            //   paginationComponentOptions={{ noRowsPerPage: "10" }}
-            // />
-          )} */}
           <CardLayoutFooter>
             <h2 className="text-xl font-semibold text-slate-600">
               Total Fare: {Number(bookingDetails?.total_fare).toLocaleString()}

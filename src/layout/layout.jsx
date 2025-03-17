@@ -5,6 +5,7 @@ import { logo } from "../assets/Index";
 
 const Layout = () => {
   const [sidebarStatus, setSidebarStatus] = useState(true);
+  const [ModalStatus, setModalStatus] = useState(false);
 
   const setSidebarStatusHandler = (status) => {
     setSidebarStatus(status);
@@ -22,7 +23,8 @@ const Layout = () => {
           imgsrc={logo}
           btnText={'signup / login'}
           Message={' Your session has expired. Please sign up or log in again to continue.'}
-          active={false}
+          active={ModalStatus}
+          onClose={() => setModalStatus(false)}
           toggle={true}
         />
         <Sidebar status={sidebarStatus} updateStatus={setSidebarStatus} />
@@ -35,6 +37,9 @@ const Layout = () => {
             <div className="w-full flex justify-center flex-col items-center px-4 pt-28">
 
               <Backbutton />
+              <button onClick={() => setModalStatus(true)}>
+                modal
+              </button>
 
               <Outlet />
             </div>
