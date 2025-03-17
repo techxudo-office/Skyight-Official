@@ -6,7 +6,7 @@ import {
   CardLayoutBody,
   CardLayoutFooter,
 } from "../../../components/CardLayout/CardLayout";
-import { Input, Button, Spinner } from "../../../components/components";
+import { Input, Button, Spinner, ModalWrapper } from "../../../components/components";
 import { useDispatch, useSelector } from "react-redux";
 import { editRole } from "../../../_core/features/roleSlice";
 import { getRoles } from "../../../_core/features/roleSlice";
@@ -62,16 +62,16 @@ const EditUserModal = ({ isOpen, onClose, usersData }) => {
         first_name: usersData.first_name || "",
         last_name: usersData.last_name || "",
         mobile_number: usersData.mobile_number || "",
-        role_id: usersData.role_id || "",
+        role_id: usersData.role.id || "",
       });
 
-      const role = roles?.find((r) => r.id === usersData.id);
+      const role = roles?.find((r) => r.id === usersData.role.id);
       setSelectedRole(role || null);
     }
   }, [usersData, roles]);
 
   useEffect(() => {
-    dispatch(getRoles({token: userData?.token }));
+    dispatch(getRoles({ token: userData?.token }));
   }, [dispatch]);
 
   const handleChange = (e) => {
@@ -123,13 +123,10 @@ const EditUserModal = ({ isOpen, onClose, usersData }) => {
   };
 
   return (
-    <Modal
+    <ModalWrapper
       isOpen={isOpen}
       onRequestClose={onClose}
-      contentLabel="Edit User"
-      className="modal-content w-[600px] bg-white rounded-xl shadow-lg p-6"
-      overlayClassName="modal-overlay fixed inset-0 flex justify-center items-center"
-      closeTimeoutMS={300}
+      contentLabel="Edit Role"
     >
       <CardLayoutContainer>
         <CardLayoutHeader heading="Edit User" />
@@ -190,7 +187,7 @@ const EditUserModal = ({ isOpen, onClose, usersData }) => {
           </div>
         </CardLayoutFooter>
       </CardLayoutContainer>
-    </Modal>
+    </ModalWrapper>
   );
 };
 
