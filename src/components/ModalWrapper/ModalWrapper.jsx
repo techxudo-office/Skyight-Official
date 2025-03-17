@@ -13,9 +13,10 @@ export default function ModalWrapper({
             isOpen={isOpen}
             onRequestClose={onRequestClose}
             contentLabel={contentLabel}
-            className={`modal-container border-4 border-primary rounded-2xl ${className}`}
-            overlayClassName="modal-overlay"
-            closeTimeoutMS={400}>
+            className={`modal-content w-[600px] bg-white text-text border-4 rounded-xl border-primary max-h-[90%] overflow-auto  shadow-lg p-6 ${className}`}
+            overlayClassName="modal-overlay fixed inset-0 flex justify-center items-center"
+            closeTimeoutMS={300}
+        >
             {children}
         </Modal>
     )

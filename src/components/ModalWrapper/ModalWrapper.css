@@ -1,52 +1,32 @@
-/* Modal overlay */
 .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 100%;
     background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    transition: opacity 0.3s ease;
     opacity: 0;
-    transition: opacity 400ms ease-in-out;
   }
   
-  /* Modal overlay when open */
+  .modal-content {
+    opacity: 0;
+    transform: scale(0.8);
+    transition:
+      opacity 0.3s ease,
+      transform 0.3s ease;
+  }
+  
   .ReactModal__Overlay--after-open {
     opacity: 1;
   }
   
-  /* Modal overlay when closing */
   .ReactModal__Overlay--before-close {
     opacity: 0;
   }
   
-  /* Modal container */
-  .modal-container {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    outline: none;
-    transform: scale(0.4);
-    opacity: 0;
-    transition: transform 400ms ease-in-out, opacity 400ms ease-in-out;
-    transform-origin: center; /* Ensure zooming happens from the center */
-    margin: auto !important; /* Center the modal */
-  }
-  
-  /* Modal container when open */
   .ReactModal__Content--after-open {
-    margin: auto;
-    transform: scale(1) ;
     opacity: 1;
+    transform: scale(1);
   }
   
-  /* Modal container when closing */
   .ReactModal__Content--before-close {
-    transform: scale(0.4) !important;
-    height: fit-content !important;
     opacity: 0;
+    transform: scale(0.8);
   }
+  

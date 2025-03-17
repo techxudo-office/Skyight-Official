@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ModalWrapper, SecondaryButton, Table } from "../../components/components";
+import { Button, ModalWrapper, SecondaryButton, Table } from "../../components/components";
 import { FaEye } from "react-icons/fa";
 import { MdAdd } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
@@ -139,11 +139,13 @@ const Transactions = () => {
             <p>
               <strong>Status:</strong> {selectedTransaction?.status}
             </p>
-            <button
+            <Button
               onClick={closeModal}
-              className="px-4 py-2 mt-4 text-white bg-red-500 rounded-md">
-              Close
-            </button>
+              text={"Close"}
+              className="hover:bg-primary bg-redColor mt-4"
+            >
+
+            </Button>
           </div>
         )}
       </ModalWrapper>
