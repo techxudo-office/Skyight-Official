@@ -46,3 +46,4 @@ export { default as AvailableFlights } from "./AvailableFlights/AvailableFlights
 export { default as CreditsDropdown } from "./CreditsDropdown/CreditsDropdown";
 export { default as AnnouncementCard } from "./AnnouncementCard/AnnouncementCard";
 export { default as PhoneNumberInput } from "./PhoneNumberInput/PhoneNumberInput";
+export { default as ModalWrapper } from "./ModalWrapper/ModalWrapper";

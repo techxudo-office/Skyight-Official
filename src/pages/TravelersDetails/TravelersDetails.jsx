@@ -231,7 +231,7 @@ const TravelersDetails = () => {
                             <div className="flex flex-col max-w-full gap-6 py-10 mx-3 md:w-80 lg:mx-auto">
                               <div className="flex items-center gap-2 ">
                                 <Select
-                                  onClick={() => gettingTravellers(travelertype)}
+                                  onMouseEnter={() => gettingTravellers(travelertype)}
                                   id={"passengers"}
                                   disabled={disableAddTraveler.includes(travelerIndex)}
                                   label={"Passengers"}

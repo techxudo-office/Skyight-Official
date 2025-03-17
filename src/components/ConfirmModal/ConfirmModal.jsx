@@ -21,9 +21,8 @@ const ConfirmModal = ({ status, onAbort, onConfirm, text, loading }) => {
     <>
       <div
         ref={modalRef}
-        className={`transition-all absolute z-10 ${
-          status ? "top-16" : "top-[-100%]"
-        } left-[50%] translate-x-[-50%]`}
+        className={`transition-all absolute z-10 ${status ? "top-16" : "top-[-100%]"
+          } left-[50%] translate-x-[-50%]`}
       >
         <div
           className={
@@ -50,7 +49,7 @@ const ConfirmModal = ({ status, onAbort, onConfirm, text, loading }) => {
             <div>
               <Button
                 text="Cancel"
-                className="bg-red-500 hover:bg-red-700"
+                className="bg-redColor"
                 onClick={onAbort}
               />
             </div>

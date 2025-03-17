@@ -6,10 +6,9 @@ import {
   CardLayoutBody,
   CardLayoutFooter,
 } from "../../../components/CardLayout/CardLayout";
-import { Input, Button, Spinner } from "../../../components/components";
+import { Input, Button, Spinner, ModalWrapper } from "../../../components/components";
 import { useDispatch, useSelector } from "react-redux";
 import { editRole } from "../../../_core/features/roleSlice";
-import './EditRoleModal.css'
 
 Modal.setAppElement("#root");
 
@@ -84,15 +83,12 @@ const EditRoleModal = ({ isOpen, onClose, roleData }) => {
   };
 
   return (
-    <Modal
+    <ModalWrapper
       isOpen={isOpen}
       onRequestClose={onClose}
       contentLabel="Edit Role"
-      className="modal-content w-[600px] bg-white rounded-xl shadow-lg p-6"
-      overlayClassName="modal-overlay fixed inset-0 flex justify-center items-center"
-      closeTimeoutMS={300}
     >
-      <CardLayoutContainer>
+      <CardLayoutContainer >
         <CardLayoutHeader heading="Edit Role" />
         <CardLayoutBody>
           <div className="flex flex-col gap-4">
@@ -151,10 +147,10 @@ const EditRoleModal = ({ isOpen, onClose, roleData }) => {
             onClick={handleSubmit}
             disabled={isLoadingUpdateRole}
           />
-          <Button text="Cancel" onClick={onClose} />
+          <Button text="Cancel" className="bg-redColor" onClick={onClose} />
         </CardLayoutFooter>
       </CardLayoutContainer>
-    </Modal>
+    </ModalWrapper>
   );
 };
 

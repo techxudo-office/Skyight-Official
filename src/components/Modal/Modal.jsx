@@ -11,11 +11,10 @@ export default function Modal({
     toggle,
     onClose // Handle closing from parent
 }) {
-    if (!active) return null; // Hide modal when inactive
-    
+
 
     return (
-        <div className="fixed inset-0 flex items-center justify-center max-md:px-5 bg-black backdrop-blur-sm z-[999] bg-opacity-50">
+        <div className={`${active ? "bg-opacity-50" : "bg-opacity-0 scale-0"} transition-all ease-in-out duration-500 fixed inset-0 flex items-center justify-center max-md:px-5 bg-black backdrop-blur-sm z-[999] `}>
             {/* Close Button */}
             {toggle && (
                 <MdCancel
@@ -24,7 +23,7 @@ export default function Modal({
                 />
             )}
 
-            <div className="bg-blue-100 py-5 rounded-2xl shadow-xl w-full max-w-md border-2 border-primary">
+            <div className={`${active ? "scale-100" : "scale-0"} transition-all duration-100 ease-in-out bg-blue-100 py-5 rounded-2xl shadow-xl w-full max-w-md border-2 border-primary`}>
                 {/* Logo */}
                 <div className="flex justify-center mb-4">
                     <img src={imgsrc} alt="logo" className="w-20" />

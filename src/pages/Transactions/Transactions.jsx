@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { SecondaryButton, Table } from "../../components/components";
+import { Button, ModalWrapper, SecondaryButton, Table } from "../../components/components";
 import { FaEye } from "react-icons/fa";
 import { MdAdd } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
@@ -117,13 +117,11 @@ const Transactions = () => {
 
         <CardLayoutFooter />
       </CardLayoutContainer>
-      <Modal
+      <ModalWrapper
         isOpen={isModalOpen}
         onRequestClose={closeModal}
         contentLabel="Transaction Details"
-        className="modal-container"
-        overlayClassName="modal-overlay"
-        closeTimeoutMS={400}>
+      >
         {selectedTransaction && (
           <div className="p-6">
             <h2 className="mb-4 text-xl font-semibold">Transaction Details</h2>
@@ -141,14 +139,16 @@ const Transactions = () => {
             <p>
               <strong>Status:</strong> {selectedTransaction?.status}
             </p>
-            <button
+            <Button
               onClick={closeModal}
-              className="px-4 py-2 mt-4 text-white bg-red-500 rounded-md">
-              Close
-            </button>
+              text={"Close"}
+              className="hover:bg-primary bg-redColor mt-4"
+            >
+
+            </Button>
           </div>
         )}
-      </Modal>
+      </ModalWrapper>
     </>
   );
 };
