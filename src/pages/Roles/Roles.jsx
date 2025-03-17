@@ -3,100 +3,118 @@ import {
   CardLayoutContainer,
   CardLayoutHeader,
   CardLayoutBody,
-  CardLayoutFooter,
 } from "../../components/CardLayout/CardLayout";
 
 import { FaEye } from "react-icons/fa";
-import { MdEditSquare, MdFilterList } from "react-icons/md";
+import { MdEditSquare } from "react-icons/md";
 import { FaRegCircleCheck, FaPlus } from "react-icons/fa6";
 import { MdAutoDelete } from "react-icons/md";
 
 import {
-  Dropdown,
+  ConfirmModal,
   SecondaryButton,
   Table,
-  TableNew,
 } from "../../components/components";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getRoles } from "../../_core/features/roleSlice";
-import { roleColumns } from "../../data/columns";
+import { deleteRole, getRoles } from "../../_core/features/roleSlice";
 
 const Roles = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [activeIndex, setActiveIndex] = useState(null);
-  const [dropdownStatus, setDropdownStatus] = useState(false);
-  const { roles, isLoadingRoles } = useSelector((state) => state.role);
+  const [deleteId, setDeleteId] = useState(null);
+  const [modalStatus, setModalStatus] = useState(false);
+  const { roles, isLoadingRoles, isDeletingRole } = useSelector(
+    (state) => state.role
+  );
   const userData = useSelector((state) => state.auth.userData);
 
   useEffect(() => {
     dispatch(getRoles({ page: 0, limit: 10, token: userData?.token }));
   }, [dispatch, userData?.token]);
 
-  const actionsData = [
+  const roleColumns = [
     {
-      name: "View",
-      icon: <FaEye title="View" className="text-green-500" />,
-      handler: (index) => {
-        if (activeIndex === index) {
-          setActiveIndex(null);
-        } else setActiveIndex(index);
-      },
+      name: "ROLE",
+      selector: (row) => row.role,
+      sortable: false,
+      minwidth: "150px",
+      center: true,
     },
     {
-      name: "Edit",
-      icon: <MdEditSquare title="Edit" className="text-blue-500" />,
-      handler: () => {
-        alert("Hello Im Edit Alert !");
-      },
+      name: "ROLE ID",
+      selector: (row) => row.id,
+      sortable: false,
+      minwidth: "150px",
+      center: true,
     },
     {
-      name: "Rights",
-      icon: (
-        <FaRegCircleCheck title="Rights" className="text-sm text-orange-500" />
+      name: "STATUS",
+      selector: (row) => row.status,
+      sortable: false,
+      minwidth: "150px",
+      center: true,
+    },
+    {
+      name: "",
+      selector: (row) => (
+        <div className="flex items-center gap-x-4">
+          <span
+            className="text-xl cursor-pointer"
+            onClick={() => navigate("/dashboard/update-reason", { state: row })}
+          >
+            <MdEditSquare title="Edit" className="text-blue-500" />
+          </span>
+          <span
+            className="text-xl cursor-pointer"
+            onClick={() => {
+              setModalStatus(true);
+              setDeleteId(row.id);
+            }}
+          >
+            <MdAutoDelete title="Delete" className="text-red-500" />
+          </span>
+        </div>
       ),
-      handler: () => {
-        alert("Hello Im Rights Alert !");
-      },
-    },
-    {
-      name: "Delete",
-      icon: <MdAutoDelete title="Delete" className="text-red-500" />,
-      handler: () => {
-        alert("Hello Im Delete Alert !");
-      },
+      sortable: false,
+      minwidth: "150px",
+      center: true,
     },
   ];
 
-  const filterOptions = [
-    {
-      name: "Filter One",
-      handler: () => {
-        setDropdownStatus(!dropdownStatus);
-      },
-    },
-    {
-      name: "Filter Two",
-      handler: () => {
-        setDropdownStatus(!dropdownStatus);
-      },
-    },
-    {
-      name: "Filter Three",
-      handler: () => {
-        setDropdownStatus(!dropdownStatus);
-      },
-    },
-  ];
+  const deleteUserHandler = () => {
+    console.log(deleteId, "deleteId TABLE");
+    if (!deleteId) {
+      errorToastify("Failed to delete this user");
+      setModalStatus(false);
+      return;
+    }
+
+    dispatch(deleteRole({ id: deleteId, token: userData?.token })).then(() => {
+      setModalStatus(false);
+      setDeleteId(null);
+    });
+  };
+
+  const abortDeleteHandler = () => {
+    setModalStatus(false);
+    setDeleteId(null);
+  };
 
   return (
     <>
+      <ConfirmModal
+        status={modalStatus}
+        loading={isDeletingRole}
+        onAbort={abortDeleteHandler}
+        onConfirm={deleteUserHandler}
+      />
       <CardLayoutContainer removeBg={true}>
         <CardLayoutHeader
           removeBorder={true}
           heading={"Roles"}
-          className="flex items-center justify-between">
+          className="flex items-center justify-between"
+        >
           <div className="relative">
             <SecondaryButton
               text={"Create New Role"}
@@ -105,19 +123,6 @@ const Roles = () => {
                 navigate("/dashboard/create-role");
               }}
               className="mb-4"
-            />
-            <SecondaryButton
-              text={"Filters"}
-              icon={<MdFilterList />}
-              onClick={() => {
-                setDropdownStatus(!dropdownStatus);
-              }}
-            />
-            <Dropdown
-              className={"top-16 right-10"}
-              status={dropdownStatus}
-              changeStatus={setDropdownStatus}
-              options={filterOptions}
             />
           </div>
         </CardLayoutHeader>

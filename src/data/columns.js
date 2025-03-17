@@ -32,27 +32,3 @@ export const transactionViewColumns = [
     type: "text",
   },
 ];
-
-export const roleColumns = [
-  {
-    name: "ROLE",
-    selector: (row) => row.role,
-    sortable: false,
-    minwidth: "150px",
-    center: true,
-  },
-  {
-    name: "ROLE ID",
-    selector: (row) => row.id,
-    sortable: false,
-    minwidth: "150px",
-    center: true,
-  },
-  {
-    name: "STATUS",
-    selector: (row) => row.status,
-    sortable: false,
-    minwidth: "150px",
-    center: true,
-  },
-];

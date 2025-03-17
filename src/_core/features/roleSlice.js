@@ -9,6 +9,9 @@ const initialState = {
   isLoadingCreateRole: false,
   rolesError: null,
   totalPages: 1,
+
+  isDeletingRole: false,
+  deleteRoleError: null,
 };
 
 const roleSlice = createSlice({
@@ -55,19 +58,34 @@ const roleSlice = createSlice({
       .addCase(createRole.rejected, (state, action) => {
         state.isLoadingCreateRole = false;
         state.rolesError = action.payload;
+      })
+      .addCase(deleteRole.pending, (state) => {
+        state.isDeletingRole = true;
+        state.deleteRoleError = null;
+      })
+      .addCase(deleteRole.fulfilled, (state, action) => {
+        state.isDeletingRole = false;
+        state.roles = state.roles.filter((role) => role.id !== action.payload);
+      })
+      .addCase(deleteRole.rejected, (state, action) => {
+        state.isDeletingRole = false;
+        state.deleteRoleError = action.payload;
       });
   },
 });
 
 export const getRoles = createAsyncThunk(
   "role/getRoles",
-  async ({ page = 0, limit = 10, token }, thunkAPI) => {
+  async ({ token }, thunkAPI) => {
     try {
-      const response = await axios.get(`${BASE_URL}/api/role`, {
-        headers: {
-          Authorization: token,
-        },
-      });
+      const response = await axios.get(
+        `${BASE_URL}/api/role?is_deleted=false`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
 
       return {
         data: response.data.data,
@@ -97,6 +115,28 @@ export const createRole = createAsyncThunk(
     } catch (error) {
       const errorMessage =
         error?.response?.data?.message || "Failed to create role.";
+      toast.error(errorMessage);
+      return thunkAPI.rejectWithValue(errorMessage);
+    }
+  }
+);
+
+export const deleteRole = createAsyncThunk(
+  "role/deleteRole",
+  async ({ id, token }, thunkAPI) => {
+    try {
+      let response = await axios.delete(`${BASE_URL}/api/role/${id}`, {
+        headers: {
+          Authorization: token,
+        },
+      });
+
+      if (response.status === 200) {
+        toast.success("Role deleted successfully");
+        return id;
+      }
+    } catch (error) {
+      const errorMessage = "Failed while deleting this role";
       toast.error(errorMessage);
       return thunkAPI.rejectWithValue(errorMessage);
     }
