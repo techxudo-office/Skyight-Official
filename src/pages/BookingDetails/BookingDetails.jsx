@@ -9,12 +9,12 @@ import {
 } from "../../components/CardLayout/CardLayout";
 import {
   Button,
-  TableNew,
   ConfirmModal,
   Tag,
   DownloadButton,
+  Table,
 } from "../../components/components";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
 import { IoIosAirplane, IoMdClock } from "react-icons/io";
 import dayjs from "dayjs";
@@ -42,9 +42,7 @@ const TicketDetails = () => {
     text: "",
   });
   const { userData } = useSelector((state) => state.auth);
-  // const { bookingDetails, isLoadingBookingDetails } = useSelector(
-  //   (state) => state.booking
-  // );
+  const { isLoadingBookingDetails } = useSelector((state) => state.booking);
   const [bookingDetails, setBookingDetails] = useState();
 
   const printRef = useRef();
@@ -204,11 +202,7 @@ const TicketDetails = () => {
                       }))
                     }
                     text={"Request Refund"}
-                    disabled={[
-                      "requested-refund",
-                      "booked",
-                      "requested-cancellation",
-                    ].includes(bookingDetails?.booking_status)}
+                    disabled={bookingDetails?.booking_status !== "confirmed"}
                   />
                 </div>
                 <div>
@@ -228,11 +222,7 @@ const TicketDetails = () => {
                       }))
                     }
                     text={"Request Cancellation"}
-                    disabled={[
-                      "requested-refund",
-                      "booked",
-                      "requested-cancellation",
-                    ].includes(bookingDetails?.booking_status)}
+                    disabled={bookingDetails?.booking_status !== "confirmed"}
                   />
                 </div>
               </div>
@@ -330,42 +320,64 @@ const TicketDetails = () => {
           <CardLayoutHeader className={"mb-2"} heading="Passenger Details" />
 
           {bookingDetails && (
-            <TableNew
-              pagination={false}
-              tableData={bookingDetails?.passengers}
-              columnsToView={[
-                { columnName: "Name", fieldName: "given_name", type: "text" },
+            <Table
+              pagination={true}
+              columnsData={[
                 {
-                  columnName: "Type",
-                  fieldName: "passenger_type_code",
-                  type: "text",
+                  name: "NAME",
+                  selector: (row) => row.given_name,
+                  sortable: false,
+                  minWidth: "150px",
+                  center: true,
                 },
                 {
-                  columnName: "Birth Date",
-                  fieldName: "birth_date",
-                  type: "date",
+                  name: "TYPE",
+                  selector: (row) => row.passenger_type_code,
+                  sortable: false,
+                  minWidth: "150px",
+                  center: true,
                 },
                 {
-                  columnName: "Passport Number",
-                  fieldName: "doc_id",
-                  type: "text",
+                  name: "BIRTH DATE",
+                  selector: (row) => dayjs(row.birth_date).format("D-MMM-YYYY"),
+                  sortable: false,
+                  minWidth: "150px",
+                  center: true,
                 },
                 {
-                  columnName: "Expiry",
-                  fieldName: "expire_date",
-                  type: "date",
+                  name: "PASSPORT NUMBER",
+                  selector: (row) => row.doc_id,
+                  sortable: false,
+                  minWidth: "150px",
+                  center: true,
                 },
                 {
-                  columnName: "Issuance",
-                  fieldName: "doc_issue_country",
-                  type: "text",
+                  name: "EXPIRY",
+                  selector: (row) =>
+                    dayjs(row.expire_date).format("D-MMM-YYYY"),
+                  sortable: false,
+                  minWidth: "150px",
+                  center: true,
                 },
                 {
-                  columnName: "Nationality",
-                  fieldName: "nationality",
-                  type: "text",
+                  name: "ISSUANCE",
+                  selector: (row) => row.doc_issue_country,
+                  sortable: false,
+                  minWidth: "150px",
+                  center: true,
+                },
+                {
+                  name: "NATIONALITY",
+                  selector: (row) => row.nationality,
+                  sortable: false,
+                  minWidth: "150px",
+                  center: true,
                 },
               ]}
+              tableData={bookingDetails?.passengers || []}
+              progressPending={isLoadingBookingDetails}
+              paginationTotalRows={bookingDetails?.passengers.length}
+              paginationComponentOptions={{ noRowsPerPage: "10" }}
             />
           )}
         </CardLayoutContainer>
@@ -374,45 +386,103 @@ const TicketDetails = () => {
             className={"mb-2"}
             heading={"Pricing Information"}
           />
-          {bookingDetails && (
-            <TableNew
-              pagination={false}
-              tableData={bookingDetails?.passengers}
-              columnsToView={[
-                { columnName: "Name", fieldName: "given_name", type: "text" },
-                {
-                  columnName: "Type",
-                  fieldName: "passenger_type_code",
-                  type: "text",
-                },
-                {
-                  columnName: "Birth Date",
-                  fieldName: "birth_date",
-                  type: "date",
-                },
-                {
-                  columnName: "Passport Number",
-                  fieldName: "doc_id",
-                  type: "text",
-                },
-                {
-                  columnName: "Expiry",
-                  fieldName: "expire_date",
-                  type: "date",
-                },
-                {
-                  columnName: "Issuance",
-                  fieldName: "doc_issue_country",
-                  type: "text",
-                },
-                {
-                  columnName: "Nationality",
-                  fieldName: "nationality",
-                  type: "text",
-                },
-              ]}
-            />
-          )}
+          {/* {bookingDetails && (
+            // <TableNew
+            //   pagination={false}
+            //   tableData={bookingDetails?.passengers}
+            //   columnsToView={[
+            //     { columnName: "Name", fieldName: "given_name", type: "text" },
+            //     {
+            //       columnName: "Type",
+            //       fieldName: "passenger_type_code",
+            //       type: "text",
+            //     },
+            //     {
+            //       columnName: "Birth Date",
+            //       fieldName: "birth_date",
+            //       type: "date",
+            //     },
+            //     {
+            //       columnName: "Passport Number",
+            //       fieldName: "doc_id",
+            //       type: "text",
+            //     },
+            //     {
+            //       columnName: "Expiry",
+            //       fieldName: "expire_date",
+            //       type: "date",
+            //     },
+            //     {
+            //       columnName: "Issuance",
+            //       fieldName: "doc_issue_country",
+            //       type: "text",
+            //     },
+            //     {
+            //       columnName: "Nationality",
+            //       fieldName: "nationality",
+            //       type: "text",
+            //     },
+            //   ]}
+            // />
+            // <Table
+            //   pagination={true}
+            //   columnsData={[
+            //     {
+            //       name: "NAME",
+            //       selector: (row) => row.given_name,
+            //       sortable: false,
+            //       minWidth: "150px",
+            //       center: true,
+            //     },
+            //     {
+            //       name: "TYPE",
+            //       selector: (row) => row.passenger_type_code,
+            //       sortable: false,
+            //       minWidth: "150px",
+            //       center: true,
+            //     },
+            //     {
+            //       name: "BIRTH DATE",
+            //       selector: (row) => row.passenger_type_code,
+            //       sortable: false,
+            //       minWidth: "150px",
+            //       center: true,
+            //     },
+            //     {
+            //       name: "PASSPORT NUMBER",
+            //       selector: (row) => row.doc_id,
+            //       sortable: false,
+            //       minWidth: "150px",
+            //       center: true,
+            //     },
+            //     {
+            //       name: "EXPIRY",
+            //       selector: (row) => row.expire_date,
+            //       sortable: false,
+            //       minWidth: "150px",
+            //       center: true,
+            //     },
+            //     {
+            //       name: "ISSUANCE",
+            //       selector: (row) => row.doc_issue_country,
+            //       sortable: false,
+            //       minWidth: "150px",
+            //       center: true,
+            //     },
+            //     {
+            //       name: "NATIONALITY",
+            //       selector: (row) => row.nationality,
+            //       sortable: false,
+            //       minWidth: "150px",
+            //       center: true,
+            //     },
+            //   ]}
+            //   tableData={bookingDetails?.passengers}
+            //   // progressPending={isLoadingUsers}
+            //   paginationTotalRows={bookingDetails?.passengers.length}
+            //   paginationComponentOptions={{ noRowsPerPage: "10" }}
+            // />
+          )} */}
           <CardLayoutFooter>
             <h2 className="text-xl font-semibold text-slate-600">
               Total Fare: {Number(bookingDetails?.total_fare).toLocaleString()}

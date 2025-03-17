@@ -227,6 +227,7 @@ const CreateTransaction = () => {
 
                     <div className="relative mb-5">
                       <CustomDate
+                      pastDate={false}
                         label={"Transaction Date"}
                         isTimePicker={true}
                         value={values.payment_date}

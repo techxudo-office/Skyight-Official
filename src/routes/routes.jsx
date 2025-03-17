@@ -1,11 +1,27 @@
-import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import React, { useEffect } from "react";
+import {
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import { useSelector } from "react-redux";
 import { routesData } from "../data/routesData";
+import toast from "react-hot-toast";
 
 const AppRoutes = () => {
-  const userData = useSelector((state) => state.auth.userData);
-  console.log(userData, "userData");
+  const { userData } = useSelector((state) => state.auth);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const auth = localStorage.getItem("auth_token");
+
+  useEffect(() => {
+    if (!auth) {
+      toast.error("Session expired");
+      navigate("/login", { replace: true });
+    }
+  }, [location.pathname, userData?.token, navigate]);
 
   return (
     <Routes>
@@ -19,7 +35,7 @@ const AppRoutes = () => {
                   index={child.index}
                   path={child.path}
                   element={
-                    child.protected && !userData ? (
+                    child.protected && !userData?.token ? (
                       <Navigate to="/login" replace />
                     ) : (
                       child.element
@@ -36,7 +52,7 @@ const AppRoutes = () => {
             key={index}
             path={route.path}
             element={
-              route.protected && !userData ? (
+              route.protected && !userData?.token ? (
                 <Navigate to="/login" replace />
               ) : (
                 route.element

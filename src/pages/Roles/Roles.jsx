@@ -27,42 +27,13 @@ const Roles = () => {
   const dispatch = useDispatch();
   const [activeIndex, setActiveIndex] = useState(null);
   const [dropdownStatus, setDropdownStatus] = useState(false);
-  const [rolesData, setRolesData] = useState([]);
-  const { roles, isLoadingRoles, rolesError } = useSelector(
-    (state) => state.role
-  );
+  const { roles, isLoadingRoles } = useSelector((state) => state.role);
   const userData = useSelector((state) => state.auth.userData);
 
   useEffect(() => {
-    dispatch(getRoles({ page: 0, limit: 10, token: userData?.token }))
-      .then(() => {
-        if (roles) {
-          const formattedData = roles.roles.map((item) => ({
-            id: item.id.toString(),
-            role: item.name || "Unknown",
-            roleRights: item.page_permission
-              ? Object.keys(item.page_permission)
-                  .filter((key) => item.page_permission[key])
-                  .map((key) => key.replace(/_/g, " "))
-                  .join(", ")
-              : "No Permissions",
-            status: item.is_deleted ? "inactive" : "active",
-          }));
-          setRolesData(formattedData);
-        } else {
-          setRolesData([]);
-        }
-      })
-      .catch(() => {
-        setRolesData([]);
-      });
-  }, [dispatch]);
+    dispatch(getRoles({ page: 0, limit: 10, token: userData?.token }));
+  }, [dispatch, userData?.token]);
 
-  const columnsData = [
-    { columnName: "Role", fieldName: "role", type: "text" },
-    { columnName: "Role ID", fieldName: "id", type: "id" },
-    { columnName: "Status", fieldName: "status", type: "status" },
-  ];
   const actionsData = [
     {
       name: "View",
@@ -151,20 +122,12 @@ const Roles = () => {
           </div>
         </CardLayoutHeader>
         <CardLayoutBody removeBorder={true}>
-          {/* <TableNew
-            columnsToView={columnsData}
-            tableData={rolesData}
-            actions={actionsData}
-            extraRows={["roleRights"]}
-            activeIndex={activeIndex}
-            loader={isLoadingRoles}
-          /> */}
           <Table
             pagination={true}
             columnsData={roleColumns}
-            tableData={rolesData}
+            tableData={roles || []}
             progressPending={isLoadingRoles}
-            paginationTotalRows={rolesData.length}
+            paginationTotalRows={roles.length}
             paginationComponentOptions={{ noRowsPerPage: "10" }}
           />
         </CardLayoutBody>

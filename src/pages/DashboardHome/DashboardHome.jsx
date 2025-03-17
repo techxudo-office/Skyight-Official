@@ -83,32 +83,33 @@ const DashboardHome = () => {
         </span>
       ),
       sortable: false,
-      center: "yes",
+      minwidth: "150px",
+      center: true,
     },
     {
       name: "PNR",
       selector: (row) => row.booking_reference_id,
       sortable: false,
       minwidth: "150px",
-      center: "yes",
+      center: true,
     },
     {
       name: "TOTAL FARE",
       selector: (row) => row.total_fare,
       sortable: false,
-      center: "yes",
+      center: true,
     },
     {
       name: "STATUS",
       selector: (row) => row.booking_status,
       sortable: false,
-      center: "yes",
+      center: true,
     },
     {
       name: "CREATED AT",
       selector: (row) => dayjs(row.created_at).format("MMM-DD-YYYY"),
       sortable: false,
-      center: "yes",
+      center: true,
     },
     {
       name: "",
@@ -124,7 +125,7 @@ const DashboardHome = () => {
         </span>
       ),
       sortable: false,
-      center: "yes",
+      center: true,
     },
   ];
   useEffect(() => {
@@ -168,7 +169,7 @@ const DashboardHome = () => {
           <Table
             pagination={true}
             columnsData={columns}
-            tableData={flightBookings}
+            tableData={flightBookings || []}
             progressPending={isLoadingFlightBookings}
             paginationTotalRows={flightBookings.length}
             paginationComponentOptions={{ noRowsPerPage: "10" }}

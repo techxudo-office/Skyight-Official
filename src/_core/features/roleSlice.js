@@ -23,8 +23,23 @@ const roleSlice = createSlice({
       })
       .addCase(getRoles.fulfilled, (state, action) => {
         state.isLoadingRoles = false;
-        state.roles = action.payload.data;
-        state.totalPages = action.payload.totalPages;
+
+        if (action.payload?.data?.roles) {
+          state.roles = action.payload.data.roles.map((item) => ({
+            id: item.id.toString(),
+            role: item.name || "Unknown",
+            roleRights: item.page_permission
+              ? Object.keys(item.page_permission)
+                  .filter((key) => item.page_permission[key])
+                  .map((key) => key.replace(/_/g, " "))
+                  .join(", ")
+              : "No Permissions",
+            status: item.is_deleted ? "inactive" : "active",
+          }));
+        } else {
+          state.roles = [];
+        }
+        state.totalPages = action.payload?.totalPages || 0;
       })
       .addCase(getRoles.rejected, (state, action) => {
         state.isLoadingRoles = false;
@@ -48,14 +63,11 @@ export const getRoles = createAsyncThunk(
   "role/getRoles",
   async ({ page = 0, limit = 10, token }, thunkAPI) => {
     try {
-      const response = await axios.get(
-        `${BASE_URL}/api/role?is_deleted=false&page=${page}&limit=${limit}`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
+      const response = await axios.get(`${BASE_URL}/api/role`, {
+        headers: {
+          Authorization: token,
+        },
+      });
 
       return {
         data: response.data.data,
