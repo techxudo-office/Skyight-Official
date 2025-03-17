@@ -36,8 +36,8 @@ const TicketDetails = () => {
   const dispatch = useDispatch();
   const [getPnr, setGetPnr] = useState(null);
   const [confirmObject, setConfirmObject] = useState({
-    onAbort: () => {},
-    onConfirm: () => {},
+    onAbort: () => { },
+    onConfirm: () => { },
     status: false,
     text: "",
   });
@@ -430,9 +430,9 @@ const TicketDetails = () => {
               }}
             />
           </div>
-          <div>
+          {/* <div>
             <Button text="View ticket" onClick={downloadHandler} />
-          </div>
+          </div> */}
           <div></div>
         </div>
       </div>
