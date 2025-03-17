@@ -97,6 +97,10 @@ const CreateUser = () => {
     dispatch(getRoles({ page: 0, limit: 10, token: userData?.token }));
   }, [dispatch]);
 
+  useEffect(() => {
+    console.log(roles, "Roles");
+  }, [roles]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -156,7 +160,8 @@ const CreateUser = () => {
               <div className="relative">
                 <div
                   className="relative flex items-center justify-between w-full p-3 bg-white border border-gray-300 rounded-md cursor-pointer"
-                  onClick={() => setDropdownOpen(!dropdownOpen)}>
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                >
                   <span>
                     {selectedRole ? selectedRole.name : "Select a Role"}
                   </span>
@@ -164,13 +169,14 @@ const CreateUser = () => {
                 </div>
                 {dropdownOpen && (
                   <ul className="absolute z-10 w-full mt-1 overflow-y-auto bg-white border border-gray-300 rounded-md shadow-md max-h-40">
-                    {roles.roles.length > 0 ? (
-                      roles.roles.map((role) => (
+                    {roles?.length > 0 ? (
+                      roles.map((role) => (
                         <li
                           key={role.id}
                           className="p-3 cursor-pointer hover:bg-gray-100"
-                          onClick={() => handleRoleSelect(role)}>
-                          {role.name}
+                          onClick={() => handleRoleSelect(role)}
+                        >
+                          {role.role}
                         </li>
                       ))
                     ) : (

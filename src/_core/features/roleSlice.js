@@ -165,7 +165,6 @@ export const editRole = createAsyncThunk(
   "role/editRole",
   async ({ id, token, data }, thunkAPI) => {
     try {
-      console.log(data,"data")
       let response = await axios.put(`${BASE_URL}/api/role/${id}`, data, {
         headers: {
           Authorization: token,

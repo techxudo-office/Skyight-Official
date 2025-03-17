@@ -13,6 +13,9 @@ const initialState = {
 
   isDeletingUser: false,
   deleteUserError: null,
+
+  isEditingUser: false,
+  editUserError: null,
 };
 
 const userSlice = createSlice({
@@ -57,6 +60,22 @@ const userSlice = createSlice({
       .addCase(deleteUser.rejected, (state, action) => {
         state.isDeletingUser = false;
         state.deleteUserError = action.payload;
+      })
+      .addCase(editUser.pending, (state) => {
+        state.isEditingUser = true;
+        state.editUserError = null;
+      })
+      .addCase(editUser.fulfilled, (state, action) => {
+        state.isEditingUser = false;
+        const updatedUser = action.payload;
+        console.log(updatedUser);
+        state.users = state.users.map((user) =>
+          user.id === updatedUser.id ? { ...user, ...updatedUser } : user
+        );
+      })
+      .addCase(editUser.rejected, (state, action) => {
+        state.isEditingUser = false;
+        state.editUserError = action.payload;
       });
   },
 });
@@ -118,6 +137,29 @@ export const deleteUser = createAsyncThunk(
       }
     } catch (error) {
       const errorMessage = "Failed while deleting this user";
+      toast.error(errorMessage);
+      return thunkAPI.rejectWithValue(errorMessage);
+    }
+  }
+);
+
+export const editUser = createAsyncThunk(
+  "user/editUser",
+  async ({ id, token, data }, thunkAPI) => {
+    try {
+      console.log(data, "data");
+      let response = await axios.put(`${BASE_URL}/api/user/${id}`, data, {
+        headers: {
+          Authorization: token,
+        },
+      });
+
+      if (response.status === 200) {
+        toast.success("Role updated successfully");
+        return response.data.data;
+      }
+    } catch (error) {
+      const errorMessage = error?.response?.data?.message || "Failed while updating this role";
       toast.error(errorMessage);
       return thunkAPI.rejectWithValue(errorMessage);
     }

@@ -15,12 +15,15 @@ import {
 import { errorToastify } from "../../helper/toast";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteUser, getUsers } from "../../_core/features/userSlice";
+import EditUserModal from "./EditUserModal/EditUserModal";
 
 const Users = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [modalStatus, setModalStatus] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
+  const [modalStatus, setModalStatus] = useState(false);
+  const [editUserData, setEditUserData] = useState(null);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const { userData } = useSelector((state) => state.auth);
   const { users, isLoadingUsers, isDeletingUser } = useSelector(
     (state) => state.user
@@ -68,8 +71,10 @@ const Users = () => {
         <div className="flex items-center gap-x-4">
           <span
             className="text-xl cursor-pointer"
-            onClick={() =>
-              navigate("/dashboard/update-reason", { state: row })
+            onClick={() => {
+              setEditUserData(row);
+              setIsEditModalOpen(true);
+            }
             }>
             <MdEditSquare title="Edit" className="text-blue-500" />
           </span>
@@ -123,6 +128,11 @@ const Users = () => {
         loading={isDeletingUser}
         onAbort={abortDeleteHandler}
         onConfirm={deleteUserHandler}
+      />
+      <EditUserModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        usersData={editUserData}
       />
       <CardLayoutContainer removeBg={true}>
         <CardLayoutHeader
