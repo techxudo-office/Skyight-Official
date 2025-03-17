@@ -9,6 +9,7 @@ import {
 import { Input, Button, Spinner } from "../../../components/components";
 import { useDispatch, useSelector } from "react-redux";
 import { editRole } from "../../../_core/features/roleSlice";
+import './EditRoleModal.css'
 
 Modal.setAppElement("#root");
 
@@ -88,7 +89,8 @@ const EditRoleModal = ({ isOpen, onClose, roleData }) => {
       onRequestClose={onClose}
       contentLabel="Edit Role"
       className="modal-content w-[600px] bg-white rounded-xl shadow-lg p-6"
-      overlayClassName="modal-overlay fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
+      overlayClassName="modal-overlay fixed inset-0 flex justify-center items-center"
+      closeTimeoutMS={300}
     >
       <CardLayoutContainer>
         <CardLayoutHeader heading="Edit Role" />
