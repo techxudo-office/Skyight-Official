@@ -32,7 +32,7 @@ const Layout = () => {
             className="flex flex-col justify-between items-center h-[100vh]  bg-slate-100 overflow-scroll"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
-            <div className="w-full flex justify-center flex-col items-center px-4 pt-28">
+            <div className="flex flex-col items-center justify-center w-full px-4 pt-28">
 
               <Backbutton />
 

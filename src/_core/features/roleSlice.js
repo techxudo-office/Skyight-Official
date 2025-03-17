@@ -12,6 +12,9 @@ const initialState = {
 
   isDeletingRole: false,
   deleteRoleError: null,
+
+  isEditingRole: false,
+  editRoleError: null,
 };
 
 const roleSlice = createSlice({
@@ -28,6 +31,7 @@ const roleSlice = createSlice({
         state.isLoadingRoles = false;
 
         if (action.payload?.data?.roles) {
+          console.log(action.payload.data.roles,"action.payload.data.roles")
           state.roles = action.payload.data.roles.map((item) => ({
             id: item.id.toString(),
             role: item.name || "Unknown",
@@ -38,6 +42,9 @@ const roleSlice = createSlice({
                   .join(", ")
               : "No Permissions",
             status: item.is_deleted ? "inactive" : "active",
+            description: item.description,
+            page_permission: item.page_permission,
+            action_permission: item.action_permission,
           }));
         } else {
           state.roles = [];
@@ -70,6 +77,17 @@ const roleSlice = createSlice({
       .addCase(deleteRole.rejected, (state, action) => {
         state.isDeletingRole = false;
         state.deleteRoleError = action.payload;
+      })
+      .addCase(editRole.pending, (state) => {
+        state.isEditingRole = true;
+        state.editRoleError = null;
+      })
+      .addCase(editRole.fulfilled, (state, action) => {
+        state.isEditingRole = false;
+      })
+      .addCase(editRole.rejected, (state, action) => {
+        state.isEditingRole = false;
+        state.editRoleError = action.payload;
       });
   },
 });
@@ -137,6 +155,29 @@ export const deleteRole = createAsyncThunk(
       }
     } catch (error) {
       const errorMessage = "Failed while deleting this role";
+      toast.error(errorMessage);
+      return thunkAPI.rejectWithValue(errorMessage);
+    }
+  }
+);
+
+export const editRole = createAsyncThunk(
+  "role/editRole",
+  async ({ id, token, data }, thunkAPI) => {
+    try {
+      console.log(data,"data")
+      let response = await axios.put(`${BASE_URL}/api/role/${id}`, data, {
+        headers: {
+          Authorization: token,
+        },
+      });
+
+      if (response.status === 200) {
+        toast.success("Role updated successfully");
+        return id;
+      }
+    } catch (error) {
+      const errorMessage = "Failed while updating this role";
       toast.error(errorMessage);
       return thunkAPI.rejectWithValue(errorMessage);
     }

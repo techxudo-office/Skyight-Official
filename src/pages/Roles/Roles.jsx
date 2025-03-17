@@ -4,10 +4,8 @@ import {
   CardLayoutHeader,
   CardLayoutBody,
 } from "../../components/CardLayout/CardLayout";
-
-import { FaEye } from "react-icons/fa";
 import { MdEditSquare } from "react-icons/md";
-import { FaRegCircleCheck, FaPlus } from "react-icons/fa6";
+import { FaPlus } from "react-icons/fa6";
 import { MdAutoDelete } from "react-icons/md";
 
 import {
@@ -18,12 +16,15 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteRole, getRoles } from "../../_core/features/roleSlice";
+import EditRoleModal from "./EditRoleModal/EditRoleModal";
 
 const Roles = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [deleteId, setDeleteId] = useState(null);
   const [modalStatus, setModalStatus] = useState(false);
+  const [editRoleData, setEditRoleData] = useState(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const { roles, isLoadingRoles, isDeletingRole } = useSelector(
     (state) => state.role
   );
@@ -61,7 +62,10 @@ const Roles = () => {
         <div className="flex items-center gap-x-4">
           <span
             className="text-xl cursor-pointer"
-            onClick={() => navigate("/dashboard/update-reason", { state: row })}
+            onClick={() => {
+              setEditRoleData(row);
+              setIsEditModalOpen(true);
+            }}
           >
             <MdEditSquare title="Edit" className="text-blue-500" />
           </span>
@@ -108,6 +112,11 @@ const Roles = () => {
         loading={isDeletingRole}
         onAbort={abortDeleteHandler}
         onConfirm={deleteUserHandler}
+      />
+      <EditRoleModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        roleData={editRoleData}
       />
       <CardLayoutContainer removeBg={true}>
         <CardLayoutHeader
