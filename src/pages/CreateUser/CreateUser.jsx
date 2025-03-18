@@ -113,7 +113,7 @@ const CreateUser = () => {
     setSelectedRole(role);
     setFormData((prev) => ({
       ...prev,
-      role_id: role.id,
+      role_id: Number(role.id),
     }));
     setDropdownOpen(false);
   };
@@ -160,10 +160,9 @@ const CreateUser = () => {
               <div className="relative">
                 <div
                   className="relative flex items-center justify-between w-full p-3 bg-white border border-gray-300 rounded-md cursor-pointer"
-                  onClick={() => setDropdownOpen(!dropdownOpen)}
-                >
+                  onClick={() => setDropdownOpen(!dropdownOpen)}>
                   <span>
-                    {selectedRole ? selectedRole.name : "Select a Role"}
+                    {selectedRole ? selectedRole.role : "Select a Role"}
                   </span>
                   <FaCaretDown className="text-gray-500" />
                 </div>
@@ -174,8 +173,7 @@ const CreateUser = () => {
                         <li
                           key={role.id}
                           className="p-3 cursor-pointer hover:bg-gray-100"
-                          onClick={() => handleRoleSelect(role)}
-                        >
+                          onClick={() => handleRoleSelect(role)}>
                           {role.role}
                         </li>
                       ))

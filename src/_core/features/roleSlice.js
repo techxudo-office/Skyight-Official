@@ -31,15 +31,15 @@ const roleSlice = createSlice({
         state.isLoadingRoles = false;
 
         if (action.payload?.data?.roles) {
-          console.log(action.payload.data.roles,"action.payload.data.roles")
+          console.log(action.payload.data.roles, "action.payload.data.roles")
           state.roles = action.payload.data.roles.map((item) => ({
             id: item.id.toString(),
             role: item.name || "Unknown",
             roleRights: item.page_permission
               ? Object.keys(item.page_permission)
-                  .filter((key) => item.page_permission[key])
-                  .map((key) => key.replace(/_/g, " "))
-                  .join(", ")
+                .filter((key) => item.page_permission[key])
+                .map((key) => key.replace(/_/g, " "))
+                .join(", ")
               : "No Permissions",
             status: item.is_deleted ? "inactive" : "active",
             description: item.description,
@@ -84,6 +84,21 @@ const roleSlice = createSlice({
       })
       .addCase(editRole.fulfilled, (state, action) => {
         state.isEditingRole = false;
+        const updatedRole = action.payload;
+
+        console.log("Updated Role Payload:", updatedRole);
+        console.log("Existing Roles Before Update:", JSON.parse(JSON.stringify(state.roles)));
+
+        if (!Array.isArray(state.roles)) {
+          console.error("state.roles is not an array!", state.roles);
+          return;
+        }
+
+        state.roles = state.roles.map((role) =>
+          role.id == updatedRole.id ? { ...role, ...updatedRole } : role
+        );
+
+        console.log("Updated Roles After Update:", JSON.parse(JSON.stringify(state.roles)));
       })
       .addCase(editRole.rejected, (state, action) => {
         state.isEditingRole = false;
@@ -173,7 +188,7 @@ export const editRole = createAsyncThunk(
 
       if (response.status === 200) {
         toast.success("Role updated successfully");
-        return id;
+        return response.data.data;
       }
     } catch (error) {
       const errorMessage = "Failed while updating this role";

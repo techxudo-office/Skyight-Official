@@ -66,11 +66,10 @@ const Roles = () => {
             onClick={() => {
               setEditRoleData(row);
               setIsEditModalOpen(true);
-            }}
-          >
+            }}>
             <MdEditSquare title="Edit" className="text-blue-500" />
           </span>
-          <span
+          {/* <span
             className="text-xl cursor-pointer"
             onClick={() => {
               setModalStatus(true);
@@ -78,7 +77,7 @@ const Roles = () => {
             }}
           >
             <MdAutoDelete title="Delete" className="text-red-500" />
-          </span>
+          </span> */}
         </div>
       ),
       sortable: false,
@@ -87,33 +86,33 @@ const Roles = () => {
     },
   ];
 
-  const deleteUserHandler = () => {
-    console.log(deleteId, "deleteId TABLE");
-    if (!deleteId) {
-      errorToastify("Failed to delete this user");
-      setModalStatus(false);
-      return;
-    }
+  // const deleteUserHandler = () => {
+  //   console.log(deleteId, "deleteId TABLE");
+  //   if (!deleteId) {
+  //     errorToastify("Failed to delete this user");
+  //     setModalStatus(false);
+  //     return;
+  //   }
 
-    dispatch(deleteRole({ id: deleteId, token: userData?.token })).then(() => {
-      setModalStatus(false);
-      setDeleteId(null);
-    });
-  };
+  //   dispatch(deleteRole({ id: deleteId, token: userData?.token })).then(() => {
+  //     setModalStatus(false);
+  //     setDeleteId(null);
+  //   });
+  // };
 
-  const abortDeleteHandler = () => {
-    setModalStatus(false);
-    setDeleteId(null);
-  };
+  // const abortDeleteHandler = () => {
+  //   setModalStatus(false);
+  //   setDeleteId(null);
+  // };
 
   return (
     <>
-      <ConfirmModal
+      {/* <ConfirmModal
         status={modalStatus}
         loading={isDeletingRole}
         onAbort={abortDeleteHandler}
         onConfirm={deleteUserHandler}
-      />
+      /> */}
       <EditRoleModal
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
@@ -123,8 +122,7 @@ const Roles = () => {
         <CardLayoutHeader
           removeBorder={true}
           heading={"Roles"}
-          className="flex items-center justify-between"
-        >
+          className="flex items-center justify-between">
           <div className="relative">
             <SecondaryButton
               text={"Create New Role"}
