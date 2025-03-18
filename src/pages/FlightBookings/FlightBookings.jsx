@@ -62,6 +62,8 @@ const FlightBookings = () => {
       selector: (row) => <Tag value={row.booking_status} />,
       sortable: false,
       center: true,
+      wrap: true,
+      grow: 2
     },
     {
       name: "CREATED AT",
