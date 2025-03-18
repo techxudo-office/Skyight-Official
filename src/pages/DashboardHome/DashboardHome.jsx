@@ -1,10 +1,5 @@
 import React, { useEffect } from "react";
-import {
-  DashboardCards,
-  TableNew,
-  Searchbar,
-  Table,
-} from "../../components/components";
+import { DashboardCards, Searchbar, Table } from "../../components/components";
 import { useNavigate } from "react-router-dom";
 import {
   CardLayoutContainer,
