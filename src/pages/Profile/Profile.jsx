@@ -63,15 +63,7 @@ const Profile = () => {
     }
   };
 
-  const renderEditableField = (
-    label,
-    field,
-    profileData,
-    handleEdit,
-    handleChange,
-    editingField,
-    type = "text"
-  ) => {
+  const renderEditableField = (label, field, type = "text") => {
     return (
       <div className="flex flex-col w-full">
         <h4 className="mb-1 text-xs font-medium text-slate-500">{label}</h4>
@@ -96,9 +88,7 @@ const Profile = () => {
       <CardLayoutContainer className="w-full mb-5">
         <CardLayoutHeader
           className="flex flex-wrap items-center justify-start gap-5 py-3"
-          removeBorder={true}
-        >
-          {" "}
+          removeBorder={true}>
           <div className="relative w-16 h-16 overflow-hidden rounded-full cursor-pointer group">
             <img
               src={profileImage}
@@ -107,8 +97,7 @@ const Profile = () => {
             />
             <div
               className="absolute inset-0 flex items-center justify-center transition-opacity bg-black bg-opacity-50 opacity-0 group-hover:opacity-100"
-              onClick={() => fileInputRef.current.click()}
-            >
+              onClick={() => fileInputRef.current.click()}>
               <MdEdit className="text-xl text-white" />
             </div>
             <input
@@ -129,8 +118,7 @@ const Profile = () => {
       <CardLayoutContainer className="w-full mb-5">
         <CardLayoutHeader
           className="flex items-center justify-between gap-5 py-3"
-          removeBorder={true}
-        >
+          removeBorder={true}>
           <h2 className="text-2xl font-semibold text-text">
             Personal Information
           </h2>
@@ -138,48 +126,26 @@ const Profile = () => {
         <CardLayoutBody removeBorder={true}>
           <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3 md:gap-5 mb-7">
             {profileFields.map(({ label, field, type }, index) => (
-              <div key={index}>
-                {renderEditableField(
-                  label,
-                  field,
-                  profileData,
-                  handleEdit,
-                  handleChange,
-                  editingField,
-                  type
-                )}
-              </div>
+              <div key={index}>{renderEditableField(label, field, type)}</div>
             ))}
           </div>
         </CardLayoutBody>
         <CardLayoutHeader
           className="flex items-center justify-between gap-5 py-3"
-          removeBorder={true}
-        >
+          removeBorder={true}>
           <h2 className="text-2xl font-semibold text-text">Address</h2>
         </CardLayoutHeader>
         <CardLayoutBody>
           <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3 md:gap-5 mb-7">
             {addressFields.map(({ label, field, type }, index) => (
-              <div key={index}>
-                {renderEditableField(
-                  label,
-                  field,
-                  profileData,
-                  handleEdit,
-                  handleChange,
-                  editingField,
-                  type
-                )}
-              </div>
+              <div key={index}>{renderEditableField(label, field, type)}</div>
             ))}
           </div>
           <button
             disabled={!editingField}
             className={`px-4 py-2 mt-3 font-semibold text-white rounded-md 
     bg-primary ${editingField ? "cursor-pointer" : "cursor-not-allowed"}`}
-            onClick={handleSave}
-          >
+            onClick={handleSave}>
             Save Changes
           </button>
         </CardLayoutBody>
