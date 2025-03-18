@@ -42,8 +42,8 @@ const TicketDetails = () => {
     text: "",
   });
   const { userData } = useSelector((state) => state.auth);
-  const { isLoadingBookingDetails } = useSelector((state) => state.booking);
-  const [bookingDetails, setBookingDetails] = useState();
+  const { isLoadingBookingDetails, bookingDetails } = useSelector((state) => state.booking);
+  // const [bookingDetails, setBookingDetails] = useState();
 
   const printRef = useRef();
 
@@ -72,6 +72,7 @@ const TicketDetails = () => {
     dispatch(issueBooking({ pnr, token: userData?.token }))
       .unwrap()
       .then(() => {
+        dispatch(getBookingDetails({ id: location.state.id, token: userData?.token }))
         setConfirmObject((prev) => ({ ...prev, status: false }));
       })
       .catch((error) => {
@@ -125,7 +126,7 @@ const TicketDetails = () => {
       dispatch(getBookingDetails({ id: refId, token: userData?.token })).then(
         (resp) => {
           console.log(resp, "bookingDetails");
-          setBookingDetails(resp.payload);
+          // setBookingDetails(resp.payload);
         }
       );
     }
