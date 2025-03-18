@@ -4,6 +4,9 @@ import {
   ConfirmModal,
   TableNew,
   Table,
+  ModalWrapper,
+  Button,
+  Tag,
 } from "../../components/components";
 
 import { MdAdd, MdEditSquare, MdAutoDelete } from "react-icons/md";
@@ -15,27 +18,32 @@ import {
   CardLayoutFooter,
 } from "../../components/CardLayout/CardLayout";
 import { FaEye } from "react-icons/fa";
-import { ticketColumns } from "../../data/columns";
-import { errorToastify } from "../../helper/toast";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteTicket, getTickets } from "../../_core/features/ticketSlice";
+import { getTickets } from "../../_core/features/ticketSlice";
+import dayjs from "dayjs";
 
 const ViewTickets = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [modal, setModal] = useState(false);
+  const [ticket, setTicket] = useState(null);
+  const { userData } = useSelector((state) => state.auth);
+  const { tickets, isLoadingTickets } = useSelector((state) => state.ticket);
 
   const navigationHandler = () => {
-    setActiveIndex(null);
     navigate("/dashboard/create-ticket");
   };
 
-  const [modalStatus, setModalStatus] = useState(false);
-  const [deleteId, setDeleteId] = useState(null);
-  const [activeIndex, setActiveIndex] = useState(null);
-  const { userData } = useSelector((state) => state.auth);
-  const { tickets, isLoadingTickets, isDeletingTicket } = useSelector(
-    (state) => state.ticket
-  );
+  const handleView = (row) => {
+    console.log(row, "row");
+    setTicket(row);
+    setModal(true);
+  };
+
+  const closeModal = () => {
+    setTicket(false);
+    setModal(false);
+  };
 
   const columns = [
     {
@@ -54,7 +62,7 @@ const ViewTickets = () => {
     },
     {
       name: "STATUS",
-      selector: (row) => row.status,
+      selector: (row) => <Tag value={row.status} />,
       sortable: false,
       minwidth: "150px",
       center: true,
@@ -63,16 +71,10 @@ const ViewTickets = () => {
       name: "",
       selector: (row) => (
         <div className="flex items-center gap-x-4">
-          <span className="text-xl cursor-pointer">
-            <FaEye title="View" className="text-green-500" />
-          </span>
           <span
             className="text-xl cursor-pointer"
-            onClick={() => {
-              setModalStatus(true);
-              setDeleteId(row.id);
-            }}>
-            <MdAutoDelete title="Delete" className="text-red-500" />
+            onClick={() => handleView(row)}>
+            <FaEye title="View" className="text-green-500" />
           </span>
         </div>
       ),
@@ -82,61 +84,12 @@ const ViewTickets = () => {
     },
   ];
 
-  const actionsData = [
-    {
-      name: "View",
-      icon: <FaEye title="View" className="text-green-500" />,
-      handler: (index) => {
-        if (activeIndex === index) {
-          setActiveIndex(null);
-        } else setActiveIndex(index);
-      },
-    },
-    {
-      name: "Delete",
-      icon: <MdAutoDelete title="Delete" className="text-red-500" />,
-      handler: (_, item) => {
-        setModalStatus(true);
-        setDeleteId(item.id);
-      },
-    },
-  ];
-
-  const deleteTicketHandler = () => {
-    if (!deleteId) {
-      errorToastify("Failed to delete this ticket");
-      setModalStatus(false);
-    } else {
-      dispatch(deleteTicket({ id: deleteId, token: userData?.token })).then(
-        () => {
-          setModalStatus(false);
-          setDeleteId(null);
-        }
-      );
-    }
-  };
-
-  const abortDeleteHandler = () => {
-    setModalStatus(false);
-    setDeleteId(null);
-  };
-
   useEffect(() => {
     dispatch(getTickets(userData?.token));
   }, []);
 
-  useEffect(() => {
-    console.log(tickets, "tickets");
-  }, [tickets]);
-
   return (
     <>
-      <ConfirmModal
-        loading={isDeletingTicket}
-        status={modalStatus}
-        onAbort={abortDeleteHandler}
-        onConfirm={deleteTicketHandler}
-      />
       <CardLayoutContainer removeBg={true}>
         <CardLayoutHeader
           removeBorder={true}
@@ -162,6 +115,49 @@ const ViewTickets = () => {
         </CardLayoutBody>
         <CardLayoutFooter></CardLayoutFooter>
       </CardLayoutContainer>
+      <ModalWrapper
+        isOpen={modal}
+        onRequestClose={closeModal}
+        contentLabel="Ticket Details">
+        {ticket && (
+          <div className="p-6 bg-white shadow-lg rounded-lg border border-gray-300 max-w-md mx-auto">
+            <h2 className="mb-4 text-2xl font-bold text-center border-b pb-2">
+              Ticket Details
+            </h2>
+
+            <div className="text-sm space-y-2">
+              <p>
+                <strong className="text-text">Title:</strong>
+                <span className="font-medium ml-2">{ticket.title}</span>
+              </p>
+              <p>
+                <strong className="text-text">Description:</strong>
+                <span className="font-medium ml-2">{ticket.description}</span>
+              </p>
+              <p className="flex items-center gap-x-4">
+                <strong className="text-text">Status:</strong>
+                <span className="w-24">
+                  <Tag value={ticket.status} />
+                </span>
+              </p>
+              <p>
+                <strong className="text-text">Created At:</strong>
+                <span className="font-medium ml-2">
+                  {dayjs(ticket.created_at).format("DD-MMM-YYYY h:mm a")}
+                </span>
+              </p>
+            </div>
+
+            <div className="mt-6 flex justify-end">
+              <Button
+                onClick={closeModal}
+                text="Close"
+                className="hover:bg-primary bg-redColor text-white px-4 py-2 rounded-md"
+              />
+            </div>
+          </div>
+        )}
+      </ModalWrapper>
     </>
   );
 };
