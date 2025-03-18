@@ -2,6 +2,7 @@ import React from 'react';
 
 const statusClasses = {
   booked: 'text-yellowColor border-yellowColor bg-yellowbg',
+  pending: 'text-yellowColor border-yellowColor bg-yellowbg',
   'requested-cancellation': 'text-redColor border-redColor bg-redbg',
   expired: 'text-redColor border-redColor bg-redbg',
   "requested-refund": 'text-blueColor border-blueColor bg-bluebg',

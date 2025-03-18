@@ -4,6 +4,7 @@ import {
   ModalWrapper,
   SecondaryButton,
   Table,
+  Tag,
 } from "../../components/components";
 import { FaEye } from "react-icons/fa";
 import { MdAdd } from "react-icons/md";
@@ -74,9 +75,11 @@ const Transactions = () => {
     },
     {
       name: "STATUS",
-      selector: (row) => row.status,
+      selector: (row) => <Tag value={row.status} />,
       sortable: false,
       center: true,
+      wrap: true,
+      grow: 2,
     },
     {
       name: "",
