@@ -1,11 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getSearchHistory } from "../../_core/features/historySlice";
 import {
   CardLayoutContainer,
   CardLayoutHeader,
 } from "../../components/CardLayout/CardLayout";
-import { Loader, Table } from "../../components/components";
+import { Button, Loader, Table } from "../../components/components";
 import dayjs from "dayjs";
 import { searchFlight } from "../../_core/features/bookingSlice";
 import toast, { Toaster } from "react-hot-toast";
@@ -14,6 +14,8 @@ import { useNavigate } from "react-router-dom";
 const SearchHistory = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [loadingRowId, setLoadingRowId] = useState(null);
+
   const { SearchHistory, isSearchHistoryLoading, errorSearchHistory } =
     useSelector((state) => state.history);
   const userData = useSelector((state) => state.auth.userData);
@@ -24,22 +26,15 @@ const SearchHistory = () => {
     }
   }, [dispatch, userData?.token]);
 
-  console.log(
-    "SearchHistory Data:",
-    SearchHistory?.length ? SearchHistory : "No data found"
-  );
-
   if (isSearchHistoryLoading) return <Loader />;
   if (errorSearchHistory) return <p>Error: {errorSearchHistory}</p>;
 
   const searchFlightHandler = async (values) => {
-    let flightType;
-    if (values.trip_type == "Return") {
-      flightType = "International";
-    } else {
-      flightType = "Domestic";
-    }
-    console.log("row", values);
+    setLoadingRowId(values.id);
+
+    let flightType =
+      values.trip_type === "Return" ? "International" : "Domestic";
+
     const payload = {
       flightRoute: flightType,
       tripType: values.trip_type,
@@ -51,6 +46,7 @@ const SearchHistory = () => {
       child: Number(values.child_quantity),
       infant: Number(values.infant_quantity),
     };
+
     try {
       const response = await dispatch(
         searchFlight({ payload, token: userData?.token })
@@ -80,8 +76,11 @@ const SearchHistory = () => {
       } else {
         toast.error(error || "Failed to search flights");
       }
+    } finally {
+      setLoadingRowId(null);
     }
   };
+
   const columnsData = [
     {
       name: "Search On",
@@ -109,18 +108,18 @@ const SearchHistory = () => {
       name: "Results",
       selector: (row) => {
         return (
-          <span
-            className="text-base cursor-pointer text-primary hover:underline"
+          <Button
+            loading={loadingRowId === row.id}
             onClick={() => searchFlightHandler(row)}
-          >
-            Result
-          </span>
+            text={"Results"}
+          />
         );
       },
       sortable: false,
       center: true,
     },
   ];
+
   return (
     <>
       <Toaster />
