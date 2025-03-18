@@ -34,7 +34,6 @@ const TicketDetails = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [getPnr, setGetPnr] = useState(null);
   const [confirmObject, setConfirmObject] = useState({
     onAbort: () => { },
     onConfirm: () => { },
@@ -56,16 +55,6 @@ const TicketDetails = () => {
     const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
     pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
     pdf.save("download.pdf");
-  };
-  const printHandler = () => {
-    window.print();
-  };
-
-  const downloadHandler = async () => {
-    // alert("download handler");
-    const response = await getPNR(bookingDetails?.booking_reference_id);
-    console.log(response);
-    // downloadAsPDF();
   };
 
   const handleIssue = async (pnr) => {
@@ -150,7 +139,6 @@ const TicketDetails = () => {
   return (
     <>
       <Toaster />
-      {getPnr && <DownloadButton data={getPnr} />}
       <ConfirmModal
         onAbort={confirmObject.onAbort}
         onConfirm={confirmObject.onConfirm}
@@ -173,20 +161,7 @@ const TicketDetails = () => {
                 </h1>
               </div>
               <div className="flex flex-wrap gap-3">
-                {/* <div>
-                <Button
-                  id={"hide-buttons"}
-                  onClick={printHandler}
-                  text={"Print Ticket"}
-                />
-              </div>
-              <div>
-                <Button
-                  id={"hide-buttons"}
-                  onClick={downloadHandler}
-                  text={"Download"}
-                />
-              </div> */}
+
                 <div>
                   <Button
                     onClick={() =>
@@ -394,7 +369,7 @@ const TicketDetails = () => {
           </CardLayoutFooter>
         </CardLayoutContainer>
 
-        <div className="flex items-center justify-end gap-3">
+        <div className="flex items-center justify-end gap-3 mb-4">
           <div>
             <Button
               id={"hide-buttons"}
@@ -404,10 +379,6 @@ const TicketDetails = () => {
               }}
             />
           </div>
-          {/* <div>
-            <Button text="View ticket" onClick={downloadHandler} />
-          </div> */}
-          <div></div>
         </div>
       </div>
     </>

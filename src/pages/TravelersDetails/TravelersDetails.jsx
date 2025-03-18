@@ -189,13 +189,13 @@ const TravelersDetails = () => {
                         last_name: "",
                         email: "",
                         telephone: {
-                          area_code: "",
                           country_code: "",
+                          area_code: "",
                           number: ""
                         },
                         mobile: {
-                          area_code: "",
                           country_code: "",
+                          area_code: "",
                           number: ""
                         },
                         country: docType === "Domestic" ? "IRN" : "",
@@ -301,7 +301,7 @@ const TravelersDetails = () => {
                                                   id={input.id}
                                                   name={input.name}
                                                   label={input.label}
-                                                  value={String(Object.values(values[input.name]).map((num) => num))}
+                                                  value={oldTraveller.includes(travelerIndex) && `${values[input.name].country_code}${values[input.name].area_code || ""}${values[input.name].number}`}
                                                   onChange={(parsedNumber) => {
                                                     setFieldValue(`${input.name}.country_code`, parsedNumber.country_code);
                                                     setFieldValue(`${input.name}.area_code`, parsedNumber.area_code);

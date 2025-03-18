@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { Button, SecondaryButton } from "../components";
+import { Button, ModalWrapper, SecondaryButton } from "../components";
 
 const ConfirmModal = ({ status, onAbort, onConfirm, text, loading }) => {
   const modalRef = useRef();
@@ -19,21 +19,22 @@ const ConfirmModal = ({ status, onAbort, onConfirm, text, loading }) => {
 
   return (
     <>
-      <div
+      <ModalWrapper
         ref={modalRef}
-        className={`transition-all absolute z-10 ${status ? "top-16" : "top-[-100%]"
-          } left-[50%] translate-x-[-50%]`}
+        isOpen={status}
+      // className={`transition-all absolute z-10 ${status ? "top-16" : "top-[-100%]"
+      //   } left-[50%] translate-x-[-50%]`}
       >
         <div
           className={
-            "shadow-2xl min-w-[450px] border bg-primary  pt-5 pb-3 rounded-b-2xl flex flex-col gap-3 "
+            " flex flex-col gap-3 "
           }
         >
-          <h2 className="px-4 text-2xl font-semibold text-white ">
+          <h2 className="px-4 text-2xl font-semibold text-primary ">
             Confirmation
           </h2>
 
-          <h2 className="px-4 py-3 text-xl text-white border-t border-b border-background">
+          <h2 className="px-4 py-3 text-xl text-text border-t border-b border-background">
             {text}
           </h2>
 
@@ -55,7 +56,7 @@ const ConfirmModal = ({ status, onAbort, onConfirm, text, loading }) => {
             </div>
           </div>
         </div>
-      </div>
+      </ModalWrapper>
     </>
   );
 };

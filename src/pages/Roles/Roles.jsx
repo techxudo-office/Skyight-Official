@@ -12,6 +12,7 @@ import {
   ConfirmModal,
   SecondaryButton,
   Table,
+  Tag,
 } from "../../components/components";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -51,7 +52,7 @@ const Roles = () => {
     },
     {
       name: "STATUS",
-      selector: (row) => row.status,
+      selector: (row) => <Tag value={row.status} />,
       sortable: false,
       minwidth: "150px",
       center: true,

@@ -1,4 +1,4 @@
-import React, { useRef, useState,useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
@@ -20,12 +20,19 @@ const PhoneNumberInput = ({
   setEditingField,
   onKeyPressHandler,
 }) => {
-  const [phone, setPhone] = useState(value||"");
+  const [phone, setPhone] = useState(null);
   const inputRef = useRef();
+  useEffect(() => {
+    if (value) {
+      setPhone(value); // Directly set if it's a string
+    } else {
+      setPhone(null);
+    }
+  }, [value]);
 
-  const handlePhoneChange = (value, country) => {
+  const handlePhoneChange = (value) => {
     setPhone(value);
-    console.log("value",value)
+    console.log("value", value)
     const phoneNumber = parsePhoneNumberFromString(`+${value}`);
 
     let parsedData = {
@@ -67,9 +74,8 @@ const PhoneNumberInput = ({
   return (
     <div className={`flex flex-col w-full ${className}`}>
       <div
-        className={`relative flex items-center rounded-lg border border-gray text-text ${
-          disabled ? "bg-slate-100" : "bg-white"
-        }`}
+        className={`relative flex items-center rounded-lg border border-gray text-text ${disabled ? "bg-slate-100" : "bg-white"
+          }`}
       >
         <label
           htmlFor={id}
@@ -79,11 +85,11 @@ const PhoneNumberInput = ({
         </label>
         <PhoneInput
           ref={inputRef}
-          country={"us"} // Default country
-          value={value||phone}
-          onChange={handlePhoneChange}
+          country={"ir"} // Default country
+          value={phone}
+          onChange={(value) => handlePhoneChange(value)}
           inputProps={{
-            className:"w-full px-3 pt-3 bg-transparent outline-none text-base flex item-center pl-10",
+            className: "w-full px-3 pt-3 bg-transparent outline-none text-base flex item-center pl-10",
             id: id,
             name: name,
             disabled: disabled,
@@ -93,8 +99,8 @@ const PhoneNumberInput = ({
           }}
           inputClass="w-full  px-3 bg-transparent outline-none"
           containerClass="w-full h-12 "
-          
-          
+
+
         />
         {disabled && profile && (
           <span

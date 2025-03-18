@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { SecondaryButton, Table } from "../../components/components";
+import { SecondaryButton, Table, Tag } from "../../components/components";
 import { useNavigate } from "react-router-dom";
 import {
   CardLayoutContainer,
@@ -59,7 +59,7 @@ const FlightBookings = () => {
     },
     {
       name: "STATUS",
-      selector: (row) => row.booking_status,
+      selector: (row) => <Tag value={row.booking_status} />,
       sortable: false,
       center: true,
     },
