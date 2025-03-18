@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { DashboardCards, Searchbar, Table } from "../../components/components";
+import { DashboardCards, Searchbar, Table, Tag } from "../../components/components";
 import { useNavigate } from "react-router-dom";
 import {
   CardLayoutContainer,
@@ -96,7 +96,7 @@ const DashboardHome = () => {
     },
     {
       name: "STATUS",
-      selector: (row) => row.booking_status,
+      selector: (row) => <Tag value={row.booking_status} />,
       sortable: false,
       center: true,
     },
