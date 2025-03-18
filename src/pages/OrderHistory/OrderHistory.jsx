@@ -29,12 +29,6 @@ const OrderHistory = () => {
 
   const columnsData = [
     {
-      name: "TRIP TYPE",
-      selector: (row) => row?.trip_type,
-      sortable: false,
-      center: true,
-    },
-    {
       name: "ROUTE",
       selector: (row) => (
         <span className="flex items-center justify-center gap-2 text-sm text-text">
@@ -49,6 +43,12 @@ const OrderHistory = () => {
       ),
       sortable: false,
       minwidth: "150px",
+      center: true,
+    },
+    {
+      name: "TRIP TYPE",
+      selector: (row) => row?.trip_type,
+      sortable: false,
       center: true,
     },
     {
@@ -81,7 +81,7 @@ const OrderHistory = () => {
     <>
       <Toaster />
       <CardLayoutContainer>
-        <CardLayoutHeader heading={"Search History"} />
+        <CardLayoutHeader heading={"Order History"} />
         <Table
           columnsData={columnsData}
           tableData={orders || []}
