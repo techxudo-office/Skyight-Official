@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, ModalWrapper, SecondaryButton, Table } from "../../components/components";
+import { Button, ModalWrapper, SecondaryButton, Table, Tag } from "../../components/components";
 import { FaEye } from "react-icons/fa";
 import { MdAdd } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
@@ -70,9 +70,11 @@ const Transactions = () => {
     },
     {
       name: "STATUS",
-      selector: (row) => row.status,
+      selector: (row) => <Tag value={row.status} />,
       sortable: false,
       center: true,
+      wrap: true,
+      grow: 2
     },
     {
       name: "",

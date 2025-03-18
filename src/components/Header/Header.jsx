@@ -141,7 +141,12 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
   const refreshCredits = () => {
     dispatch(getCredits(userData?.token));
   };
+  const handleSettings = () => {
+    if (!userData?.token) return;
+    dispatch(setting(userData?.token)).then(() => {
 
+    });
+  }
   return (
     <>
       <Toaster />
@@ -216,7 +221,7 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
                 )}
               </div>
               <CustomTooltip content={"Settings"}>
-                <div className="max-md:hidden">
+                <div className="max-md:hidden" onClick={handleSettings}>
                   <MdSettings className="text-2xl cursor-pointer text-text" />{" "}
                   {/* Consistent size for all icons */}
                 </div>
@@ -225,9 +230,9 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
                 <CustomTooltip content={"credits"}>
                   <button
                     className={`w-full text-sm md:text-base relative flex items-center justify-center gap-1 md:gap-2 cursor-pointer p-1 px-2 md:py-2 md:px-4 border-primary border-[1px]  bg-blue-100 hover:text-secondary  text-primary font-semibold rounded-xl transition duration-300 ease-in-out transform focus:outline-none`}
-                    // onClick={() => {
-                    //   setIsActive(!isActive);
-                    // }}
+                  // onClick={() => {
+                  //   setIsActive(!isActive);
+                  // }}
                   >
                     {isLoadingCredits ? (
                       <span className="flex items-center gap-2">
@@ -248,9 +253,8 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
                       </span>
                     )}
                     <MdArrowDropDown
-                      className={`text-xl ${
-                        CreditsDropdownOpen ? "rotate-180" : ""
-                      } transition-all duration-300`}
+                      className={`text-xl ${CreditsDropdownOpen ? "rotate-180" : ""
+                        } transition-all duration-300`}
                       onClick={() => setCreditsDropdownOpen((prev) => !prev)}
                     />
                     <div className="absolute right-0 top-14">

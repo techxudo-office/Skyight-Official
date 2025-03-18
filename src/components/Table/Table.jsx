@@ -34,6 +34,7 @@ const Table = ({
       minWidth: "70px",
       center: true,
     },
+
     ...columnsData,
   ];
 
