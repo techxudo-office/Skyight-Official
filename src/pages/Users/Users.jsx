@@ -23,7 +23,7 @@ const Users = () => {
   const [deleteId, setDeleteId] = useState(null);
   const [modalStatus, setModalStatus] = useState(false);
   const [editUserData, setEditUserData] = useState(null);
-    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const { userData } = useSelector((state) => state.auth);
   const { users, isLoadingUsers, isDeletingUser } = useSelector(
     (state) => state.user
@@ -32,35 +32,35 @@ const Users = () => {
   const userColumns = [
     {
       name: "USER ID",
-      selector: (row) => row.id,
+      selector: (row) => row?.id,
       sortable: false,
       minwidth: "150px",
       center: true,
     },
     {
       name: "FIRST NAME",
-      selector: (row) => row.first_name,
+      selector: (row) => row?.first_name,
       sortable: false,
       minwidth: "150px",
       center: true,
     },
     {
       name: "LAST NAME",
-      selector: (row) => row.last_name,
+      selector: (row) => row?.last_name,
       sortable: false,
       minwidth: "150px",
       center: true,
     },
     {
       name: "EMAIL",
-      selector: (row) => row.email,
+      selector: (row) => row?.email,
       sortable: false,
       minwidth: "150px",
       center: true,
     },
     {
       name: "ROLE",
-      selector: (row) => row.role.name,
+      selector: (row) => row?.role?.name,
       sortable: false,
       minwidth: "150px",
       center: true,
@@ -74,8 +74,7 @@ const Users = () => {
             onClick={() => {
               setEditUserData(row);
               setIsEditModalOpen(true);
-            }
-            }>
+            }}>
             <MdEditSquare title="Edit" className="text-blue-500" />
           </span>
           <span
