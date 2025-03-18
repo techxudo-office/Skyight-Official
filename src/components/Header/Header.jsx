@@ -41,8 +41,9 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
   };
   const dropdownOptions = [
     {
-      name: "Profile",
-      icon: <FaUser />,
+      name: "Setting",
+      // icon: <MdSettings className="text-2xl cursor-pointer text-text" />,
+      icon: <SlSettings />,
       handler: () => {
         navigationHandler("/dashboard/profile");
       },
@@ -93,23 +94,6 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
       icon: <FiLogOut />,
       handler: () => {
         logoutHandler();
-      },
-    },
-  ];
-
-  const options = [
-    {
-      name: "View Credits",
-      icon: <PiCoinsFill />,
-      handler: () => {
-        setIsActive(!isActive);
-      },
-    },
-    {
-      name: "More Credits",
-      icon: <PiHandCoinsFill />,
-      handler: () => {
-        setIsActive(!isActive);
       },
     },
   ];
@@ -220,12 +204,6 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
                   </motion.div>
                 )}
               </div>
-              <CustomTooltip content={"Settings"}>
-                <div className="max-md:hidden" onClick={handleSettings}>
-                  <MdSettings className="text-2xl cursor-pointer text-text" />{" "}
-                  {/* Consistent size for all icons */}
-                </div>
-              </CustomTooltip>
               <div className="relative">
                 <CustomTooltip content={"credits"}>
                   <button
