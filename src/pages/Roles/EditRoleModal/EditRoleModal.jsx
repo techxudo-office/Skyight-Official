@@ -6,7 +6,12 @@ import {
   CardLayoutBody,
   CardLayoutFooter,
 } from "../../../components/CardLayout/CardLayout";
-import { Input, Button, Spinner, ModalWrapper } from "../../../components/components";
+import {
+  Input,
+  Button,
+  Spinner,
+  ModalWrapper,
+} from "../../../components/components";
 import { useDispatch, useSelector } from "react-redux";
 import { editRole } from "../../../_core/features/roleSlice";
 
@@ -31,7 +36,7 @@ const EditRoleModal = ({ isOpen, onClose, roleData }) => {
 
   const [rolesData, setRolesData] = useState(roleData || {});
   const { userData } = useSelector((state) => state.auth);
-  const { isLoadingUpdateRole } = useSelector((state) => state.role);
+  const { isEditingRole } = useSelector((state) => state.role);
 
   useEffect(() => {
     console.log(roleData);
@@ -58,6 +63,8 @@ const EditRoleModal = ({ isOpen, onClose, roleData }) => {
       alert("Please fill in all fields");
       return;
     }
+    const { role_id, ...filteredActionPermission } =
+      rolesData?.action_permission || {};
 
     const payload = {
       name: rolesData?.role,
@@ -73,29 +80,29 @@ const EditRoleModal = ({ isOpen, onClose, roleData }) => {
         tickets: true,
         help_and_support: true,
       },
-      action_permission: rolesData?.action_permission,
+      action_permission: filteredActionPermission,
     };
 
     dispatch(
       editRole({ data: payload, token: userData?.token, id: rolesData?.id })
-    );
-    onClose();
+    ).then(() => {
+      onClose();
+    });
   };
 
   return (
     <ModalWrapper
       isOpen={isOpen}
       onRequestClose={onClose}
-      contentLabel="Edit Role"
-    >
-      <CardLayoutContainer >
+      contentLabel="Edit Role">
+      <CardLayoutContainer>
         <CardLayoutHeader heading="Edit Role" />
         <CardLayoutBody>
           <div className="flex flex-col gap-4">
             <Input
               placeholder="Enter Role Name"
               label="Role Name"
-              name="name"
+              name="role"
               value={rolesData.role || ""}
               onChange={handleInputChange}
             />
@@ -143,9 +150,9 @@ const EditRoleModal = ({ isOpen, onClose, roleData }) => {
 
         <CardLayoutFooter className="flex justify-end gap-4 mt-4">
           <Button
-            text={isLoadingUpdateRole ? <Spinner /> : "Update Role"}
+            text={isEditingRole ? <Spinner /> : "Update Role"}
             onClick={handleSubmit}
-            disabled={isLoadingUpdateRole}
+            disabled={isEditingRole}
           />
           <Button text="Cancel" className="bg-redColor" onClick={onClose} />
         </CardLayoutFooter>
