@@ -50,6 +50,10 @@ const initialState = {
   isCancelling: false,
   cancelSuccess: null,
   cancelError: null,
+
+  orders: [],
+  isLoadingOrders: false,
+  orderError: null,
 };
 
 const bookingSlice = createSlice({
@@ -201,6 +205,17 @@ const bookingSlice = createSlice({
         state.isCancelling = false;
         state.cancelSuccess = null;
         state.cancelError = action.payload;
+      })
+      .addCase(getOrders.pending, (state) => {
+        state.isLoadingOrders = true;
+      })
+      .addCase(getOrders.fulfilled, (state, action) => {
+        state.isLoadingOrders = false;
+        state.orders = action.payload;
+      })
+      .addCase(getOrders.rejected, (state, action) => {
+        state.isLoadingOrders = false;
+        state.orderError = action.payload;
       });
   },
 });
@@ -588,6 +603,32 @@ export const cancelFlightBooking = createAsyncThunk(
     } catch (error) {
       const errorMessage =
         error.response?.data?.message || "An error occurred";
+      toast.error(errorMessage);
+      return thunkAPI.rejectWithValue(errorMessage);
+    }
+  }
+);
+
+export const getOrders = createAsyncThunk(
+  "booking/getOrders",
+  async (token, thunkAPI) => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/api/orders/company`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      if (response.status === 200) {
+        return response.data.data;
+      } else {
+        throw new Error("Failed to fetch orders");
+      }
+    } catch (error) {
+      const errorMessage =
+        error?.response?.data?.message || "Failed to fetch orders";
       toast.error(errorMessage);
       return thunkAPI.rejectWithValue(errorMessage);
     }
