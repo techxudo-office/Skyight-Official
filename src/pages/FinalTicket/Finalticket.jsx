@@ -7,6 +7,7 @@ import {
 } from "../../components/CardLayout/CardLayout";
 import { logo } from "../../assets/Index.js";
 import { Spinner } from "../../components/components";
+import { IoMdAirplane } from "react-icons/io";
 
 
 const Finalticket = () => {
@@ -41,7 +42,7 @@ const Finalticket = () => {
                         {/* Header */}
                         <CardLayoutHeader className={"bg-primary text-white rounded-t-md"} heading={`Electronic Ticket - Traveler ${index + 1}`} />
                         <CardLayoutBody>
-                            <div className="pb-2">
+                            <div className="pb-2 text-lg">
                                 <p>
                                     <strong>Traveler:</strong> {traveler?.NameTitle} {traveler?.GivenName}{" "}
                                     {traveler?.Surname}
@@ -63,52 +64,58 @@ const Finalticket = () => {
                                         Flight Details {originDestinationOptions.length > 1 && ` (Segment ${optionIndex + 1})`}</h3>
                                     {option.FlightSegment.map((flightSegment, segmentIndex) => (
                                         <div key={segmentIndex} className="">
-                                            <p>
-                                                {flightSegment?.DepartureAirport?.LocationCode} to{" "}
-                                                {flightSegment?.ArrivalAirport?.LocationCode} on{" "}
-                                                {flightSegment?.DepartureDate} | Airline PNR: {bookingInfo?.Id}
+                                            <p className="text-lg mb-3 flex items-center gap-2">
+
+                                                <strong>{flightSegment?.DepartureAirport?.LocationCode}</strong>
+                                                <span><IoMdAirplane className="rotate-90 text-primary" /></span>
+                                                <strong> {flightSegment?.ArrivalAirport?.LocationCode}</strong>
+                                                on{" "}
+                                                <strong>{flightSegment?.DepartureDate}</strong> | Airline PNR: <strong> {bookingInfo?.Id}</strong>
                                             </p>
-                                            <div className="flex items-center gap-2 my-2">
-                                                <img
-                                                    src={logo}
-                                                    alt="Airline Logo"
-                                                    className=" h-12"
-                                                />
+                                            <div className="flex gap-7 text-lg items-center">
+
+
+                                                <div className="flex items-center gap-2 my-2">
+
+                                                    <div>
+                                                        <p>
+                                                            <strong>Airline:</strong> {flightSegment?.OperatingAirline?.Code}
+                                                        </p>
+                                                        <p>
+                                                            <strong>Flight No / Aircraft Type:</strong>{" "}
+                                                            {flightSegment?.FlightNumber} /{" "}
+                                                            {flightSegment?.Equipment?.AirEquipType}
+                                                        </p>
+                                                        <p>
+                                                            <strong>Cabin / Stop:</strong> Economy /{" "}
+                                                            {flightSegment?.StopQuantity || "0"} stop
+                                                        </p>
+                                                        <p>
+                                                            <strong>Baggage:</strong>{" "}
+                                                            {flightSegment?.FreeBaggages || "N/A"}
+                                                        </p>
+                                                    </div>
+                                                </div>
                                                 <div>
                                                     <p>
-                                                        <strong>Airline:</strong> {flightSegment?.OperatingAirline?.Code}
+                                                        <strong>Depart:</strong> {flightSegment?.DepartureAirport?.Terminal} (
+                                                        {flightSegment?.DepartureAirport?.LocationCode})
                                                     </p>
                                                     <p>
-                                                        <strong>Flight No / Aircraft Type:</strong>{" "}
-                                                        {flightSegment?.FlightNumber} /{" "}
-                                                        {flightSegment?.Equipment?.AirEquipType}
+                                                        <strong>Date:</strong> {flightSegment?.DepartureDate} |{" "}
+                                                        <strong>Time:</strong> {flightSegment?.DepartureTime}
                                                     </p>
                                                     <p>
-                                                        <strong>Cabin / Stop:</strong> Economy /{" "}
-                                                        {flightSegment?.StopQuantity || "0"} stop
+                                                        <strong>Arrive:</strong> {flightSegment?.ArrivalAirport?.Terminal} (
+                                                        {flightSegment?.ArrivalAirport?.LocationCode})
                                                     </p>
                                                     <p>
-                                                        <strong>Baggage:</strong>{" "}
-                                                        {flightSegment?.FreeBaggages || "N/A"}
+                                                        <strong>Date:</strong> {flightSegment?.ArrivalDate} |{" "}
+                                                        <strong>Time:</strong> {flightSegment?.ArrivalTime}
                                                     </p>
                                                 </div>
                                             </div>
-                                            <p>
-                                                <strong>Depart:</strong> {flightSegment?.DepartureAirport?.Terminal} (
-                                                {flightSegment?.DepartureAirport?.LocationCode})
-                                            </p>
-                                            <p>
-                                                <strong>Date:</strong> {flightSegment?.DepartureDate} |{" "}
-                                                <strong>Time:</strong> {flightSegment?.DepartureTime}
-                                            </p>
-                                            <p>
-                                                <strong>Arrive:</strong> {flightSegment?.ArrivalAirport?.Terminal} (
-                                                {flightSegment?.ArrivalAirport?.LocationCode})
-                                            </p>
-                                            <p>
-                                                <strong>Date:</strong> {flightSegment?.ArrivalDate} |{" "}
-                                                <strong>Time:</strong> {flightSegment?.ArrivalTime}
-                                            </p>
+
                                         </div>
                                     ))}
                                 </div>
@@ -120,15 +127,15 @@ const Finalticket = () => {
                             <div className="pb-2">
                                 <h3 className="font-bold p-2 bg-background mb-2 text-xl">Price Details</h3>
                                 <p>
-                                    <strong>{travelerInfo.PassengerTypeCode} Base Price:</strong> {(priceInfo[index]?.PassengerFare.BaseFare?.Amount 
-                                        /priceInfo[index]?.PassengerTypeQuantity?.Quantity 
-                                        )?.toLocaleString()}{" "}
+                                    <strong>{travelerInfo.PassengerTypeCode} Base Price:</strong> {(priceInfo[index]?.PassengerFare.BaseFare?.Amount
+                                        / priceInfo[index]?.PassengerTypeQuantity?.Quantity
+                                    )?.toLocaleString()}{" "}
                                     {priceInfo[index]?.PassengerFare.BaseFare.CurrencyCode || "IRR"}
                                 </p>
                                 <p>
-                                    <strong>{travelerInfo.PassengerTypeCode} Total Price:</strong> {(priceInfo[index]?.PassengerFare.TotalFare?.Amount 
-                                        /priceInfo[index]?.PassengerTypeQuantity?.Quantity
-                                        )?.toLocaleString()}{" "}
+                                    <strong>{travelerInfo.PassengerTypeCode} Total Price:</strong> {(priceInfo[index]?.PassengerFare.TotalFare?.Amount
+                                        / priceInfo[index]?.PassengerTypeQuantity?.Quantity
+                                    )?.toLocaleString()}{" "}
                                     {priceInfo[index]?.PassengerFare.TotalFare.CurrencyCode || "IRR"}
                                 </p>
                             </div>
