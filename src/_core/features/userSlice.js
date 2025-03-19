@@ -125,7 +125,7 @@ export const deleteUser = createAsyncThunk(
   "user/deleteUser",
   async ({ id, token }, thunkAPI) => {
     try {
-      let response = await axios.delete(`${BASE_URL}/api/user/${id}`, {
+      const response = await axios.delete(`${BASE_URL}/api/user/${id}`, {
         headers: {
           Authorization: token,
         },
@@ -148,7 +148,7 @@ export const editUser = createAsyncThunk(
   async ({ id, token, data }, thunkAPI) => {
     try {
       console.log(data, "data");
-      let response = await axios.put(`${BASE_URL}/api/user/${id}`, data, {
+      const response = await axios.put(`${BASE_URL}/api/user/${id}`, data, {
         headers: {
           Authorization: token,
         },
@@ -163,6 +163,29 @@ export const editUser = createAsyncThunk(
         error?.response?.data?.message || "Failed while updating this User";
       toast.error(errorMessage);
       return thunkAPI.rejectWithValue(errorMessage);
+    }
+  }
+);
+
+export const uploadUserImage = createAsyncThunk(
+  "user/uploadUserImage",
+  async ({ img, token }, thunkAPI) => {
+    try {
+      const response = await axios.post(`${BASE_URL}/api/user/image`, img, {
+        headers: {
+          Authorization: token,
+          Accept: "application/json",
+        },
+      });
+      console.log(response,"Response")
+      if (response.status === 200) {
+        toast.success("User updated successfully");
+        return response.data.data;
+      }
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Failed to upload image"
+      );
     }
   }
 );

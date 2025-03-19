@@ -4,6 +4,7 @@ import { MdEdit } from "react-icons/md";
 
 const Input = ({
   id,
+  edit,
   type,
   name,
   label,
@@ -62,7 +63,7 @@ const Input = ({
           autoComplete={autoComplete}
           onBlur={() => setEditingField && setEditingField(null)}
         />
-        {disabled && profile && (
+        {disabled && profile && edit && (
           <span
             className="absolute text-xl cursor-pointer right-3 text-primary"
             onClick={onEditClick}

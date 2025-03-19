@@ -9,6 +9,7 @@ import { MdEdit } from "react-icons/md";
 import { FaCaretDown } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserInfo, updateAccount } from "../../_core/features/authSlice";
+import { uploadUserImage } from "../../_core/features/userSlice";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -92,27 +93,29 @@ const Profile = () => {
     const file = event.target.files[0];
     if (file) {
       const imageUrl = URL.createObjectURL(file);
+      // dispatch(uploadUserImage({ img: imageUrl, token: userData?.token }));
       setProfileImage(imageUrl);
     }
   };
 
   const profileFields = [
-    { label: "First Name", field: "first_name", type: "text" },
-    { label: "Last Name", field: "last_name", type: "text" },
-    { label: "Email Address", field: "email", type: "email" },
-    { label: "Phone Number", field: "mobile_number", type: "tel" },
+    { label: "First Name", field: "first_name", type: "text", edit: true },
+    { label: "Last Name", field: "last_name", type: "text", edit: true },
+    { label: "Email Address", field: "email", type: "email", edit: false },
+    { label: "Phone Number", field: "mobile_number", type: "tel", edit: true },
   ];
 
   const addressFields = [
-    { label: "City", field: "city", type: "text" },
-    { label: "Country", field: "country", type: "text" },
+    { label: "City", field: "city", type: "text", edit: false },
+    { label: "Country", field: "country", type: "text", edit: false },
   ];
 
-  const renderEditableField = (label, field, type = "text") => (
+  const renderEditableField = (label, field, type = "text", edit) => (
     <div className="flex flex-col w-full">
       <h4 className="mb-1 text-xs font-medium text-slate-500">{label}</h4>
       <div className="flex items-center gap-x-2">
         <Input
+          edit={edit}
           type={type}
           profile={true}
           value={profileData[field]}
@@ -170,8 +173,10 @@ const Profile = () => {
         </CardLayoutHeader>
         <CardLayoutBody removeBorder={true}>
           <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3 md:gap-5 mb-7">
-            {profileFields.map(({ label, field, type }, index) => (
-              <div key={index}>{renderEditableField(label, field, type)}</div>
+            {profileFields.map(({ label, field, type, edit }, index) => (
+              <div key={index}>
+                {renderEditableField(label, field, type, edit)}
+              </div>
             ))}
             <div className="relative self-end">
               <div
@@ -209,8 +214,10 @@ const Profile = () => {
         </CardLayoutHeader>
         <CardLayoutBody>
           <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3 md:gap-5 mb-7">
-            {addressFields.map(({ label, field, type }, index) => (
-              <div key={index}>{renderEditableField(label, field, type)}</div>
+            {addressFields.map(({ label, field, type, edit }, index) => (
+              <div key={index}>
+                {renderEditableField(label, field, type, edit)}
+              </div>
             ))}
           </div>
           <button
