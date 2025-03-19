@@ -10,9 +10,12 @@ import { Toaster } from "react-hot-toast";
 import { getOrders } from "../../_core/features/bookingSlice";
 
 import { IoIosAirplane } from "react-icons/io";
+import { useNavigate } from "react-router-dom";
+import { FaEye } from "react-icons/fa";
 
 const OrderHistory = () => {
   const dispatch = useDispatch();
+  const navigate=useNavigate()
   const userData = useSelector((state) => state.auth.userData);
   const { orders, isLoadingOrders, orderError } = useSelector(
     (state) => state.booking
@@ -68,6 +71,22 @@ const OrderHistory = () => {
       selector: (row) => row?.rate,
       sortable: false,
       minwidth: "200px",
+      center: true,
+    },
+    {
+      name: "",
+      selector: (row) => (
+        <span
+          className="text-lg cursor-pointer"
+          onClick={() => {
+            navigate("/dashboard/booking-details", {
+              state: row,
+            });
+          }}>
+          <FaEye title="View" className="text-green-500 " />
+        </span>
+      ),
+      sortable: false,
       center: true,
     },
   ];

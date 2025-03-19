@@ -67,7 +67,7 @@ const BookingHistory = () => {
     },
     {
       name: "STATUS",
-      selector: (row) => row.booking_status,
+      selector: (row) =><Tag value={row.booking_status}/> ,
       sortable: false,
       center: true,
     },
@@ -101,7 +101,7 @@ const BookingHistory = () => {
         <CardLayoutHeader heading={"Booking History"} />
         <Table
           columnsData={columns}
-          tableData={flightBookings || []}
+          tableData={flightBookings.filter((item)=>item.booking_status==="booked") || []}
           pagination={true}
           progressPending={isLoadingFlightBookings}
           paginationTotalRows={flightBookings?.length}
