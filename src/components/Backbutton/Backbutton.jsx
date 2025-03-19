@@ -25,7 +25,7 @@ const Backbutton = ({ className }) => {
         <div className="">
           <button
             onClick={goBack}
-            className="text-xl pl-2 pr-1 py-1 rounded-r-full bg-background hover:bg-blue-300  text-primary border-[1px] border-primary">
+            className="text-xl pl-2 pr-1 py-1 rounded-l-full bg-background hover:bg-blue-300  text-primary border-[1px] border-primary">
             <MdArrowBackIos />
           </button>
         </div>

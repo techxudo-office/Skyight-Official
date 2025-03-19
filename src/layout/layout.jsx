@@ -35,9 +35,8 @@ const Layout = () => {
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
 
-            <div className="flex flex-col items-center relative justify-center w-full px-4 pt-28">
+            <div className="flex flex-col items-center  justify-center w-full px-4 pt-28">
 
-              <Backbutton className={"fixed left-[303px] z-[999] top-20"} />
 
 
               <Outlet />
