@@ -70,12 +70,6 @@ const OrderHistory = () => {
       minwidth: "200px",
       center: true,
     },
-    // {
-    //   name: "TOTAL FARE",
-    //   selector: (row) => row?.total_fare,
-    //   sortable: false,
-    //   center: true,
-    // },
   ];
   return (
     <>

@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from "react";
 import {
   SecondaryButton,
-  ConfirmModal,
-  TableNew,
   Table,
   ModalWrapper,
   Button,
   Tag,
 } from "../../components/components";
 
-import { MdAdd, MdEditSquare, MdAutoDelete } from "react-icons/md";
+import { MdAdd } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import {
   CardLayoutContainer,
@@ -35,7 +33,6 @@ const ViewTickets = () => {
   };
 
   const handleView = (row) => {
-    console.log(row, "row");
     setTicket(row);
     setModal(true);
   };

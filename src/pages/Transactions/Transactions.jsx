@@ -17,7 +17,6 @@ import {
 } from "../../components/CardLayout/CardLayout";
 import { getTransactions } from "../../_core/features/transactionSlice";
 import { useDispatch, useSelector } from "react-redux";
-import Modal from "react-modal";
 import "./Transaction.css";
 import dayjs from "dayjs";
 
@@ -26,12 +25,11 @@ const Transactions = () => {
   const dispatch = useDispatch();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedTransaction, setSelectedTransaction] = useState(null);
-
   const { userData } = useSelector((state) => state.auth);
   const { transactions, isLoadingTransactions } = useSelector(
     (state) => state.transaction
   );
+  const [selectedTransaction, setSelectedTransaction] = useState(null);
 
   useEffect(() => {
     dispatch(getTransactions({ token: userData?.token }));
