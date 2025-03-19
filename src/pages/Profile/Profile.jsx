@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import {
   CardLayoutContainer,
   CardLayoutHeader,
@@ -6,35 +6,46 @@ import {
 } from "../../components/CardLayout/CardLayout";
 import { Input } from "../../components/components";
 import { MdEdit } from "react-icons/md";
+import { FaCaretDown } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import { getUserInfo, updateAccount } from "../../_core/features/authSlice";
 
 const Profile = () => {
+  const dispatch = useDispatch();
+  const { roles } = useSelector((state) => state.role);
+  const { userData } = useSelector((state) => state.auth);
   const [editingField, setEditingField] = useState(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [profileData, setProfileData] = useState({
-    firstName: "First Name",
-    lastName: "Last Name",
-    dateOfBirth: "28-11-2024",
-    email: "profile.user@gmail.com",
-    phoneNumber: "(+00) 001002003004",
-    role: "Admin",
-    country: "United Kingdom",
-    city: "Los Angeles, California",
-    postalCode: "PTC 0204",
+    first_name: "",
+    last_name: "",
+    email: "",
+    city: "",
+    country: "",
+    role_id: "",
+    role_name: "",
+    mobile_number: "",
   });
 
-  const profileFields = [
-    { label: "First Name", field: "firstName", type: "text" },
-    { label: "Last Name", field: "lastName", type: "text" },
-    { label: "Date of Birth", field: "dateOfBirth", type: "date" },
-    { label: "Email Address", field: "email", type: "email" },
-    { label: "Phone Number", field: "phoneNumber", type: "tel" },
-    { label: "User Role", field: "role", type: "text" },
-  ];
+  useEffect(() => {
+    if (userData) {
+      console.log(userData);
+      setProfileData({
+        first_name: userData.user.first_name || "",
+        last_name: userData.user.last_name || "",
+        email: userData.user.email || "",
+        mobile_number: userData.user.mobile_number || "",
+        city: userData.user.company.city || "",
+        country: userData.user.company.country || "",
+        role_id: userData.user.role_id || "",
+        role_name: userData?.user?.role?.name || "Select a Role",
+      });
+    }
+  }, [userData, roles]);
 
-  const addressFields = [
-    { label: "Country", field: "country", type: "text" },
-    { label: "City", field: "city", type: "text" },
-    { label: "Postal Code", field: "postalCode", type: "text" },
-  ];
+  useEffect(() => {
+    dispatch(getUserInfo(userData?.token));
+  }, []);
 
   const handleChange = (e, field) => {
     setProfileData({ ...profileData, [field]: e.target.value });
@@ -44,9 +55,31 @@ const Profile = () => {
     setEditingField(field);
   };
 
+  const handleRoleSelect = (role) => {
+    console.log(role);
+    setProfileData((prev) => ({
+      ...prev,
+      role_id: Number(role.id),
+      role_name: role.role,
+    }));
+    setDropdownOpen(false);
+  };
+
   const handleSave = () => {
+    const payload = {
+      first_name: profileData.first_name,
+      last_name: profileData.last_name,
+      mobile_number: profileData.mobile_number,
+      role_id: profileData.role_id,
+    };
+    dispatch(
+      updateAccount({
+        data: payload,
+        token: userData.token,
+        id: userData.user.id,
+      })
+    );
     setEditingField(null);
-    console.log(profileData, "Form Data");
   };
 
   const [profileImage, setProfileImage] = useState(
@@ -63,32 +96,43 @@ const Profile = () => {
     }
   };
 
-  const renderEditableField = (label, field, type = "text") => {
-    return (
-      <div className="flex flex-col w-full">
-        <h4 className="mb-1 text-xs font-medium text-slate-500">{label}</h4>
-        <div className="flex items-center gap-x-2">
-          <Input
-            type={type}
-            profile={true}
-            value={profileData[field]}
-            disabled={editingField !== field}
-            setEditingField={setEditingField}
-            isSelected={editingField === field}
-            onEditClick={() => handleEdit(field)}
-            onChange={(e) => handleChange(e, field)}
-          />
-        </div>
+  const profileFields = [
+    { label: "First Name", field: "first_name", type: "text" },
+    { label: "Last Name", field: "last_name", type: "text" },
+    { label: "Email Address", field: "email", type: "email" },
+    { label: "Phone Number", field: "mobile_number", type: "tel" },
+  ];
+
+  const addressFields = [
+    { label: "City", field: "city", type: "text" },
+    { label: "Country", field: "country", type: "text" },
+  ];
+
+  const renderEditableField = (label, field, type = "text") => (
+    <div className="flex flex-col w-full">
+      <h4 className="mb-1 text-xs font-medium text-slate-500">{label}</h4>
+      <div className="flex items-center gap-x-2">
+        <Input
+          type={type}
+          profile={true}
+          value={profileData[field]}
+          disabled={editingField !== field}
+          setEditingField={setEditingField}
+          isSelected={editingField === field}
+          onEditClick={() => handleEdit(field)}
+          onChange={(e) => handleChange(e, field)}
+        />
       </div>
-    );
-  };
+    </div>
+  );
 
   return (
     <div className="flex flex-col items-center justify-center w-full">
       <CardLayoutContainer className="w-full mb-5">
         <CardLayoutHeader
           className="flex flex-wrap items-center justify-start gap-5 py-3"
-          removeBorder={true}>
+          removeBorder={true}
+        >
           <div className="relative w-16 h-16 overflow-hidden rounded-full cursor-pointer group">
             <img
               src={profileImage}
@@ -97,7 +141,8 @@ const Profile = () => {
             />
             <div
               className="absolute inset-0 flex items-center justify-center transition-opacity bg-black bg-opacity-50 opacity-0 group-hover:opacity-100"
-              onClick={() => fileInputRef.current.click()}>
+              onClick={() => fileInputRef.current.click()}
+            >
               <MdEdit className="text-xl text-white" />
             </div>
             <input
@@ -109,8 +154,7 @@ const Profile = () => {
             />
           </div>
           <div>
-            <h3 className="text-lg font-semibold text-text">{`${profileData.firstName} ${profileData.lastName}`}</h3>
-            <h4 className="mb-0 text-sm text-text">{`${profileData.role}`}</h4>
+            <h3 className="text-lg font-semibold text-text">{`${profileData.first_name} ${profileData.last_name}`}</h3>
             <h4 className="mb-0 text-sm text-text">{`${profileData.city}, ${profileData.country}`}</h4>
           </div>
         </CardLayoutHeader>
@@ -118,7 +162,8 @@ const Profile = () => {
       <CardLayoutContainer className="w-full mb-5">
         <CardLayoutHeader
           className="flex items-center justify-between gap-5 py-3"
-          removeBorder={true}>
+          removeBorder={true}
+        >
           <h2 className="text-2xl font-semibold text-text">
             Personal Information
           </h2>
@@ -128,11 +173,38 @@ const Profile = () => {
             {profileFields.map(({ label, field, type }, index) => (
               <div key={index}>{renderEditableField(label, field, type)}</div>
             ))}
+            <div className="relative self-end">
+              <div
+                className="relative flex items-center justify-between w-full p-3 bg-white border border-gray-300 rounded-md cursor-pointer"
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+              >
+                <span>{profileData.role_name}</span>
+                <FaCaretDown className="text-gray-500" />
+              </div>
+              {dropdownOpen && (
+                <ul className="absolute z-10 w-full mt-1 overflow-y-auto bg-white border border-gray-300 rounded-md shadow-md max-h-40">
+                  {roles?.length > 0 ? (
+                    roles.map((role) => (
+                      <li
+                        key={role.id}
+                        className="p-3 cursor-pointer hover:bg-gray-100"
+                        onClick={() => handleRoleSelect(role)}
+                      >
+                        {role.role}
+                      </li>
+                    ))
+                  ) : (
+                    <li className="p-3 text-gray-500">No roles found</li>
+                  )}
+                </ul>
+              )}
+            </div>
           </div>
         </CardLayoutBody>
         <CardLayoutHeader
           className="flex items-center justify-between gap-5 py-3"
-          removeBorder={true}>
+          removeBorder={true}
+        >
           <h2 className="text-2xl font-semibold text-text">Address</h2>
         </CardLayoutHeader>
         <CardLayoutBody>
@@ -142,10 +214,13 @@ const Profile = () => {
             ))}
           </div>
           <button
-            disabled={!editingField}
+            // disabled={!editingField}
             className={`px-4 py-2 mt-3 font-semibold text-white rounded-md 
-    bg-primary ${editingField ? "cursor-pointer" : "cursor-not-allowed"}`}
-            onClick={handleSave}>
+              bg-primary ${
+                editingField ? "cursor-pointer" : "cursor-not-allowed"
+              }`}
+            onClick={handleSave}
+          >
             Save Changes
           </button>
         </CardLayoutBody>

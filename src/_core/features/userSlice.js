@@ -155,11 +155,12 @@ export const editUser = createAsyncThunk(
       });
 
       if (response.status === 200) {
-        toast.success("Role updated successfully");
+        toast.success("User updated successfully");
         return response.data.data;
       }
     } catch (error) {
-      const errorMessage = error?.response?.data?.message || "Failed while updating this role";
+      const errorMessage =
+        error?.response?.data?.message || "Failed while updating this User";
       toast.error(errorMessage);
       return thunkAPI.rejectWithValue(errorMessage);
     }

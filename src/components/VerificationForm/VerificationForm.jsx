@@ -88,7 +88,7 @@ const VerificationForm = () => {
       <Toaster />
       <CardLayoutContainer className="hide-scrollbar max-w-[900px] h-[500px] m-auto p-0 shadow-3xl overflow-y-scroll">
         <CardLayoutBody removeBorder padding="p-0" className="flex">
-          <div className="flex-1 flex items-center justify-center">
+          <div className="flex items-center justify-center flex-1">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -289,15 +289,15 @@ const VerificationForm = () => {
           </div>
 
           <div className="flex-1 p-16">
-            <h3 className="text-4xl font-extrabold text-center mb-5">
+            <h3 className="mb-5 text-4xl font-extrabold text-center">
               OTP Verification
             </h3>
-            <h3 className="text-md text-slate-500 text-center mb-10">
+            <h3 className="mb-10 text-center text-md text-slate-500">
               We have sent a verification code to your email address.
             </h3>
 
             <div className="flex flex-col gap-5">
-              <div className="flex justify-center mt-5 gap-4">
+              <div className="flex justify-center gap-4 mt-5">
                 {verificationCode.map((value, index) => (
                   <input
                     key={index}
@@ -317,7 +317,7 @@ const VerificationForm = () => {
               <div className="flex items-center justify-end px-10 mt-[-10px]">
                 <Link
                   onClick={resendCodeHandler}
-                  className="text-end text-primary hover:text-secondary transition-all">
+                  className="transition-all text-end text-primary hover:text-secondary">
                   Resend code
                 </Link>
               </div>

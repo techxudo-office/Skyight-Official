@@ -17,7 +17,6 @@ const Input = ({
   placeholder,
   autoComplete,
   setEditingField,
-  onKeyPressHandler,
 }) => {
   const [showPassword, setShowPassword] = useState(false);
   const inputRef = useRef();
@@ -60,7 +59,6 @@ const Input = ({
           value={value}
           placeholder={placeholder}
           onChange={onChange}
-          onKeyPress={onKeyPressHandler}
           autoComplete={autoComplete}
           onBlur={() => setEditingField && setEditingField(null)}
         />
