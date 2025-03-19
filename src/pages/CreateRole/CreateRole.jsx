@@ -88,7 +88,7 @@ const CreateRole = () => {
     }
 
     const payload = {
-      name: rolesData.name,
+      role: rolesData.name,
       description: rolesData.description,
       page_permission: rolesData.page_permission,
       action_permission: rolesData.action_permission,
