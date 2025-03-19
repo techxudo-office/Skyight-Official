@@ -14,10 +14,11 @@ import {
   DownloadButton,
   Table,
   Spinner,
+  CustomTooltip,
 } from "../../components/components";
 import { Toaster } from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
-import { IoIosAirplane, IoMdClock } from "react-icons/io";
+import { IoIosAirplane, IoMdCash, IoMdClock, IoMdPaperPlane } from "react-icons/io";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { useDispatch, useSelector } from "react-redux";
@@ -28,6 +29,8 @@ import {
   issueBooking,
   requestRefund,
 } from "../../_core/features/bookingSlice";
+import { MdArrowBack, MdOutlineCancelScheduleSend } from "react-icons/md";
+import { RiRefund2Fill } from "react-icons/ri";
 
 dayjs.extend(utc); // Extend dayjs with UTC support
 
@@ -89,9 +92,13 @@ const TicketDetails = () => {
       .unwrap()
       .then(() => {
         setConfirmObject((prev) => ({ ...prev, status: false }));
+        dispatch(getBookingDetails({ id: location.state.id, token: userData?.token }))
+
       })
       .catch((error) => {
         console.log("Request Refund Failed:", error);
+        setConfirmObject((prev) => ({ ...prev, status: false }));
+        dispatch(getBookingDetails({ id: location.state.id, token: userData?.token }))
       });
   };
 
@@ -105,9 +112,13 @@ const TicketDetails = () => {
       .unwrap()
       .then(() => {
         setConfirmObject((prev) => ({ ...prev, status: false }));
+        dispatch(getBookingDetails({ id: location.state.id, token: userData?.token }))
+
       })
       .catch((error) => {
         console.log("Request Refund Failed:", error);
+        setConfirmObject((prev) => ({ ...prev, status: false }));
+        dispatch(getBookingDetails({ id: location.state.id, token: userData?.token }))
       });
   };
 
@@ -169,6 +180,7 @@ const TicketDetails = () => {
 
                   <div>
                     <Button
+                      icon={<RiRefund2Fill />}
                       onClick={() =>
                         setConfirmObject((prev) => ({
                           ...prev,
@@ -188,6 +200,7 @@ const TicketDetails = () => {
                   </div>
                   <div>
                     <Button
+                      icon={<MdOutlineCancelScheduleSend />}
                       onClick={() =>
                         setConfirmObject((prev) => ({
                           ...prev,
@@ -210,6 +223,7 @@ const TicketDetails = () => {
               </div>
 
               <Button
+                icon={<IoMdPaperPlane />}
                 disabled={
                   [
                     "requested-refund",
@@ -373,15 +387,18 @@ const TicketDetails = () => {
           </CardLayoutContainer>
 
           <div className="flex items-center justify-end gap-3 mb-4">
-            <div>
-              <Button
-                id={"hide-buttons"}
-                text="Go Back"
-                onClick={() => {
-                  navigate(-1);
-                }}
-              />
-            </div>
+            <CustomTooltip content={"Previous Page"}>
+              <div>
+                <Button
+                  icon={<MdArrowBack />}
+                  id={"hide-buttons"}
+                  text="Go Back"
+                  onClick={() => {
+                    navigate(-1);
+                  }}
+                />
+              </div>
+            </CustomTooltip>
           </div>
         </div>
       </>

@@ -90,7 +90,7 @@ const FlightCard = ({ data, doc_type, travelers, pricingInfo }) => {
                 </div>
               </div>
               <div>
-                <SecondaryButton text={"AIRBLUEAPI (Fix)"} />
+                <SecondaryButton text={data?.ProviderType} />
               </div>
             </div>
           ))}
@@ -101,9 +101,8 @@ const FlightCard = ({ data, doc_type, travelers, pricingInfo }) => {
               totalTravelers.map((item, index) => (
                 <div
                   key={index}
-                  className={`flex justify-between items-center py-3 ${
-                    index == totalTravelers.length - 1 ? "" : "border-b"
-                  }  border-slate-200`}>
+                  className={`flex justify-between items-center py-3 ${index == totalTravelers.length - 1 ? "" : "border-b"
+                    }  border-slate-200`}>
                   <div>
                     <h2 className="text-sm font-semibold text-text flex items-center  gap-1">
                       <span className="text-lg">

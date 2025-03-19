@@ -9,6 +9,7 @@ import { MdDownload } from "react-icons/md";
 
 const Finalticket = () => {
     const ticketRefs = useRef([]);
+    const [loading, setLoading] = useState(null)
     const { pnrData, isLoadingPNR } = useSelector((state) => state.booking)
     const { AirReservation } = pnrData;
     const travelers = AirReservation?.TravelerInfo || [];
@@ -22,32 +23,41 @@ const Finalticket = () => {
     const bookingInfo = AirReservation?.bookingReferenceID;
 
     // Function to download a specific ticket as a PDF
+
     const downloadPDF = async (index) => {
+        setLoading(index); // Set loader for the specific ticket
+
         const ticketElement = ticketRefs.current[index];
         if (!ticketElement) return;
 
-        // Capture the element with forced width
-        const canvas = await html2canvas(ticketElement, {
-            scale: 2,
-            scrollX: 0,
-            scrollY: 0
-        });
+        try {
+            // Capture the element with forced width
+            const canvas = await html2canvas(ticketElement, {
+                scale: 2,
+                scrollX: 0,
+                scrollY: 0
+            });
 
-        // Convert 1300px to mm (1px ≈ 0.264583mm)
-        const pdfWidth = 201;
-        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+            // Convert 1300px to mm (1px ≈ 0.264583mm)
+            const pdfWidth = 201;
+            const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
-        // Create PDF with exact element width
-        const pdf = new jsPDF("p", "mm", [pdfWidth, pdfHeight]);
+            // Create PDF with exact element width
+            const pdf = new jsPDF("p", "mm", [pdfWidth, pdfHeight]);
 
-        // Convert canvas to PNG
-        const imgData = canvas.toDataURL("image/png");
+            // Convert canvas to PNG
+            const imgData = canvas.toDataURL("image/png");
 
-        // Add image to PDF
-        pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-        pdf.save(`ticket_traveler_${index + 1}.pdf`);
-
+            // Add image to PDF
+            pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+            pdf.save(`ticket_traveler_${index + 1}.pdf`);
+        } catch (error) {
+            console.error("Error generating PDF:", error);
+        } finally {
+            setLoading(null); // Remove loader after download
+        }
     };
+
 
 
     return (
@@ -160,7 +170,7 @@ const Finalticket = () => {
                                 </div>
 
                                 {/* Price Details */}
-                                <div className="p-5 border-b text-lg">
+                                <div className="p-5 border-b text-lg flex flex-col gap-2">
                                     <h3 className="font-bold text-xl text-primary">Price Details</h3>
                                     <p>
                                         <span >{travelerInfo.PassengerTypeCode} Base Price:</span>{" "}
@@ -174,7 +184,7 @@ const Finalticket = () => {
                                     </p>
                                     <p>
                                         <span >{travelerInfo.PassengerTypeCode} Taxes:</span>{" "}
-                                        <span className=" border-dashed border-b-2 border-primary">
+                                        <span className=" ">
                                             {
                                                 priceInfo[index]?.PassengerFare.Taxes?.Tax.map((tax, i) => (
                                                     <div className="pl-3 flex gap-2">
@@ -217,7 +227,8 @@ const Finalticket = () => {
                             {/* Download Button */}
                             <div className="p-5 text-center">
                                 <Button
-                                    text={"Download PDF"}
+                                    disabled={loading === index}
+                                    text={loading === index ? <Spinner /> : "Download PDF"}
                                     icon={<MdDownload />}
                                     onClick={() => downloadPDF(index)}
                                     className=""
