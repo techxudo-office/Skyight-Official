@@ -16,7 +16,6 @@ const SearchHistory = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [loadingRowId, setLoadingRowId] = useState(null);
-
   const { SearchHistory, isSearchHistoryLoading, errorSearchHistory } =
     useSelector((state) => state.history);
   const userData = useSelector((state) => state.auth.userData);

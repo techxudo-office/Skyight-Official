@@ -18,7 +18,7 @@ const PhoneNumberInput = ({
   placeholder,
   autoComplete,
   setEditingField,
-  onKeyPressHandler,
+  
 }) => {
   const [phone, setPhone] = useState(null);
   const inputRef = useRef();

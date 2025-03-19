@@ -63,24 +63,16 @@ const EditRoleModal = ({ isOpen, onClose, roleData }) => {
       alert("Please fill in all fields");
       return;
     }
-    const { role_id, ...filteredActionPermission } =
+    const { role_id: actionRoleId, ...action_permission } =
       rolesData?.action_permission || {};
+    const { role_id: pageRoleId, ...page_permission } =
+      rolesData?.page_permission || {};
 
     const payload = {
-      name: rolesData?.role,
+      role: rolesData?.role,
       description: rolesData?.description,
-      page_permission: {
-        dashboard: true,
-        flights: true,
-        bookings: true,
-        credits: true,
-        transactions: true,
-        history: true,
-        administrators: true,
-        tickets: true,
-        help_and_support: true,
-      },
-      action_permission: filteredActionPermission,
+      page_permission: page_permission,
+      action_permission: action_permission,
     };
 
     dispatch(
@@ -94,7 +86,8 @@ const EditRoleModal = ({ isOpen, onClose, roleData }) => {
     <ModalWrapper
       isOpen={isOpen}
       onRequestClose={onClose}
-      contentLabel="Edit Role">
+      contentLabel="Edit Role"
+    >
       <CardLayoutContainer>
         <CardLayoutHeader heading="Edit Role" />
         <CardLayoutBody>
