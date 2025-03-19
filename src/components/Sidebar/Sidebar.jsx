@@ -9,6 +9,7 @@ import {
 } from "../CardLayout/CardLayout";
 import { MdEdit } from "react-icons/md";
 import { useSidebarLinks } from "../../data/sidebarData";
+import { Backbutton } from "../components";
 
 const Sidebar = ({ status, updateStatus }) => {
   const sidebarLinks = useSidebarLinks();
@@ -115,14 +116,14 @@ const Sidebar = ({ status, updateStatus }) => {
     <div
       id="sidebar-container"
       ref={sidebarRef}
-      className={`transition-all z-10  bg-white   shadow-md ${!mobileView
+      className={`transition-all z-20  bg-white    shadow-md ${!mobileView
         ? status
           ? "w-1/5 pt-20 "
           : "w-28  items-center pt-20"
         : status
-          ? "w-60 shadow-md fixed left-0 h-screen"
+          ? "w-60 shadow-md fixed left-0 h-screen pt-20"
           : "w-0 p-0"
-        } flex flex-col justify-between  transition-all duration-300 overflow-auto overflow-x-hidden`}
+        } flex flex-col justify-between  transition-all duration-300 overflow-y-auto overflow-x-visible`}
     >
       <div>
         {/* <div className={`py-3 items-center  flex ${status ? 'px-5' : 'justify-center'} `}>
@@ -134,7 +135,8 @@ const Sidebar = ({ status, updateStatus }) => {
             {status ? 'Skyight' : ''}
           </h3>
         </div> */}
-        <CardLayoutContainer className="w-full shadow-none">
+        <CardLayoutContainer className="w-full relative shadow-none">
+          <Backbutton className={"absolute z-[99] right-0 top-0"} />
           <CardLayoutHeader
             className="flex flex-col flex-wrap items-center justify-start py-3 gap-x-5"
             removeBorder={true}

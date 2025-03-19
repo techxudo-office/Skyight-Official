@@ -42,7 +42,7 @@ const TicketDetails = () => {
     text: "",
   });
   const { userData } = useSelector((state) => state.auth);
-  const { isLoadingBookingDetails, bookingDetails ,isLoadingPNR} = useSelector((state) => state.booking);
+  const { isLoadingBookingDetails, bookingDetails, isLoadingPNR } = useSelector((state) => state.booking);
   // const [bookingDetails, setBookingDetails] = useState();
 
   const printRef = useRef();
@@ -138,9 +138,9 @@ const TicketDetails = () => {
   const timelimit = new Date(bookingDetails?.Timelimit);
   const localTimeLimit = timelimit.toLocaleString("en-GB");
 
-  if(isLoadingBookingDetails || isLoadingPNR){
-    return <Spinner className={"text-primary"}/>
-  }else{
+  if (isLoadingBookingDetails || isLoadingPNR) {
+    return <Spinner className={"text-primary"} />
+  } else {
     return (
       <>
         <Toaster />
@@ -166,7 +166,7 @@ const TicketDetails = () => {
                   </h1>
                 </div>
                 <div className="flex flex-wrap gap-3">
-  
+
                   <div>
                     <Button
                       onClick={() =>
@@ -208,7 +208,7 @@ const TicketDetails = () => {
                   </div>
                 </div>
               </div>
-  
+
               <Button
                 disabled={
                   [
@@ -297,8 +297,8 @@ const TicketDetails = () => {
             </div>
           </CardLayoutContainer>
           <CardLayoutContainer>
-            <CardLayoutHeader className={"mb-2"} heading="Passenger Details" />
-  
+            <CardLayoutHeader className={"mb-2 text-text"} heading="Passenger Details" />
+
             {bookingDetails && (
               <Table
                 pagination={true}
@@ -363,16 +363,15 @@ const TicketDetails = () => {
           </CardLayoutContainer>
           <CardLayoutContainer>
             <CardLayoutHeader
-              className={"mb-2"}
+              className={"mb-2 text-text"}
               heading={"Pricing Information"}
             />
-            <CardLayoutFooter>
-              <h2 className="text-xl font-semibold text-slate-600">
-                Total Fare: {Number(bookingDetails?.total_fare).toLocaleString()}
-              </h2>
-            </CardLayoutFooter>
+            <h2 className="text-xl font-semibold text-text p-5">
+              Total Fare: {Number(bookingDetails?.total_fare).toLocaleString()} PKR
+            </h2>
+
           </CardLayoutContainer>
-  
+
           <div className="flex items-center justify-end gap-3 mb-4">
             <div>
               <Button
@@ -388,7 +387,7 @@ const TicketDetails = () => {
       </>
     );
   }
-  
+
 };
 
 export default TicketDetails;
