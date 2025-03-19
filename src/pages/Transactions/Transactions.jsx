@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Button, ModalWrapper, SecondaryButton, Table, Tag } from "../../components/components";
+import {
+  Button,
+  ModalWrapper,
+  SecondaryButton,
+  Table,
+  Tag,
+} from "../../components/components";
 import { FaEye } from "react-icons/fa";
 import { MdAdd } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
@@ -11,7 +17,6 @@ import {
 } from "../../components/CardLayout/CardLayout";
 import { getTransactions } from "../../_core/features/transactionSlice";
 import { useDispatch, useSelector } from "react-redux";
-import Modal from "react-modal";
 import "./Transaction.css";
 import dayjs from "dayjs";
 
@@ -20,19 +25,17 @@ const Transactions = () => {
   const dispatch = useDispatch();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedTransaction, setSelectedTransaction] = useState(null);
-
   const { userData } = useSelector((state) => state.auth);
   const { transactions, isLoadingTransactions } = useSelector(
     (state) => state.transaction
   );
+  const [selectedTransaction, setSelectedTransaction] = useState(null);
 
   useEffect(() => {
     dispatch(getTransactions({ token: userData?.token }));
   }, [dispatch, userData?.token]);
 
   const handleView = (row) => {
-    console.log("Modal Open");
     setSelectedTransaction(row);
     setIsModalOpen(true);
   };
@@ -74,7 +77,7 @@ const Transactions = () => {
       sortable: false,
       center: true,
       wrap: true,
-      grow: 2
+      grow: 2,
     },
     {
       name: "",
@@ -122,8 +125,7 @@ const Transactions = () => {
       <ModalWrapper
         isOpen={isModalOpen}
         onRequestClose={closeModal}
-        contentLabel="Transaction Details"
-      >
+        contentLabel="Transaction Details">
         {selectedTransaction && (
           <div className="p-6 bg-white shadow-lg rounded-lg border border-gray-300 max-w-md mx-auto">
             <h2 className="mb-4 text-2xl font-bold text-center border-b pb-2">
@@ -131,7 +133,9 @@ const Transactions = () => {
             </h2>
             <div className="flex justify-between items-center mb-4">
               <span className="text-sm text-gray-600">Transaction ID:</span>
-              <span className="font-semibold">{selectedTransaction?.id || "N/A"}</span>
+              <span className="font-semibold">
+                {selectedTransaction?.id || "N/A"}
+              </span>
             </div>
             <img
               src={selectedTransaction?.document_url}
@@ -141,23 +145,35 @@ const Transactions = () => {
             <div className="space-y-2 text-sm">
               <p>
                 <strong className="text-text">Bank Holder Name:</strong>{" "}
-                <span className="font-medium">{selectedTransaction?.account_holder_name}</span>
+                <span className="font-medium">
+                  {selectedTransaction?.account_holder_name}
+                </span>
               </p>
               <p>
                 <strong className="text-text">Bank number:</strong>{" "}
-                <span className="font-medium">{selectedTransaction?.bank_number}</span>
+                <span className="font-medium">
+                  {selectedTransaction?.bank_number}
+                </span>
               </p>
               <p>
                 <strong className="text-text">Bank:</strong>{" "}
-                <span className="font-medium">{selectedTransaction?.bank_name}</span>
+                <span className="font-medium">
+                  {selectedTransaction?.bank_name}
+                </span>
               </p>
               <p>
                 <strong className="text-text">Comment:</strong>{" "}
-                <span className="font-medium">{selectedTransaction?.comment}</span>
+                <span className="font-medium">
+                  {selectedTransaction?.comment}
+                </span>
               </p>
               <p>
                 <strong className="text-text">Payment Date:</strong>{" "}
-                <span className="font-medium">{dayjs(selectedTransaction?.payment_date).format("DD-MMM-YYYY h:mm a")}</span>
+                <span className="font-medium">
+                  {dayjs(selectedTransaction?.payment_date).format(
+                    "DD-MMM-YYYY h:mm a"
+                  )}
+                </span>
               </p>
               <p>
                 <strong className="text-text">Amount:</strong>{" "}
@@ -165,17 +181,15 @@ const Transactions = () => {
                   ${selectedTransaction?.amount}
                 </span>
               </p>
-              <p>
-
-              </p>
+              <p></p>
               <p>
                 <strong className="text-text">Status:</strong>{" "}
                 <span
-                  className={`font-medium px-2 py-1 rounded ${selectedTransaction?.status === "Approved"
-                    ? "bg-green-100 text-greenColor"
-                    : "bg-red-100 text-redColor"
-                    }`}
-                >
+                  className={`font-medium px-2 py-1 rounded ${
+                    selectedTransaction?.status === "Approved"
+                      ? "bg-green-100 text-greenColor"
+                      : "bg-red-100 text-redColor"
+                  }`}>
                   {selectedTransaction?.status}
                 </span>
               </p>
@@ -188,7 +202,6 @@ const Transactions = () => {
               />
             </div>
           </div>
-
         )}
       </ModalWrapper>
     </>

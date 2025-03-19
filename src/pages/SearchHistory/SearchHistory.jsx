@@ -10,6 +10,7 @@ import dayjs from "dayjs";
 import { searchFlight } from "../../_core/features/bookingSlice";
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { IoIosAirplane } from "react-icons/io";
 
 const SearchHistory = () => {
   const navigate = useNavigate();
@@ -89,10 +90,20 @@ const SearchHistory = () => {
       center: true,
     },
     {
-      name: "City Pair",
-      selector: (row) =>
-        `${row.origin_destinations[0]?.destination_location_code} - ${row.origin_destinations[0]?.origin_location_code}`,
+      name: "ROUTE",
+      selector: (row) => (
+        <span className="flex items-center justify-center gap-2 text-sm text-text">
+          {row.origin_destinations[0]?.destination_location_code}
+          <div className="flex items-center gap-1">
+            <span className="h-0.5 w-3 bg-primary"></span>
+            <IoIosAirplane className="text-lg text-primary" />
+            <span className="h-0.5 w-3 bg-primary"></span>
+          </div>
+          {row.origin_destinations[0]?.origin_location_code}
+        </span>
+      ),
       sortable: false,
+      minwidth: "150px",
       center: true,
     },
     {

@@ -1,11 +1,9 @@
 import * as Tooltip from "@radix-ui/react-tooltip";
 
 const CustomTooltip = ({ children, content }) => {
-  // If content is empty or null, return just the children without a tooltip
   if (!content) {
-    return children;
+    return children
   }
-
   return (
     <Tooltip.Provider>
       <Tooltip.Root>
