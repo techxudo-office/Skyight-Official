@@ -1,11 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
 // import { FaChevronDown } from "react-icons/fa";
 import { FaCaretDown } from "react-icons/fa";
+import { Spinner } from "../components";
 
 const Select = ({
   id,
   label,
   disabled,
+  isLoading = false,
   name,
   options,
   value,
@@ -35,8 +37,9 @@ const Select = ({
     if (disabled) {
       return
     } else {
-      // setdropDown((prev)=>!prev)
-
+      if (!selectStatus) {
+        onClick()
+      }
       setSelectStatus((prev) => !prev);
     }
   };
@@ -79,7 +82,6 @@ const Select = ({
         <div
           className="flex w-full items-center justify-between py-5 px-3  bg-transparent text-text"
           onClick={selectHandler}
-          onMouseEnter={onClick}
         >
 
           <span className="text-text flex gap-3 items-center"><span className="text-primary">{selectIcon}</span>{(value && value) || placeholder}</span>
@@ -101,7 +103,7 @@ const Select = ({
               />
             </div>
 
-            <ul className="max-h-40 overflow-y-auto ">
+            {isLoading ? <Spinner className={"text-primary my-2"} /> : <ul className="max-h-40 overflow-y-auto ">
               {filteredOptions.map((option, index) => (
                 <li
                   key={index}
@@ -118,7 +120,7 @@ const Select = ({
               {filteredOptions.length === 0 && (
                 <li className="p-3 text-sm text-text-500">No options found</li>
               )}
-            </ul>
+            </ul>}
           </div>
         )}
       </div>

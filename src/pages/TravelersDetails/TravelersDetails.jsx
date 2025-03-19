@@ -177,7 +177,7 @@ const TravelersDetails = () => {
                           {`Traveller ${travelerIndex + 1}. ${travelertype === "ADT" ? "adult" : travelertype === "CHD" ? "child" : "infant"}`}
                         </h2>
                         <span className="text-2xl transition-all cursor-pointer hover:scale-110 text-primary hover:text-secondary">
-                          {toogleForm !== travelerIndex ? <FaChevronCircleDown /> : <FaChevronCircleUp />}
+                          {toogleForm !== travelerIndex || oldTraveller.includes(travelerIndex) ? <FaChevronCircleDown /> : <FaChevronCircleUp />}
                         </span>
                       </div>
                     </CardLayoutHeader>
@@ -231,13 +231,14 @@ const TravelersDetails = () => {
                             <div className="flex flex-col max-w-full gap-6 py-10 mx-3 md:w-80 lg:mx-auto">
                               <div className="flex items-center gap-2 ">
                                 <Select
-                                  onMouseEnter={() => gettingTravellers(travelertype)}
+                                  onClick={() => gettingTravellers(travelertype)}
+                                  isLoading={isLoadingTravelers}
                                   id={"passengers"}
                                   disabled={disableAddTraveler.includes(travelerIndex)}
                                   label={"Passengers"}
                                   onChange={(option) => handlePassengerForm(formikRefs.current[travelerIndex]?.setValues, option.value, travelerIndex)}
                                   value={oldTraveller.includes(travelerIndex) && `${values.first_name} ${values.last_name}`}
-                                  options={passengers}
+                                  options={travelers.map((item) => ({ value: item.email, label: item.email }))}
                                 />
                                 {oldTraveller.includes(travelerIndex) && (
                                   <MdCancel

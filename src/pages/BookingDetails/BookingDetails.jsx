@@ -62,19 +62,21 @@ const TicketDetails = () => {
   };
 
   const handleIssue = async (pnr) => {
+    setConfirmObject((prev) => ({ ...prev, status: false }));
+
     dispatch(issueBooking({ pnr, token: userData?.token }))
       .unwrap()
       .then(() => {
         dispatch(getBookingDetails({ id: location.state.id, token: userData?.token }))
-        setConfirmObject((prev) => ({ ...prev, status: false }));
       })
       .catch((error) => {
         dispatch(getBookingDetails({ id: location.state.id, token: userData?.token }))
-        setConfirmObject((prev) => ({ ...prev, status: false }));
       });
   };
 
   const handleGetPnr = (pnr) => {
+    setConfirmObject((prev) => ({ ...prev, status: false }));
+
     dispatch(getPNR({ id: pnr, token: userData?.token }))
       .unwrap()
       .then((result) => {
@@ -85,24 +87,26 @@ const TicketDetails = () => {
   };
 
   const cancelFlightBookingHandler = async (flight) => {
+    setConfirmObject((prev) => ({ ...prev, status: false }));
+
     const bookingId = {
       booking_id: flight.id,
     };
     dispatch(cancelFlightBooking({ data: bookingId, token: userData?.token }))
       .unwrap()
       .then(() => {
-        setConfirmObject((prev) => ({ ...prev, status: false }));
         dispatch(getBookingDetails({ id: location.state.id, token: userData?.token }))
 
       })
       .catch((error) => {
         console.log("Request Refund Failed:", error);
-        setConfirmObject((prev) => ({ ...prev, status: false }));
         dispatch(getBookingDetails({ id: location.state.id, token: userData?.token }))
       });
   };
 
   const refundRequestHandler = async (flight) => {
+    setConfirmObject((prev) => ({ ...prev, status: false }));
+
     console.log(flight);
 
     const bookingId = {
@@ -111,13 +115,11 @@ const TicketDetails = () => {
     dispatch(requestRefund({ data: bookingId, token: userData?.token }))
       .unwrap()
       .then(() => {
-        setConfirmObject((prev) => ({ ...prev, status: false }));
         dispatch(getBookingDetails({ id: location.state.id, token: userData?.token }))
 
       })
       .catch((error) => {
         console.log("Request Refund Failed:", error);
-        setConfirmObject((prev) => ({ ...prev, status: false }));
         dispatch(getBookingDetails({ id: location.state.id, token: userData?.token }))
       });
   };
@@ -160,6 +162,7 @@ const TicketDetails = () => {
           onConfirm={confirmObject.onConfirm}
           status={confirmObject.status}
           text={confirmObject.text}
+          loading={isLoadingBookingDetails}
         />
         <div ref={printRef} className="flex flex-col w-full gap-5">
           <CardLayoutContainer>
@@ -235,7 +238,7 @@ const TicketDetails = () => {
                 className="text-xl py-14 w-full md:w-44"
                 text={
                   bookingDetails?.booking_status === "confirmed"
-                    ? "Get PNR"
+                    ? "E-Ticket"
                     : "Order Ticket"
                 }
                 onClick={() => {
