@@ -432,11 +432,7 @@ export const issueBooking = createAsyncThunk(
       );
 
       if (response.status === 200) {
-        if(response.data.data.Success==false){
-          toast.error(response.data.data.error.message)
-        }else{
-          toast.success("Booking issued successfully")
-        }
+        toast.success("Booking issued successfully")
         return response.data.data;
       } else {
         throw new Error(response.data.message || "Failed to issue booking");

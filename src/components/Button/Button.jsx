@@ -15,7 +15,7 @@ const Button = ({ text, onClick, type = 'button', className = '', styles, disabl
             >
                 {loading ? <Spinner /> :
                     <div className='flex items-center justify-center gap-1 '>
-                        <span className='text-white text-xl pb-[2px] '>{icon}</span>
+                        <span className={`${disabled ? "text-text" : "text-white"} text-xl pb-[2px] `}>{icon}</span>
                         <span className={` hover:${textColorHover} max-md:text-sm`}>{text}</span>
 
                     </div>
