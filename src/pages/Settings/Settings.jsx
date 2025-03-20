@@ -4,7 +4,12 @@ import {
   CardLayoutHeader,
   CardLayoutBody,
 } from "../../components/CardLayout/CardLayout";
-import { Button, Input, Select } from "../../components/components";
+import {
+  Button,
+  Input,
+  PhoneNumberInput,
+  Select,
+} from "../../components/components";
 import { MdEdit } from "react-icons/md";
 import { FaCaretDown } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
@@ -98,7 +103,6 @@ const Settings = () => {
     { label: "First Name", field: "first_name", type: "text", edit: true },
     { label: "Last Name", field: "last_name", type: "text", edit: true },
     { label: "Email Address", field: "email", type: "email", edit: false },
-    { label: "Phone Number", field: "mobile_number", type: "tel", edit: true },
   ];
 
   const addressFields = [
@@ -174,6 +178,25 @@ const Settings = () => {
                 {renderEditableField(label, field, type, edit)}
               </div>
             ))}
+            <PhoneNumberInput
+              id={1}
+              name={"Phone Number"}
+              label={"Phone Number"}
+              className="self-end"
+              value={profileData.mobile_number}
+              onChange={(number) =>
+                handleChange(
+                  {
+                    target: {
+                      value:
+                        number.country_code + number.area_code + number.number,
+                    },
+                  },
+                  "mobile_number"
+                )
+              }
+              placeholder={"Phone Number"}
+            />
             <Select
               id="roles"
               label="Role"
