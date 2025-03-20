@@ -19,9 +19,6 @@ const Sidebar = ({ status, updateStatus }) => {
   const [mobileView, setMobileView] = useState(false);
   const { userData } = useSelector((state) => state.auth);
 
-  const navigationHandler = (path) => {
-    navigate(path);
-  };
   useEffect(() => {
     if (!status) {
       setActiveMenu(null);
@@ -35,7 +32,7 @@ const Sidebar = ({ status, updateStatus }) => {
     if (link.sublinks && link.sublinks.length > 0) {
       setActiveMenu((prevIndex) => (prevIndex === index ? null : index));
     } else if (link.path) {
-      navigationHandler(link.path);
+      navigate(link.path);
     }
   };
 
@@ -78,21 +75,6 @@ const Sidebar = ({ status, updateStatus }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, [updateStatus]);
 
-  // useEffect(() => {
-  //   if (mobileView) {
-  //     const handleClickOutside = (e) => {
-  //       if (sidebarRef.current && !sidebarRef.current.contains(e.target)) {
-  //         updateStatus(false);
-  //       }
-  //     };
-
-  //     document.addEventListener("mousedown", handleClickOutside);
-  //     return () => {
-  //       document.removeEventListener("mousedown", handleClickOutside);
-  //     };
-  //   }
-  // }, [sidebarRef, mobileView]);
-
   const [profileImage, setProfileImage] = useState(
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjUuYcnZ-xqlGZiDZvuUy_iLx3Nj6LSaZSzQ&s"
   );
@@ -123,12 +105,14 @@ const Sidebar = ({ status, updateStatus }) => {
     >
       <div>
         <CardLayoutContainer className="relative w-full shadow-none">
-          <Backbutton className={"absolute z-[99] right-0 top-0"} />
+          <Backbutton
+            className={"absolute z-[99] right-0 top-0"}
+            status={status}
+          />
           <CardLayoutHeader
             className="flex flex-col flex-wrap items-center justify-start py-3 gap-x-5"
             removeBorder={true}
           >
-            {" "}
             <div
               className={`relative ${
                 !mobileView ? (status ? "w-24 h-24" : "w-16 h-16") : "w-20 h-20"
@@ -209,7 +193,7 @@ const Sidebar = ({ status, updateStatus }) => {
                   link.sublinks.map((sublink, sublinkIndex) => (
                     <li
                       key={sublinkIndex}
-                      onClick={() => navigationHandler(sublink.path)}
+                      onClick={() => navigate(sublink.path)}
                       className={`  w-full flex items-center gap-4 ${
                         status ? "px-3" : ""
                       } cursor-pointer transition-all  ${

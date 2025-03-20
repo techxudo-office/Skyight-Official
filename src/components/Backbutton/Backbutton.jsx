@@ -1,22 +1,19 @@
 import React from "react";
-import { useLocation, useNavigate } from "react-router-dom"; // Import useNavigate hook
-import { Button, CustomTooltip } from "../components";
-import { IoArrowBack } from "react-icons/io5";
+import { useLocation, useNavigate } from "react-router-dom";
+import { CustomTooltip } from "../components";
 import { MdArrowBackIos } from "react-icons/md";
-const Backbutton = ({ className }) => {
-  const navigate = useNavigate(); // Initialize useNavigate
-  const location = useLocation(); // Initialize useLocation to get the current location/path
+const Backbutton = ({ className, status }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  // Function to navigate to the previous page
   const goBack = () => {
-    navigate(-1); // -1 means going back to the previous page
+    navigate(-1);
   };
 
-  // Hide the button on the dashboard home page
   const isDashboardHome = location.pathname === "/dashboard";
 
-  if (isDashboardHome) {
-    return null; // Don't render the button if we're on the dashboard home page
+  if (isDashboardHome || !status) {
+    return null;
   }
 
   return (
@@ -25,7 +22,8 @@ const Backbutton = ({ className }) => {
         <div className="">
           <button
             onClick={goBack}
-            className="text-xl pl-2 pr-1 py-1 rounded-l-full bg-background hover:bg-blue-300  text-primary border-[1px] border-primary">
+            className="text-xl pl-2 pr-1 py-1 rounded-l-full bg-background hover:bg-blue-300  text-primary border-[1px] border-primary"
+          >
             <MdArrowBackIos />
           </button>
         </div>

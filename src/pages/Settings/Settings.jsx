@@ -4,17 +4,17 @@ import {
   CardLayoutHeader,
   CardLayoutBody,
 } from "../../components/CardLayout/CardLayout";
-import { Input } from "../../components/components";
+import { Button, Input } from "../../components/components";
 import { MdEdit } from "react-icons/md";
 import { FaCaretDown } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserInfo, updateAccount } from "../../_core/features/authSlice";
 import { uploadUserImage } from "../../_core/features/userSlice";
 
-const Profile = () => {
+const Settings = () => {
   const dispatch = useDispatch();
   const { roles } = useSelector((state) => state.role);
-  const { userData } = useSelector((state) => state.auth);
+  const { userData, isUpdatingAccount } = useSelector((state) => state.auth);
   const [editingField, setEditingField] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [profileData, setProfileData] = useState({
@@ -50,10 +50,6 @@ const Profile = () => {
 
   const handleChange = (e, field) => {
     setProfileData({ ...profileData, [field]: e.target.value });
-  };
-
-  const handleEdit = (field) => {
-    setEditingField(field);
   };
 
   const handleRoleSelect = (role) => {
@@ -122,7 +118,7 @@ const Profile = () => {
           disabled={editingField !== field}
           setEditingField={setEditingField}
           isSelected={editingField === field}
-          onEditClick={() => handleEdit(field)}
+          onEditClick={() => setEditingField(field)}
           onChange={(e) => handleChange(e, field)}
         />
       </div>
@@ -220,20 +216,16 @@ const Profile = () => {
               </div>
             ))}
           </div>
-          <button
-            // disabled={!editingField}
-            className={`px-4 py-2 mt-3 font-semibold text-white rounded-md 
-              bg-primary ${
-                editingField ? "cursor-pointer" : "cursor-not-allowed"
-              }`}
+          <Button
+            text="Save Changes"
             onClick={handleSave}
-          >
-            Save Changes
-          </button>
+            loading={isUpdatingAccount}
+            disabled={isUpdatingAccount}
+          />
         </CardLayoutBody>
       </CardLayoutContainer>
     </div>
   );
 };
 
-export default Profile;
+export default Settings;
