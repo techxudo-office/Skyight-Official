@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getUserInfo, updateAccount } from "../../_core/features/authSlice";
 import { uploadUserImage } from "../../_core/features/userSlice";
 
-const Profile = () => {
+const Settings = () => {
   const dispatch = useDispatch();
   const { roles } = useSelector((state) => state.role);
   const { userData } = useSelector((state) => state.auth);
@@ -236,4 +236,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default Settings;

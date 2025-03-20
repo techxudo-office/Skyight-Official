@@ -38,7 +38,7 @@ export { default as ViewTickets } from "./ViewTickets/ViewTickets";
 
 export { default as Support } from "./Support/Support";
 
-export { default as Profile } from "./Profile/Profile";
+export { default as Settings } from "./Settings/Settings";
 export { default as Notifications } from "./Notifications/Notifications";
 
 export { default as FlightResults } from "./FlightResults/FlightResults";

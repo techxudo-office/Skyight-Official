@@ -45,7 +45,7 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
       // icon: <MdSettings className="text-2xl cursor-pointer text-text" />,
       icon: <SlSettings />,
       handler: () => {
-        navigationHandler("/dashboard/profile");
+        navigationHandler("/dashboard/settings");
       },
     },
     {
