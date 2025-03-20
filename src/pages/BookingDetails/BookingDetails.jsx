@@ -45,7 +45,7 @@ const TicketDetails = () => {
     text: "",
   });
   const { userData } = useSelector((state) => state.auth);
-  const { isLoadingBookingDetails, bookingDetails, isLoadingPNR } = useSelector((state) => state.booking);
+  const { isLoadingBookingDetails, bookingDetails, isLoadingPNR, isIssueLoading } = useSelector((state) => state.booking);
   // const [bookingDetails, setBookingDetails] = useState();
 
   const printRef = useRef();
@@ -151,7 +151,7 @@ const TicketDetails = () => {
   const timelimit = new Date(bookingDetails?.Timelimit);
   const localTimeLimit = timelimit.toLocaleString("en-GB");
 
-  if (isLoadingBookingDetails || isLoadingPNR) {
+  if (isLoadingBookingDetails || isLoadingPNR || isIssueLoading) {
     return <Spinner className={"text-primary"} />
   } else {
     return (
@@ -233,6 +233,7 @@ const TicketDetails = () => {
                     "expired",
                     "requested-cancellation",
                   ].includes(bookingDetails?.booking_status)
+                  || isIssueLoading
                   // || now.format("M/D/YYYY h:m:s a") > timeLimit.format("M/D/YYYY h:m:s a")
                 }
                 className="text-xl py-14 w-full md:w-44"
