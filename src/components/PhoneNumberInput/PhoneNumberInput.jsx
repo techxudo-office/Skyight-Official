@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
@@ -8,7 +8,7 @@ const PhoneNumberInput = ({
   id,
   name,
   label,
-  value,
+  value = "",
   profile,
   onChange,
   disabled,
@@ -18,52 +18,8 @@ const PhoneNumberInput = ({
   placeholder,
   autoComplete,
   setEditingField,
-  
 }) => {
-  const [phone, setPhone] = useState(null);
   const inputRef = useRef();
-  useEffect(() => {
-    if (value) {
-      setPhone(value); // Directly set if it's a string
-    } else {
-      setPhone(null);
-    }
-  }, [value]);
-
-  const handlePhoneChange = (value) => {
-    setPhone(value);
-    console.log("value", value)
-    const phoneNumber = parsePhoneNumberFromString(`+${value}`);
-
-    let parsedData = {
-      area_code: '',
-      country_code: '',
-      number: '',
-    };
-
-    if (phoneNumber) {
-      // Extract country code
-      const countryCode = phoneNumber.countryCallingCode;
-
-      // Extract national number (without country code)
-      const nationalNumber = phoneNumber.nationalNumber;
-
-      // Extract area code and subscriber number
-      const areaCode = phoneNumber.extensions?.[0]?.ext || nationalNumber.slice(0, 3); // Fallback to first 3 digits
-      const number = nationalNumber.slice(areaCode.length); // Subscriber number
-
-      parsedData = {
-        area_code: areaCode,
-        country_code: countryCode,
-        number: number,
-      };
-    }
-
-    // Pass the parsed data to the parent component
-    if (onChange) {
-      onChange(parsedData);
-    }
-  };
 
   useEffect(() => {
     if (isSelected) {
@@ -71,40 +27,56 @@ const PhoneNumberInput = ({
     }
   }, [isSelected]);
 
+  const handlePhoneChange = (value) => {
+    const phoneNumber = parsePhoneNumberFromString(`+${value}`);
+
+    const parsedData = phoneNumber
+      ? {
+          country_code: phoneNumber.countryCallingCode,
+          area_code: phoneNumber.nationalNumber?.slice(0, 3) || "", // First 3 digits as area code
+          number: phoneNumber.nationalNumber?.slice(3) || "", // Remaining digits as number
+        }
+      : { country_code: "", area_code: "", number: "" };
+
+    if (onChange) onChange(parsedData);
+  };
+
   return (
     <div className={`flex flex-col w-full ${className}`}>
       <div
-        className={`relative flex items-center rounded-lg border border-gray text-text ${disabled ? "bg-slate-100" : "bg-white"
-          }`}
+        className={`relative flex items-center rounded-lg border border-gray text-text ${
+          disabled ? "bg-slate-100" : "bg-white"
+        }`}
       >
-        <label
-          htmlFor={id}
-          className="absolute px-1 mb-2 text-base font-medium bg-white rounded-md -top-3 left-3 text-text"
-        >
-          {label}
-        </label>
+        {label && (
+          <label
+            htmlFor={id}
+            className="absolute px-1 mb-2 text-base font-medium bg-white rounded-md -top-3 left-3 text-text"
+          >
+            {label}
+          </label>
+        )}
         <PhoneInput
           ref={inputRef}
           country={"ir"} // Default country
-          value={phone}
-          onChange={(value) => handlePhoneChange(value)}
+          value={value}
+          onChange={handlePhoneChange}
           inputProps={{
-            className: "w-full px-3 pt-3 bg-transparent outline-none text-base flex item-center pl-10",
-            id: id,
-            name: name,
-            disabled: disabled,
-            placeholder: placeholder,
-            autoComplete: autoComplete,
-            onBlur: () => setEditingField && setEditingField(null),
+            id,
+            name,
+            disabled,
+            placeholder,
+            autoComplete,
+            onBlur: () => setEditingField?.(null),
+            className:
+              "w-full px-3 pt-3 bg-transparent outline-none text-base pl-10",
           }}
-          inputClass="w-full  px-3 bg-transparent outline-none"
-          containerClass="w-full h-12 "
-
-
+          inputClass="w-full px-3 bg-transparent outline-none"
+          containerClass="w-full h-12"
         />
         {disabled && profile && (
           <span
-            className="absolute text-xl  cursor-pointer right-3 text-primary"
+            className="absolute text-xl cursor-pointer right-3 text-primary"
             onClick={onEditClick}
           >
             <MdEdit className="text-xl text-black" />

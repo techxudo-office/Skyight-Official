@@ -56,7 +56,6 @@ export const travelerDetailScehma = Yup.object().shape({
       "is-valid-phone",
       "Please enter a valid telephone number",
       (value) => {
-        console.log("phonenumber", typeof value)
         return (typeof value === "string" ||
           (typeof value === "object" && value !== null in value))
       } // Object with "number" key allowed
@@ -68,7 +67,6 @@ export const travelerDetailScehma = Yup.object().shape({
       "is-valid-mobile",
       "Please enter a valid mobile number",
       (value) => {
-        console.log("phonenumber", typeof value)
         return (typeof value === "string" ||
           (typeof value === "object" && value !== null in value))
       }
