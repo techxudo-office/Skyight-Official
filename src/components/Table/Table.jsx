@@ -34,9 +34,14 @@ const Table = ({
       minWidth: "70px",
       center: true,
     },
-
-    ...columnsData,
+    ...columnsData.map((col) => ({
+      ...col,
+      grow: col.grow || 2,
+      wrap: col.wrap || true // Agar grow pehle se hai to use rehne do, warna 2 assign karo
+    })),
   ];
+
+
 
   return (
     <div className="overflow-x-auto">
@@ -47,6 +52,7 @@ const Table = ({
           columns={modifiedColumns}
           data={paginatedData}
           pagination={pagination}
+
           paginationTotalRows={paginationTotalRows || tableData.length}
           paginationComponentOptions={paginationComponentOptions}
           onChangePage={handlePageChange}
@@ -76,6 +82,8 @@ const Table = ({
                 color: "#fff",
                 fontSize: "16px",
                 fontWeight: "bold",
+                whiteSpace: "normal", // Wrap heading text
+                wordBreak: "break-word",
               },
             },
             rows: {
