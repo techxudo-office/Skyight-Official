@@ -43,7 +43,7 @@ const FlightBookings = () => {
       sortable: false,
       center: true,
       wrap: true,
-      grow: 3,
+      grow: 4,
     },
     {
       name: "PNR",
@@ -67,7 +67,7 @@ const FlightBookings = () => {
       sortable: false,
       center: true,
       wrap: true,
-      grow: 3
+      grow: 4
     },
     {
       name: "CREATED AT",

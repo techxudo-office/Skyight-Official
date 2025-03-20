@@ -80,7 +80,7 @@ const DashboardHome = () => {
       sortable: false,
       center: true,
       wrap: true,
-      grow: 3,
+      grow: 4,
     },
     {
       name: "PNR",

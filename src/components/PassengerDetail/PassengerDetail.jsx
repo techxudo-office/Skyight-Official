@@ -8,6 +8,11 @@ import countries from "i18n-iso-countries";
 const PassengerDetail = ({ travelersData }) => {
   console.log("travelersData", travelersData);
   const [dropdown, setDropdown] = useState([]);
+  const [modalObject, setModalObject] = useState({
+    isOpen: false,
+    onRequestClose: "",
+    contentLabel: ""
+  });
   const handleDropdown = (index) => {
     if (dropdown.includes(index)) {
       setDropdown((prev) => prev.filter((item) => item != index));
@@ -21,6 +26,7 @@ const PassengerDetail = ({ travelersData }) => {
   };
   return (
     <CardLayoutContainer className={" my-4 p-5"}>
+
       <h2 className="text-xl text-text font-semibold mb-3">
         Passenger Details
       </h2>
@@ -53,23 +59,21 @@ const PassengerDetail = ({ travelersData }) => {
                     {passenger.passenger_type == "ADT"
                       ? "Adult"
                       : passenger.passenger_type == "CHD"
-                      ? "Child"
-                      : "Infant"}
+                        ? "Child"
+                        : "Infant"}
                   </p>
                 </div>
                 <button
-                  className={`${
-                    dropdown.includes(index) ? "rotate-180" : ""
-                  } flex self-center justify-self-end transition-all duration-300 h-fit bg-primary w-fit text-white text-xl p-1 rounded-full`}>
+                  className={`${dropdown.includes(index) ? "rotate-180" : ""
+                    } flex self-center justify-self-end transition-all duration-300 h-fit bg-primary w-fit text-white text-xl p-1 rounded-full`}>
                   <FaChevronDown onClick={() => handleDropdown(index)} />
                 </button>
               </div>
               <div
-                className={`${
-                  dropdown.includes(index)
-                    ? "h-fit pb-4"
-                    : "h-0 -translate-y-5 opacity-50 overflow-hidden"
-                } px-4 w-full lg:w-1/2  mx-auto transition-all duration-300`}>
+                className={`${dropdown.includes(index)
+                  ? "h-fit pb-4"
+                  : "h-0 -translate-y-5 opacity-50 overflow-hidden"
+                  } px-4 w-full lg:w-1/2  mx-auto transition-all duration-300`}>
                 <div className=" mt-5 rounded-xl p-7 bg-secondary shadow-lg border-gray border-[1px]">
                   <h1 className="text-white font-semibold text-2xl pb-3">
                     {passenger.first_name}'s Details
