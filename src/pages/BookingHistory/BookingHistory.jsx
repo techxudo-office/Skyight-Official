@@ -67,7 +67,7 @@ const BookingHistory = () => {
     },
     {
       name: "STATUS",
-      selector: (row) =><Tag value={row.booking_status}/> ,
+      selector: (row) => <Tag value={row.booking_status} />,
       sortable: false,
       center: true,
     },
@@ -94,6 +94,7 @@ const BookingHistory = () => {
       center: true,
     },
   ];
+  const bookedBookings = flightBookings?.filter((item) => item.booking_status === "booked")
   return (
     <>
       <Toaster />
@@ -101,10 +102,10 @@ const BookingHistory = () => {
         <CardLayoutHeader heading={"Booking History"} />
         <Table
           columnsData={columns}
-          tableData={flightBookings.filter((item)=>item.booking_status==="booked") || []}
+          tableData={bookedBookings || []}
           pagination={true}
           progressPending={isLoadingFlightBookings}
-          paginationTotalRows={flightBookings?.length}
+          paginationTotalRows={bookedBookings?.length}
           paginationComponentOptions={{ noRowsPerPage: "10" }}
         />
       </CardLayoutContainer>

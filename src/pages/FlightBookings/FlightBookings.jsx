@@ -30,9 +30,9 @@ const FlightBookings = () => {
     {
       name: "ROUTE",
       selector: (row) => (
-        <span className="flex items-center justify-center gap-2 text-sm text-text">
+        <span className="flex w-52 items-center lg:justify-center  gap-2 text-sm text-text">
           {row.origin}
-          <div className="flex items-center gap-1">
+          <div className="flex justify-center items-center gap-1">
             <span className="h-0.5 w-3 bg-primary"></span>
             <IoIosAirplane className="text-lg text-primary" />
             <span className="h-0.5 w-3 bg-primary"></span>
@@ -41,8 +41,9 @@ const FlightBookings = () => {
         </span>
       ),
       sortable: false,
-      minwidth: "150px",
       center: true,
+      wrap: true,
+      grow: 3,
     },
     {
       name: "PNR",
@@ -50,12 +51,15 @@ const FlightBookings = () => {
       sortable: false,
       minwidth: "150px",
       center: true,
+      grow: 2
     },
     {
       name: "TOTAL FARE",
       selector: (row) => row.total_fare,
       sortable: false,
       center: true,
+      grow: 2,
+
     },
     {
       name: "STATUS",
@@ -63,13 +67,15 @@ const FlightBookings = () => {
       sortable: false,
       center: true,
       wrap: true,
-      grow: 2
+      grow: 3
     },
     {
       name: "CREATED AT",
       selector: (row) => dayjs(row.created_at).format("MMM-DD-YYYY"),
       sortable: false,
       center: true,
+      grow: 2,
+
     },
     {
       name: "",

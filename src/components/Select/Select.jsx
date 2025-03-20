@@ -37,10 +37,11 @@ const Select = ({
     if (disabled) {
       return
     } else {
-      if (!selectStatus) {
+      setSelectStatus((prev) => !prev);
+
+      if (!selectStatus && onClick) {
         onClick()
       }
-      setSelectStatus((prev) => !prev);
     }
   };
 
