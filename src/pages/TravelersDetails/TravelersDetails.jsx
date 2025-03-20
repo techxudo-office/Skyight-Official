@@ -440,7 +440,6 @@ const TravelersDetails = () => {
                                             {input.type === "select" ? (
                                               <Select
                                                 id={input.id}
-                                                name={input.name}
                                                 label={input.label}
                                                 options={input.options}
                                                 disabled={

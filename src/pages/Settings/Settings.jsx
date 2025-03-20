@@ -4,19 +4,19 @@ import {
   CardLayoutHeader,
   CardLayoutBody,
 } from "../../components/CardLayout/CardLayout";
-import { Button, Input } from "../../components/components";
+import { Button, Input, Select } from "../../components/components";
 import { MdEdit } from "react-icons/md";
 import { FaCaretDown } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserInfo, updateAccount } from "../../_core/features/authSlice";
 import { uploadUserImage } from "../../_core/features/userSlice";
+import { getRoles } from "../../_core/features/roleSlice";
 
 const Settings = () => {
   const dispatch = useDispatch();
-  const { roles } = useSelector((state) => state.role);
+  const { roles, isLoadingRoles } = useSelector((state) => state.role);
   const { userData, isUpdatingAccount } = useSelector((state) => state.auth);
   const [editingField, setEditingField] = useState(null);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [profileData, setProfileData] = useState({
     first_name: "",
     last_name: "",
@@ -46,6 +46,7 @@ const Settings = () => {
 
   useEffect(() => {
     dispatch(getUserInfo(userData?.token));
+    dispatch(getRoles(userData?.token));
   }, []);
 
   const handleChange = (e, field) => {
@@ -59,7 +60,6 @@ const Settings = () => {
       role_id: Number(role.id),
       role_name: role.role,
     }));
-    setDropdownOpen(false);
   };
 
   const handleSave = () => {
@@ -174,32 +174,20 @@ const Settings = () => {
                 {renderEditableField(label, field, type, edit)}
               </div>
             ))}
-            <div className="relative self-end">
-              <div
-                className="relative flex items-center justify-between w-full p-3 bg-white border border-gray-300 rounded-md cursor-pointer"
-                onClick={() => setDropdownOpen(!dropdownOpen)}
-              >
-                <span>{profileData.role_name}</span>
-                <FaCaretDown className="text-gray-500" />
-              </div>
-              {dropdownOpen && (
-                <ul className="absolute z-10 w-full mt-1 overflow-y-auto bg-white border border-gray-300 rounded-md shadow-md max-h-40">
-                  {roles?.length > 0 ? (
-                    roles.map((role) => (
-                      <li
-                        key={role.id}
-                        className="p-3 cursor-pointer hover:bg-gray-100"
-                        onClick={() => handleRoleSelect(role)}
-                      >
-                        {role.role}
-                      </li>
-                    ))
-                  ) : (
-                    <li className="p-3 text-gray-500">No roles found</li>
-                  )}
-                </ul>
-              )}
-            </div>
+            <Select
+              id="roles"
+              label="Role"
+              value={profileData.role_name}
+              onChange={(role) => handleRoleSelect(role)}
+              options={roles.map((role) => ({
+                value: role.id,
+                label: role.role,
+              }))}
+              placeholder="Select a role"
+              disabled={false}
+              isLoading={isLoadingRoles}
+              className="self-end w-full"
+            />
           </div>
         </CardLayoutBody>
         <CardLayoutHeader

@@ -8,7 +8,6 @@ const Select = ({
   label,
   disabled,
   isLoading = false,
-  name,
   options,
   value,
   placeholder,
@@ -24,12 +23,9 @@ const Select = ({
   const selectRef = useRef(null);
   const [selectStatus, setSelectStatus] = useState(false);
   const [searchValue, setSearchValue] = useState("");
-  // const [dropDown, setdropDown] = useState(true);
-  // console.log(options)
-  // Sync selectStatus with isSelected
   useEffect(() => {
     setSelectStatus(isSelected);
-  }, [isSelected]); // Whenever isSelected changes, update selectStatus
+  }, [isSelected]);
 
 
 
@@ -76,16 +72,16 @@ const Select = ({
 
   return (
     <div className={`flex flex-col ${className ? className : 'w-full'}`} ref={selectRef}>
-      <div onMouseEnter={onMouseEnter} className={`relative rounded-md border border-gray flex items-center justify-between px-2 ${disabled && 'bg-slate-100'}`}>
+      <div onMouseEnter={onMouseEnter} className={`relative h-14 rounded-md border border-gray flex items-center justify-between px-2 ${disabled && 'bg-slate-100'}`}>
         <label htmlFor={id} className={` text-md bg-white font-medium  mb-2 absolute -top-3 left-3  px-1 roounded-md text-text`}>
           {label}
         </label>
         <div
-          className="flex w-full items-center justify-between py-5 px-3  bg-transparent text-text"
+          className="flex items-center justify-between w-full px-3 py-5 bg-transparent text-text"
           onClick={selectHandler}
         >
 
-          <span className="text-text flex gap-3 items-center"><span className="text-primary">{selectIcon}</span>{(value && value) || placeholder}</span>
+          <span className="flex items-center gap-3 text-text"><span className="text-primary">{selectIcon}</span>{(value && value) || placeholder}</span>
           <FaCaretDown
             className={`text-text transform transition-transform ${(selectStatus) ? "rotate-180" : ""
               }`}
@@ -97,14 +93,14 @@ const Select = ({
             <div className="p-2">
               <input
                 type="text"
-                className="w-full p-2 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring focus:ring-primary focus:border-primary"
+                className="w-full p-2 text-sm border rounded-md border-slate-200 focus:outline-none focus:ring focus:ring-primary focus:border-primary"
                 placeholder="Search..."
                 value={searchValue}
                 onChange={searchHandler}
               />
             </div>
 
-            {isLoading ? <Spinner className={"text-primary my-2"} /> : <ul className="max-h-40 overflow-y-auto ">
+            {isLoading ? <Spinner className={"text-primary my-2"} /> : <ul className="overflow-y-auto max-h-40 ">
               {filteredOptions.map((option, index) => (
                 <li
                   key={index}

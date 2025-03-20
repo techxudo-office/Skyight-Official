@@ -264,7 +264,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                       }
                     />
                     {touched.flightRoute && errors.flightRoute && (
-                      <div className=" mt-2 text-sm text-red-500 -bottom-6">
+                      <div className="mt-2 text-sm text-red-500 -bottom-6">
                         {errors.flightRoute}
                       </div>
                     )}
@@ -282,7 +282,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                     />
 
                     {errors.tripType && (
-                      <div className=" mt-2 text-sm text-red-500 -bottom-6">
+                      <div className="mt-2 text-sm text-red-500 -bottom-6">
                         {errors.tripType}
                       </div>
                     )}
@@ -295,7 +295,6 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                             <Select
                               id="departure"
                               label="Departure From"
-                              name="departure"
                               options={
                                 values.flightRoute == "Domestic"
                                   ? iranianCities.filter(
@@ -335,7 +334,6 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                               isSelected={activeField.arrival}
                               id="arrival"
                               label="Arrival To"
-                              name="arrival"
                               options={
                                 values.flightRoute == "Domestic"
                                   ? iranianCities.filter(
@@ -415,7 +413,6 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                               isSelected={activeField.adult}
                               id="adult"
                               label="Adult"
-                              name="adult"
                               options={adultOptions}
                               value={values.adult}
                               placeholder="Select Adults"
@@ -437,7 +434,6 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                               isSelected={activeField.child}
                               id="child"
                               label="Child"
-                              name="child"
                               options={childOptions}
                               value={values.child}
                               placeholder="Select Childrens"
@@ -459,7 +455,6 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                               isSelected={activeField.infant}
                               id="infant"
                               label="Infant"
-                              name="infant"
                               options={infantOptions}
                               value={values.infant}
                               placeholder="Select Infants"
@@ -481,7 +476,6 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                               isSelected={activeField.cabinClass}
                               id="cabinClass"
                               label="Cabin Class"
-                              name="cabinClass"
                               options={cabinClassOptions}
                               value={values.cabinClass}
                               placeholder="Cabin Class"

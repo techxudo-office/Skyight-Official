@@ -31,15 +31,15 @@ const roleSlice = createSlice({
         state.isLoadingRoles = false;
 
         if (action.payload?.data?.roles) {
-          console.log(action.payload.data.roles, "action.payload.data.roles")
+          console.log(action.payload.data.roles, "action.payload.data.roles");
           state.roles = action.payload.data.roles.map((item) => ({
             id: item.id.toString(),
             role: item.name || "Unknown",
             roleRights: item.page_permission
               ? Object.keys(item.page_permission)
-                .filter((key) => item.page_permission[key])
-                .map((key) => key.replace(/_/g, " "))
-                .join(", ")
+                  .filter((key) => item.page_permission[key])
+                  .map((key) => key.replace(/_/g, " "))
+                  .join(", ")
               : "No Permissions",
             status: item.is_deleted ? "inactive" : "active",
             description: item.description,
@@ -87,7 +87,10 @@ const roleSlice = createSlice({
         const updatedRole = action.payload;
 
         console.log("Updated Role Payload:", updatedRole);
-        console.log("Existing Roles Before Update:", JSON.parse(JSON.stringify(state.roles)));
+        console.log(
+          "Existing Roles Before Update:",
+          JSON.parse(JSON.stringify(state.roles))
+        );
 
         if (!Array.isArray(state.roles)) {
           console.error("state.roles is not an array!", state.roles);
@@ -98,7 +101,10 @@ const roleSlice = createSlice({
           role.id == updatedRole.id ? { ...role, ...updatedRole } : role
         );
 
-        console.log("Updated Roles After Update:", JSON.parse(JSON.stringify(state.roles)));
+        console.log(
+          "Updated Roles After Update:",
+          JSON.parse(JSON.stringify(state.roles))
+        );
       })
       .addCase(editRole.rejected, (state, action) => {
         state.isEditingRole = false;
@@ -109,7 +115,7 @@ const roleSlice = createSlice({
 
 export const getRoles = createAsyncThunk(
   "role/getRoles",
-  async ({ token }, thunkAPI) => {
+  async (token, thunkAPI) => {
     try {
       const response = await axios.get(
         `${BASE_URL}/api/role?is_deleted=false`,

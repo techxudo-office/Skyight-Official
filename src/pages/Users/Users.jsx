@@ -74,7 +74,8 @@ const Users = () => {
             onClick={() => {
               setEditUserData(row);
               setIsEditModalOpen(true);
-            }}>
+            }}
+          >
             <MdEditSquare title="Edit" className="text-blue-500" />
           </span>
           <span
@@ -82,7 +83,8 @@ const Users = () => {
             onClick={() => {
               setModalStatus(true);
               setDeleteId(row.id);
-            }}>
+            }}
+          >
             <MdAutoDelete title="Delete" className="text-red-500" />
           </span>
         </div>
@@ -128,16 +130,19 @@ const Users = () => {
         onAbort={abortDeleteHandler}
         onConfirm={deleteUserHandler}
       />
-      <EditUserModal
-        isOpen={isEditModalOpen}
-        onClose={() => setIsEditModalOpen(false)}
-        usersData={editUserData}
-      />
+      {isEditModalOpen && (
+        <EditUserModal
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          usersData={editUserData}
+        />
+      )}
       <CardLayoutContainer removeBg={true}>
         <CardLayoutHeader
           removeBorder={true}
           heading={"Users"}
-          className="flex items-center justify-between">
+          className="flex items-center justify-between"
+        >
           <div className="relative">
             <SecondaryButton
               icon={<MdAdd />}
