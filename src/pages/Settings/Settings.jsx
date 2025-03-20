@@ -11,7 +11,6 @@ import {
   Select,
 } from "../../components/components";
 import { MdEdit } from "react-icons/md";
-import { FaCaretDown } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserInfo, updateAccount } from "../../_core/features/authSlice";
 import { uploadUserImage } from "../../_core/features/userSlice";
@@ -19,9 +18,13 @@ import { getRoles } from "../../_core/features/roleSlice";
 
 const Settings = () => {
   const dispatch = useDispatch();
+  const fileInputRef = useRef(null);
+  const [editingField, setEditingField] = useState(null);
   const { roles, isLoadingRoles } = useSelector((state) => state.role);
   const { userData, isUpdatingAccount } = useSelector((state) => state.auth);
-  const [editingField, setEditingField] = useState(null);
+  const [profileImage, setProfileImage] = useState(
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjUuYcnZ-xqlGZiDZvuUy_iLx3Nj6LSaZSzQ&s"
+  );
   const [profileData, setProfileData] = useState({
     first_name: "",
     last_name: "",
@@ -59,11 +62,10 @@ const Settings = () => {
   };
 
   const handleRoleSelect = (role) => {
-    console.log(role);
     setProfileData((prev) => ({
       ...prev,
-      role_id: Number(role.id),
-      role_name: role.role,
+      role_id: role.value,
+      role_name: role.label,
     }));
   };
 
@@ -72,7 +74,7 @@ const Settings = () => {
       first_name: profileData.first_name,
       last_name: profileData.last_name,
       mobile_number: profileData.mobile_number,
-      role_id: profileData.role_id,
+      role_id: Number(profileData.role_id),
     };
     dispatch(
       updateAccount({
@@ -83,12 +85,6 @@ const Settings = () => {
     );
     setEditingField(null);
   };
-
-  const [profileImage, setProfileImage] = useState(
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjUuYcnZ-xqlGZiDZvuUy_iLx3Nj6LSaZSzQ&s"
-  );
-
-  const fileInputRef = useRef(null);
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
