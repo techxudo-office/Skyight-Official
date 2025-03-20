@@ -80,7 +80,7 @@ const DashboardHome = () => {
       sortable: false,
       center: true,
       wrap: true,
-      grow: 2,
+      grow: 3,
     },
     {
       name: "PNR",
@@ -88,12 +88,15 @@ const DashboardHome = () => {
       sortable: false,
       minwidth: "150px",
       center: true,
+      grow: 2
     },
     {
       name: "TOTAL FARE",
       selector: (row) => row.total_fare,
       sortable: false,
       center: true,
+      grow: 2
+
     },
     {
       name: "STATUS",
@@ -110,6 +113,8 @@ const DashboardHome = () => {
       selector: (row) => dayjs(row.created_at).format("MMM-DD-YYYY"),
       sortable: false,
       center: true,
+      grow: 2
+
     },
     {
       name: "",
@@ -126,6 +131,8 @@ const DashboardHome = () => {
       ),
       sortable: false,
       center: true,
+      grow: 2
+
     },
   ];
   useEffect(() => {
