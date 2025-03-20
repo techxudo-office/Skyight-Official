@@ -7,6 +7,7 @@ import {
 import {
   Button,
   Input,
+  Loader,
   PhoneNumberInput,
   Select,
 } from "../../components/components";
@@ -21,7 +22,9 @@ const Settings = () => {
   const fileInputRef = useRef(null);
   const [editingField, setEditingField] = useState(null);
   const { roles, isLoadingRoles } = useSelector((state) => state.role);
-  const { userData, isUpdatingAccount } = useSelector((state) => state.auth);
+  const { userData, isUpdatingAccount, isLoadingUserInfo } = useSelector(
+    (state) => state.auth
+  );
   const [profileImage, setProfileImage] = useState(
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjUuYcnZ-xqlGZiDZvuUy_iLx3Nj6LSaZSzQ&s"
   );
@@ -158,79 +161,85 @@ const Settings = () => {
           </div>
         </CardLayoutHeader>
       </CardLayoutContainer>
-      <CardLayoutContainer className="w-full mb-5">
-        <CardLayoutHeader
-          className="flex items-center justify-between gap-5 py-3"
-          removeBorder={true}
-        >
-          <h2 className="text-2xl font-semibold text-text">
-            Personal Information
-          </h2>
-        </CardLayoutHeader>
-        <CardLayoutBody removeBorder={true}>
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3 md:gap-5 mb-7">
-            {profileFields.map(({ label, field, type, edit }, index) => (
-              <div key={index}>
-                {renderEditableField(label, field, type, edit)}
-              </div>
-            ))}
-            <PhoneNumberInput
-              id={1}
-              name={"Phone Number"}
-              label={"Phone Number"}
-              className="self-end"
-              value={profileData.mobile_number}
-              onChange={(number) =>
-                handleChange(
-                  {
-                    target: {
-                      value:
-                        number.country_code + number.area_code + number.number,
+      {isLoadingRoles || isLoadingUserInfo ? (
+        <Loader />
+      ) : (
+        <CardLayoutContainer className="w-full mb-5">
+          <CardLayoutHeader
+            className="flex items-center justify-between gap-5 py-3"
+            removeBorder={true}
+          >
+            <h2 className="text-2xl font-semibold text-text">
+              Personal Information
+            </h2>
+          </CardLayoutHeader>
+          <CardLayoutBody removeBorder={true}>
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3 md:gap-5 mb-7">
+              {profileFields.map(({ label, field, type, edit }, index) => (
+                <div key={index}>
+                  {renderEditableField(label, field, type, edit)}
+                </div>
+              ))}
+              <PhoneNumberInput
+                id={1}
+                name={"Phone Number"}
+                label={"Phone Number"}
+                className="self-end"
+                value={profileData.mobile_number}
+                onChange={(number) =>
+                  handleChange(
+                    {
+                      target: {
+                        value:
+                          number.country_code +
+                          number.area_code +
+                          number.number,
+                      },
                     },
-                  },
-                  "mobile_number"
-                )
-              }
-              placeholder={"Phone Number"}
+                    "mobile_number"
+                  )
+                }
+                placeholder={"Phone Number"}
+              />
+              <Select
+                id="roles"
+                label="Role"
+                value={profileData.role_name}
+                onChange={(role) => handleRoleSelect(role)}
+                options={roles.map((role) => ({
+                  value: role.id,
+                  label: role.role,
+                }))}
+                placeholder="Select a role"
+                disabled={false}
+                isLoading={isLoadingRoles}
+                className="self-end w-full"
+              />
+            </div>
+          </CardLayoutBody>
+          <CardLayoutHeader
+            className="flex items-center justify-between gap-5 py-3"
+            removeBorder={true}
+          >
+            <h2 className="text-2xl font-semibold text-text">Address</h2>
+          </CardLayoutHeader>
+          <CardLayoutBody>
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3 md:gap-5 mb-7">
+              {addressFields.map(({ label, field, type, edit }, index) => (
+                <div key={index}>
+                  {renderEditableField(label, field, type, edit)}
+                </div>
+              ))}
+            </div>
+            <Button
+              text="Save Changes"
+              onClick={handleSave}
+              loading={isUpdatingAccount}
+              disabled={isUpdatingAccount}
             />
-            <Select
-              id="roles"
-              label="Role"
-              value={profileData.role_name}
-              onChange={(role) => handleRoleSelect(role)}
-              options={roles.map((role) => ({
-                value: role.id,
-                label: role.role,
-              }))}
-              placeholder="Select a role"
-              disabled={false}
-              isLoading={isLoadingRoles}
-              className="self-end w-full"
-            />
-          </div>
-        </CardLayoutBody>
-        <CardLayoutHeader
-          className="flex items-center justify-between gap-5 py-3"
-          removeBorder={true}
-        >
-          <h2 className="text-2xl font-semibold text-text">Address</h2>
-        </CardLayoutHeader>
-        <CardLayoutBody>
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3 md:gap-5 mb-7">
-            {addressFields.map(({ label, field, type, edit }, index) => (
-              <div key={index}>
-                {renderEditableField(label, field, type, edit)}
-              </div>
-            ))}
-          </div>
-          <Button
-            text="Save Changes"
-            onClick={handleSave}
-            loading={isUpdatingAccount}
-            disabled={isUpdatingAccount}
-          />
-        </CardLayoutBody>
-      </CardLayoutContainer>
+          </CardLayoutBody>
+        </CardLayoutContainer>
+      )}
     </div>
   );
 };
