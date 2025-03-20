@@ -67,7 +67,7 @@ const FlightBookings = () => {
       sortable: false,
       center: true,
       wrap: true,
-      grow: 2
+      grow: 3
     },
     {
       name: "CREATED AT",

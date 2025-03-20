@@ -104,7 +104,7 @@ const DashboardHome = () => {
       sortable: false,
       center: true,
       wrap: true,
-      grow: 2,
+      grow: 3,
 
     },
 
