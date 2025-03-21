@@ -37,11 +37,12 @@ const Settings = () => {
     role_id: "",
     role_name: "",
     mobile_number: "",
+    password: "",
   });
 
   useEffect(() => {
     if (userData) {
-      console.log(userData);
+      console.log(userData, "UserData");
       setProfileData({
         first_name: userData.user.first_name || "",
         last_name: userData.user.last_name || "",
@@ -51,6 +52,7 @@ const Settings = () => {
         country: userData.user.company.country || "",
         role_id: userData.user.role_id || "",
         role_name: userData?.user?.role?.name || "Select a Role",
+        // password: userData.user.password || "",
       });
     }
   }, [userData, roles]);
@@ -78,6 +80,7 @@ const Settings = () => {
       last_name: profileData.last_name,
       mobile_number: profileData.mobile_number,
       role_id: Number(profileData.role_id),
+      password: profileData.password,
     };
     dispatch(
       updateAccount({
@@ -99,9 +102,34 @@ const Settings = () => {
   };
 
   const profileFields = [
-    { label: "First Name", field: "first_name", type: "text", edit: true },
-    { label: "Last Name", field: "last_name", type: "text", edit: true },
-    { label: "Email Address", field: "email", type: "email", edit: false },
+    {
+      label: "First Name",
+      field: "first_name",
+      type: "text",
+      edit: true,
+      placeholder: "Enter your first name",
+    },
+    {
+      label: "Last Name",
+      field: "last_name",
+      type: "text",
+      edit: true,
+      placeholder: "Enter your last name",
+    },
+    {
+      label: "Email Address",
+      field: "email",
+      type: "email",
+      edit: false,
+      placeholder: "example@email.com",
+    },
+    {
+      label: "Password",
+      field: "password",
+      type: "password",
+      edit: true,
+      placeholder: "Enter new password",
+    },
   ];
 
   const addressFields = [
@@ -109,7 +137,13 @@ const Settings = () => {
     { label: "Country", field: "country", type: "text", edit: false },
   ];
 
-  const renderEditableField = (label, field, type = "text", edit) => (
+  const renderEditableField = (
+    label,
+    field,
+    type = "text",
+    edit,
+    placeholder
+  ) => (
     <div className="flex flex-col w-full">
       <h4 className="mb-1 text-xs font-medium text-slate-500">{label}</h4>
       <div className="flex items-center gap-x-2">
@@ -117,6 +151,7 @@ const Settings = () => {
           edit={edit}
           type={type}
           profile={true}
+          placeholder={placeholder}
           value={profileData[field]}
           disabled={editingField !== field}
           setEditingField={setEditingField}
@@ -133,8 +168,7 @@ const Settings = () => {
       <CardLayoutContainer className="w-full mb-5">
         <CardLayoutHeader
           className="flex flex-wrap items-center justify-start gap-5 py-3"
-          removeBorder={true}
-        >
+          removeBorder={true}>
           <div className="relative w-16 h-16 overflow-hidden rounded-full cursor-pointer group">
             <img
               src={profileImage}
@@ -143,8 +177,7 @@ const Settings = () => {
             />
             <div
               className="absolute inset-0 flex items-center justify-center transition-opacity bg-black bg-opacity-50 opacity-0 group-hover:opacity-100"
-              onClick={() => fileInputRef.current.click()}
-            >
+              onClick={() => fileInputRef.current.click()}>
               <MdEdit className="text-xl text-white" />
             </div>
             <input
@@ -167,19 +200,20 @@ const Settings = () => {
         <CardLayoutContainer className="w-full mb-5">
           <CardLayoutHeader
             className="flex items-center justify-between gap-5 py-3"
-            removeBorder={true}
-          >
+            removeBorder={true}>
             <h2 className="text-2xl font-semibold text-text">
               Personal Information
             </h2>
           </CardLayoutHeader>
           <CardLayoutBody removeBorder={true}>
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3 md:gap-5 mb-7">
-              {profileFields.map(({ label, field, type, edit }, index) => (
-                <div key={index}>
-                  {renderEditableField(label, field, type, edit)}
-                </div>
-              ))}
+              {profileFields.map(
+                ({ label, field, type, edit, placeholder }, index) => (
+                  <div key={index}>
+                    {renderEditableField(label, field, type, edit, placeholder)}
+                  </div>
+                )
+              )}
               <PhoneNumberInput
                 id={1}
                 name={"Phone Number"}
@@ -219,8 +253,7 @@ const Settings = () => {
           </CardLayoutBody>
           <CardLayoutHeader
             className="flex items-center justify-between gap-5 py-3"
-            removeBorder={true}
-          >
+            removeBorder={true}>
             <h2 className="text-2xl font-semibold text-text">Address</h2>
           </CardLayoutHeader>
           <CardLayoutBody>
