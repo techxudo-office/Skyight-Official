@@ -86,7 +86,7 @@ const PassengerDetail = ({ travelersData }) => {
                             <p className=" py-2 flex gap-3  border-lightgray   text-white ">
                               <span className="capitalize font-semibold">{key.replaceAll("_", " ")}:</span>
                               <span className="border-b border-dashed">
-                                {Number(Object.values(value).join(""))}
+                                {(Object.values(value).join(" "))}
                               </span>
                             </p>
                           )
@@ -102,35 +102,6 @@ const PassengerDetail = ({ travelersData }) => {
                     }
                   </div>
 
-
-                  {/* <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-white ">
-                      First name <span>{passenger.first_name}</span>
-                    </p>
-                    <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-white ">
-                      last name <span>{passenger.last_name}</span>
-                    </p>
-                    <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-white ">
-                      date of birth <span>{passenger.date_of_birth}</span>
-                    </p>
-                    <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-white ">
-                      gender <span>{passenger.gender}</span>
-                    </p>
-                    <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-white ">
-                      nationality <span>{passenger.country}</span>
-                    </p>
-                    <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-white ">
-                      Mobile{" "}
-                      <span>
-                        {Number(Object.values(passenger.mobile).join(""))}
-                      </span>
-                    </p>
-                    <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold  text-white">
-                      Passport no. <span>{passenger.passport_number}</span>
-                    </p>
-                    <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold  text-white">
-                      Passport Expiry.{" "}
-                      <span>{passenger.passport_expiry_date}</span>
-                    </p> */}
                 </div>
 
               </ModalWrapper>
