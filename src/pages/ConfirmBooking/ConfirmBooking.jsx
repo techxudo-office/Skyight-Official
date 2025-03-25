@@ -22,7 +22,7 @@ const FlightDetails = () => {
   const [travelers, setTravelers] = useState(null);
   const [allTravelersData, setAllTravelersData] = useState([]);
   const { userData } = useSelector((state) => state.auth);
-  const { isBookingLoading } = useSelector((state) => state.booking);
+  const { isBookingLoading, searchForm } = useSelector((state) => state.booking);
 
   useEffect(() => {
     if (location.state) {
@@ -37,9 +37,7 @@ const FlightDetails = () => {
   console.log("all-travellers", allTravelersData);
 
   const confirmBookingHandler = async () => {
-    const tripType = JSON.parse(
-      localStorage.getItem("flightSearchForm")
-    ).tripType;
+    const tripType = searchForm.tripType;
     const isRoundTrip = tripType === "Round-Trip";
     const flights = flightData.AirItinerary.OriginDestinationOptions;
     const pricing = flightData.AirItineraryPricingInfo;

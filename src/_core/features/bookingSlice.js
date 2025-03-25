@@ -47,6 +47,8 @@ const initialState = {
   refundMessage: null,
   refundError: null,
 
+  searchForm: null,
+
   isCancelling: false,
   cancelSuccess: null,
   cancelError: null,
@@ -59,7 +61,11 @@ const initialState = {
 const bookingSlice = createSlice({
   name: "booking",
   initialState,
-  reducers: {},
+  reducers: {
+    setSearchForm: (state, action) => {
+      state.searchForm = action.payload; // Save incoming object to state.companies
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getTravelers.pending, (state) => {
@@ -641,4 +647,5 @@ export const getOrders = createAsyncThunk(
   }
 );
 
+export const { setSearchForm } = bookingSlice.actions;
 export default bookingSlice.reducer;

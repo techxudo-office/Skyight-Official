@@ -34,7 +34,7 @@ import { FlightsBanner, forBackArrows } from "../../assets/Index";
 import RadioButtons from "../../components/RadioButtons/RadioButtons";
 import { internationalCities } from "../../data/InternationalCities";
 import { useDispatch, useSelector } from "react-redux";
-import { searchFlight } from "../../_core/features/bookingSlice";
+import { searchFlight, setSearchForm } from "../../_core/features/bookingSlice";
 
 const adultOptions = [
   { value: "1", label: "1 Adult" },
@@ -76,18 +76,11 @@ const validationSchema = Yup.object().shape({
 });
 
 const SearchFlights = ({ OnlySearch, onSearch }) => {
+  const { isLoadingSearchResults, searchForm } = useSelector((state) => state.booking);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [formData, setFormData] = useState();
-  const [storedValues, setStoredValues] = useState(
-    localStorage.getItem("flightSearchForm") &&
-    JSON.parse(localStorage.getItem("flightSearchForm"))
-  );
-  const [flightRoute, setFlightRoute] = useState("Domestic");
-  const [loading, setLoading] = useState(false);
-  const [Triptype, setTriptype] = useState("One-Way");
   const { userData } = useSelector((state) => state.auth);
-  const { isLoadingSearchResults } = useSelector((state) => state.booking);
   const [activeField, setActiveField] = useState({
     departure: false,
     arrival: false,
@@ -110,11 +103,6 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
     });
   };
 
-  // const loadFormData = () => {
-  //   const storedValues = localStorage.getItem("flightSearchForm");
-  //   return storedValues ? JSON.parse(storedValues) : null;
-  // };
-  // console.log(activeField)
   const initialValues = {
     flightRoute: "",
     tripType: "",
@@ -178,9 +166,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
     localStorage.removeItem("allFormData");
     localStorage.removeItem("disableTravelers");
     localStorage.removeItem("oldTraveller");
-    localStorage.setItem("flightSearchForm", JSON.stringify(values));
-    setFormData(values);
-    // console.log("Form Values: ", values);
+    dispatch(setSearchForm(values))
     console.log("submitting");
     searchFlightHandler(values);
   };
@@ -229,7 +215,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
           />
 
           <Formik
-            initialValues={storedValues || initialValues}
+            initialValues={searchForm || initialValues}
             validationSchema={validationSchema}
             onSubmit={handleSubmit}>
             {({
