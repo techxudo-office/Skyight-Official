@@ -36,7 +36,7 @@ const Finalticket = () => {
         });
     
         // Convert 1300px to mm (1px ≈ 0.264583mm)
-        const pdfWidth = 1000 ;  
+        const pdfWidth = 3000*0.264583 ;  
         const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
     
         // Create PDF with exact element width
