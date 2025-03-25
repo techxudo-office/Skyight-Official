@@ -63,7 +63,8 @@ const cabinClassOptions = [
 ];
 
 const validationSchema = Yup.object().shape({
-  // tripType: Yup.string().required("Please select a trip type"),
+  tripType: Yup.string().required("Please select a trip type"),
+  flightRoute: Yup.string().required("Please select a flight route"),
   departure: Yup.string().required("Please select departure"),
   arrival: Yup.string().required("Please select arrival"),
   departureDate: Yup.date().required("Please select departure date"),
@@ -80,7 +81,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
   const [formData, setFormData] = useState();
   const [storedValues, setStoredValues] = useState(
     localStorage.getItem("flightSearchForm") &&
-      JSON.parse(localStorage.getItem("flightSearchForm"))
+    JSON.parse(localStorage.getItem("flightSearchForm"))
   );
   const [flightRoute, setFlightRoute] = useState("Domestic");
   const [loading, setLoading] = useState(false);
@@ -262,6 +263,11 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                         setFieldValue("flightRoute", option)
                       }
                     />
+                    {touched.flightRoute && errors.flightRoute && (
+                      <div className="mt-2 text-sm text-red-500 -bottom-6">
+                        {errors.flightRoute}
+                      </div>
+                    )}
                   </CardLayoutBody>
                   <CardLayoutBody>
                     <RadioButtons
@@ -274,6 +280,12 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                         setFieldValue("tripType", option)
                       }
                     />
+
+                    {errors.tripType && (
+                      <div className="mt-2 text-sm text-red-500 -bottom-6">
+                        {errors.tripType}
+                      </div>
+                    )}
                   </CardLayoutBody>
                   {values.tripType !== "Multi-City" ? (
                     <>
@@ -283,15 +295,14 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                             <Select
                               id="departure"
                               label="Departure From"
-                              name="departure"
                               options={
                                 values.flightRoute == "Domestic"
                                   ? iranianCities.filter(
-                                      (item) => item.value != values.arrival
-                                    )
+                                    (item) => item.value != values.arrival
+                                  )
                                   : internationalCities.filter(
-                                      (item) => item.value != values.arrival
-                                    )
+                                    (item) => item.value != values.arrival
+                                  )
                               }
                               value={values.departure}
                               placeholder="Select Departure"
@@ -323,15 +334,14 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                               isSelected={activeField.arrival}
                               id="arrival"
                               label="Arrival To"
-                              name="arrival"
                               options={
                                 values.flightRoute == "Domestic"
                                   ? iranianCities.filter(
-                                      (item) => item.value != values.departure
-                                    )
+                                    (item) => item.value != values.departure
+                                  )
                                   : internationalCities.filter(
-                                      (item) => item.value != values.departure
-                                    )
+                                    (item) => item.value != values.departure
+                                  )
                               }
                               value={values.arrival}
                               placeholder="Select Arrival"
@@ -403,7 +413,6 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                               isSelected={activeField.adult}
                               id="adult"
                               label="Adult"
-                              name="adult"
                               options={adultOptions}
                               value={values.adult}
                               placeholder="Select Adults"
@@ -425,7 +434,6 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                               isSelected={activeField.child}
                               id="child"
                               label="Child"
-                              name="child"
                               options={childOptions}
                               value={values.child}
                               placeholder="Select Childrens"
@@ -447,7 +455,6 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                               isSelected={activeField.infant}
                               id="infant"
                               label="Infant"
-                              name="infant"
                               options={infantOptions}
                               value={values.infant}
                               placeholder="Select Infants"
@@ -469,7 +476,6 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                               isSelected={activeField.cabinClass}
                               id="cabinClass"
                               label="Cabin Class"
-                              name="cabinClass"
                               options={cabinClassOptions}
                               value={values.cabinClass}
                               placeholder="Cabin Class"

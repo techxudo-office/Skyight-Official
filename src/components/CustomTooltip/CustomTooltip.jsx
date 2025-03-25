@@ -1,7 +1,7 @@
 import * as Tooltip from "@radix-ui/react-tooltip";
 
 const CustomTooltip = ({ children, content }) => {
-  if(!content){
+  if (!content) {
     return children
   }
   return (
@@ -10,7 +10,7 @@ const CustomTooltip = ({ children, content }) => {
         <Tooltip.Trigger asChild>{children}</Tooltip.Trigger>
         <Tooltip.Portal>
           <Tooltip.Content
-            className="bg-gray-900 capitalize text-primary z-[999] relative bg-slate-100 border-primary border-[1px] shadow-lg px-3 py-1 rounded-md text-sm"
+            className="bg-gray-900 capitalize text-primary z-[9999] relative bg-slate-100 border-primary border-[1px] shadow-lg px-3 py-1 rounded-md text-sm"
             sideOffset={5}
           >
             {content}

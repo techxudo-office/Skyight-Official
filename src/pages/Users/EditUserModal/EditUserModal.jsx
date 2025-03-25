@@ -6,14 +6,17 @@ import {
   CardLayoutBody,
   CardLayoutFooter,
 } from "../../../components/CardLayout/CardLayout";
-import { Input, Button, Spinner, ModalWrapper } from "../../../components/components";
+import {
+  Input,
+  Button,
+  Spinner,
+  ModalWrapper,
+  Select,
+} from "../../../components/components";
 import { useDispatch, useSelector } from "react-redux";
-import { editRole } from "../../../_core/features/roleSlice";
 import { getRoles } from "../../../_core/features/roleSlice";
-import { FaCaretDown } from "react-icons/fa";
 import toast from "react-hot-toast";
 import { editUser } from "../../../_core/features/userSlice";
-// import "./EditRoleModal.css";
 
 Modal.setAppElement("#root");
 
@@ -31,6 +34,18 @@ const inputFields = [
     placeholder: "Enter Last Name",
   },
   {
+    name: "email",
+    label: "Email*",
+    type: "text",
+    placeholder: "Enter Email",
+  },
+  {
+    name: "password",
+    label: "Password*",
+    type: "password",
+    placeholder: "Enter New Password",
+  },
+  {
     name: "mobile_number",
     label: "Mobile Number*",
     type: "text",
@@ -41,6 +56,8 @@ const inputFields = [
 const initialState = {
   first_name: "",
   last_name: "",
+  email: "",
+  password: "",
   mobile_number: "",
   role_id: "",
 };
@@ -49,10 +66,9 @@ const EditUserModal = ({ isOpen, onClose, usersData }) => {
   const dispatch = useDispatch();
   const [formData, setFormData] = useState(initialState);
   const [errors, setErrors] = useState({});
-  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [selectedRole, setSelectedRole] = useState(null);
   const { userData } = useSelector((state) => state.auth);
-  const { roles } = useSelector((state) => state.role);
+  const { roles, isLoadingRoles } = useSelector((state) => state.role);
   const { isEditingUser } = useSelector((state) => state.user);
 
   useEffect(() => {
@@ -61,6 +77,7 @@ const EditUserModal = ({ isOpen, onClose, usersData }) => {
       setFormData({
         first_name: usersData.first_name || "",
         last_name: usersData.last_name || "",
+        email: usersData.email || "",
         mobile_number: usersData.mobile_number || "",
         role_id: usersData.role.id || "",
       });
@@ -71,7 +88,7 @@ const EditUserModal = ({ isOpen, onClose, usersData }) => {
   }, [usersData, roles]);
 
   useEffect(() => {
-    dispatch(getRoles({ token: userData?.token }));
+    dispatch(getRoles(userData?.token));
   }, [dispatch]);
 
   const handleChange = (e) => {
@@ -82,7 +99,6 @@ const EditUserModal = ({ isOpen, onClose, usersData }) => {
   const handleRoleSelect = (role) => {
     setSelectedRole(role);
     setFormData((prev) => ({ ...prev, role_id: role.id }));
-    setDropdownOpen(false);
   };
 
   const validateForm = () => {
@@ -90,12 +106,37 @@ const EditUserModal = ({ isOpen, onClose, usersData }) => {
 
     if (!formData.first_name.trim())
       newErrors.first_name = "First name is required";
+
     if (!formData.last_name.trim())
       newErrors.last_name = "Last name is required";
+
     if (!formData.mobile_number.trim()) {
       newErrors.mobile_number = "Mobile number is required";
     } else if (!/^\d{10}$/.test(formData.mobile_number)) {
       newErrors.mobile_number = "Mobile number must be 10 digits";
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = "Invalid email format";
+    }
+
+    if (!formData.password.trim()) {
+      newErrors.password = "Password is required";
+    } else if (formData.password.length < 8) {
+      newErrors.password = "Password must be at least 8 characters";
+    } else if (!/[A-Z]/.test(formData.password)) {
+      newErrors.password =
+        "Password must contain at least one uppercase letter";
+    } else if (!/[a-z]/.test(formData.password)) {
+      newErrors.password =
+        "Password must contain at least one lowercase letter";
+    } else if (!/\d/.test(formData.password)) {
+      newErrors.password = "Password must contain at least one number";
+    } else if (!/[!@#$%^&*]/.test(formData.password)) {
+      newErrors.password =
+        "Password must contain at least one special character (!@#$%^&*)";
     }
 
     setErrors(newErrors);
@@ -112,6 +153,7 @@ const EditUserModal = ({ isOpen, onClose, usersData }) => {
       first_name: formData.first_name,
       last_name: formData.last_name,
       mobile_number: formData.mobile_number,
+      password: formData.password,
       role_id: Number(formData.role_id),
     };
 
@@ -126,8 +168,7 @@ const EditUserModal = ({ isOpen, onClose, usersData }) => {
     <ModalWrapper
       isOpen={isOpen}
       onRequestClose={onClose}
-      contentLabel="Edit Role"
-    >
+      contentLabel="Edit Role">
       <CardLayoutContainer>
         <CardLayoutHeader heading="Edit User" />
         <CardLayoutBody>
@@ -147,33 +188,19 @@ const EditUserModal = ({ isOpen, onClose, usersData }) => {
                 )}
               </div>
             ))}
-            <div className="relative">
-              <div
-                className="relative flex items-center justify-between w-full p-3 bg-white border border-gray-300 rounded-md cursor-pointer"
-                onClick={() => setDropdownOpen(!dropdownOpen)}
-              >
-                <span>
-                  {selectedRole ? selectedRole.role : "Select a Role"}
-                </span>
-                <FaCaretDown className="text-gray-500" />
-              </div>
-              {dropdownOpen && (
-                <ul className="absolute z-10 w-full mt-1 overflow-y-auto bg-white border border-gray-300 rounded-md shadow-md min-h-12 max-h-40">
-                  {roles?.map((role) => (
-                    <li
-                      key={role.id}
-                      className="p-3 cursor-pointer hover:bg-gray-100"
-                      onClick={() => handleRoleSelect(role)}
-                    >
-                      {role.role}
-                    </li>
-                  ))}
-                </ul>
-              )}
-              {errors.role_id && (
-                <p className="mt-1 text-sm text-red-500">{errors.role_id}</p>
-              )}
-            </div>
+            <Select
+              id="roles"
+              label="Role"
+              height="h-12"
+              value={selectedRole ? selectedRole.role : ""}
+              onChange={handleRoleSelect}
+              options={roles.map((role) => ({
+                value: role.id,
+                label: role.role,
+              }))}
+              placeholder="Select a Role"
+              isLoading={isLoadingRoles}
+            />
           </div>
         </CardLayoutBody>
         <CardLayoutFooter>

@@ -1,9 +1,8 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button, ModalWrapper, SecondaryButton } from "../components";
 
 const ConfirmModal = ({ status, onAbort, onConfirm, text, loading }) => {
   const modalRef = useRef();
-
   useEffect(() => {
     const outsideClickHandler = (e) => {
       if (modalRef.current && !modalRef.current.contains(e.target)) {

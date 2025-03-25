@@ -28,7 +28,7 @@ const initialState = {
   isLoadingBookingDetails: false,
   bookingDetailsError: null,
 
-  isIssuingBooking: false,
+  isIssueLoading: false,
   issueBookingError: null,
 
   searchResults: [],
@@ -135,14 +135,14 @@ const bookingSlice = createSlice({
         state.bookingDetailsError = action.payload;
       })
       .addCase(issueBooking.pending, (state) => {
-        state.isIssuingBooking = true;
+        state.isIssueLoading = true;
         state.issueBookingError = null;
       })
       .addCase(issueBooking.fulfilled, (state, action) => {
-        state.isIssuingBooking = false;
+        state.isIssueLoading = false;
       })
       .addCase(issueBooking.rejected, (state, action) => {
-        state.isIssuingBooking = false;
+        state.isIssueLoading = false;
         state.issueBookingError = action.payload;
       })
       .addCase(searchFlight.pending, (state) => {
@@ -432,9 +432,11 @@ export const issueBooking = createAsyncThunk(
       );
 
       if (response.status === 200) {
-        if(response.data.data.Success==false){
-          toast.error(response.data.data.error.message)
-        }else{
+        if (!response.data?.data?.Success) {
+          toast.error(
+            // response.data?.data?.Error?.Message || 
+            "Your ticket has expired")
+        } else {
           toast.success("Booking issued successfully")
         }
         return response.data.data;

@@ -56,7 +56,6 @@ export const travelerDetailScehma = Yup.object().shape({
       "is-valid-phone",
       "Please enter a valid telephone number",
       (value) => {
-        console.log("phonenumber", typeof value)
         return (typeof value === "string" ||
           (typeof value === "object" && value !== null in value))
       } // Object with "number" key allowed
@@ -68,7 +67,6 @@ export const travelerDetailScehma = Yup.object().shape({
       "is-valid-mobile",
       "Please enter a valid mobile number",
       (value) => {
-        console.log("phonenumber", typeof value)
         return (typeof value === "string" ||
           (typeof value === "object" && value !== null in value))
       }
@@ -93,6 +91,10 @@ export const travelerDetailScehma = Yup.object().shape({
     }),
   passenger_type: Yup.string().required("Please select passenger type"),
   gender: Yup.string().required("Please select gender"),
-  passport_number: Yup.string().required("Please enter valid passport number"),
+  passport_number: Yup.string()
+    .required("Please enter a valid passport number")
+    .max(10, "Passport number cannot exceed 10 characters") // Limits to 10 characters
+    .min(6, "Passport number must be at least 6 characters") // Limits to 10 characters
+    .matches(/^[A-Za-z0-9]+$/, "Passport number must contain only letters and numbers"),
   passport_expiry_date: Yup.string().required("Please select expiry date of passport"),
 });

@@ -1,21 +1,15 @@
-import React, { useEffect, useState, useCallback } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import React, { useEffect, useState } from "react";
+import { Toaster } from "react-hot-toast";
 import { HiOutlineSpeakerphone } from "react-icons/hi";
-import { FaUser, FaUserCircle } from "react-icons/fa";
+import { FaUserCircle } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { CreditsDropdown, CustomTooltip, Dropdown } from "../components";
 import { HiOutlineRefresh } from "react-icons/hi";
-import { PiCoinsFill } from "react-icons/pi";
-import { PiHandCoinsFill } from "react-icons/pi";
 import { IoHome } from "react-icons/io5";
 import { skyightLogo } from "../../assets/Index";
 import { GiHamburgerMenu } from "react-icons/gi";
-import {
-  MdNotificationsNone,
-  MdArrowDropDown,
-  MdSettings,
-} from "react-icons/md";
+import { MdNotificationsNone, MdArrowDropDown } from "react-icons/md";
 import { SlSettings } from "react-icons/sl";
 import Notifications from "../../pages/Notifications/Notifications";
 import { motion } from "framer-motion";
@@ -45,7 +39,7 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
       // icon: <MdSettings className="text-2xl cursor-pointer text-text" />,
       icon: <SlSettings />,
       handler: () => {
-        navigationHandler("/dashboard/profile");
+        navigationHandler("/dashboard/settings");
       },
     },
     {
@@ -127,10 +121,8 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
   };
   const handleSettings = () => {
     if (!userData?.token) return;
-    dispatch(setting(userData?.token)).then(() => {
-
-    });
-  }
+    dispatch(setting(userData?.token)).then(() => {});
+  };
   return (
     <>
       <Toaster />
@@ -145,7 +137,8 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
               <CustomTooltip content={"Open / close"}>
                 <button
                   className="text-gray-700 transition hover:text-gray-900"
-                  onClick={sidebarHandler}>
+                  onClick={sidebarHandler}
+                >
                   <GiHamburgerMenu size={22} />{" "}
                   {/* Consistent size for mobile and desktop */}
                 </button>
@@ -165,7 +158,8 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
               <div
                 className="relative py-2"
                 onMouseEnter={() => setIsAnnHovered(true)}
-                onMouseLeave={() => setIsAnnHovered(false)}>
+                onMouseLeave={() => setIsAnnHovered(false)}
+              >
                 {" "}
                 <CustomTooltip content={"Announcement"}>
                   <div className="max-md:hidden">
@@ -178,7 +172,8 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.3 }}
-                    className="absolute top-10 right-0 w-[300px] bg-white shadow-lg rounded-lg p-3 z-50">
+                    className="absolute top-10 right-0 w-[300px] bg-white shadow-lg rounded-lg p-3 z-50"
+                  >
                     <Announcement />
                   </motion.div>
                 )}
@@ -186,7 +181,8 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
               <div
                 className="relative py-2"
                 onMouseEnter={() => setIsNotiHovered(true)}
-                onMouseLeave={() => setIsNotiHovered(false)}>
+                onMouseLeave={() => setIsNotiHovered(false)}
+              >
                 <CustomTooltip content={"Notifications"}>
                   <div className="max-md:hidden">
                     <MdNotificationsNone className="text-2xl cursor-pointer text-text" />
@@ -199,18 +195,19 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.3 }}
-                    className="absolute top-10 right-0 w-[500px] bg-white shadow-lg rounded-lg p-3 z-50">
+                    className="absolute top-10 right-0 w-[500px] bg-white shadow-lg rounded-lg p-3 z-50"
+                  >
                     <Notifications />
                   </motion.div>
                 )}
               </div>
               <div className="relative">
-                <CustomTooltip content={CreditsDropdownOpen?null:"credits"}>
+                <CustomTooltip content={CreditsDropdownOpen ? null : "credits"}>
                   <button
                     className={`w-full text-sm md:text-base relative flex items-center justify-center gap-1 md:gap-2 cursor-pointer p-1 px-2 md:py-2 md:px-4 border-primary border-[1px]  bg-blue-100 hover:text-secondary  text-primary font-semibold rounded-xl transition duration-300 ease-in-out transform focus:outline-none`}
-                  // onClick={() => {
-                  //   setIsActive(!isActive);
-                  // }}
+                    // onClick={() => {
+                    //   setIsActive(!isActive);
+                    // }}
                   >
                     {isLoadingCredits ? (
                       <span className="flex items-center gap-2">
@@ -220,7 +217,8 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
                     ) : credits ? (
                       <span
                         onClick={refreshCredits}
-                        className="flex items-center gap-2">
+                        className="flex items-center gap-2"
+                      >
                         <HiOutlineRefresh className="max-sm:hidden" />
                         <span>PKR {credits?.amount}</span>
                       </span>
@@ -231,8 +229,9 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
                       </span>
                     )}
                     <MdArrowDropDown
-                      className={`text-xl ${CreditsDropdownOpen ? "rotate-180" : ""
-                        } transition-all duration-300`}
+                      className={`text-xl ${
+                        CreditsDropdownOpen ? "rotate-180" : ""
+                      } transition-all duration-300`}
                       onClick={() => setCreditsDropdownOpen((prev) => !prev)}
                     />
                     <div className="absolute right-0 top-14">
@@ -247,7 +246,7 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
                 </CustomTooltip>
               </div>
 
-              <CustomTooltip content={dropdownStatus?null:"profile"}>
+              <CustomTooltip content={dropdownStatus ? null : "profile"}>
                 <div className="px-3">
                   {/* <FaUserCircle
                     onClick={dropdownHandler}

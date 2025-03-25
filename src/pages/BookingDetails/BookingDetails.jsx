@@ -14,10 +14,11 @@ import {
   DownloadButton,
   Table,
   Spinner,
+  CustomTooltip,
 } from "../../components/components";
 import { Toaster } from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
-import { IoIosAirplane, IoMdClock } from "react-icons/io";
+import { IoIosAirplane, IoMdCash, IoMdClock, IoMdPaperPlane } from "react-icons/io";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { useDispatch, useSelector } from "react-redux";
@@ -28,6 +29,8 @@ import {
   issueBooking,
   requestRefund,
 } from "../../_core/features/bookingSlice";
+import { MdArrowBack, MdOutlineCancelScheduleSend } from "react-icons/md";
+import { RiRefund2Fill } from "react-icons/ri";
 
 dayjs.extend(utc); // Extend dayjs with UTC support
 
@@ -42,7 +45,7 @@ const TicketDetails = () => {
     text: "",
   });
   const { userData } = useSelector((state) => state.auth);
-  const { isLoadingBookingDetails, bookingDetails ,isLoadingPNR} = useSelector((state) => state.booking);
+  const { isLoadingBookingDetails, bookingDetails, isLoadingPNR, isIssueLoading } = useSelector((state) => state.booking);
   // const [bookingDetails, setBookingDetails] = useState();
 
   const printRef = useRef();
@@ -59,19 +62,21 @@ const TicketDetails = () => {
   };
 
   const handleIssue = async (pnr) => {
+    setConfirmObject((prev) => ({ ...prev, status: false }));
+
     dispatch(issueBooking({ pnr, token: userData?.token }))
       .unwrap()
       .then(() => {
         dispatch(getBookingDetails({ id: location.state.id, token: userData?.token }))
-        setConfirmObject((prev) => ({ ...prev, status: false }));
       })
       .catch((error) => {
         dispatch(getBookingDetails({ id: location.state.id, token: userData?.token }))
-        setConfirmObject((prev) => ({ ...prev, status: false }));
       });
   };
 
   const handleGetPnr = (pnr) => {
+    setConfirmObject((prev) => ({ ...prev, status: false }));
+
     dispatch(getPNR({ id: pnr, token: userData?.token }))
       .unwrap()
       .then((result) => {
@@ -82,20 +87,26 @@ const TicketDetails = () => {
   };
 
   const cancelFlightBookingHandler = async (flight) => {
+    setConfirmObject((prev) => ({ ...prev, status: false }));
+
     const bookingId = {
       booking_id: flight.id,
     };
     dispatch(cancelFlightBooking({ data: bookingId, token: userData?.token }))
       .unwrap()
       .then(() => {
-        setConfirmObject((prev) => ({ ...prev, status: false }));
+        dispatch(getBookingDetails({ id: location.state.id, token: userData?.token }))
+
       })
       .catch((error) => {
         console.log("Request Refund Failed:", error);
+        dispatch(getBookingDetails({ id: location.state.id, token: userData?.token }))
       });
   };
 
   const refundRequestHandler = async (flight) => {
+    setConfirmObject((prev) => ({ ...prev, status: false }));
+
     console.log(flight);
 
     const bookingId = {
@@ -104,10 +115,12 @@ const TicketDetails = () => {
     dispatch(requestRefund({ data: bookingId, token: userData?.token }))
       .unwrap()
       .then(() => {
-        setConfirmObject((prev) => ({ ...prev, status: false }));
+        dispatch(getBookingDetails({ id: location.state.id, token: userData?.token }))
+
       })
       .catch((error) => {
         console.log("Request Refund Failed:", error);
+        dispatch(getBookingDetails({ id: location.state.id, token: userData?.token }))
       });
   };
 
@@ -138,9 +151,9 @@ const TicketDetails = () => {
   const timelimit = new Date(bookingDetails?.Timelimit);
   const localTimeLimit = timelimit.toLocaleString("en-GB");
 
-  if(isLoadingBookingDetails || isLoadingPNR){
-    return <Spinner className={"text-primary"}/>
-  }else{
+  if (isLoadingBookingDetails || isLoadingPNR || isIssueLoading) {
+    return <Spinner className={"text-primary"} />
+  } else {
     return (
       <>
         <Toaster />
@@ -149,6 +162,7 @@ const TicketDetails = () => {
           onConfirm={confirmObject.onConfirm}
           status={confirmObject.status}
           text={confirmObject.text}
+          loading={isLoadingBookingDetails}
         />
         <div ref={printRef} className="flex flex-col w-full gap-5">
           <CardLayoutContainer>
@@ -166,9 +180,10 @@ const TicketDetails = () => {
                   </h1>
                 </div>
                 <div className="flex flex-wrap gap-3">
-  
+
                   <div>
                     <Button
+                      icon={<RiRefund2Fill />}
                       onClick={() =>
                         setConfirmObject((prev) => ({
                           ...prev,
@@ -188,6 +203,7 @@ const TicketDetails = () => {
                   </div>
                   <div>
                     <Button
+                      icon={<MdOutlineCancelScheduleSend />}
                       onClick={() =>
                         setConfirmObject((prev) => ({
                           ...prev,
@@ -208,20 +224,22 @@ const TicketDetails = () => {
                   </div>
                 </div>
               </div>
-  
+
               <Button
+                icon={<IoMdPaperPlane />}
                 disabled={
                   [
                     "requested-refund",
                     "expired",
                     "requested-cancellation",
                   ].includes(bookingDetails?.booking_status)
+                  || isIssueLoading
                   // || now.format("M/D/YYYY h:m:s a") > timeLimit.format("M/D/YYYY h:m:s a")
                 }
                 className="text-xl py-14 w-full md:w-44"
                 text={
                   bookingDetails?.booking_status === "confirmed"
-                    ? "Get PNR"
+                    ? "E-Ticket"
                     : "Order Ticket"
                 }
                 onClick={() => {
@@ -297,8 +315,8 @@ const TicketDetails = () => {
             </div>
           </CardLayoutContainer>
           <CardLayoutContainer>
-            <CardLayoutHeader className={"mb-2"} heading="Passenger Details" />
-  
+            <CardLayoutHeader className={"mb-2 text-text"} heading="Passenger Details" />
+
             {bookingDetails && (
               <Table
                 pagination={true}
@@ -363,32 +381,34 @@ const TicketDetails = () => {
           </CardLayoutContainer>
           <CardLayoutContainer>
             <CardLayoutHeader
-              className={"mb-2"}
+              className={"mb-2 text-text"}
               heading={"Pricing Information"}
             />
-            <CardLayoutFooter>
-              <h2 className="text-xl font-semibold text-slate-600">
-                Total Fare: {Number(bookingDetails?.total_fare).toLocaleString()}
-              </h2>
-            </CardLayoutFooter>
+            <h2 className="text-xl font-semibold text-text p-5">
+              Total Fare: {Number(bookingDetails?.total_fare).toLocaleString()} PKR
+            </h2>
+
           </CardLayoutContainer>
-  
+
           <div className="flex items-center justify-end gap-3 mb-4">
-            <div>
-              <Button
-                id={"hide-buttons"}
-                text="Go Back"
-                onClick={() => {
-                  navigate(-1);
-                }}
-              />
-            </div>
+            <CustomTooltip content={"Previous Page"}>
+              <div>
+                <Button
+                  icon={<MdArrowBack />}
+                  id={"hide-buttons"}
+                  text="Go Back"
+                  onClick={() => {
+                    navigate(-1);
+                  }}
+                />
+              </div>
+            </CustomTooltip>
           </div>
         </div>
       </>
     );
   }
-  
+
 };
 
 export default TicketDetails;

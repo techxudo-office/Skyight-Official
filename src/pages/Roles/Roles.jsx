@@ -32,7 +32,7 @@ const Roles = () => {
   const userData = useSelector((state) => state.auth.userData);
 
   useEffect(() => {
-    dispatch(getRoles({ page: 0, limit: 10, token: userData?.token }));
+    dispatch(getRoles(userData?.token));
   }, [dispatch, userData?.token]);
 
   const roleColumns = [
@@ -66,7 +66,8 @@ const Roles = () => {
             onClick={() => {
               setEditRoleData(row);
               setIsEditModalOpen(true);
-            }}>
+            }}
+          >
             <MdEditSquare title="Edit" className="text-blue-500" />
           </span>
           {/* <span
@@ -122,7 +123,8 @@ const Roles = () => {
         <CardLayoutHeader
           removeBorder={true}
           heading={"Roles"}
-          className="flex items-center justify-between">
+          className="flex items-center justify-between"
+        >
           <div className="relative">
             <SecondaryButton
               text={"Create New Role"}

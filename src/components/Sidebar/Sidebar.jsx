@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { GiCommercialAirplane } from "react-icons/gi";
 import { IoIosArrowForward } from "react-icons/io";
-
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   CardLayoutContainer,
@@ -9,20 +7,18 @@ import {
 } from "../CardLayout/CardLayout";
 import { MdEdit } from "react-icons/md";
 import { useSidebarLinks } from "../../data/sidebarData";
+import { Backbutton } from "../components";
+import { useSelector } from "react-redux";
 
 const Sidebar = ({ status, updateStatus }) => {
-  const sidebarLinks = useSidebarLinks();
+  const sidebarRef = useRef();
   const navigate = useNavigate();
   const location = useLocation();
-  const sidebarRef = useRef();
-
+  const sidebarLinks = useSidebarLinks();
   const [activeMenu, setActiveMenu] = useState(null);
-  const [activeSubmenu, setActiveSubmenu] = useState(null);
   const [mobileView, setMobileView] = useState(false);
+  const { userData } = useSelector((state) => state.auth);
 
-  const navigationHandler = (path) => {
-    navigate(path);
-  };
   useEffect(() => {
     if (!status) {
       setActiveMenu(null);
@@ -34,10 +30,9 @@ const Sidebar = ({ status, updateStatus }) => {
 
   const menuItemHandler = (index, link) => {
     if (link.sublinks && link.sublinks.length > 0) {
-      // navigationHandler(link.sublinks[0].path);
       setActiveMenu((prevIndex) => (prevIndex === index ? null : index));
     } else if (link.path) {
-      navigationHandler(link.path);
+      navigate(link.path);
     }
   };
 
@@ -58,9 +53,7 @@ const Sidebar = ({ status, updateStatus }) => {
         }
       }
     });
-
     setActiveMenu(matchedMenu);
-    setActiveSubmenu(matchedSubmenu);
     if (mobileView) {
       updateStatus(false);
     }
@@ -82,21 +75,6 @@ const Sidebar = ({ status, updateStatus }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, [updateStatus]);
 
-  // useEffect(() => {
-  //   if (mobileView) {
-  //     const handleClickOutside = (e) => {
-  //       if (sidebarRef.current && !sidebarRef.current.contains(e.target)) {
-  //         updateStatus(false);
-  //       }
-  //     };
-
-  //     document.addEventListener("mousedown", handleClickOutside);
-  //     return () => {
-  //       document.removeEventListener("mousedown", handleClickOutside);
-  //     };
-  //   }
-  // }, [sidebarRef, mobileView]);
-
   const [profileImage, setProfileImage] = useState(
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjUuYcnZ-xqlGZiDZvuUy_iLx3Nj6LSaZSzQ&s"
   );
@@ -115,34 +93,30 @@ const Sidebar = ({ status, updateStatus }) => {
     <div
       id="sidebar-container"
       ref={sidebarRef}
-      className={`transition-all z-10  bg-white   shadow-md ${!mobileView
-        ? status
-          ? "w-1/5 pt-20 "
-          : "w-28  items-center pt-20"
-        : status
-          ? "w-60 shadow-md fixed left-0 h-screen"
+      className={`transition-all z-20  bg-white    shadow-md ${
+        !mobileView
+          ? status
+            ? "w-1/5 pt-20 "
+            : "w-28  items-center pt-20"
+          : status
+          ? "w-60 shadow-md fixed left-0 h-screen pt-20"
           : "w-0 p-0"
-        } flex flex-col justify-between  transition-all duration-300 overflow-auto overflow-x-hidden`}
+      } flex flex-col justify-between  transition-all duration-300 overflow-y-auto overflow-x-visible`}
     >
       <div>
-        {/* <div className={`py-3 items-center  flex ${status ? 'px-5' : 'justify-center'} `}>
-          <h3
-            onClick={() => navigationHandler("/")}
-            className="flex items-center gap-3 text-2xl font-semibold cursor-pointer text-text"
-          >
-            <GiCommercialAirplane />
-            {status ? 'Skyight' : ''}
-          </h3>
-        </div> */}
-        <CardLayoutContainer className="w-full shadow-none">
+        <CardLayoutContainer className="relative w-full shadow-none">
+          <Backbutton
+            className={"absolute z-[99] right-0 top-0"}
+            status={status}
+          />
           <CardLayoutHeader
             className="flex flex-col flex-wrap items-center justify-start py-3 gap-x-5"
             removeBorder={true}
           >
-            {" "}
             <div
-              className={`relative ${!mobileView ? (status ? "w-24 h-24" : "w-16 h-16") : "w-20 h-20"
-                } overflow-hidden rounded-full cursor-pointer group`}
+              className={`relative ${
+                !mobileView ? (status ? "w-24 h-24" : "w-16 h-16") : "w-20 h-20"
+              } overflow-hidden rounded-full cursor-pointer group`}
             >
               <img
                 src={profileImage}
@@ -165,10 +139,11 @@ const Sidebar = ({ status, updateStatus }) => {
             </div>
             <div>
               <h3
-                className={`font-semibold text-text ${!mobileView ? (status ? "text-lg" : "text-sm") : ""
-                  }`}
+                className={`font-semibold text-text ${
+                  !mobileView ? (status ? "text-lg" : "text-sm") : ""
+                }`}
               >
-                @techxudo
+                {`${userData?.user?.first_name} ${userData?.user?.last_name}`}
               </h3>
             </div>
           </CardLayoutHeader>
@@ -178,23 +153,27 @@ const Sidebar = ({ status, updateStatus }) => {
             {sidebarLinks.map((link, linkIndex) => (
               <div
                 key={linkIndex}
-                className={`flex flex-col    ${status ? "w-full" : "items-center"
-                  }`}
+                className={`flex flex-col    ${
+                  status ? "w-full" : "items-center"
+                }`}
               >
                 <li
                   onClick={() => menuItemHandler(linkIndex, link)}
-                  className={`mb-2 flex items-center  gap-4 ${status ? "px-4" : ""
-                    }  py-4 cursor-pointer transition-all hover:text-primary hover:bg-background text-text rounded-full   text-base `}
+                  className={`mb-2 flex items-center  gap-4 ${
+                    status ? "px-4" : ""
+                  }  py-4 cursor-pointer transition-all hover:text-primary hover:bg-background text-text rounded-full   text-base `}
                 >
                   {link.sublinks && status && (
                     <IoIosArrowForward
-                      className={`text-xl transition-transform duration-300 ${activeMenu === linkIndex ? "-rotate-90" : "rotate-90"
-                        }`}
+                      className={`text-xl transition-transform duration-300 ${
+                        activeMenu === linkIndex ? "-rotate-90" : "rotate-90"
+                      }`}
                     />
                   )}
                   <span
-                    className={`flex ${status ? "flex-row" : "flex-col"
-                      } font-semibold  items-center gap-3`}
+                    className={`flex ${
+                      status ? "flex-row" : "flex-col"
+                    } font-semibold  items-center gap-3`}
                   >
                     {link.title == "Dashboard" && status ? (
                       <span className="text-2xl">{link.icon}</span>
@@ -214,12 +193,14 @@ const Sidebar = ({ status, updateStatus }) => {
                   link.sublinks.map((sublink, sublinkIndex) => (
                     <li
                       key={sublinkIndex}
-                      onClick={() => navigationHandler(sublink.path)}
-                      className={`  w-full flex items-center gap-4 ${status ? "px-3" : ""
-                        } cursor-pointer transition-all  ${activeMenu === linkIndex && link.sublinks
+                      onClick={() => navigate(sublink.path)}
+                      className={`  w-full flex items-center gap-4 ${
+                        status ? "px-3" : ""
+                      } cursor-pointer transition-all  ${
+                        activeMenu === linkIndex && link.sublinks
                           ? "h-auto py-4 "
                           : "h-0 overflow-hidden "
-                        } text-text rounded-full text-base  transition-all duration-300 hover:text-primary`}
+                      } text-text rounded-full text-base  transition-all duration-300 hover:text-primary`}
                     >
                       <span className="text-3xl">{sublink.icon}</span>
                       {sublink.title}

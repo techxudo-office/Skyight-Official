@@ -136,7 +136,6 @@ const CreateTransaction = () => {
                       <Select
                         id="bank_name"
                         label="Bank Name"
-                        name="bank_name"
                         options={banksData}
                         value={values.bank_name}
                         placeholder="Select Bank"
