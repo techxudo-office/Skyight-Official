@@ -21,7 +21,7 @@ export default function ModalWrapper({
         >
 
             {onRequestClose && <CustomTooltip content={"Close"}>
-                <div onClick={onRequestClose} className='absolute text-2xl text-redColor cursor-pointer top-2 right-2' >
+                <div onClick={onRequestClose} className='sticky text-2xl w-fit h-fit text-redColor bg-white rounded-full cursor-pointer top-0 right-0' >
                     <MdCancel />
 
                 </div>

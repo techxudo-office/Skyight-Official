@@ -1,9 +1,10 @@
-import { FaChevronCircleDown, FaChevronDown, FaUser } from "react-icons/fa";
+import { FaChevronCircleDown, FaChevronDown, FaEye, FaUser } from "react-icons/fa";
 import Flag from "react-world-flags";
 import { CardLayoutContainer } from "../CardLayout/CardLayout";
 import { MdChildCare, MdChildFriendly } from "react-icons/md";
 import React, { useState } from "react";
 import countries from "i18n-iso-countries";
+import { ModalWrapper } from "../components";
 
 const PassengerDetail = ({ travelersData }) => {
   console.log("travelersData", travelersData);
@@ -64,53 +65,76 @@ const PassengerDetail = ({ travelersData }) => {
                   </p>
                 </div>
                 <button
-                  className={`${dropdown.includes(index) ? "rotate-180" : ""
-                    } flex self-center justify-self-end transition-all duration-300 h-fit bg-primary w-fit text-white text-xl p-1 rounded-full`}>
-                  <FaChevronDown onClick={() => handleDropdown(index)} />
+                  className={` flex self-center justify-self-end transition-all duration-300 h-fit bg-primary w-fit text-white text-xl p-1 rounded-full`}>
+                  <FaEye onClick={() => handleDropdown(index)} />
                 </button>
               </div>
-              <div
-                className={`${dropdown.includes(index)
-                  ? "h-fit pb-4"
-                  : "h-0 -translate-y-5 opacity-50 overflow-hidden"
-                  } px-4 w-full lg:w-1/2  mx-auto transition-all duration-300`}>
-                <div className=" mt-5 rounded-xl p-7 bg-secondary shadow-lg border-gray border-[1px]">
-                  <h1 className="text-white font-semibold text-2xl pb-3">
+              <ModalWrapper
+                isOpen={dropdown.includes(index)}
+                onRequestClose={() => setDropdown((prev) => prev.filter((item) => item !== index))}
+              >
+
+                <div className=" mt-5 rounded-xl  p-7 bg-secondary shadow-lg border-gray border-[1px]">
+                  <h1 className="text-white font-semibold text-2xl border-b pb-3 mb-2">
                     {passenger.first_name}'s Details
                   </h1>
-                  <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-white ">
-                    title <span>{passenger.title}</span>
-                  </p>
-                  <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-white ">
-                    First name <span>{passenger.first_name}</span>
-                  </p>
-                  <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-white ">
-                    last name <span>{passenger.last_name}</span>
-                  </p>
-                  <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-white ">
-                    date of birth <span>{passenger.date_of_birth}</span>
-                  </p>
-                  <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-white ">
-                    gender <span>{passenger.gender}</span>
-                  </p>
-                  <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-white ">
-                    nationality <span>{passenger.country}</span>
-                  </p>
-                  <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-white ">
-                    Mobile{" "}
-                    <span>
-                      {Number(Object.values(passenger.mobile).join(""))}
-                    </span>
-                  </p>
-                  <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold  text-white">
-                    Passport no. <span>{passenger.passport_number}</span>
-                  </p>
-                  <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold  text-white">
-                    Passport Expiry.{" "}
-                    <span>{passenger.passport_expiry_date}</span>
-                  </p>
+                  <div className="flex flex-wrap gap-x-6 md:gap-x-10 gap-y-5">
+                    {
+                      Object.entries(passenger).map(([key, value]) => {
+                        if (typeof value === "object") {
+                          return (
+                            <p className=" py-2 flex gap-3  border-lightgray   text-white ">
+                              <span className="capitalize font-semibold">{key.replaceAll("_", " ")}:</span>
+                              <span className="border-b border-dashed">
+                                {Number(Object.values(value).join(""))}
+                              </span>
+                            </p>
+                          )
+                        } else {
+                          return (
+                            <p className=" py-2 flex gap-3  border-lightgray   text-white ">
+                              <span className="capitalize font-semibold">{key.replaceAll("_", " ")}:</span>
+                              <span className="border-b border-dashed">{value}</span>
+                            </p>
+                          )
+                        }
+                      })
+                    }
+                  </div>
+
+
+                  {/* <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-white ">
+                      First name <span>{passenger.first_name}</span>
+                    </p>
+                    <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-white ">
+                      last name <span>{passenger.last_name}</span>
+                    </p>
+                    <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-white ">
+                      date of birth <span>{passenger.date_of_birth}</span>
+                    </p>
+                    <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-white ">
+                      gender <span>{passenger.gender}</span>
+                    </p>
+                    <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-white ">
+                      nationality <span>{passenger.country}</span>
+                    </p>
+                    <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold text-white ">
+                      Mobile{" "}
+                      <span>
+                        {Number(Object.values(passenger.mobile).join(""))}
+                      </span>
+                    </p>
+                    <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold  text-white">
+                      Passport no. <span>{passenger.passport_number}</span>
+                    </p>
+                    <p className=" py-4 flex justify-between border-b border-lightgray capitalize font-semibold  text-white">
+                      Passport Expiry.{" "}
+                      <span>{passenger.passport_expiry_date}</span>
+                    </p> */}
                 </div>
-              </div>
+
+              </ModalWrapper>
+
             </React.Fragment>
           ))}
       </div>
