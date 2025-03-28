@@ -27,7 +27,7 @@ const DashboardCards = ({ index, data }) => {
         <div className="flex items-center justify-start pb-2">
           <div>
             <Button
-            icon={<MdBookmark/>}
+              icon={<MdBookmark />}
               onClick={() => {
                 navigate("/dashboard/search-flights");
               }}

@@ -5,7 +5,10 @@ const statusClasses = {
   pending: 'text-yellowColor border-yellowColor bg-yellowbg',
   'requested-cancellation': 'text-redColor border-redColor bg-redbg',
   expired: 'text-redColor border-redColor bg-redbg',
+  closed: 'text-redColor border-redColor bg-redbg',
+  cancelled: 'text-redColor border-redColor bg-redbg',
   "requested-refund": 'text-blueColor border-blueColor bg-bluebg',
+  Refunded: 'text-blueColor border-blueColor bg-bluebg',
 };
 
 export default function Tag({ value }) {
