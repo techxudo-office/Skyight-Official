@@ -206,7 +206,8 @@ const FlightDetails = () => {
           <div>
             <Button
               icon={<MdBookmark />}
-              text={isBookingLoading ? <Spinner /> : "Confirm Booking"}
+              text={"Confirm Booking"}
+              loading={isBookingLoading}
               onClick={confirmBookingHandler}
             />
           </div>
