@@ -21,6 +21,7 @@ const FlightCard = ({ data, doc_type, travelers, pricingInfo }) => {
       (item) => item.FlightSegment[0]
     )
   );
+  console.log("pricing info", pricingInfo)
   const navigate = useNavigate();
   const totalTravelers = [];
   Object.entries(travelers).forEach(([key, value]) => {
@@ -39,6 +40,13 @@ const FlightCard = ({ data, doc_type, travelers, pricingInfo }) => {
     <>
       <CardLayoutContainer className={"mb-5"}>
         <CardLayoutHeader className={""}>
+          <div className="text-text text-sm mb-3">
+            <h2 className=" font-semibold text-text">
+              {data.AirItinerary.OriginDestinationOptions.length === 1 ?
+                "Non Stop (fix)" : `Stops: ${data.AirItinerary.OriginDestinationOptions.length}`
+              }
+            </h2>
+          </div>
           {flightSegment.map((flights, idx) => (
             <div
               key={idx}
@@ -82,11 +90,6 @@ const FlightCard = ({ data, doc_type, travelers, pricingInfo }) => {
                       {flights.ArrivalTime}
                     </h2>
                   </div>
-                </div>
-                <div>
-                  <h2 className="text-xs font-semibold text-text">
-                    Non Stop (Fix)
-                  </h2>
                 </div>
               </div>
               <div>
@@ -138,13 +141,20 @@ const FlightCard = ({ data, doc_type, travelers, pricingInfo }) => {
                     <span>
                       <FaMoneyBillAlt />
                     </span>
-                    <span>20,000 (Fix)</span>
+                    <span className="">{(pricingInfo.PTC_FareBreakdowns[index].PassengerFare.TotalFare.Amount).toLocaleString()}</span>
                   </h2>
                 </div>
               ))}
           </div>
         </CardLayoutBody>
         <CardLayoutFooter>
+          <div className=" mr-4 lg:mr-7">
+            <h1 className="text-text text-xl font-semibold">Total:{" "}
+              <span className="text-primary">
+                {(pricingInfo.ItinTotalFare.TotalFare.pkrTotalFare).toLocaleString()}
+              </span>
+            </h1>
+          </div>
           <div>
             <Button
               icon={<IoMdEye />}

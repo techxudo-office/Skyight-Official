@@ -13,10 +13,17 @@ const CustomDate = ({
     onChange,
     disabled,
     isSelected,
-    pastDate=true,
-    futureDate=true,
+    pastDate = true,
+    futureDate = true,
     isTimePicker // Toggle between DatePicker and DateTimePicker
 }) => {
+    const [isOpen, setIsOpen] = useState(false)
+
+    useEffect(() => {
+        setIsOpen(isSelected)
+    }, [isSelected])
+
+    console.log(isOpen, "isopen")
     const handleDateChange = (newValue) => {
         if (onChange) {
             const event = {
@@ -26,6 +33,7 @@ const CustomDate = ({
                 },
             };
             onChange(event);
+            setIsOpen(false);
         }
     };
 
@@ -41,7 +49,7 @@ const CustomDate = ({
                     value={value ? dayjs(value) : null}
                     onChange={handleDateChange}
                     minDate={!pastDate ? dayjs() : null}
-                    maxDate={!futureDate? dayjs(): null}
+                    maxDate={!futureDate ? dayjs() : null}
                     sx={{
                         "& .MuiOutlinedInput-root": {
                             padding: "6px 12px",
@@ -61,12 +69,14 @@ const CustomDate = ({
                     id={id}
                     className="w-full"
                     disabled={disabled}
-                    autoFocus={isSelected}
+                    open={isOpen}
+                    onOpen={() => setIsOpen(true)}  // Open on click
+                    onClose={() => setIsOpen(false)}
                     label={label}
                     value={value ? dayjs(value) : null}
                     onChange={handleDateChange}
-                    minDate={(pastDate  || pastDate ==null)? null : dayjs()}
-                    maxDate={(futureDate || futureDate ==null)? null: dayjs()}
+                    minDate={(pastDate || pastDate == null) ? null : dayjs()}
+                    maxDate={(futureDate || futureDate == null) ? null : dayjs()}
                     sx={{
                         "& .MuiOutlinedInput-root": {
                             padding: "6px 12px",

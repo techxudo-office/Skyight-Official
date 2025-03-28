@@ -48,8 +48,7 @@ const FlightResults = () => {
       const travelers = location.state.travelersData;
       const priceInfo = location.state.flightsData.PricedItineraries;
       setPricingInfo(
-        location.state.flightsData.PricedItineraries.PricedItinerary[0]
-          .AirItineraryPricingInfo
+        location.state.flightsData.PricedItineraries.PricedItinerary.map((flight) => flight.AirItineraryPricingInfo)
       );
       setFlightsData(flights);
       setTravelersData(travelers);
@@ -184,7 +183,7 @@ const FlightResults = () => {
             />
             <SearchFlights
               OnlySearch={true}
-              //  onSearch={()=>setChangeFlight(false)}
+            //  onSearch={()=>setChangeFlight(false)}
             />
           </div>
         </div>
@@ -214,7 +213,7 @@ const FlightResults = () => {
             key={index}
             data={item}
             doc_type={TripDetail.flightRoute}
-            pricingInfo={pricingInfo}
+            pricingInfo={pricingInfo[index]}
             travelers={travelersData}
           />
         ))
