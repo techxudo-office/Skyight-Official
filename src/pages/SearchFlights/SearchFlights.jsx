@@ -68,17 +68,12 @@ const validationSchema = Yup.object().shape({
   departure: Yup.string().required("Please select departure"),
   arrival: Yup.string().required("Please select arrival"),
   departureDate: Yup.date().required("Please select departure date"),
-  returnDate: Yup.date().when("tripType", {
-    is: (tripType) => tripType !== "One-Way",
-    then: (schema) => schema.required("Please select return date"),
-    otherwise: (schema) => schema.notRequired(),
-  }),
+  // returnDate: Yup.date().required("Please select return date"),
   adult: Yup.string().required("Please select the number of adults"),
   child: Yup.string().required("Please select the number of children"),
   infant: Yup.string().required("Please select the number of infants"),
   cabinClass: Yup.string().required("Please select the cabin class"),
 });
-
 
 const SearchFlights = ({ OnlySearch, onSearch }) => {
   const { isLoadingSearchResults, searchForm } = useSelector((state) => state.booking);
@@ -469,7 +464,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                               label="Cabin Class"
                               options={cabinClassOptions}
                               value={values.cabinClass}
-                              placeholder="Cabin Class"
+                              placeholder="Select Cabin Class"
                               onChange={(option) => {
                                 setFieldValue("cabinClass", option.value);
                                 activateField(null);
@@ -478,7 +473,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                             />
                             {touched.cabinClass && errors.cabinClass && (
                               <div className="absolute left-0 mt-2 text-sm text-red-500">
-                                {errors.infant}
+                                {errors.cabinClass}
                               </div>
                             )}
                           </div>
