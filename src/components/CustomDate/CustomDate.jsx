@@ -20,7 +20,7 @@ const CustomDate = ({
     const [isOpen, setIsOpen] = useState(false)
 
     useEffect(() => {
-        setIsOpen(isSelected)
+        setIsOpen(isSelected||false)
     }, [isSelected])
 
     console.log(isOpen, "isopen")

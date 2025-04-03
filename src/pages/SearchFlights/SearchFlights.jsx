@@ -104,8 +104,8 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
   };
 
   const initialValues = {
-    flightRoute: "",
-    tripType: "",
+    flightRoute: "Domestic",
+    tripType: "One-Way",
     departure: "",
     arrival: "",
     departureDate: "",
@@ -236,6 +236,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                   ...prev,
                   departure: "",
                   arrival: "",
+                  tripType:"One-Way"
                 }));
               }, [values.flightRoute]);
               console.log(errors);
@@ -243,11 +244,14 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                 <Form>
                   <CardLayoutBody>
                     <RadioButtons
+                    name={"flightRoute"}
                       value={values.flightRoute}
                       options={["Domestic", "International"]}
-                      selectedOption={(option) =>
+                      onChange={(option) => {
                         setFieldValue("flightRoute", option)
                       }
+                      }
+
                     />
                     {touched.flightRoute && errors.flightRoute && (
                       <div className="mt-2 text-sm text-red-500 -bottom-6">
@@ -258,11 +262,12 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                   <CardLayoutBody>
                     <RadioButtons
                       value={values.tripType}
+                      name={"tripType"}
                       disabledOptionindex={
                         values.flightRoute == "Domestic" ? [1, 2] : []
                       }
                       options={["One-Way", "Round-Trip", "Multi-City"]}
-                      selectedOption={(option) =>
+                      onChange={(option) =>
                         setFieldValue("tripType", option)
                       }
                     />
