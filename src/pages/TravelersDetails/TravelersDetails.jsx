@@ -280,10 +280,10 @@ const TravelersDetails = () => {
                       >
                         <h2 className="text-xl font-semibold capitalize text-primary">
                           {`Traveller ${travelerIndex + 1}. ${travelertype === "ADT"
-                              ? "adult"
-                              : travelertype === "CHD"
-                                ? "child"
-                                : "infant"
+                            ? "adult"
+                            : travelertype === "CHD"
+                              ? "child"
+                              : "infant"
                             }`}
                         </h2>
                         <span className="text-2xl transition-all cursor-pointer hover:scale-110 text-primary hover:text-secondary">
@@ -455,82 +455,80 @@ const TravelersDetails = () => {
                                                     )
                                                   }
                                                 />
-                                              )
-                                                : input.type === "date" ? (
-                                                  <CustomDate
-                                                    id={input.id}
-                                                    name={input.name}
-                                                    pastDate={input.pastDate}
-                                                    futureDate={input.futureDate}
-                                                    label={input.label}
-                                                    disabled={disableAddTraveler.includes(
-                                                      travelerIndex
-                                                    )}
-                                                    value={values[input.name]}
-                                                    onChange={(e) =>
-                                                      setFieldValue(
-                                                        input.name,
-                                                        e.target.value
-                                                      )
-                                                    }
-                                                  />
-                                                )
-                                                  : input.type === "number" ? (
-                                                    <PhoneNumberInput
-                                                      id={input.id}
-                                                      name={input.name}
-                                                      label={input.label}
-                                                      value={
-                                                        oldTraveller.includes(
-                                                          travelerIndex
-                                                        )
-                                                          ? `${values[input.name]
-                                                            .country_code
-                                                          }${values[input.name]
-                                                            .area_code || ""
-                                                          }${values[input.name]
-                                                            .number
-                                                          }`
-                                                          : ""
-                                                      }
-                                                      onChange={(parsedNumber) => {
-                                                        setFieldValue(
-                                                          `${input.name}.country_code`,
-                                                          parsedNumber.country_code
-                                                        );
-                                                        setFieldValue(
-                                                          `${input.name}.area_code`,
-                                                          parsedNumber.area_code
-                                                        );
-                                                        setFieldValue(
-                                                          `${input.name}.number`,
-                                                          parsedNumber.number
-                                                        );
-                                                      }}
-                                                      disabled={disableAddTraveler.includes(
-                                                        travelerIndex
-                                                      )}
-                                                      placeholder={input.name}
-                                                    />
-                                                  ) : (
-                                                    <Input
-                                                      id={input.id}
-                                                      name={input.name}
-                                                      label={input.label}
-                                                      type={input.type}
-                                                      placeholder={input.placeholder}
-                                                      disabled={disableAddTraveler.includes(
-                                                        travelerIndex
-                                                      )}
-                                                      value={values[input.name]}
-                                                      onChange={(e) =>
-                                                        setFieldValue(
-                                                          input.name,
-                                                          e.target.value
-                                                        )
-                                                      }
-                                                    />
+                                              ) : input.type === "date" ? (
+                                                <CustomDate
+                                                  id={input.id}
+                                                  name={input.name}
+                                                  pastDate={input.pastDate}
+                                                  futureDate={input.futureDate}
+                                                  label={input.label}
+                                                  disabled={disableAddTraveler.includes(
+                                                    travelerIndex
                                                   )}
+                                                  value={values[input.name]}
+                                                  onChange={(e) =>
+                                                    setFieldValue(
+                                                      input.name,
+                                                      e.target.value
+                                                    )
+                                                  }
+                                                />
+                                              ) : input.type === "number" ? (
+                                                <PhoneNumberInput
+                                                  id={input.id}
+                                                  name={input.name}
+                                                  label={input.label}
+                                                  value={
+                                                    oldTraveller.includes(
+                                                      travelerIndex
+                                                    )
+                                                      ? `${values[input.name]
+                                                        .country_code
+                                                      }${values[input.name]
+                                                        .area_code || ""
+                                                      }${values[input.name]
+                                                        .number
+                                                      }`
+                                                      : ""
+                                                  }
+                                                  onChange={(parsedNumber) => {
+                                                    setFieldValue(
+                                                      `${input.name}.country_code`,
+                                                      parsedNumber.country_code
+                                                    );
+                                                    setFieldValue(
+                                                      `${input.name}.area_code`,
+                                                      parsedNumber.area_code
+                                                    );
+                                                    setFieldValue(
+                                                      `${input.name}.number`,
+                                                      parsedNumber.number
+                                                    );
+                                                  }}
+                                                  disabled={disableAddTraveler.includes(
+                                                    travelerIndex
+                                                  )}
+                                                  placeholder={input.name}
+                                                />
+                                              ) : (
+                                                <Input
+                                                  id={input.id}
+                                                  name={input.name}
+                                                  label={input.label}
+                                                  type={input.type}
+                                                  placeholder={input.placeholder}
+                                                  disabled={disableAddTraveler.includes(
+                                                    travelerIndex
+                                                  )}
+                                                  value={values[input.name]}
+                                                  onChange={(e) =>
+                                                    setFieldValue(
+                                                      input.name,
+                                                      e.target.value
+                                                    )
+                                                  }
+                                                />
+                                              )}
                                               {touched[input.name] &&
                                                 errors[input.name] && (
                                                   <div className="absolute left-0 mt-2 text-sm text-red-500">
@@ -571,8 +569,8 @@ const TravelersDetails = () => {
                                                 className={`${disableAddTraveler.includes(
                                                   travelerIndex
                                                 )
-                                                    ? "cursor-pointer"
-                                                    : "cursor-not-allowed"
+                                                  ? "cursor-pointer"
+                                                  : "cursor-not-allowed"
                                                   } text-primary hover:text-secondary underline`}
                                               >
                                                 Edit Data
@@ -616,7 +614,7 @@ const TravelersDetails = () => {
                                             ([key, value]) => (
                                               <p
                                                 key={key}
-                                                className="flex justify-between py-4 font-semibold border-b border-lightgray text-text"
+                                                className="flex justify-between py-4 font-semibold border-b border-lightgray text-text text-sm"
                                               >
                                                 <span className="capitalize">
                                                   {" "}

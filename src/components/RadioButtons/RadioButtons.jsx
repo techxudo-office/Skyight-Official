@@ -1,42 +1,61 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React from 'react';
 
-export default function RadioButtons({ options, selectedOption, disabledOptionindex ,value}) {
-  const [selected, setSelected] = useState();
-  
+export default function RadioButtons({
+  options,
+  value,
+  name,
+  onChange,
+  disabledOptionindex = []
+}) {
   return (
     <div className="flex space-x-4">
-      {options.map((option, idx) => (
-        <label
-          key={option}
-          className={`flex items-center space-x-2 ${disabledOptionindex?.includes(idx)?'cursor-not-allowed':'cursor-pointer'}`}
-        >
-          <div
-            className={`w-4 h-4 rounded-full border-[1px] border-gray  flex items-center justify-center transition-all ${!disabledOptionindex?.includes(idx) 
-                ?((selected === option||value==option)   ? "border-primary":"border-text")
-                : "border-background"
-              }`}
+      {options.map((option, idx) => {
+        const isDisabled = disabledOptionindex.includes(idx);
+        const isSelected = value === option;
+        
+        return (
+          <label
+            key={option}
+            className={`flex items-center space-x-2 ${
+              isDisabled ? 'cursor-not-allowed' : 'cursor-pointer'
+            }`}
           >
-            {(((selected === option||value==option) ||value==option)  & !disabledOptionindex?.includes(idx) )? 
-              <div className="w-2 h-2 bg-primary rounded-full"></div>:''
-            }
-          </div>
-          <span
-            className={`text-sm ${!disabledOptionindex?.includes(idx)  ? (((selected === option||value==option) ||value==option) ? "text-primary font-medium" : "text-text"):'text-background'
+            <div
+              className={`w-4 h-4 rounded-full border-[1px] flex items-center justify-center transition-all ${
+                isDisabled 
+                  ? "border-background" 
+                  : isSelected 
+                    ? "border-primary" 
+                    : "border-text"
               }`}
-          >
-            {option}
-          </span>
-          <input
-            disabled={disabledOptionindex?.includes(idx)}
-            type="radio"
-            name="trip"
-            value={option||value}
-            checked={(selected === option||value==option) }
-            onChange={() => setSelected(option) & selectedOption(option)}
-            className="hidden"
-          />
-        </label>
-      ))}
+            >
+              {isSelected && !isDisabled && (
+                <div className="w-2 h-2 bg-primary rounded-full"></div>
+              )}
+            </div>
+            <span
+              className={`text-sm ${
+                isDisabled 
+                  ? "text-background" 
+                  : isSelected 
+                    ? "text-primary font-medium" 
+                    : "text-text"
+              }`}
+            >
+              {option}
+            </span>
+            <input
+              disabled={isDisabled}
+              type="radio"
+              name={name}
+              value={option}
+              checked={isSelected}
+              onChange={() => !isDisabled && onChange(option)}
+              className="hidden"
+            />
+          </label>
+        );
+      })}
     </div>
-  )
+  );
 }

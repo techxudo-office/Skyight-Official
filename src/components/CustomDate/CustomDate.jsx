@@ -24,6 +24,7 @@ const CustomDate = ({
         return () => {
             setIsOpen(false)
         }
+        setIsOpen(isSelected || false)
     }, [isSelected])
 
     console.log(isOpen, "isopen")
