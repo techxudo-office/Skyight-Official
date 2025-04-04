@@ -7,7 +7,7 @@ const Registration = () => {
   return (
     <>
       <Navbar hideLinks={true} />
-      <div className="animated-page h-screen w-full flex items-center justify-center">
+      <div className="animated-page h-screen w-full flex items-center justify-center pt-16">
         <RegistrationForm />
       </div>
     </>

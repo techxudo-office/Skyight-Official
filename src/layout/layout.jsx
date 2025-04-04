@@ -36,9 +36,6 @@ const Layout = () => {
           >
 
             <div className="flex flex-col items-center  justify-center w-full px-4 pt-28">
-
-
-
               <Outlet />
             </div>
 

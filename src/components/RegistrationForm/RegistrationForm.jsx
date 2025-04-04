@@ -75,7 +75,7 @@ const RegistrationForm = () => {
   return (
     <>
       <Toaster />
-      <CardLayoutContainer className="hide-scrollbar max-w-[900px] h-[500px] m-auto p-0 shadow-3xl overflow-y-scroll">
+      <CardLayoutContainer className="hide-scrollbar max-w-[900px] h-[550px] m-auto p-0 shadow-3xl overflow-y-scroll">
         <CardLayoutBody removeBorder padding="p-0" className="flex">
           <div className="flex-1 p-16">
             <h3 className="text-4xl font-extrabold text-center mb-10">
@@ -85,11 +85,10 @@ const RegistrationForm = () => {
               onSubmit={formik.handleSubmit}
               className="flex flex-col gap-5">
               <div
-                className={`relative ${
-                  formik.touched.company_name && formik.errors.company_name
-                    ? "mb-5"
-                    : ""
-                }`}>
+                className={`relative ${formik.touched.company_name && formik.errors.company_name
+                  ? "mb-5"
+                  : ""
+                  }`}>
                 <Input
                   placeholder="Skyight"
                   id="company_name"
@@ -107,11 +106,10 @@ const RegistrationForm = () => {
                 )}
               </div>
               <div
-                className={`relative ${
-                  formik.touched.first_name && formik.errors.first_name
-                    ? "mb-5"
-                    : ""
-                }`}>
+                className={`relative ${formik.touched.first_name && formik.errors.first_name
+                  ? "mb-5"
+                  : ""
+                  }`}>
                 <Input
                   placeholder="John"
                   id="first_name"
@@ -129,11 +127,10 @@ const RegistrationForm = () => {
                 )}
               </div>
               <div
-                className={`relative ${
-                  formik.touched.last_name && formik.errors.last_name
-                    ? "mb-5"
-                    : ""
-                }`}>
+                className={`relative ${formik.touched.last_name && formik.errors.last_name
+                  ? "mb-5"
+                  : ""
+                  }`}>
                 <Input
                   placeholder="Albert"
                   id="last_name"
@@ -151,9 +148,8 @@ const RegistrationForm = () => {
                 )}
               </div>
               <div
-                className={`relative ${
-                  formik.touched.email && formik.errors.email ? "mb-5" : ""
-                }`}>
+                className={`relative ${formik.touched.email && formik.errors.email ? "mb-5" : ""
+                  }`}>
                 <Input
                   placeholder="abc.xcv@gmail.com"
                   id="email"
@@ -171,11 +167,10 @@ const RegistrationForm = () => {
                 )}
               </div>
               <div
-                className={`relative ${
-                  formik.touched.phone_number && formik.errors.phone_number
-                    ? "mb-5"
-                    : ""
-                }`}>
+                className={`relative ${formik.touched.phone_number && formik.errors.phone_number
+                  ? "mb-5"
+                  : ""
+                  }`}>
                 <Input
                   placeholder="+923312334567"
                   id="phone_number"
@@ -193,11 +188,10 @@ const RegistrationForm = () => {
                 )}
               </div>
               <div
-                className={`relative ${
-                  formik.touched.mobile_number && formik.errors.mobile_number
-                    ? "mb-5"
-                    : ""
-                }`}>
+                className={`relative ${formik.touched.mobile_number && formik.errors.mobile_number
+                  ? "mb-5"
+                  : ""
+                  }`}>
                 <Input
                   placeholder="03312334567"
                   id="mobile_number"
@@ -216,11 +210,10 @@ const RegistrationForm = () => {
                   )}
               </div>
               <div
-                className={`relative ${
-                  formik.touched.password && formik.errors.password
-                    ? "mb-5"
-                    : ""
-                }`}>
+                className={`relative ${formik.touched.password && formik.errors.password
+                  ? "mb-5"
+                  : ""
+                  }`}>
                 <Input
                   placeholder="********"
                   id="password"
@@ -238,9 +231,8 @@ const RegistrationForm = () => {
                 )}
               </div>
               <div
-                className={`relative ${
-                  formik.touched.city && formik.errors.city ? "mb-5" : ""
-                }`}>
+                className={`relative ${formik.touched.city && formik.errors.city ? "mb-5" : ""
+                  }`}>
                 <Input
                   placeholder="Karachi"
                   id="city"
@@ -258,9 +250,8 @@ const RegistrationForm = () => {
                 )}
               </div>
               <div
-                className={`relative ${
-                  formik.touched.country && formik.errors.country ? "mb-5" : ""
-                }`}>
+                className={`relative ${formik.touched.country && formik.errors.country ? "mb-5" : ""
+                  }`}>
                 <Input
                   placeholder="Pakistan"
                   id="country"
@@ -278,9 +269,8 @@ const RegistrationForm = () => {
                 )}
               </div>
               <div
-                className={`relative ${
-                  formik.touched.address && formik.errors.add ? "mb-5" : ""
-                }`}>
+                className={`relative ${formik.touched.address && formik.errors.add ? "mb-5" : ""
+                  }`}>
                 <Input
                   placeholder="House no. abc near xvc mart"
                   id="address"
@@ -298,9 +288,8 @@ const RegistrationForm = () => {
                 )}
               </div>
               <div
-                className={`mt-5 relative ${
-                  formik.touched.website && formik.errors.website ? "mb-5" : ""
-                }`}>
+                className={`mt-5 relative ${formik.touched.website && formik.errors.website ? "mb-5" : ""
+                  }`}>
                 <Input
                   placeholder="www.skyight.com"
                   id="website"
