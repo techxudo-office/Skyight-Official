@@ -20,11 +20,10 @@ const CustomDate = ({
     const [isOpen, setIsOpen] = useState(false)
 
     useEffect(() => {
-        setIsOpen(isSelected)
+        setIsOpen(isSelected || false)
         return () => {
             setIsOpen(false)
         }
-        setIsOpen(isSelected || false)
     }, [isSelected])
 
     console.log(isOpen, "isopen")
@@ -73,9 +72,9 @@ const CustomDate = ({
                     id={id}
                     className="w-full"
                     disabled={disabled}
-                    // open={isOpen}
-                    // onOpen={() => setIsOpen(true)}  // Open on click
-                    // onClose={() => setIsOpen(false)}
+                    open={isOpen}
+                    onOpen={() => setIsOpen(true)}  // Open on click
+                    onClose={() => setIsOpen(false)}
                     label={label}
                     value={value ? dayjs(value) : null}
                     onChange={handleDateChange}
