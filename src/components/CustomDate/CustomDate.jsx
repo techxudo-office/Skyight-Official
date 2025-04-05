@@ -78,8 +78,8 @@ const CustomDate = ({
                     label={label}
                     value={value ? dayjs(value) : null}
                     onChange={handleDateChange}
-                    minDate={(pastDate || pastDate == null) ? null : dayjs()}
-                    maxDate={(futureDate || futureDate == null) ? null : dayjs()}
+                    minDate={!pastDate ? dayjs() : null}
+                    maxDate={!futureDate ? dayjs() : null}
                     sx={{
                         "& .MuiOutlinedInput-root": {
                             padding: "6px 12px",

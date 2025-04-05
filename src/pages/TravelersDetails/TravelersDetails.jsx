@@ -213,6 +213,7 @@ const TravelersDetails = () => {
       label: "Date of Birth",
       name: "date_of_birth",
       futureDate: false,
+      pastDate: true
     },
     {
       type: "select",
@@ -233,6 +234,7 @@ const TravelersDetails = () => {
       label: "Passport Exp Date",
       name: "passport_expiry_date",
       pastDate: false,
+      futureDate: true
     },
   ];
 

@@ -227,8 +227,8 @@ const Finalticket = () => {
                             {/* Download Button */}
                             <div className="p-5 text-center">
                                 <Button
-                                    disabled={loading === index}
-                                    text={loading === index ? <Spinner /> : "Download PDF"}
+                                    loading={loading}
+                                    text={"Download PDF"}
                                     icon={<MdDownload />}
                                     onClick={() => downloadPDF(index)}
                                     className=""
