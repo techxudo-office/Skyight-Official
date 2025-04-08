@@ -141,7 +141,7 @@ const FlightCard = ({ data, doc_type, travelers, pricingInfo }) => {
                     <span>
                       <FaMoneyBillAlt />
                     </span>
-                    <span className="">{(pricingInfo.PTC_FareBreakdowns[index].PassengerFare.TotalFare.Amount).toLocaleString()}</span>
+                    <span className="">{(pricingInfo.PTC_FareBreakdowns[index].PassengerFare.TotalFare.pkrTotalFare).toLocaleString()}</span>
                   </h2>
                 </div>
               ))}

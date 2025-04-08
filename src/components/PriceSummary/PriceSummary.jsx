@@ -12,9 +12,9 @@ export default function PriceSummary({ pricingInfo, travelers }) {
   console.log("travelers", travelersQuantity);
 
   const travelersFares = [
-    passengersPrice[0].PassengerFare.TotalFare.Amount,
-    passengersPrice[1].PassengerFare.TotalFare.Amount,
-    passengersPrice[2].PassengerFare.TotalFare.Amount,
+    passengersPrice[0].PassengerFare.TotalFare.pkrTotalFare,
+    passengersPrice[1].PassengerFare.TotalFare.pkrTotalFare,
+    passengersPrice[2].PassengerFare.TotalFare.pkrTotalFare,
   ];
 
   console.log(travelersFares);
@@ -41,16 +41,14 @@ export default function PriceSummary({ pricingInfo, travelers }) {
             Fare Break Down{" "}
             <span>
               <FaChevronCircleDown
-                className={`text-primary ${
-                  fareBreakdown ? "rotate-180" : "rotate-0"
-                } transition-all duration-300 ease-in-out `}
+                className={`text-primary ${fareBreakdown ? "rotate-180" : "rotate-0"
+                  } transition-all duration-300 ease-in-out `}
               />
             </span>
           </p>
           <div
-            className={` ${
-              fareBreakdown ? "h-auto" : "h-0 overflow-hidden"
-            } transition-all duration-300 ease-in-out flex flex-col gap-3 px-3`}>
+            className={` ${fareBreakdown ? "h-auto" : "h-0 overflow-hidden"
+              } transition-all duration-300 ease-in-out flex flex-col gap-3 px-3`}>
             {travelersQuantity.map(([key, value], idx) => (
               <div key={idx}>
                 <h2 className="text-lg font-semibold capitalize">
@@ -61,7 +59,7 @@ export default function PriceSummary({ pricingInfo, travelers }) {
                   <p className="text-gray">
                     {passengersPrice[idx].PassengerFare.CurrencyCode}
                     {Number(
-                      passengersPrice[idx].PassengerFare.BaseFare.Amount
+                      passengersPrice[idx].PassengerFare.BaseFare.pkrBaseFare
                     ).toLocaleString()}
                   </p>
                 </div>
