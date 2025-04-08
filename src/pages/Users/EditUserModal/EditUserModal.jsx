@@ -97,7 +97,11 @@ const EditUserModal = ({ isOpen, onClose, usersData }) => {
   };
 
   const handleRoleSelect = (role) => {
-    setSelectedRole(role);
+    let data = {
+      id: role.value,
+      role: role.label,
+    };
+    setSelectedRole(data);
     setFormData((prev) => ({ ...prev, role_id: role.id }));
   };
 
@@ -168,7 +172,8 @@ const EditUserModal = ({ isOpen, onClose, usersData }) => {
     <ModalWrapper
       isOpen={isOpen}
       onRequestClose={onClose}
-      contentLabel="Edit Role">
+      contentLabel="Edit Role"
+    >
       <CardLayoutContainer>
         <CardLayoutHeader heading="Edit User" />
         <CardLayoutBody>

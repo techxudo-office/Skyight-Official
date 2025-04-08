@@ -51,7 +51,7 @@ const Select = ({
   };
 
   const filteredOptions = options.filter((option) =>
-    option.label.toLowerCase().includes(searchValue.toLowerCase())
+    option?.label?.toLowerCase()?.includes(searchValue?.toLowerCase())
   );
 
   useEffect(() => {

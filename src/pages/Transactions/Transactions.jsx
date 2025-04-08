@@ -54,12 +54,6 @@ const Transactions = () => {
       center: true,
     },
     {
-      name: "BANK NO.",
-      selector: (row) => row.bank_number,
-      sortable: false,
-      center: true,
-    },
-    {
       name: "PAYMENT DATE",
       selector: (row) => dayjs(row.payment_date).format("ddd-DD-MMM-YYYY"),
       sortable: false,
@@ -127,11 +121,11 @@ const Transactions = () => {
         onRequestClose={closeModal}
         contentLabel="Transaction Details">
         {selectedTransaction && (
-          <div className="p-6 bg-white shadow-lg rounded-lg border border-gray-300 max-w-md mx-auto">
-            <h2 className="mb-4 text-2xl font-bold text-center border-b pb-2">
+          <div className="max-w-md p-6 mx-auto bg-white border border-gray-300 rounded-lg shadow-lg">
+            <h2 className="pb-2 mb-4 text-2xl font-bold text-center border-b">
               Transaction Invoice
             </h2>
-            <div className="flex justify-between items-center mb-4">
+            <div className="flex items-center justify-between mb-4">
               <span className="text-sm text-gray-600">Transaction ID:</span>
               <span className="font-semibold">
                 {selectedTransaction?.id || "N/A"}
@@ -140,7 +134,7 @@ const Transactions = () => {
             <img
               src={selectedTransaction?.document_url}
               alt="Document"
-              className="object-cover w-full h-40 mb-4 rounded-md border"
+              className="object-cover w-full h-40 mb-4 border rounded-md"
             />
             <div className="space-y-2 text-sm">
               <p>
@@ -194,11 +188,11 @@ const Transactions = () => {
                 </span>
               </p>
             </div>
-            <div className="mt-6 flex justify-end">
+            <div className="flex justify-end mt-6">
               <Button
                 onClick={closeModal}
                 text="Close"
-                className="hover:bg-primary bg-redColor text-white px-4 py-2 rounded-md"
+                className="px-4 py-2 text-white rounded-md hover:bg-primary bg-redColor"
               />
             </div>
           </div>

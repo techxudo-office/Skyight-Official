@@ -96,7 +96,7 @@ const CreateUser = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    console.log(roles, "Roles");
+    console.log(roles, "roles");
   }, [roles]);
 
   const handleChange = (e) => {
@@ -108,7 +108,11 @@ const CreateUser = () => {
   };
 
   const handleRoleSelect = (role) => {
-    setSelectedRole(role);
+    let data = {
+      id: role.value,
+      role: role.label,
+    };
+    setSelectedRole(data);
     setFormData((prev) => ({
       ...prev,
       role_id: Number(role.id),

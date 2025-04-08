@@ -29,27 +29,7 @@ const roleSlice = createSlice({
       })
       .addCase(getRoles.fulfilled, (state, action) => {
         state.isLoadingRoles = false;
-
-        if (action.payload?.data?.roles) {
-          console.log(action.payload.data.roles, "action.payload.data.roles");
-          state.roles = action.payload.data.roles.map((item) => ({
-            id: item.id.toString(),
-            role: item.name || "Unknown",
-            roleRights: item.page_permission
-              ? Object.keys(item.page_permission)
-                  .filter((key) => item.page_permission[key])
-                  .map((key) => key.replace(/_/g, " "))
-                  .join(", ")
-              : "No Permissions",
-            status: item.is_deleted ? "inactive" : "active",
-            description: item.description,
-            page_permission: item.page_permission,
-            action_permission: item.action_permission,
-          }));
-        } else {
-          state.roles = [];
-        }
-        state.totalPages = action.payload?.totalPages || 0;
+        state.roles = action.payload.data.roles;
       })
       .addCase(getRoles.rejected, (state, action) => {
         state.isLoadingRoles = false;
