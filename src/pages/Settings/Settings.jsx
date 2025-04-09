@@ -58,6 +58,7 @@ const Settings = () => {
   }, [userData, roles]);
 
   useEffect(() => {
+    if (!userData?.token) return;
     dispatch(getUserInfo(userData?.token));
     dispatch(getRoles(userData?.token));
   }, []);
@@ -168,7 +169,8 @@ const Settings = () => {
       <CardLayoutContainer className="w-full mb-5">
         <CardLayoutHeader
           className="flex flex-wrap items-center justify-start gap-5 py-3"
-          removeBorder={true}>
+          removeBorder={true}
+        >
           <div className="relative w-16 h-16 overflow-hidden rounded-full cursor-pointer group">
             <img
               src={profileImage}
@@ -177,7 +179,8 @@ const Settings = () => {
             />
             <div
               className="absolute inset-0 flex items-center justify-center transition-opacity bg-black bg-opacity-50 opacity-0 group-hover:opacity-100"
-              onClick={() => fileInputRef.current.click()}>
+              onClick={() => fileInputRef.current.click()}
+            >
               <MdEdit className="text-xl text-white" />
             </div>
             <input
@@ -200,7 +203,8 @@ const Settings = () => {
         <CardLayoutContainer className="w-full mb-5">
           <CardLayoutHeader
             className="flex items-center justify-between gap-5 py-3"
-            removeBorder={true}>
+            removeBorder={true}
+          >
             <h2 className="text-2xl font-semibold text-text">
               Personal Information
             </h2>
@@ -253,7 +257,8 @@ const Settings = () => {
           </CardLayoutBody>
           <CardLayoutHeader
             className="flex items-center justify-between gap-5 py-3"
-            removeBorder={true}>
+            removeBorder={true}
+          >
             <h2 className="text-2xl font-semibold text-text">Address</h2>
           </CardLayoutHeader>
           <CardLayoutBody>

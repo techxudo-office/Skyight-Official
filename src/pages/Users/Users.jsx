@@ -119,8 +119,9 @@ const Users = () => {
   };
 
   useEffect(() => {
+    if (!userData?.token) return;
     dispatch(getUsers(userData?.token));
-  }, []);
+  }, [userData?.token]);
 
   return (
     <>

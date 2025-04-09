@@ -15,16 +15,15 @@ import { FaEye } from "react-icons/fa";
 
 const OrderHistory = () => {
   const dispatch = useDispatch();
-  const navigate=useNavigate()
+  const navigate = useNavigate();
   const userData = useSelector((state) => state.auth.userData);
   const { orders, isLoadingOrders, orderError } = useSelector(
     (state) => state.booking
   );
 
   useEffect(() => {
-    if (userData?.token) {
-      dispatch(getOrders(userData.token));
-    }
+    if (!userData?.token) return;
+    dispatch(getOrders(userData.token));
   }, [dispatch, userData?.token]);
 
   if (isLoadingOrders) return <Loader />;
@@ -82,7 +81,8 @@ const OrderHistory = () => {
             navigate("/dashboard/booking-details", {
               state: row,
             });
-          }}>
+          }}
+        >
           <FaEye title="View" className="text-green-500 " />
         </span>
       ),

@@ -17,9 +17,8 @@ const Announcement = () => {
   const userData = useSelector((state) => state.auth.userData);
 
   useEffect(() => {
-    if (userData?.token) {
-      dispatch(getAnnouncements(userData.token));
-    }
+    if (!userData?.token) return;
+    dispatch(getAnnouncements(userData.token));
   }, [dispatch, userData?.token]);
 
   const announcementData = announcements?.data?.[0] || [];

@@ -92,6 +92,7 @@ const CreateUser = () => {
   };
 
   useEffect(() => {
+    if (!userData?.token) return;
     dispatch(getRoles(userData?.token));
   }, [dispatch]);
 

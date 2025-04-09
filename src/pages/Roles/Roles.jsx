@@ -32,6 +32,7 @@ const Roles = () => {
   const userData = useSelector((state) => state.auth.userData);
 
   useEffect(() => {
+    if (!userData?.token) return;
     dispatch(getRoles(userData?.token));
   }, [dispatch, userData?.token]);
 

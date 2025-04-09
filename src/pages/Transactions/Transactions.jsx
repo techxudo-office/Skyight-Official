@@ -32,6 +32,7 @@ const Transactions = () => {
   const [selectedTransaction, setSelectedTransaction] = useState(null);
 
   useEffect(() => {
+    if (!userData?.token) return;
     dispatch(getTransactions({ token: userData?.token }));
   }, [dispatch, userData?.token]);
 
@@ -78,7 +79,8 @@ const Transactions = () => {
       selector: (row) => (
         <span
           className="text-xl cursor-pointer"
-          onClick={() => handleView(row)}>
+          onClick={() => handleView(row)}
+        >
           <FaEye title="View" className="text-green-500" />
         </span>
       ),
@@ -93,7 +95,8 @@ const Transactions = () => {
         <CardLayoutHeader
           removeBorder={true}
           heading={"Transactions"}
-          className="flex items-center justify-between">
+          className="flex items-center justify-between"
+        >
           <div className="relative">
             <SecondaryButton
               text={"Create New Transaction"}
@@ -119,7 +122,8 @@ const Transactions = () => {
       <ModalWrapper
         isOpen={isModalOpen}
         onRequestClose={closeModal}
-        contentLabel="Transaction Details">
+        contentLabel="Transaction Details"
+      >
         {selectedTransaction && (
           <div className="max-w-md p-6 mx-auto bg-white border border-gray-300 rounded-lg shadow-lg">
             <h2 className="pb-2 mb-4 text-2xl font-bold text-center border-b">
@@ -183,7 +187,8 @@ const Transactions = () => {
                     selectedTransaction?.status === "Approved"
                       ? "bg-green-100 text-greenColor"
                       : "bg-red-100 text-redColor"
-                  }`}>
+                  }`}
+                >
                   {selectedTransaction?.status}
                 </span>
               </p>

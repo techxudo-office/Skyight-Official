@@ -18,9 +18,8 @@ const Notifications = () => {
   const userData = useSelector((state) => state.auth.userData);
 
   useEffect(() => {
-    if (userData?.token) {
-      dispatch(getNotifications(userData.token));
-    }
+    if (!userData?.token) return;
+    dispatch(getNotifications(userData.token));
   }, [dispatch, userData?.token]);
 
   const renderRow = ({ index, style }) => {

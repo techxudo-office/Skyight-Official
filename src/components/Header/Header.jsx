@@ -109,13 +109,12 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
   };
 
   useEffect(() => {
-    if (!credits) {
-      dispatch(getCredits(userData?.token));
-    }
-    console.log(credits, "credits");
-  }, [credits, dispatch, userData?.token]);
+    if (!userData?.token) return;
+    refreshCredits();
+  }, [userData?.token]);
 
   const refreshCredits = () => {
+    if (!userData?.token) return;
     dispatch(getCredits(userData?.token));
   };
   const handleSettings = () => {
@@ -229,7 +228,7 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
                         className="flex items-center gap-2"
                       >
                         <HiOutlineRefresh className="max-sm:hidden" />
-                        <span>PKR {credits?.amount}</span>
+                        <span>PKR {credits?.amount?.toLocaleString()}</span>
                       </span>
                     ) : (
                       <span className="flex items-center gap-2">
