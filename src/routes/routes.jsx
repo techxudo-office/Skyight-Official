@@ -18,10 +18,10 @@ const AppRoutes = () => {
 
   useEffect(() => {
     if (!auth) {
-      toast.error("Session expired");
+      toast.success("Logout Successfully");
       navigate("/login", { replace: true });
     }
-  }, [location.pathname, userData?.token, navigate]);
+  }, [auth]);
 
   return (
     <Routes>
