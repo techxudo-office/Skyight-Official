@@ -1,18 +1,21 @@
-import React from 'react';
+import React from "react";
 
 const statusClasses = {
-  booked: 'text-yellowColor border-yellowColor bg-yellowbg',
-  pending: 'text-yellowColor border-yellowColor bg-yellowbg',
-  'requested-cancellation': 'text-redColor border-redColor bg-redbg',
-  expired: 'text-redColor border-redColor bg-redbg',
-  closed: 'text-redColor border-redColor bg-redbg',
-  cancelled: 'text-redColor border-redColor bg-redbg',
-  "requested-refund": 'text-blueColor border-blueColor bg-bluebg',
-  Refunded: 'text-blueColor border-blueColor bg-bluebg',
+  booked: "text-yellowColor border-yellowColor bg-yellowbg",
+  "in-progress": "text-yellowColor border-yellowColor bg-yellowbg",
+  pending: "text-yellowColor border-yellowColor bg-yellowbg",
+  "requested-cancellation": "text-redColor border-redColor bg-redbg",
+  cancelled: "text-redColor border-redColor bg-redbg",
+  expired: "text-redColor border-redColor bg-redbg",
+  "requested-refund": "text-blueColor border-blueColor bg-bluebg",
+  Refunded: "text-blueColor border-blueColor bg-bluebg",
+  rejected: "text-redColor border-redColor bg-redbg",
+  inactive: "text-redColor border-redColor bg-redbg",
+  closed: "text-redColor border-redColor bg-redbg",
 };
 
 export default function Tag({ value }) {
-  const defaultClass = 'text-greenColor bg-greenbg border-greenColor';
+  const defaultClass = "text-greenColor bg-greenbg border-greenColor";
 
   return (
     <p

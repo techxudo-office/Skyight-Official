@@ -2,15 +2,17 @@ import React, { createContext, useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode"; // Install using: npm install jwt-decode
 import Modal from "../components/Modal/Modal"; // Import your modal component
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
 
 export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
-  const [authToken, setAuthToken] = useState(null);
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [showModal, setShowModal] = useState(false); // Modal state
   const navigate = useNavigate(); // React Router navigation
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(true);
+  const [authToken, setAuthToken] = useState(null);
+  const [showModal, setShowModal] = useState(false); // Modal state
 
   let logoutTimer; // Store the timeout reference
 
@@ -23,7 +25,6 @@ const AuthProvider = ({ children }) => {
       localStorage.setItem("auth_token", token);
       localStorage.setItem("user", JSON.stringify(decoded)); // Store user details
       setAuthToken(token);
-      setUser(decoded);
 
       // Auto logout when token expires
       const logoutTime = expiryTime - Date.now();
@@ -45,11 +46,11 @@ const AuthProvider = ({ children }) => {
 
   // Logout function
   const handleLogout = () => {
-    localStorage.removeItem("auth_token");
-    localStorage.removeItem("user");
     setAuthToken(null);
-    setUser(null);
     setShowModal(false);
+    dispatch({ type: "user/logout" });
+    localStorage.removeItem("auth_token");
+    toast.error("Session expired");
     navigate("/login"); // Redirect to login page
   };
 

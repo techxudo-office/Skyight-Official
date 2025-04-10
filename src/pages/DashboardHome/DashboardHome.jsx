@@ -1,5 +1,10 @@
 import React, { useEffect } from "react";
-import { DashboardCards, Searchbar, Table, Tag } from "../../components/components";
+import {
+  DashboardCards,
+  Searchbar,
+  Table,
+  Tag,
+} from "../../components/components";
 import { useNavigate } from "react-router-dom";
 import {
   CardLayoutContainer,
@@ -60,6 +65,7 @@ const DashboardHome = () => {
   };
 
   useEffect(() => {
+    if (!userData?.token) return;
     dispatch(getRoutes(userData?.token));
   }, [userData?.token, dispatch]);
 
@@ -67,9 +73,9 @@ const DashboardHome = () => {
     {
       name: "ROUTE",
       selector: (row) => (
-        <span className="flex w-52 items-center lg:justify-center  gap-2 text-sm text-text">
+        <span className="flex items-center gap-2 text-sm w-52 lg:justify-center text-text">
           {row.origin}
-          <div className="flex justify-center items-center gap-1">
+          <div className="flex items-center justify-center gap-1">
             <span className="h-0.5 w-3 bg-primary"></span>
             <IoIosAirplane className="text-lg text-primary" />
             <span className="h-0.5 w-3 bg-primary"></span>
@@ -88,15 +94,14 @@ const DashboardHome = () => {
       sortable: false,
       minwidth: "150px",
       center: true,
-      grow: 2
+      grow: 2,
     },
     {
       name: "TOTAL FARE",
       selector: (row) => row.total_fare,
       sortable: false,
       center: true,
-      grow: 2
-
+      grow: 2,
     },
     {
       name: "STATUS",
@@ -105,7 +110,6 @@ const DashboardHome = () => {
       center: true,
       wrap: true,
       grow: 3,
-
     },
 
     {
@@ -113,8 +117,7 @@ const DashboardHome = () => {
       selector: (row) => dayjs(row.created_at).format("MMM-DD-YYYY"),
       sortable: false,
       center: true,
-      grow: 2
-
+      grow: 2,
     },
     {
       name: "",
@@ -125,14 +128,14 @@ const DashboardHome = () => {
             navigate("/dashboard/booking-details", {
               state: row,
             });
-          }}>
+          }}
+        >
           <FaEye title="View" className="text-green-500 " />
         </span>
       ),
       sortable: false,
       center: true,
-      grow: 2
-
+      grow: 2,
     },
   ];
   useEffect(() => {
@@ -170,7 +173,8 @@ const DashboardHome = () => {
         <CardLayoutHeader
           removeBorder={true}
           heading={"Flight Bookings"}
-          className="flex items-center justify-between"></CardLayoutHeader>
+          className="flex items-center justify-between"
+        ></CardLayoutHeader>
         <CardLayoutBody removeBorder={true}>
           <Searchbar className={"mb-7"} />
           <Table
@@ -186,7 +190,8 @@ const DashboardHome = () => {
       </CardLayoutContainer>
       <div
         id="footer-container"
-        className="flex items-center justify-center w-full p-3 pb-0 bg-white">
+        className="flex items-center justify-center w-full p-3 pb-0 bg-white"
+      >
         <h2 className="mt-2 font-semibold text-center text-text text-md">
           © 2024 All rights reserved by SKYIGHT AIR & BOOKING SYSTEM
         </h2>

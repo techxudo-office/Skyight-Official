@@ -32,6 +32,7 @@ const Roles = () => {
   const userData = useSelector((state) => state.auth.userData);
 
   useEffect(() => {
+    if (!userData?.token) return;
     dispatch(getRoles(userData?.token));
   }, [dispatch, userData?.token]);
 
@@ -52,7 +53,7 @@ const Roles = () => {
     },
     {
       name: "STATUS",
-      selector: (row) => <Tag value={row.status} />,
+      selector: (row) => <Tag value={row.is_deleted ? "inactive" : "active"} />,
       sortable: false,
       minwidth: "150px",
       center: true,

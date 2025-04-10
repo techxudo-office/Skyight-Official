@@ -27,9 +27,8 @@ const OrderHistory = () => {
   );
 
   useEffect(() => {
-    if (userData?.token) {
-      dispatch(getOrders(userData.token));
-    }
+    if (!userData?.token) return;
+    dispatch(getOrders(userData.token));
   }, [dispatch, userData?.token]);
 
   if (isLoadingOrders) return <Loader />;

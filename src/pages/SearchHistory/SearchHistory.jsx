@@ -21,9 +21,8 @@ const SearchHistory = () => {
   const userData = useSelector((state) => state.auth.userData);
 
   useEffect(() => {
-    if (userData?.token) {
-      dispatch(getSearchHistory(userData.token));
-    }
+    if (!userData?.token) return;
+    dispatch(getSearchHistory(userData.token));
   }, [dispatch, userData?.token]);
 
   if (isSearchHistoryLoading) return <Loader />;

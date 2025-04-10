@@ -18,7 +18,12 @@ import {
 } from "../../components/components";
 import { Toaster } from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
-import { IoIosAirplane, IoMdCash, IoMdClock, IoMdPaperPlane } from "react-icons/io";
+import {
+  IoIosAirplane,
+  IoMdCash,
+  IoMdClock,
+  IoMdPaperPlane,
+} from "react-icons/io";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { useDispatch, useSelector } from "react-redux";
@@ -40,14 +45,21 @@ const TicketDetails = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [confirmObject, setConfirmObject] = useState({
-    onAbort: () => { },
-    onConfirm: () => { },
+    onAbort: () => {},
+    onConfirm: () => {},
     status: false,
     text: "",
-    loading: false
+    loading: false,
   });
   const { userData } = useSelector((state) => state.auth);
-  const { isLoadingBookingDetails, bookingDetails, isLoadingPNR, isIssueLoading, isRefundLoading, isCancelling } = useSelector((state) => state.booking);
+  const {
+    isLoadingBookingDetails,
+    bookingDetails,
+    isLoadingPNR,
+    isIssueLoading,
+    isRefundLoading,
+    isCancelling,
+  } = useSelector((state) => state.booking);
   // const [bookingDetails, setBookingDetails] = useState();
 
   const printRef = useRef();
@@ -64,21 +76,24 @@ const TicketDetails = () => {
   };
 
   const handleIssue = async (pnr) => {
-
     dispatch(issueBooking({ pnr, token: userData?.token }))
       .unwrap()
       .then(() => {
-        dispatch(getBookingDetails({ id: location.state.id, token: userData?.token }))
+        dispatch(
+          getBookingDetails({ id: location.state.id, token: userData?.token })
+        );
         setConfirmObject((prev) => ({ ...prev, status: false }));
       })
       .catch((error) => {
-        dispatch(getBookingDetails({ id: location.state.id, token: userData?.token }))
+        dispatch(
+          getBookingDetails({ id: location.state.id, token: userData?.token })
+        );
         setConfirmObject((prev) => ({ ...prev, status: false }));
       });
   };
 
   const handleGetPnr = (pnr) => {
-
+    if (!userData?.token) return;
     dispatch(getPNR({ id: pnr, token: userData?.token }))
       .unwrap()
       .then((result) => {
@@ -89,23 +104,23 @@ const TicketDetails = () => {
   };
 
   const cancelFlightBookingHandler = async (flight) => {
-
-
     const bookingId = {
       booking_id: flight.id,
     };
     dispatch(cancelFlightBooking({ data: bookingId, token: userData?.token }))
       .unwrap()
       .then(() => {
-        dispatch(getBookingDetails({ id: location.state.id, token: userData?.token }))
+        dispatch(
+          getBookingDetails({ id: location.state.id, token: userData?.token })
+        );
         setConfirmObject((prev) => ({ ...prev, status: false }));
-
       })
       .catch((error) => {
         console.log("Request Refund Failed:", error);
-        dispatch(getBookingDetails({ id: location.state.id, token: userData?.token }))
+        dispatch(
+          getBookingDetails({ id: location.state.id, token: userData?.token })
+        );
         setConfirmObject((prev) => ({ ...prev, status: false }));
-
       });
   };
 
@@ -118,21 +133,25 @@ const TicketDetails = () => {
     dispatch(requestRefund({ data: bookingId, token: userData?.token }))
       .unwrap()
       .then(() => {
-        dispatch(getBookingDetails({ id: location.state.id, token: userData?.token }))
+        dispatch(
+          getBookingDetails({ id: location.state.id, token: userData?.token })
+        );
         setConfirmObject((prev) => ({ ...prev, status: false }));
       })
       .catch((error) => {
         console.log("Request Refund Failed:", error);
-        dispatch(getBookingDetails({ id: location.state.id, token: userData?.token }))
+        dispatch(
+          getBookingDetails({ id: location.state.id, token: userData?.token })
+        );
         setConfirmObject((prev) => ({ ...prev, status: false }));
-
       });
   };
 
 
   useEffect(() => {
-    if (location.state) {
+    if (location.state && userData?.token) {
       const refId = location.state.id;
+      if (!userData?.token) return;
       dispatch(getBookingDetails({ id: refId, token: userData?.token })).then(
         (resp) => {
           console.log(resp, "bookingDetails");
@@ -158,16 +177,13 @@ const TicketDetails = () => {
   const localTimeLimit = timelimit.toLocaleString("en-GB");
 
   if (isLoadingBookingDetails || isLoadingPNR || isIssueLoading) {
-    return <Spinner className={"text-primary"} />
+    return <Spinner className={"text-primary"} />;
   }
 
   return (
     <>
       <Toaster />
-      <ConfirmModal
-        {...confirmObject}
-
-      />
+      <ConfirmModal {...confirmObject} />
       <div ref={printRef} className="flex flex-col w-full gap-5">
         <CardLayoutContainer>
           <CardLayoutBody className={"flex flex-wrap gap-3 justify-between"}>
@@ -184,7 +200,6 @@ const TicketDetails = () => {
                 </h1>
               </div>
               <div className="flex flex-wrap gap-3">
-
                 <div>
                   <Button
                     icon={<RiRefund2Fill />}
@@ -242,7 +257,7 @@ const TicketDetails = () => {
                 ].includes(bookingDetails?.booking_status)
                 // || now.format("M/D/YYYY h:m:s a") > timeLimit.format("M/D/YYYY h:m:s a")
               }
-              className="text-xl py-14 w-full md:w-44"
+              className="w-full text-xl py-14 md:w-44"
               text={
                 bookingDetails?.booking_status === "confirmed"
                   ? "E-Ticket"
@@ -255,7 +270,9 @@ const TicketDetails = () => {
                   setConfirmObject({
                     loading: isIssueLoading,
                     status: true,
-                    text: `Are you really want to order the ticket. The total fare is ${String(bookingDetails?.total_fare).toLocaleString()} `,
+                    text: `Are you really want to order the ticket. The total fare is ${String(
+                      bookingDetails?.total_fare
+                    ).toLocaleString()} `,
                     onAbort: () =>
                       setConfirmObject((prev) => ({ ...prev, status: false })),
                     onConfirm: () =>
@@ -270,7 +287,8 @@ const TicketDetails = () => {
               bookingDetails.flightSegments.map((item, idx) => (
                 <div
                   key={idx}
-                  className="flex items-center justify-between gap-5 max-sm:flex-wrap text-text py-5">
+                  className="flex items-center justify-between gap-5 py-5 max-sm:flex-wrap text-text"
+                >
                   <div className="flex flex-col items-start">
                     <h2 className="mb-2 text-2xl font-semibold text-primary">
                       Departure
@@ -325,7 +343,10 @@ const TicketDetails = () => {
           </div>
         </CardLayoutContainer>
         <CardLayoutContainer>
-          <CardLayoutHeader className={"mb-2 text-text"} heading="Passenger Details" />
+          <CardLayoutHeader
+            className={"mb-2 text-text"}
+            heading="Passenger Details"
+          />
 
           {bookingDetails && (
             <Table
@@ -394,10 +415,10 @@ const TicketDetails = () => {
             className={"mb-2 text-text"}
             heading={"Pricing Information"}
           />
-          <h2 className="text-xl font-semibold text-text p-5">
-            Total Fare: {Number(bookingDetails?.total_fare).toLocaleString()} PKR
+          <h2 className="p-5 text-xl font-semibold text-text">
+            Total Fare: {Number(bookingDetails?.total_fare).toLocaleString()}{" "}
+            PKR
           </h2>
-
         </CardLayoutContainer>
 
         <div className="flex items-center justify-end gap-3 mb-4">
@@ -417,8 +438,6 @@ const TicketDetails = () => {
       </div>
     </>
   );
-
-
 };
 
 export default TicketDetails;

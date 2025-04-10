@@ -36,6 +36,7 @@ const CreateTransaction = () => {
   const { isCreatingTransaction } = useSelector((state) => state.transaction);
 
   useEffect(() => {
+    if (!userData?.token) return;
     dispatch(getBanks(userData?.token));
   }, [dispatch]);
 
@@ -226,7 +227,7 @@ const CreateTransaction = () => {
 
                     <div className="relative mb-5">
                       <CustomDate
-                      pastDate={false}
+                        pastDate={false}
                         label={"Transaction Date"}
                         isTimePicker={true}
                         value={values.payment_date}
