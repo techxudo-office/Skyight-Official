@@ -1,16 +1,22 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useLocation } from "react-router-dom";
-import { Button, Spinner } from "../../components/components";
+import { Button, CustomTooltip, Spinner } from "../../components/components";
 import { IoMdAirplane } from "react-icons/io";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { MdDownload } from "react-icons/md";
+import { getPNR } from "../../_core/features/bookingSlice";
 
-const Finalticket = () => {
+const Finalticket = ({ fetchingPnr, downloadFromParent, id }) => {
     const ticketRefs = useRef([]);
-    const [loading, setLoading] = useState(null)
-    const { pnrData, isLoadingPNR } = useSelector((state) => state.booking)
+    const dispatch = useDispatch()
+    const [loading, setLoading] = useState(null);
+    const [downloadingAll, setDownloadingAll] = useState(false);
+
+    const { pnrData } = useSelector((state) => state.booking);
+    const { userData } = useSelector((state) => state.auth);
+
     const { AirReservation } = pnrData;
     const travelers = AirReservation?.TravelerInfo || [];
     const originDestinationOptions =
@@ -23,7 +29,6 @@ const Finalticket = () => {
     const bookingInfo = AirReservation?.bookingReferenceID;
 
     // Function to download a specific ticket as a PDF
-
     const downloadPDF = async (index) => {
         setLoading(index); // Set loader for the specific ticket
 
@@ -58,23 +63,76 @@ const Finalticket = () => {
         }
     };
 
+    // Function to download all tickets
+    const downloadAllTickets = async () => {
+        setDownloadingAll(true);
+        try {
+            for (let i = 0; i < travelers.length; i++) {
+                await downloadPDF(i);
+            }
+        } catch (error) {
+            console.error("Error downloading all tickets:", error);
+        } finally {
+            setDownloadingAll(false);
+        }
+    };
 
+    const downloadAllTicketsFromParent = () => {
+        dispatch(getPNR({ token: userData.token, id: id })).then(downloadAllTickets)
+    }
+
+    // Expose the download function to parent when component mounts
+    // useEffect(() => {
+    //     if (onDownloadAll) {
+    //         onDownloadAll(downloadAllTickets);
+    //     }
+
+    //     // Cleanup function to avoid memory leaks
+    //     return () => {
+    //         if (onDownloadAll) {
+    //             onDownloadAll(null);
+    //         }
+    //     };
+    // }, [onDownloadAll]);
+    if (!pnrData) {
+        return
+    }
 
     return (
-        <div className="md:p-4 w-full text-text mx-auto max-md:text-sm">
-            {travelers.map((travelerInfo, index) => {
-                const traveler = travelerInfo?.PersonName;
-                const ticketInfo = travelerInfo?.ETicketInfos?.[0];
+        <>{downloadFromParent &&
+            <CustomTooltip content={"Allow Download Multiple Files"}>
+                <Button
+                    loading={downloadingAll}
+                    icon={<MdDownload />}
+                    onClick={downloadAllTicketsFromParent}
+                    className="bg-green-600 hover:bg-green-700"
+                />
+            </CustomTooltip>
+        }
+            <div className={`md:p-4 w-[1200px] text-text mx-auto max-md:text-sm ${downloadFromParent ? "fixed -top-[9999] -right-[9999px] " : ""}`}>
+                {/* Download All Button - Added at the top */}
+                {travelers.length > 1 && !downloadFromParent && (
+                    <div className="text-center mb-4">
+                        <CustomTooltip content={"Allow Download Multiple Files"}>
+                            <Button
+                                loading={downloadingAll}
+                                text={`Download All Tickets (${travelers.length})`}
+                                icon={<MdDownload />}
+                                onClick={downloadAllTickets}
+                                className="bg-green-600 hover:bg-green-700"
+                            />
+                        </CustomTooltip>
 
-                return (
-                    <>
-                        <div
-                            key={index}
-                            className="lg:w-[90%] mb-8 mx-auto bg-white shadow-lg rounded-lg overflow-hidden border border-gray-300"
-                        >
+                    </div>
+                )}
 
+                {travelers.map((travelerInfo, index) => {
+                    const traveler = travelerInfo?.PersonName;
+                    const ticketInfo = travelerInfo?.ETicketInfos?.[0];
+
+                    return (
+                        <div key={index} className="lg:w-[90%] mb-8 mx-auto bg-white shadow-lg rounded-lg overflow-hidden border border-gray-300">
                             <div className="bg-white" ref={(el) => (ticketRefs.current[index] = el)}>
-
                                 {/* Header Section */}
                                 <div className="bg-primary text-white text-xl font-bold py-3 px-5 flex flex-wrap gap-3 justify-between">
                                     <span className="text-2xl">Ticket - Traveler {index + 1}</span>
@@ -128,8 +186,6 @@ const Finalticket = () => {
                                                         </span>
                                                     </div>
 
-
-
                                                     <div className="flex gap-2">
                                                         <span className="text-text ">Arrival Date:</span>
                                                         <span className="border-b-2 border-dashed border-primary font-semibold">
@@ -166,7 +222,6 @@ const Finalticket = () => {
                                             ))
                                         )}
                                     </div>
-
                                 </div>
 
                                 {/* Price Details */}
@@ -191,11 +246,9 @@ const Finalticket = () => {
                                                         <p key={i}>{tax.Name}:</p>
                                                         <p className="border-b-2 border-dashed border-primary font-semibold">{(tax.Amount).toLocaleString()} PKR</p>
                                                     </div>
-
                                                 ))
                                             }{" "}
                                         </span>
-
                                     </p>
 
                                     <p>
@@ -207,7 +260,6 @@ const Finalticket = () => {
                                             )?.toLocaleString()}{" "}
                                             {priceInfo[index]?.PassengerFare.TotalFare.CurrencyCode || "PKR"}
                                         </span>
-
                                     </p>
                                 </div>
 
@@ -227,21 +279,18 @@ const Finalticket = () => {
                             {/* Download Button */}
                             <div className="p-5 text-center">
                                 <Button
-                                    loading={loading}
+                                    loading={loading === index}
                                     text={"Download PDF"}
                                     icon={<MdDownload />}
                                     onClick={() => downloadPDF(index)}
                                     className=""
-                                >
-
-                                </Button>
+                                />
                             </div>
                         </div>
-
-                    </>
-                );
-            })}
-        </div>
+                    );
+                })}
+            </div>
+        </>
     );
 };
 

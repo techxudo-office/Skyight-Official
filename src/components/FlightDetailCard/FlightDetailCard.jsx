@@ -28,7 +28,7 @@ const FlightDetailCard = ({ flights }) => {
         <CardLayoutContainer className={'p-5 flightdetailpdf'}>
             <h2 className="text-xl font-semibold mb-3 text-text">Flight Details</h2>
             {flightSegments.map((flight, index) => (
-                <div onClick={() => handleDropdown(index)} key={index} className={`mb-4 ${flightSegments.length-1==index?'':'border-b'} border-lightgray`}>
+                <div onClick={() => handleDropdown(index)} key={index} className={`mb-4 ${flightSegments.length - 1 == index ? '' : 'border-b'} border-lightgray`}>
                     <div className="p-4 rounded-lg flex items-center justify-between">
                         <div className="flex gap-3">
                             <FaPlaneDeparture className="text-primary text-lg mt-1" />
@@ -41,7 +41,7 @@ const FlightDetailCard = ({ flights }) => {
                         </div>
 
                         <div className="text-center">
-                            <p className="text-base text-gray-600 text-text font-semibold">Airblue</p>
+                            <p className="text-base text-gray-600 text-text font-semibold">{flights.ProviderType}</p>
                             <p className="text-sm font-semibold text-gray">
                                 {flight.OperatingAirline.Code}-{flight.FlightNumber}
                             </p>
@@ -107,7 +107,7 @@ const FlightDetailCard = ({ flights }) => {
                             </div>
 
                             <div className="ml-auto text-right">
-                                <p className="text-base font-semibold">Airblue</p>
+                                <p className="text-base font-semibold">{flights.ProviderType}</p>
                                 <p className="text-sm font-semibold text-gray">{flight.OperatingAirline.Code}-{flight.FlightNumber}</p>
                             </div>
                         </div>

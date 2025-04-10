@@ -79,7 +79,7 @@ const TravelersDetails = () => {
   const [clickedIndex, setClickedIndex] = useState();
 
   const formikRefs = useRef([]);
-
+  console.log("state travlerdetail", location.state)
   useEffect(() => {
     if (location.state) {
       setFlightData(location.state.data);

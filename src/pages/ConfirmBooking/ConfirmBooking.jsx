@@ -5,6 +5,7 @@ import {
   Button,
   FlightDetailCard,
   PassengerDetail,
+  PriceSummary,
   SecondaryButton,
   Spinner,
 } from "../../components/components";
@@ -35,12 +36,12 @@ const FlightDetails = () => {
   }, [location.state]);
 
   console.log("all-travellers", allTravelersData);
+  const pricing = flightData?.AirItineraryPricingInfo;
 
   const confirmBookingHandler = async () => {
     const tripType = searchForm.tripType;
     const isRoundTrip = tripType === "Round-Trip";
     const flights = flightData.AirItinerary.OriginDestinationOptions;
-    const pricing = flightData.AirItineraryPricingInfo;
     let payLoad = {
       flight_duration: flights[0].FlightSegment[0].FlightDuration,
       origin_location_code:
@@ -193,6 +194,8 @@ const FlightDetails = () => {
       <Toaster />
       <div className="w-full flex flex-col">
         <FlightDetailCard flights={flightData} />
+        <div className="py-2"></div>
+        <PriceSummary pricingInfo={pricing} travelers={travelers} />
         <PassengerDetail travelersData={allTravelersData} />
 
         <div className="flex items-center justify-end gap-3 my-4">

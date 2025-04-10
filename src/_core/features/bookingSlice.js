@@ -47,6 +47,10 @@ const initialState = {
   refundMessage: null,
   refundError: null,
 
+  isPenaltyLoading: false,
+  penalties: [],
+  penaltyError: null,
+
   searchForm: null,
 
   isCancelling: false,
@@ -196,6 +200,17 @@ const bookingSlice = createSlice({
       .addCase(requestRefund.rejected, (state, action) => {
         state.isRefundLoading = false;
         state.refundError = action.payload;
+      })
+      .addCase(getPenalty.pending, (state) => {
+        state.isPenaltyLoading = true;
+      })
+      .addCase(getPenalty.fulfilled, (state, action) => {
+        state.isPenaltyLoading = false;
+        state.penalties = action.payload.message;
+      })
+      .addCase(getPenalty.rejected, (state, action) => {
+        state.isPenaltyLoading = false;
+        state.penaltyError = action.payload;
       })
       .addCase(cancelFlightBooking.pending, (state) => {
         state.isCancelling = true;
@@ -567,6 +582,33 @@ export const confirmBooking = createAsyncThunk(
 
 export const requestRefund = createAsyncThunk(
   "booking/requestRefund",
+  async ({ data, token }, thunkAPI) => {
+    try {
+      let response = await axios({
+        method: "POST",
+        url: `${BASE_URL}/api/request-booking-refund`,
+        data: data,
+        headers: {
+          Authorization: token,
+        },
+      });
+
+      if (response.status === 200) {
+        toast.success("Requested refund successfully");
+        return { status: true, message: "Refund Requested" };
+      } else {
+        return thunkAPI.rejectWithValue(response.data?.message || "Unexpected response");
+      }
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message || "An error occurred";
+      toast.error(errorMessage);
+      return thunkAPI.rejectWithValue(errorMessage);
+    }
+  }
+);
+export const getPenalty = createAsyncThunk(
+  "booking/getPenalty",
   async ({ data, token }, thunkAPI) => {
     try {
       let response = await axios({

@@ -25,6 +25,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   cancelFlightBooking,
   getBookingDetails,
+  getPenalty,
   getPNR,
   issueBooking,
   requestRefund,
@@ -128,6 +129,7 @@ const TicketDetails = () => {
       });
   };
 
+
   useEffect(() => {
     if (location.state) {
       const refId = location.state.id;
@@ -186,7 +188,8 @@ const TicketDetails = () => {
                 <div>
                   <Button
                     icon={<RiRefund2Fill />}
-                    onClick={() =>
+                    onClick={() => {
+                      // dispatch(getPenalty({ id: bookingDetails?.id, token: userData?.token }))
                       setConfirmObject((prev) => ({
                         loading: isRefundLoading,
                         status: true,
@@ -198,6 +201,7 @@ const TicketDetails = () => {
                           })),
                         onConfirm: () => refundRequestHandler(bookingDetails),
                       }))
+                    }
                     }
                     text={"Request Refund"}
                     disabled={bookingDetails?.booking_status !== "confirmed"}
@@ -303,12 +307,16 @@ const TicketDetails = () => {
           </CardLayoutBody>
         </CardLayoutContainer>
         <CardLayoutContainer>
-          <div className="flex justify-between p-4 text-text">
+          <div className="flex flex-wrap gap-4 p-4 text-text">
             <div>
               <span className="font-semibold">Booked On: </span>
               {dayjs
                 .utc(bookingDetails?.created_at)
                 .format("DD MMM YYYY, h:mm a")}
+            </div>
+            <div>
+              <span className="font-semibold">Booked by: </span>
+              {bookingDetails?.user.first_name}
             </div>
             <div>
               <span className="font-semibold">TKT Time Limit: </span>

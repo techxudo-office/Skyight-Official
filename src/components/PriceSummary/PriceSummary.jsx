@@ -9,7 +9,7 @@ export default function PriceSummary({ pricingInfo, travelers }) {
   const travelersQuantity = Object.entries(travelers).filter(
     ([key, value]) => value > 0
   );
-  console.log("travelers", travelersQuantity);
+  console.log("travelers", travelers);
 
   const travelersFares = [
     passengersPrice[0].PassengerFare.TotalFare.pkrTotalFare,

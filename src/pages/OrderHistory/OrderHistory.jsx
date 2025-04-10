@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   CardLayoutContainer,
@@ -7,17 +7,22 @@ import {
 import { Loader, Table, Tag } from "../../components/components";
 import dayjs from "dayjs";
 import { Toaster } from "react-hot-toast";
-import { getOrders } from "../../_core/features/bookingSlice";
+import { getOrders, getPNR } from "../../_core/features/bookingSlice";
 
 import { IoIosAirplane } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import { FaEye } from "react-icons/fa";
+import Finalticket from "../FinalTicket/Finalticket";
+import { MdDownload } from "react-icons/md";
 
 const OrderHistory = () => {
+
   const dispatch = useDispatch();
-  const navigate=useNavigate()
+  const navigate = useNavigate()
+  const [pnrFetched, setPnrFetched] = useState(false)
+  const [downloadAllFn, setDownloadAllFn] = useState(null);
   const userData = useSelector((state) => state.auth.userData);
-  const { orders, isLoadingOrders, orderError } = useSelector(
+  const { orders, isLoadingOrders, orderError, pnrData, isLoadingPNR } = useSelector(
     (state) => state.booking
   );
 
@@ -76,24 +81,32 @@ const OrderHistory = () => {
     {
       name: "",
       selector: (row) => (
-        <span
-          className="text-lg cursor-pointer"
-          onClick={() => {
-            navigate("/dashboard/booking-details", {
-              state: row,
-            });
-          }}>
-          <FaEye title="View" className="text-green-500 " />
-        </span>
+        <div className="flex items-center justify-center gap-3 text-text">
+          <span
+            className="text-lg cursor-pointer"
+            onClick={() => {
+              navigate("/dashboard/booking-details", {
+                state: row,
+              });
+            }}>
+            <FaEye title="View" className="text-green-500 " />
+          </span>
+          <span className="text-lg cursor-pointer">
+            <Finalticket fetchingPnr={isLoadingPNR} downloadFromParent={true} id={row.booking_reference_id}
+            />
+          </span>
+        </div>
       ),
       sortable: false,
       center: true,
-    },
+    }
   ];
+
   return (
     <>
       <Toaster />
-      <CardLayoutContainer>
+      <CardLayoutContainer className={"z-10 "}>
+
         <CardLayoutHeader heading={"Order History"} />
         <Table
           columnsData={columnsData}
