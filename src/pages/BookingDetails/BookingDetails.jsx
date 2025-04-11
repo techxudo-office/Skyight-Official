@@ -16,7 +16,7 @@ import {
   Spinner,
   CustomTooltip,
 } from "../../components/components";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   IoIosAirplane,
@@ -45,8 +45,8 @@ const TicketDetails = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [confirmObject, setConfirmObject] = useState({
-    onAbort: () => {},
-    onConfirm: () => {},
+    onAbort: () => { },
+    onConfirm: () => { },
     status: false,
     text: "",
     loading: false,
@@ -59,6 +59,8 @@ const TicketDetails = () => {
     isIssueLoading,
     isRefundLoading,
     isCancelling,
+    isPenaltyLoading,
+    penalties
   } = useSelector((state) => state.booking);
   // const [bookingDetails, setBookingDetails] = useState();
 
@@ -126,6 +128,7 @@ const TicketDetails = () => {
 
   const refundRequestHandler = async (flight) => {
     console.log(flight);
+    setConfirmObject((prev) => ({ ...prev, status: false }));
 
     const bookingId = {
       booking_id: flight.id,
@@ -179,7 +182,35 @@ const TicketDetails = () => {
   if (isLoadingBookingDetails || isLoadingPNR || isIssueLoading) {
     return <Spinner className={"text-primary"} />;
   }
-
+  const getPenaltyPayload = {
+    Items: [{
+      ticket_number: bookingDetails?.ticket_number,
+      coupon_number: bookingDetails?.coupen_number,
+      reference: "",
+      zero_penalty: true,
+    }]
+  }
+  const handleRefund = async () => {
+    try {
+      // First fetch penalty data
+      const result = await dispatch(
+        getPenalty({ data: getPenaltyPayload, token: userData?.token })
+      ).unwrap();
+  
+      // Then show confirmation with the penalty amount
+      setConfirmObject({
+        loading: isRefundLoading,
+        text: `Are you sure you want to refund? Penalty amount: ${result.amount} PKR`,
+        status: true,
+        onAbort: () => setConfirmObject(prev => ({ ...prev, status: false })),
+        onConfirm: () => refundRequestHandler(bookingDetails),
+      });
+      
+    } catch (error) {
+      // Handle error
+      toast.error("Failed to get penalty:", error);
+    }
+  }
   return (
     <>
       <Toaster />
@@ -203,21 +234,8 @@ const TicketDetails = () => {
                 <div>
                   <Button
                     icon={<RiRefund2Fill />}
-                    onClick={() => {
-                      // dispatch(getPenalty({ id: bookingDetails?.id, token: userData?.token }))
-                      setConfirmObject((prev) => ({
-                        loading: isRefundLoading,
-                        status: true,
-                        text: "Are you really want to Refund?",
-                        onAbort: () =>
-                          setConfirmObject((prev) => ({
-                            ...prev,
-                            status: false,
-                          })),
-                        onConfirm: () => refundRequestHandler(bookingDetails),
-                      }))
-                    }
-                    }
+                    loading={isPenaltyLoading}
+                    onClick={handleRefund}
                     text={"Request Refund"}
                     disabled={bookingDetails?.booking_status !== "confirmed"}
                   />

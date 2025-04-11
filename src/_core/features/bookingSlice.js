@@ -48,7 +48,7 @@ const initialState = {
   refundError: null,
 
   isPenaltyLoading: false,
-  penalties: [],
+  penalties: null,
   penaltyError: null,
 
   searchForm: null,
@@ -206,7 +206,7 @@ const bookingSlice = createSlice({
       })
       .addCase(getPenalty.fulfilled, (state, action) => {
         state.isPenaltyLoading = false;
-        state.penalties = action.payload.message;
+        state.penalties = action.payload;
       })
       .addCase(getPenalty.rejected, (state, action) => {
         state.isPenaltyLoading = false;
@@ -613,7 +613,7 @@ export const getPenalty = createAsyncThunk(
     try {
       let response = await axios({
         method: "POST",
-        url: `${BASE_URL}/api/request-booking-refund`,
+        url: `${BASE_URL}/api/getPenalty`,
         data: data,
         headers: {
           Authorization: token,
@@ -621,8 +621,9 @@ export const getPenalty = createAsyncThunk(
       });
 
       if (response.status === 200) {
-        toast.success("Requested refund successfully");
-        return { status: true, message: "Refund Requested" };
+        // toast.success("Requested refund successfully");
+        console.log(response.data.data)
+        return response.data.data;
       } else {
         return thunkAPI.rejectWithValue(response.data?.message || "Unexpected response");
       }

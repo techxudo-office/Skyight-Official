@@ -91,7 +91,7 @@ const OrderHistory = () => {
             <FaEye title="View" className="text-green-500 " />
           </span>
           <span className="text-lg cursor-pointer">
-            <Finalticket fetchingPnr={isLoadingPNR} downloadFromParent={true} id={row.booking_reference_id}
+            <Finalticket downloadFromParent={true} id={row.booking_reference_id}
             />
           </span>
         </div>

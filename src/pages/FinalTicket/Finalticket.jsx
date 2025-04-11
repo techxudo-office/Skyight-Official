@@ -8,7 +8,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { MdDownload } from "react-icons/md";
 import { getPNR } from "../../_core/features/bookingSlice";
 
-const Finalticket = ({ fetchingPnr, downloadFromParent, id }) => {
+const Finalticket = ({downloadFromParent, id }) => {
+  
+
     const ticketRefs = useRef([]);
     const dispatch = useDispatch()
     const [loading, setLoading] = useState(null);
@@ -17,16 +19,14 @@ const Finalticket = ({ fetchingPnr, downloadFromParent, id }) => {
     const { pnrData } = useSelector((state) => state.booking);
     const { userData } = useSelector((state) => state.auth);
 
-    const { AirReservation } = pnrData;
-    const travelers = AirReservation?.TravelerInfo || [];
-    const originDestinationOptions =
-        AirReservation?.AirItinerary?.OriginDestinationOptions || [];
+    const travelers = pnrData?.AirReservation?.TravelerInfo || [];
+    const originDestinationOptions = pnrData?.AirReservation?.AirItinerary?.OriginDestinationOptions || [];
     const priceInfo = travelers.map((passenger, i) => {
-        let pricing = AirReservation?.PriceInfo?.PTC_FareBreakDowns.filter((item) => (item.PassengerTypeQuantity.Code == passenger.PassengerTypeCode));
+        let pricing = pnrData?.AirReservation?.PriceInfo?.PTC_FareBreakDowns.filter((item) => (item.PassengerTypeQuantity.Code == passenger.PassengerTypeCode));
         return pricing[0];
     });
 
-    const bookingInfo = AirReservation?.bookingReferenceID;
+    const bookingInfo = pnrData?.AirReservation?.bookingReferenceID;
 
     // Function to download a specific ticket as a PDF
     const downloadPDF = async (index) => {
@@ -94,9 +94,7 @@ const Finalticket = ({ fetchingPnr, downloadFromParent, id }) => {
     //         }
     //     };
     // }, [onDownloadAll]);
-    if (!pnrData) {
-        return
-    }
+
 
     return (
         <>{downloadFromParent &&
