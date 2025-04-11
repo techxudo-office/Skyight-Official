@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { SecondaryButton, Table, Tag } from "../../components/components";
+import React, { useEffect, useState } from "react";
+import { Searchbar, SecondaryButton, Table, Tag } from "../../components/components";
 import { useNavigate } from "react-router-dom";
 import {
   CardLayoutContainer,
@@ -17,6 +17,8 @@ import dayjs from "dayjs";
 const FlightBookings = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [filteredData, setFilteredData] = useState([]);
+
   const { userData } = useSelector((state) => state.auth);
   const { flightBookings, isLoadingFlightBookings } = useSelector(
     (state) => state.booking
@@ -122,12 +124,13 @@ const FlightBookings = () => {
           </div>
         </CardLayoutHeader>
         <CardLayoutBody removeBorder={true}>
+          <Searchbar onFilteredData={setFilteredData} data={flightBookings} />
           <Table
             pagination={true}
             columnsData={columns}
-            tableData={flightBookings || []}
+            tableData={filteredData || []}
             progressPending={isLoadingFlightBookings}
-            paginationTotalRows={flightBookings.length}
+            paginationTotalRows={filteredData.length}
             paginationComponentOptions={{ noRowsPerPage: "10" }}
           />
         </CardLayoutBody>

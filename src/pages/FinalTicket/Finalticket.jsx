@@ -8,8 +8,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { MdDownload } from "react-icons/md";
 import { getPNR } from "../../_core/features/bookingSlice";
 
-const Finalticket = ({downloadFromParent, id }) => {
-  
+const Finalticket = ({ downloadFromParent, id }) => {
+
 
     const ticketRefs = useRef([]);
     const dispatch = useDispatch()
@@ -39,12 +39,10 @@ const Finalticket = ({downloadFromParent, id }) => {
             // Capture the element with forced width
             const canvas = await html2canvas(ticketElement, {
                 scale: 2,
-                scrollX: 0,
-                scrollY: 0
             });
 
             // Convert 1300px to mm (1px ≈ 0.264583mm)
-            const pdfWidth = 201;
+            const pdfWidth = 200;
             const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
             // Create PDF with exact element width
@@ -107,7 +105,7 @@ const Finalticket = ({downloadFromParent, id }) => {
                 />
             </CustomTooltip>
         }
-            <div className={`md:p-4 w-[1200px] text-text mx-auto max-md:text-sm ${downloadFromParent ? "fixed -top-[9999] -right-[9999px] " : ""}`}>
+            <div className={`md:p-4 w-[1000px] text-text mx-auto max-md:text-sm ${downloadFromParent ? "fixed -top-[9999] -right-[9999px] " : ""}`}>
                 {/* Download All Button - Added at the top */}
                 {travelers.length > 1 && !downloadFromParent && (
                     <div className="text-center mb-4">
@@ -130,11 +128,11 @@ const Finalticket = ({downloadFromParent, id }) => {
 
                     return (
                         <div key={index} className="lg:w-[90%] mb-8 mx-auto bg-white shadow-lg rounded-lg overflow-hidden border border-gray-300">
-                            <div className="bg-white" ref={(el) => (ticketRefs.current[index] = el)}>
+                            <div className="bg-white max-md:absolute -right-[9999px]" ref={(el) => (ticketRefs.current[index] = el)}>
                                 {/* Header Section */}
                                 <div className="bg-primary text-white text-xl font-bold py-3 px-5 flex flex-wrap gap-3 justify-between">
                                     <span className="text-2xl">Ticket - Traveler {index + 1}</span>
-                                    <span className="text-lg">E-Ticket No: {ticketInfo?.ETicketNo || "N/A"}</span>
+                                    <span className="text-lg pr-5">E-Ticket No: {ticketInfo?.ETicketNo || "N/A"}</span>
                                 </div>
 
                                 {/* Passenger Info */}
@@ -190,6 +188,12 @@ const Finalticket = ({downloadFromParent, id }) => {
                                                             {flightSegment?.ArrivalDate} {flightSegment?.ArrivalTime}
                                                         </span>
                                                     </div>
+                                                    <div className="flex gap-2">
+                                                        <span className="text-text ">Cabin:</span>
+                                                        <span className="border-b-2 border-dashed border-primary font-semibold">
+                                                            {option.CabinClass == "Y" ? "Economy" : option.CabinClass == "J" ? "Business" : option.CabinClass == "F" ? "First Class" : option.CabinClass == "W" ? "Premium Economy" : option.CabinClass}
+                                                        </span>
+                                                    </div>
 
                                                     {/* Type */}
                                                     <div className="flex gap-2">
@@ -213,7 +217,7 @@ const Finalticket = ({downloadFromParent, id }) => {
 
                                                     {/* Baggage */}
                                                     <div className="flex gap-2">
-                                                        <span className="text-text ">Baggage:</span>
+                                                        <span className="text-text ">Free Baggages:</span>
                                                         <span className="border-b-2 border-dashed border-primary font-semibold">{flightSegment?.FreeBaggages || "N/A"}</span>
                                                     </div>
                                                 </div>
@@ -227,7 +231,7 @@ const Finalticket = ({downloadFromParent, id }) => {
                                     <h3 className="font-bold text-xl text-primary">Price Details</h3>
                                     <p>
                                         <span >{travelerInfo.PassengerTypeCode} Base Price:</span>{" "}
-                                        <span className="font-semibold border-dashed border-b-2 border-primary">
+                                        <span className="font-semibold border-dashed border-b-2 border-primary pb-1">
                                             {(
                                                 priceInfo[index]?.PassengerFare.BaseFare?.Amount /
                                                 priceInfo[index]?.PassengerTypeQuantity?.Quantity
@@ -251,7 +255,7 @@ const Finalticket = ({downloadFromParent, id }) => {
 
                                     <p>
                                         <span>{travelerInfo.PassengerTypeCode} Total Price:</span>{" "}
-                                        <span className="border-b-2 border-dashed border-primary font-semibold">
+                                        <span className="border-b-2 pb-1 border-dashed border-primary font-semibold">
                                             {(
                                                 priceInfo[index]?.PassengerFare.TotalFare?.Amount /
                                                 priceInfo[index]?.PassengerTypeQuantity?.Quantity

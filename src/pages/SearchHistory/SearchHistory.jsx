@@ -5,7 +5,7 @@ import {
   CardLayoutContainer,
   CardLayoutHeader,
 } from "../../components/CardLayout/CardLayout";
-import { Button, Loader, Table } from "../../components/components";
+import { Button, Loader, Searchbar, Table } from "../../components/components";
 import dayjs from "dayjs";
 import { searchFlight } from "../../_core/features/bookingSlice";
 import toast, { Toaster } from "react-hot-toast";
@@ -16,6 +16,8 @@ const SearchHistory = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [loadingRowId, setLoadingRowId] = useState(null);
+  const [filteredData, setFilteredData] = useState([]);
+
   const { SearchHistory, isSearchHistoryLoading, errorSearchHistory } =
     useSelector((state) => state.history);
   const userData = useSelector((state) => state.auth.userData);
@@ -134,12 +136,13 @@ const SearchHistory = () => {
       <Toaster />
       <CardLayoutContainer>
         <CardLayoutHeader heading={"Search History"} />
+        <Searchbar onFilteredData={setFilteredData} data={SearchHistory} />
         <Table
           columnsData={columnsData}
-          tableData={SearchHistory || []}
+          tableData={filteredData || []}
           pagination={true}
           progressPending={isSearchHistoryLoading}
-          paginationTotalRows={SearchHistory.length}
+          paginationTotalRows={filteredData.length}
           paginationComponentOptions={{ noRowsPerPage: "10" }}
         />
       </CardLayoutContainer>

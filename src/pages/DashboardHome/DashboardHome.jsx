@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   DashboardCards,
   Searchbar,
@@ -27,6 +27,8 @@ import dayjs from "dayjs";
 const DashboardHome = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [filteredData, setFilteredData] = useState([]);
+
   const { userData } = useSelector((state) => state.auth);
   const { flightBookings, isLoadingFlightBookings } = useSelector(
     (state) => state.booking
@@ -176,13 +178,13 @@ const DashboardHome = () => {
           className="flex items-center justify-between"
         ></CardLayoutHeader>
         <CardLayoutBody removeBorder={true}>
-          <Searchbar className={"mb-7"} />
+          <Searchbar className={"mb-7"} data={flightBookings} onFilteredData={setFilteredData} />
           <Table
             pagination={true}
             columnsData={columns}
-            tableData={flightBookings || []}
+            tableData={filteredData || []}
             progressPending={isLoadingFlightBookings}
-            paginationTotalRows={flightBookings.length}
+            paginationTotalRows={filteredData.length}
             paginationComponentOptions={{ noRowsPerPage: "10" }}
           />
         </CardLayoutBody>

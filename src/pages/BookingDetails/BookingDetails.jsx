@@ -196,7 +196,7 @@ const TicketDetails = () => {
       const result = await dispatch(
         getPenalty({ data: getPenaltyPayload, token: userData?.token })
       ).unwrap();
-  
+
       // Then show confirmation with the penalty amount
       setConfirmObject({
         loading: isRefundLoading,
@@ -205,7 +205,7 @@ const TicketDetails = () => {
         onAbort: () => setConfirmObject(prev => ({ ...prev, status: false })),
         onConfirm: () => refundRequestHandler(bookingDetails),
       });
-      
+
     } catch (error) {
       // Handle error
       toast.error("Failed to get penalty:", error);
@@ -343,7 +343,7 @@ const TicketDetails = () => {
           </CardLayoutBody>
         </CardLayoutContainer>
         <CardLayoutContainer>
-          <div className="flex flex-wrap gap-4 p-4 text-text">
+          <div className="flex flex-col gap-3 p-4 text-text">
             <div>
               <span className="font-semibold">Booked On: </span>
               {dayjs
