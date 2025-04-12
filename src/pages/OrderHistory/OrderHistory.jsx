@@ -49,33 +49,32 @@ const OrderHistory = () => {
         </span>
       ),
       sortable: false,
-      minwidth: "150px",
-      center: true,
+      
     },
     {
       name: "TRIP TYPE",
       selector: (row) => row?.trip_type,
       sortable: false,
-      center: true,
+      
     },
     {
       name: "DATE",
       selector: (row) => dayjs(row.created_at).format("DD-MMM-YYYY"),
       sortable: false,
-      center: true,
+      
     },
     {
       name: "STATUS",
       selector: (row) => <Tag value={row?.booking_status} />,
       sortable: false,
-      center: true,
+      
     },
     {
       name: "PRICE",
       selector: (row) => row?.rate,
       sortable: false,
       minwidth: "200px",
-      center: true,
+      
     },
     {
       name: "",
@@ -97,7 +96,7 @@ const OrderHistory = () => {
         </div>
       ),
       sortable: false,
-      center: true,
+      
     }
   ];
 

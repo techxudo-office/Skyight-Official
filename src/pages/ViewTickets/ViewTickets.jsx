@@ -47,22 +47,19 @@ const ViewTickets = () => {
       name: "TITLE",
       selector: (row) => row.title,
       sortable: false,
-      minwidth: "150px",
-      center: true,
+      
     },
     {
       name: "DESCRIPTION",
       selector: (row) => row.description,
       sortable: false,
-      minwidth: "150px",
-      center: true,
+      
     },
     {
       name: "STATUS",
       selector: (row) => <Tag value={row.status} />,
       sortable: false,
-      minwidth: "150px",
-      center: true,
+      
     },
     {
       name: "",
@@ -77,8 +74,7 @@ const ViewTickets = () => {
         </div>
       ),
       sortable: false,
-      minwidth: "150px",
-      center: true,
+      
     },
   ];
 

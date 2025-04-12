@@ -49,33 +49,31 @@ const BookingHistory = () => {
         </span>
       ),
       sortable: false,
-      minwidth: "150px",
-      center: true,
+      
     },
     {
       name: "PNR",
       selector: (row) => row.booking_reference_id,
       sortable: false,
-      minwidth: "150px",
-      center: true,
+      
     },
     {
       name: "TOTAL FARE",
       selector: (row) => row.total_fare,
       sortable: false,
-      center: true,
+      
     },
     {
       name: "STATUS",
       selector: (row) => <Tag value={row.booking_status} />,
       sortable: false,
-      center: true,
+      
     },
     {
       name: "CREATED AT",
       selector: (row) => dayjs(row.created_at).format("MMM-DD-YYYY"),
       sortable: false,
-      center: true,
+      
     },
     {
       name: "",
@@ -91,7 +89,7 @@ const BookingHistory = () => {
         </span>
       ),
       sortable: false,
-      center: true,
+      
     },
   ];
   const bookedBookings = flightBookings?.filter((item) => item.booking_status === "booked")

@@ -34,36 +34,26 @@ const Users = () => {
       name: "USER ID",
       selector: (row) => row?.id,
       sortable: false,
-      minwidth: "150px",
-      center: true,
     },
     {
       name: "FIRST NAME",
       selector: (row) => row?.first_name,
       sortable: false,
-      minwidth: "150px",
-      center: true,
     },
     {
       name: "LAST NAME",
       selector: (row) => row?.last_name,
       sortable: false,
-      minwidth: "150px",
-      center: true,
     },
     {
       name: "EMAIL",
       selector: (row) => row?.email,
       sortable: false,
-      minwidth: "150px",
-      center: true,
     },
     {
       name: "ROLE",
       selector: (row) => row?.role?.name,
       sortable: false,
-      minwidth: "150px",
-      center: true,
     },
     {
       name: "",
@@ -90,8 +80,6 @@ const Users = () => {
         </div>
       ),
       sortable: false,
-      minwidth: "150px",
-      center: true,
     },
   ];
 

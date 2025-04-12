@@ -87,7 +87,7 @@ const SearchHistory = () => {
       name: "Search On",
       selector: (row) => dayjs(row.created_at).format("DD-MMM-YYYY | h:m a"),
       sortable: false,
-      center: true,
+      
     },
     {
       name: "ROUTE",
@@ -103,8 +103,7 @@ const SearchHistory = () => {
         </span>
       ),
       sortable: false,
-      minwidth: "150px",
-      center: true,
+      
     },
     {
       name: "Travel Date",
@@ -113,7 +112,7 @@ const SearchHistory = () => {
           "DD-MMM-YYYY"
         ),
       sortable: false,
-      center: true,
+      
     },
     {
       name: "Results",
@@ -127,7 +126,7 @@ const SearchHistory = () => {
         );
       },
       sortable: false,
-      center: true,
+      
     },
   ];
 
