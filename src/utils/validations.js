@@ -11,11 +11,9 @@ export const updateAccountValidation = (form, setErrors) => {
     newErrors.last_name = "Last name is required";
   }
 
-  // Mobile Number
+  // Mobile Number  
   if (!form.mobile_number?.trim()) {
     newErrors.mobile_number = "Mobile number is required";
-  } else if (!/^\d{10}$/.test(form.mobile_number)) {
-    newErrors.mobile_number = "Mobile number must be 10 digits";
   }
 
   // Role ID
