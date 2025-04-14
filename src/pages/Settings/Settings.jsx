@@ -16,10 +16,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { getUserInfo, updateAccount } from "../../_core/features/authSlice";
 import { uploadUserImage } from "../../_core/features/userSlice";
 import { getRoles } from "../../_core/features/roleSlice";
+import { updateAccountValidation } from "../../utils/validations";
+import toast from "react-hot-toast";
 
 const Settings = () => {
   const dispatch = useDispatch();
   const fileInputRef = useRef(null);
+  const [errors, setErrors] = useState({});
   const [editingField, setEditingField] = useState(null);
   const { roles, isLoadingRoles } = useSelector((state) => state.role);
   const { userData, isUpdatingAccount, isLoadingUserInfo } = useSelector(
@@ -83,6 +86,12 @@ const Settings = () => {
       role_id: Number(profileData.role_id),
       password: profileData.password,
     };
+
+    if (!updateAccountValidation(payload, setErrors)) {
+      toast.error("Please fix the errors before submitting.");
+      return;
+    }
+
     dispatch(
       updateAccount({
         data: payload,
@@ -90,6 +99,7 @@ const Settings = () => {
         id: userData.user.id,
       })
     );
+
     setEditingField(null);
   };
 
@@ -161,6 +171,9 @@ const Settings = () => {
           onChange={(e) => handleChange(e, field)}
         />
       </div>
+      {errors[field] && (
+        <p className="mt-1 text-sm text-red-500">{errors[field]}</p>
+      )}
     </div>
   );
 
@@ -210,7 +223,7 @@ const Settings = () => {
             </h2>
           </CardLayoutHeader>
           <CardLayoutBody removeBorder={true}>
-            <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3 md:gap-5 mb-7">
+            <div className="grid grid-cols-1 gap-3 py-4 md:grid-cols-2 lg:grid-cols-3 md:gap-5 mb-7">
               {profileFields.map(
                 ({ label, field, type, edit, placeholder }, index) => (
                   <div key={index}>
@@ -222,7 +235,7 @@ const Settings = () => {
                 id={1}
                 name={"Phone Number"}
                 label={"Phone Number"}
-                className="self-end"
+                className="self-center"
                 value={profileData.mobile_number}
                 onChange={(number) =>
                   handleChange(
@@ -251,7 +264,7 @@ const Settings = () => {
                 placeholder="Select a role"
                 disabled={false}
                 isLoading={isLoadingRoles}
-                className="self-end w-full"
+                className="self-center w-full"
               />
             </div>
           </CardLayoutBody>
