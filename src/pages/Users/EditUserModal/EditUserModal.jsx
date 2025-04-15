@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getRoles } from "../../../_core/features/roleSlice";
 import toast from "react-hot-toast";
 import { editUser } from "../../../_core/features/userSlice";
+import { updateUserValidation } from "../../../utils/validations";
 
 Modal.setAppElement("#root");
 
@@ -106,50 +107,8 @@ const EditUserModal = ({ isOpen, onClose, usersData }) => {
     setFormData((prev) => ({ ...prev, role_id: role.id }));
   };
 
-  const validateForm = () => {
-    let newErrors = {};
-
-    if (!formData.first_name.trim())
-      newErrors.first_name = "First name is required";
-
-    if (!formData.last_name.trim())
-      newErrors.last_name = "Last name is required";
-
-    if (!formData.mobile_number.trim()) {
-      newErrors.mobile_number = "Mobile number is required";
-    } else if (!/^\d{10}$/.test(formData.mobile_number)) {
-      newErrors.mobile_number = "Mobile number must be 10 digits";
-    }
-
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "Invalid email format";
-    }
-
-    if (!formData.password.trim()) {
-      newErrors.password = "Password is required";
-    } else if (formData.password.length < 8) {
-      newErrors.password = "Password must be at least 8 characters";
-    } else if (!/[A-Z]/.test(formData.password)) {
-      newErrors.password =
-        "Password must contain at least one uppercase letter";
-    } else if (!/[a-z]/.test(formData.password)) {
-      newErrors.password =
-        "Password must contain at least one lowercase letter";
-    } else if (!/\d/.test(formData.password)) {
-      newErrors.password = "Password must contain at least one number";
-    } else if (!/[!@#$%^&*]/.test(formData.password)) {
-      newErrors.password =
-        "Password must contain at least one special character (!@#$%^&*)";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
   const handleSubmit = () => {
-    if (!validateForm()) {
+    if (!updateUserValidation(formData, setErrors)) {
       toast.error("Please fix the errors before submitting.");
       return;
     }
@@ -194,19 +153,24 @@ const EditUserModal = ({ isOpen, onClose, usersData }) => {
                 )}
               </div>
             ))}
-            <Select
-              id="roles"
-              label="Role"
-              height="h-12"
-              value={selectedRole ? selectedRole.role : ""}
-              onChange={handleRoleSelect}
-              options={roles.map((role) => ({
-                value: role.id,
-                label: role.role,
-              }))}
-              placeholder="Select a Role"
-              isLoading={isLoadingRoles}
-            />
+            <div>
+              <Select
+                id="roles"
+                label="Role"
+                height="h-12"
+                value={selectedRole ? selectedRole.role : ""}
+                onChange={handleRoleSelect}
+                options={roles.map((role) => ({
+                  value: role.id,
+                  label: role.role,
+                }))}
+                placeholder="Select a Role"
+                isLoading={isLoadingRoles}
+              />
+              {errors["role_id"] && (
+                <p className="mt-1 text-sm text-red-500">{errors["role_id"]}</p>
+              )}
+            </div>
           </div>
         </CardLayoutBody>
         <CardLayoutFooter>
