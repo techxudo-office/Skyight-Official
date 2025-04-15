@@ -67,13 +67,7 @@ export const createTicket = createAsyncThunk(
   "ticket/createTicket",
   async ({ data, token }, thunkAPI) => {
     try {
-      console.log(token, "token");
-      const response = await axios.post(`${BASE_URL}/api/ticket`, data, {
-        headers: {
-          Authorization: token,
-          "Content-Type": "application/json",
-        },
-      });
+     
 
       if (response.status === 200) {
         toast.success("New Ticket Created");

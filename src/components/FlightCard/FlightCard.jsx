@@ -21,7 +21,6 @@ const FlightCard = ({ data, doc_type, travelers, pricingInfo }) => {
       (item) => item.FlightSegment[0]
     )
   );
-  console.log("pricing info", pricingInfo)
   const navigate = useNavigate();
   const totalTravelers = [];
   Object.entries(travelers).forEach(([key, value]) => {

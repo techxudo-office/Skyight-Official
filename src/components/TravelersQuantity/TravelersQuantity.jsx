@@ -6,7 +6,6 @@ import dayjs from "dayjs";
 
 export default function TravelersQuantity({ flightSegments, travelers }) {
     const [travelersQuantity, setTravelersQuantity] = useState([]);
-console.log('flightsegments',flightSegments)
     useEffect(() => {
         if (Object.keys(travelers).length) {
             setTravelersQuantity(

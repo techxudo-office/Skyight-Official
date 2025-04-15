@@ -22,7 +22,6 @@ const TableNew = ({
   loader,
 }) => {
   useEffect(() => {
-    console.log(tableData, "tableData");
   }, [tableData]);
   const data = tableData;
   const [rowsPerPage, setRowsPerPage] = useState(15);

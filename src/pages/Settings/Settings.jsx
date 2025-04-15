@@ -45,7 +45,6 @@ const Settings = () => {
 
   useEffect(() => {
     if (userData) {
-      console.log(userData, "UserData");
       setProfileData({
         first_name: userData.user.first_name || "",
         last_name: userData.user.last_name || "",

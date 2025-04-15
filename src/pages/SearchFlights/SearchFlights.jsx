@@ -162,12 +162,10 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
   };
 
   const handleSubmit = (values) => {
-    // console.log("handleSubmit");
     localStorage.removeItem("allFormData");
     localStorage.removeItem("disableTravelers");
     localStorage.removeItem("oldTraveller");
     dispatch(setSearchForm(values))
-    console.log("submitting");
     searchFlightHandler(values);
   };
 
@@ -239,7 +237,6 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                   tripType:"One-Way"
                 }));
               }, [values.flightRoute]);
-              console.log(errors);
               return (
                 <Form>
                   <CardLayoutBody>

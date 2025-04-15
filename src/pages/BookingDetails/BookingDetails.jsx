@@ -118,7 +118,6 @@ const TicketDetails = () => {
         setConfirmObject((prev) => ({ ...prev, status: false }));
       })
       .catch((error) => {
-        console.log("Request Refund Failed:", error);
         dispatch(
           getBookingDetails({ id: location.state.id, token: userData?.token })
         );
@@ -127,7 +126,6 @@ const TicketDetails = () => {
   };
 
   const refundRequestHandler = async (flight) => {
-    console.log(flight);
     setConfirmObject((prev) => ({ ...prev, status: false }));
 
     const bookingId = {
@@ -142,7 +140,6 @@ const TicketDetails = () => {
         setConfirmObject((prev) => ({ ...prev, status: false }));
       })
       .catch((error) => {
-        console.log("Request Refund Failed:", error);
         dispatch(
           getBookingDetails({ id: location.state.id, token: userData?.token })
         );
@@ -157,7 +154,6 @@ const TicketDetails = () => {
       if (!userData?.token) return;
       dispatch(getBookingDetails({ id: refId, token: userData?.token })).then(
         (resp) => {
-          console.log(resp, "bookingDetails");
           // setBookingDetails(resp.payload);
         }
       );
@@ -168,14 +164,7 @@ const TicketDetails = () => {
   const timeLimit = dayjs(bookingDetails?.Timelimit);
   // const timeLimitLocal = (bookingDetails?.Timelimit).toISOString();
 
-  console.log("Current UTC:", now.format("M/D/YYYY h:m:s a"));
-  console.log("Time Limit UTC:", timeLimit.format("M/D/YYYY h:m:s a"));
-  // console.log("Time Limit local:", dayjs(timeLimitLocal).local().format('DD MMMM YYYY, h:mm a'));
-
-  console.log(
-    "Comparison result:",
-    now.format("M/D/YYYY h:m:s a") > timeLimit.format("M/D/YYYY h:m:s a")
-  );
+ 
   const timelimit = new Date(bookingDetails?.Timelimit);
   const localTimeLimit = timelimit.toLocaleString("en-GB");
 

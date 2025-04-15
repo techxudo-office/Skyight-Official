@@ -129,7 +129,6 @@ const MultiCity = ({ OnlySearch, onSearch }) => {
         const storedValues = localStorage.getItem("flightSearchForm");
         return storedValues ? JSON.parse(storedValues) : null;
     };
-    // console.log(activeField)
 
 
 
@@ -154,7 +153,6 @@ const MultiCity = ({ OnlySearch, onSearch }) => {
     //         child: values.child,
     //         infant: values.infant,
     //     };
-    //     console.log('values', values)
     //     setLoading(true);
     //     const response = await searchFlight(payload);
     //     setLoading(false);
@@ -187,11 +185,8 @@ const MultiCity = ({ OnlySearch, onSearch }) => {
     // };
 
     const handleSubmit = (values) => {
-        // console.log("handleSubmit");
-        console.log('Submitted values', values)
         // localStorage.setItem("flightSearchForm", JSON.stringify(values));
         // setFormData(values)
-        // console.log("Form Values: ", values);
 
         // searchFlightHandler(values)
 

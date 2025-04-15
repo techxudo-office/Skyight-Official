@@ -43,7 +43,6 @@ export const getSearchHistory = createAsyncThunk(
             });
 
             if (response.status === 200) {
-                console.log("searchHistory", response.data?.data || response.data);
                 return response.data?.data || response.data;
             } else {
                 throw new Error("Failed to fetch search history");

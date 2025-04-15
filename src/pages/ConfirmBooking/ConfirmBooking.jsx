@@ -27,7 +27,6 @@ const FlightDetails = () => {
 
   useEffect(() => {
     if (location.state) {
-      console.log("state", location.state);
 
       setFlightData(location.state.flightData);
       setTravelers(location.state.travelersData);
@@ -35,7 +34,6 @@ const FlightDetails = () => {
     }
   }, [location.state]);
 
-  console.log("all-travellers", allTravelersData);
   const pricing = flightData?.AirItineraryPricingInfo;
 
   const confirmBookingHandler = async () => {
@@ -174,14 +172,12 @@ const FlightDetails = () => {
       };
     }
 
-    console.log("confirm-booking", payLoad);
     dispatch(confirmBooking({ data: payLoad, token: userData?.token }))
       .unwrap()
       .then(() => {
         navigate("/dashboard/flight-bookings");
       })
       .catch((error) => {
-        console.log("Booking Failed:", error);
       });
   };
 

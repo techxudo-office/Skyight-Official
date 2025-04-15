@@ -420,7 +420,6 @@ export const getBookingDetails = createAsyncThunk(
   "booking/getBookingDetails",
   async ({ id, token }, thunkAPI) => {
     try {
-      console.log("getBookingDetails running");
       const response = await axios.get(`${BASE_URL}/api/booking/${id}`, {
         headers: {
           "Content-Type": "application/json",
@@ -428,7 +427,6 @@ export const getBookingDetails = createAsyncThunk(
         },
       });
 
-      console.log(response.data.data, "bookingDetails------->");
       return response.data.data;
     } catch (error) {
       const errorMessage =
@@ -622,7 +620,6 @@ export const getPenalty = createAsyncThunk(
 
       if (response.status === 200) {
         // toast.success("Requested refund successfully");
-        console.log(response.data.data)
         return response.data.data;
       } else {
         return thunkAPI.rejectWithValue(response.data?.message || "Unexpected response");

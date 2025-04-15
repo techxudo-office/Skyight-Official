@@ -40,8 +40,6 @@ const FlightResults = () => {
   const navigate = useNavigate();
   useEffect(() => {
     if (location.state) {
-      console.log("state", location.state);
-      console.log("payload", location.state.payload);
 
       const flights =
         location.state.flightsData.PricedItineraries.PricedItinerary;

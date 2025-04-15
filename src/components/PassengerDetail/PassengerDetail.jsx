@@ -7,7 +7,6 @@ import countries from "i18n-iso-countries";
 import { ModalWrapper } from "../components";
 
 const PassengerDetail = ({ travelersData }) => {
-  console.log("travelersData", travelersData);
   const [dropdown, setDropdown] = useState([]);
   const [modalObject, setModalObject] = useState({
     isOpen: false,

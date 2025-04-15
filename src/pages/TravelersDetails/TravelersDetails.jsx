@@ -79,7 +79,6 @@ const TravelersDetails = () => {
   const [clickedIndex, setClickedIndex] = useState();
 
   const formikRefs = useRef([]);
-  console.log("state travlerdetail", location.state)
   useEffect(() => {
     if (location.state) {
       setFlightData(location.state.data);
@@ -97,7 +96,6 @@ const TravelersDetails = () => {
   }, [successPopup.active]);
 
   const handleSubmit = (travelerIndex, values) => {
-    console.log("formValues", values);
     const payload = {
       ...values,
       country: docType === "Domestic" ? "IRN" : values.country,
@@ -160,8 +158,6 @@ const TravelersDetails = () => {
 
   const handlePassengerForm = (setValues, passenger, travelerIndex) => {
     const formValues = travelers.find((item) => item.email === passenger);
-    console.log("formvalues", formValues);
-    console.log("travelerIndex", travelerIndex);
     if (formValues) {
       setOldTraveller((prev) => [...prev, travelerIndex]);
       setValues((prev) => ({
@@ -239,7 +235,6 @@ const TravelersDetails = () => {
   ];
 
   let count = -1;
-  console.log("alltravellersData", allTravelersData);
   return (
     <>
       <PopupMessage
@@ -344,7 +339,6 @@ const TravelersDetails = () => {
 
                           if (allFormData) {
                             setAllTravelersData(allFormData);
-                            console.log("formikRefs", formikRefs.current);
                             formikRefs.current?.forEach((item, idx) => {
                               const persistValues = allFormData[idx];
                               item?.setValues({

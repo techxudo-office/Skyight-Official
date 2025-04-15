@@ -26,7 +26,6 @@ const CustomDate = ({
         }
     }, [isSelected])
 
-    console.log(isOpen, "isopen")
     const handleDateChange = (newValue) => {
         if (onChange) {
             const event = {

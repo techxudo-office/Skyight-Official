@@ -5,11 +5,9 @@ export default function PriceSummary({ pricingInfo, travelers }) {
   const [fareBreakdown, setFareBreakdown] = useState(false);
   const passengersPrice = pricingInfo.PTC_FareBreakdowns;
   const totalFare = pricingInfo.ItinTotalFare;
-  console.log("flightprice", totalFare);
   const travelersQuantity = Object.entries(travelers).filter(
     ([key, value]) => value > 0
   );
-  console.log("travelers", travelers);
 
   const travelersFares = [
     passengersPrice[0].PassengerFare.TotalFare.pkrTotalFare,
@@ -17,7 +15,6 @@ export default function PriceSummary({ pricingInfo, travelers }) {
     passengersPrice[2].PassengerFare.TotalFare.pkrTotalFare,
   ];
 
-  console.log(travelersFares);
   return (
     <div className="flex flex-col gap-3 text-text bg-white shadow-lg p-4 py-8 rounded-lg text-sm">
       <h2 className="text-xl font-semibold">Price Summary </h2>

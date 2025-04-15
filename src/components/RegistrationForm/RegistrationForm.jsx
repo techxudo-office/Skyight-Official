@@ -134,7 +134,6 @@ const RegistrationForm = () => {
       }))
     : [];
 
-  console.log(cityOptions);
 
   return (
     <>

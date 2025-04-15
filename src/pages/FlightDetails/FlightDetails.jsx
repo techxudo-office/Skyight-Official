@@ -88,7 +88,6 @@ const FlightDetails = () => {
   };
 
   const handleSubmit = (values) => {
-    console.log("Form Values: ", values);
     // searchFlightHandler(values);
   };
 
@@ -98,7 +97,6 @@ const FlightDetails = () => {
 
   useEffect(() => {
     if (location.state) {
-      console.log(location.state.data)
       setFlightData(location.state.data);
     }
   }, [location.state]);

@@ -65,13 +65,6 @@ const roleSlice = createSlice({
       .addCase(editRole.fulfilled, (state, action) => {
         state.isEditingRole = false;
         const updatedRole = action.payload;
-
-        console.log("Updated Role Payload:", updatedRole);
-        console.log(
-          "Existing Roles Before Update:",
-          JSON.parse(JSON.stringify(state.roles))
-        );
-
         if (!Array.isArray(state.roles)) {
           console.error("state.roles is not an array!", state.roles);
           return;
@@ -81,10 +74,7 @@ const roleSlice = createSlice({
           role.id == updatedRole.id ? { ...role, ...updatedRole } : role
         );
 
-        console.log(
-          "Updated Roles After Update:",
-          JSON.parse(JSON.stringify(state.roles))
-        );
+       
       })
       .addCase(editRole.rejected, (state, action) => {
         state.isEditingRole = false;
