@@ -58,7 +58,7 @@ const formFields = [
   {
     name: "country",
     label: "Country*",
-    placeholder: "Pakistan",
+    placeholder: "Select a country  ",
     type: "text",
   },
   { name: "city", label: "City*", placeholder: "Karachi", type: "text" },
