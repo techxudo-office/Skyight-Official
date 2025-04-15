@@ -111,32 +111,36 @@ const EditRoleModal = ({ isOpen, onClose, roleData }) => {
             <h3 className="mb-2 font-semibold">Page Permissions</h3>
             <div className="grid grid-cols-2 gap-3">
               {rolesData?.page_permission &&
-                Object.keys(rolesData.page_permission).map((key) => (
-                  <Checkbox
-                    key={key}
-                    label={key.replace(/_/g, " ")}
-                    checked={rolesData.page_permission[key]}
-                    onChange={() =>
-                      handleCheckboxChange("page_permission", key)
-                    }
-                  />
-                ))}
+                Object.keys(rolesData.page_permission)
+                  .filter((key) => key !== "role_id")
+                  .map((key) => (
+                    <Checkbox
+                      key={key}
+                      label={key.replace(/_/g, " ")}
+                      checked={rolesData.page_permission[key]}
+                      onChange={() =>
+                        handleCheckboxChange("page_permission", key)
+                      }
+                    />
+                  ))}
             </div>
           </div>
           <div className="mt-6">
             <h3 className="mb-2 font-semibold">Action Permissions</h3>
             <div className="grid grid-cols-2 gap-3">
               {rolesData?.action_permission &&
-                Object.keys(rolesData.action_permission).map((key) => (
-                  <Checkbox
-                    key={key}
-                    label={key.replace(/_/g, " ")}
-                    checked={rolesData.action_permission[key]}
-                    onChange={() =>
-                      handleCheckboxChange("action_permission", key)
-                    }
-                  />
-                ))}
+                Object.keys(rolesData.action_permission)
+                  .filter((key) => key !== "role_id")
+                  .map((key) => (
+                    <Checkbox
+                      key={key}
+                      label={key.replace(/_/g, " ")}
+                      checked={rolesData.action_permission[key]}
+                      onChange={() =>
+                        handleCheckboxChange("action_permission", key)
+                      }
+                    />
+                  ))}
             </div>
           </div>
         </CardLayoutBody>
