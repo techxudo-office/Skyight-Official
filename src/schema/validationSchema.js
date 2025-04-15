@@ -31,3 +31,16 @@ export const ticketSchema = Yup.object({
 });
 
 
+export const registrationValidationSchema = Yup.object({
+    company_name: Yup.string().required("Please enter your company name"),
+    first_name: Yup.string().required("Please enter your first name"),
+    last_name: Yup.string().required("Please enter your last name"),
+    email: Yup.string().email().required("Please enter your email"),
+    phone_number: Yup.string().required("Please enter your phone number"),
+    mobile_number: Yup.string().required("Please enter your mobile number"),
+    password: Yup.string().required("Please enter your password"),
+    city: Yup.string().required("Please enter your city"),
+    country: Yup.object().required("Please enter your country"),
+    address: Yup.string().required("Please enter your address"),
+    website: Yup.string().required("Please enter your website"),
+  });
