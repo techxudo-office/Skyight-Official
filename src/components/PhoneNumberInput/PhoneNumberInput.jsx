@@ -44,7 +44,7 @@ const PhoneNumberInput = ({
   return (
     <div className={`flex flex-col w-full ${className}`}>
       <div
-        className={`relative flex items-center rounded-lg border border-gray text-text ${
+        className={`relative flex items-center py-1 rounded-lg border border-gray text-text ${
           disabled ? "bg-slate-100" : "bg-white"
         }`}
       >

@@ -49,7 +49,7 @@ const Input = ({
         </label>
         <input
           ref={inputRef}
-          className="w-full px-3 py-3 bg-transparent outline-none"
+          className="w-full px-3 py-4 bg-transparent outline-none"
           id={id}
           type={
             type === "password" ? (showPassword ? "text" : "password") : type

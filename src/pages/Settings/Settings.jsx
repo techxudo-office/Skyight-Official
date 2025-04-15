@@ -156,10 +156,11 @@ const Settings = () => {
     placeholder
   ) => (
     <div className="flex flex-col w-full">
-      <h4 className="mb-1 text-xs font-medium text-slate-500">{label}</h4>
+      {/* <h4 className="mb-1 text-xs font-medium text-slate-500">{label}</h4> */}
       <div className="flex items-center gap-x-2">
         <Input
           edit={edit}
+          label={label}
           type={type}
           profile={true}
           placeholder={placeholder}

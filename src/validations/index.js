@@ -8,14 +8,30 @@ export const ticketSchema = Yup.object({
 });
 
 export const transactionSchema = Yup.object().shape({
-  bank_name: Yup.string().required("Please enter bank name"),
-  bank_number: Yup.string().required("Please enter bank number"),
-  account_holder_name: Yup.string().required(
-    "Please enter account holder name"
-  ),
-  document_number: Yup.string().required("Please enter account number"),
-  payment_date: Yup.string().required("Please enter payment date"),
-  amount: Yup.string().required("Please enter amount"),
+  bank_name: Yup.string()
+    .matches(/^[a-zA-Z\s]+$/, "Bank name should contain only letters")
+    .required("Please enter bank name"),
+
+  bank_number: Yup.string()
+    .matches(/^\d+$/, "Bank number must contain only digits")
+    .required("Please enter bank number"),
+
+  account_holder_name: Yup.string()
+    .matches(/^[a-zA-Z\s]+$/, "Invalid account holder name ")
+    .required("Please enter account holder name"),
+
+  document_number: Yup.string()
+    .matches(/^\d+$/, "Account number must contain only digits")
+    .required("Please enter account number"),
+
+  payment_date: Yup.date()
+    .max(new Date(), "Payment date cannot be in the future")
+    .required("Please enter payment date"),
+
+  amount: Yup.string()
+    .matches(/^\d+(\.\d{1,2})?$/, "Amount must be a valid number (no alphabets or special characters)")
+    .required("Please enter amount"),
+
   comment: Yup.string().required("Please enter comment"),
 });
 
