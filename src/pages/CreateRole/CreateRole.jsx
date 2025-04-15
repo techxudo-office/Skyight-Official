@@ -9,6 +9,7 @@ import { Input, Button, Spinner } from "../../components/components";
 import toast, { Toaster } from "react-hot-toast";
 import { createRole } from "../../_core/features/roleSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const initialRolesData = {
   name: "",
@@ -61,6 +62,7 @@ const Checkbox = ({ label, checked, onChange }) => {
 };
 
 const CreateRole = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [rolesData, setRolesData] = useState(initialRolesData);
   const { userData } = useSelector((state) => state.auth);
@@ -96,7 +98,10 @@ const CreateRole = () => {
 
     const action = await dispatch(
       createRole({ data: payload, token: userData?.token })
-    ).then(() => setRolesData(initialRolesData));
+    ).then(() => {
+      setRolesData(initialRolesData);
+      navigate('/dashboard/roles');
+    });
   };
 
   return (
@@ -105,7 +110,8 @@ const CreateRole = () => {
       <CardLayoutContainer>
         <CardLayoutHeader
           heading="Create Role"
-          className="flex items-center justify-between">
+          className="flex items-center justify-between"
+        >
           {/* <span onClick={() => setIsActive(!isActive)}>
             <Switch switchStatus={isActive} />
           </span> */}

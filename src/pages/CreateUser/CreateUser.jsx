@@ -75,9 +75,7 @@ const CreateUser = () => {
 
     if (!formData.mobile_number.trim()) {
       newErrors.mobile_number = "Mobile number is required";
-    } else if (!/^\d{10}$/.test(formData.mobile_number)) {
-      newErrors.mobile_number = "Mobile number must be 10 digits";
-    }
+    } 
 
     if (!formData.password.trim()) {
       newErrors.password = "Password is required";
