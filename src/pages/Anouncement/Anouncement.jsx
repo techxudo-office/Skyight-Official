@@ -34,7 +34,7 @@ const Announcement = () => {
           >
             <BellIcon
               icon={
-                <HiOutlineSpeakerphone className="text-[46px] text-primary" />
+                <HiOutlineSpeakerphone className="text-[30px] text-primary" />
               }
             />
             <div>

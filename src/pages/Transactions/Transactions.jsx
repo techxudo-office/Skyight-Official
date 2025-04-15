@@ -179,16 +179,9 @@ const Transactions = () => {
                 </span>
               </p>
               <p></p>
-              <p>
+              <p className="flex items-center gap-3">
                 <strong className="text-text">Status:</strong>{" "}
-                <span
-                  className={`font-medium px-2 py-1 rounded ${
-                    selectedTransaction?.status === "Approved"
-                      ? "bg-green-100 text-greenColor"
-                      : "bg-red-100 text-redColor"
-                  }`}
-                >
-                  {selectedTransaction?.status}
+                <span><Tag value={selectedTransaction?.status}/>
                 </span>
               </p>
             </div>

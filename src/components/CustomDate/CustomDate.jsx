@@ -46,7 +46,7 @@ const CustomDate = ({
                 <DateTimePicker
                     id={id}
                     autoFocus={isSelected}
-                    className="w-full"
+                    className="w-full h-14"
                     disabled={disabled}
                     label={label}
                     value={value ? dayjs(value) : null}
@@ -55,7 +55,7 @@ const CustomDate = ({
                     maxDate={!futureDate ? dayjs() : null}
                     sx={{
                         "& .MuiOutlinedInput-root": {
-                            padding: "6px 12px",
+                            padding: "1px 12px",
                             backgroundColor: "#fff",
                             color: '#49454f',
                             width: "100%",
@@ -70,7 +70,7 @@ const CustomDate = ({
             ) : (
                 <DatePicker
                     id={id}
-                    className="w-full"
+                    className="w-full "
                     disabled={disabled}
                     open={isOpen}
                     onOpen={() => setIsOpen(true)}  // Open on click
@@ -82,7 +82,7 @@ const CustomDate = ({
                     maxDate={!futureDate ? dayjs() : null}
                     sx={{
                         "& .MuiOutlinedInput-root": {
-                            padding: "6px 12px",
+                            padding: "1px 10px",
                             backgroundColor: "#fff",
                             color: '#49454f',
                             width: "100%",
