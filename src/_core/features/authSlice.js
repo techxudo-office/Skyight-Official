@@ -30,7 +30,11 @@ const initialState = {
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
+  reducers: {
+    updateUserData: (state, action) => {
+      state.userData = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(login.pending, (state) => {
@@ -298,7 +302,6 @@ export const updateAccount = createAsyncThunk(
   "auth/updateAccount",
   async ({ token, data }, thunkAPI) => {
     try {
-       
       let response = await axios.put(
         `${BASE_URL}/api/user/update-account`,
         data,
@@ -321,5 +324,5 @@ export const updateAccount = createAsyncThunk(
     }
   }
 );
-
+export const { updateUserData } = authSlice.actions;
 export default authSlice.reducer;

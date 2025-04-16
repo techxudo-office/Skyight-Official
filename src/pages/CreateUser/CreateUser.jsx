@@ -75,7 +75,7 @@ const CreateUser = () => {
 
     if (!formData.mobile_number.trim()) {
       newErrors.mobile_number = "Mobile number is required";
-    } 
+    }
 
     if (!formData.password.trim()) {
       newErrors.password = "Password is required";
@@ -91,7 +91,7 @@ const CreateUser = () => {
 
   useEffect(() => {
     if (!userData?.token) return;
-    dispatch(getRoles(userData?.token));
+    dispatch(getRoles({ token: userData?.token }));
   }, [dispatch]);
 
   const handleChange = (e) => {

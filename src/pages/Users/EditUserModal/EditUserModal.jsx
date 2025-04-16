@@ -89,7 +89,7 @@ const EditUserModal = ({ isOpen, onClose, usersData }) => {
 
   useEffect(() => {
     if (!userData?.token) return;
-    dispatch(getRoles(userData?.token));
+    dispatch(getRoles({ token: userData?.token }));
   }, [dispatch, userData?.token]);
 
   const handleChange = (e) => {

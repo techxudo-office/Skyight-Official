@@ -62,7 +62,7 @@ const Settings = () => {
   useEffect(() => {
     if (!userData?.token) return;
     dispatch(getUserInfo(userData?.token));
-    dispatch(getRoles(userData?.token));
+    dispatch(getRoles({ token: userData?.token }));
   }, []);
 
   const handleChange = (e, field) => {

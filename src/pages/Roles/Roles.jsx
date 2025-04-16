@@ -33,7 +33,7 @@ const Roles = () => {
 
   useEffect(() => {
     if (!userData?.token) return;
-    dispatch(getRoles(userData?.token));
+    dispatch(getRoles({ token: userData?.token }));
   }, [dispatch, userData?.token]);
 
   const roleColumns = [
@@ -41,19 +41,16 @@ const Roles = () => {
       name: "ROLE",
       selector: (row) => row.role,
       sortable: false,
-      
     },
     {
       name: "ROLE ID",
       selector: (row) => row.id,
       sortable: false,
-      
     },
     {
       name: "STATUS",
       selector: (row) => <Tag value={row.is_deleted ? "inactive" : "active"} />,
       sortable: false,
-      
     },
     {
       name: "",
@@ -80,7 +77,6 @@ const Roles = () => {
         </div>
       ),
       sortable: false,
-      
     },
   ];
 

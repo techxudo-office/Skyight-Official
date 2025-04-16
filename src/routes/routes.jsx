@@ -1,9 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import {
   Routes,
   Route,
   Navigate,
-  useLocation,
   useNavigate,
 } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -12,14 +11,19 @@ import toast from "react-hot-toast";
 
 const AppRoutes = () => {
   const { userData } = useSelector((state) => state.auth);
-  const location = useLocation();
   const navigate = useNavigate();
   const auth = localStorage.getItem("auth_token");
 
+  const isInitialRender = useRef(true);
+
   useEffect(() => {
     if (!auth) {
-      toast.success("Logout Successfully");
-      navigate("/login", { replace: true });
+      if (!isInitialRender.current) {
+        toast.success("Logged out successfully");
+        navigate("/login", { replace: true });
+      } else {
+        isInitialRender.current = false;
+      }
     }
   }, [auth]);
 

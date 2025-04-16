@@ -73,8 +73,6 @@ const roleSlice = createSlice({
         state.roles = state.roles.map((role) =>
           role.id == updatedRole.id ? { ...role, ...updatedRole } : role
         );
-
-       
       })
       .addCase(editRole.rejected, (state, action) => {
         state.isEditingRole = false;
@@ -85,10 +83,10 @@ const roleSlice = createSlice({
 
 export const getRoles = createAsyncThunk(
   "role/getRoles",
-  async (token, thunkAPI) => {
+  async ({ token, page = 0, limit = 10000000 }, thunkAPI) => {
     try {
       const response = await axios.get(
-        `${BASE_URL}/api/role?is_deleted=false`,
+        `${BASE_URL}/api/role?page=${page}&limit=${limit}`,
         {
           headers: {
             Authorization: token,
