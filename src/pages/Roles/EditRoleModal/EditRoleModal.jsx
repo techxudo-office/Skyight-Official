@@ -79,7 +79,15 @@ const EditRoleModal = ({ isOpen, onClose, roleData }) => {
       editRole({ data: payload, token: userData?.token, id: rolesData?.id })
     ).then((resp) => {
       console.log(resp.payload);
-      dispatch(updateUserData({ ...userData, role: resp.payload }));
+      dispatch(
+        updateUserData({
+          ...userData,
+          user: {
+            ...userData.user,
+            role: resp.payload,
+          },
+        })
+      );
       onClose();
     });
   };

@@ -13,9 +13,15 @@ import { IoTicket } from "react-icons/io5";
 import { RiDashboardFill } from "react-icons/ri";
 import { BiSolidBookmarks } from "react-icons/bi";
 import { FaBusinessTime, FaMoneyBill1Wave } from "react-icons/fa6";
+import { useEffect } from "react";
 
 export const useSidebarLinks = () => {
   const userData = useSelector((state) => state.auth.userData);
+
+  useEffect(() => {
+    console.log(userData, "userData in routes");
+  }, [userData]);
+  
   const pagePermissions = userData?.user?.role?.page_permission || {
     dashboard: true,
     flights: true,
@@ -29,12 +35,12 @@ export const useSidebarLinks = () => {
   };
 
   return [
-    pagePermissions.dashboard && {
+    userData?.user?.role?.page_permission.dashboard && {
       title: "Dashboard",
       path: "/dashboard",
       icon: <RiDashboardFill />,
     },
-    pagePermissions.flights && {
+    userData?.user?.role?.page_permission.flights && {
       title: "Search",
       icon: <MdContentPasteSearch />,
       sublinks: [
@@ -45,7 +51,7 @@ export const useSidebarLinks = () => {
         },
       ],
     },
-    pagePermissions.bookings && {
+    userData?.user?.role?.page_permission.bookings && {
       title: "Bookings",
       icon: <FaBusinessTime />,
       sublinks: [
@@ -56,7 +62,7 @@ export const useSidebarLinks = () => {
         },
       ],
     },
-    pagePermissions.transactions && {
+    userData?.user?.role?.page_permission.transactions && {
       title: "Transactions",
       icon: <FaMoneyBill1Wave />,
       sublinks: [
@@ -67,7 +73,7 @@ export const useSidebarLinks = () => {
         },
       ],
     },
-    pagePermissions.administrators && {
+    userData?.user?.role?.page_permission.administrators && {
       title: "Administrator",
       icon: <MdAdminPanelSettings />,
       sublinks: [
@@ -83,7 +89,7 @@ export const useSidebarLinks = () => {
         },
       ],
     },
-    pagePermissions.tickets && {
+    userData?.user?.role?.page_permission.tickets && {
       title: "Support",
       icon: <IoTicket />,
       sublinks: [
@@ -94,7 +100,7 @@ export const useSidebarLinks = () => {
         },
       ],
     },
-    pagePermissions.history && {
+    userData?.user?.role?.page_permission.history && {
       title: "History",
       icon: <IoTicket />,
       sublinks: [

@@ -24,7 +24,6 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
   const location = useLocation();
 
   const [dropdownStatus, setDropDownStatus] = useState(false);
-  const [isActive, setIsActive] = useState(false);
   const [isAnnHovered, setIsAnnHovered] = useState(false);
   const [isNotiHovered, setIsNotiHovered] = useState(false);
   const [CreditsDropdownOpen, setCreditsDropdownOpen] = useState(false);
@@ -37,7 +36,6 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
   const dropdownOptions = [
     {
       name: "Setting",
-      // icon: <MdSettings className="text-2xl cursor-pointer text-text" />,
       icon: <SlSettings />,
       handler: () => {
         navigationHandler("/dashboard/settings");
@@ -213,9 +211,6 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
                 <CustomTooltip content={CreditsDropdownOpen ? null : "credits"}>
                   <button
                     className={`w-full text-sm md:text-base relative flex items-center justify-center gap-1 md:gap-2 cursor-pointer p-1 px-2 md:py-2 md:px-4 border-primary border-[1px]  bg-blue-100 hover:text-secondary  text-primary font-semibold rounded-xl transition duration-300 ease-in-out transform focus:outline-none`}
-                    // onClick={() => {
-                    //   setIsActive(!isActive);
-                    // }}
                   >
                     {isLoadingCredits ? (
                       <span className="flex items-center gap-2">
@@ -228,7 +223,9 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
                         className="flex items-center gap-2"
                       >
                         <HiOutlineRefresh className="max-sm:hidden" />
-                        <span>PKR {credits?.amount?.toLocaleString()}</span>
+                        <span>
+                          PKR {Number(credits?.amount || 0).toLocaleString()}
+                        </span>
                       </span>
                     ) : (
                       <span className="flex items-center gap-2">
@@ -245,7 +242,7 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
                     <div className="absolute right-0 top-14">
                       {CreditsDropdownOpen && (
                         <CreditsDropdown
-                          credits={credits?.amount}
+                          credits={credits?.amount.toLocaleString()}
                           onClose={() => setCreditsDropdownOpen(false)}
                         />
                       )}
