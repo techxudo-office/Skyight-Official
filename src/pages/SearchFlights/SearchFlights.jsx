@@ -34,7 +34,11 @@ import { FlightsBanner, forBackArrows } from "../../assets/Index";
 import RadioButtons from "../../components/RadioButtons/RadioButtons";
 import { internationalCities } from "../../data/InternationalCities";
 import { useDispatch, useSelector } from "react-redux";
-import { searchFlight, setSearchForm } from "../../_core/features/bookingSlice";
+import {
+  getBookingRoutes,
+  searchFlight,
+  setSearchForm,
+} from "../../_core/features/bookingSlice";
 
 const adultOptions = [
   { value: "1", label: "1 Adult" },
@@ -76,7 +80,9 @@ const validationSchema = Yup.object().shape({
 });
 
 const SearchFlights = ({ OnlySearch, onSearch }) => {
-  const { isLoadingSearchResults, searchForm } = useSelector((state) => state.booking);
+  const { isLoadingSearchResults, searchForm } = useSelector(
+    (state) => state.booking
+  );
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -102,6 +108,10 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
       return newState;
     });
   };
+
+  useEffect(() => {
+    dispatch(getBookingRoutes(userData.token));
+  }, [dispatch]);
 
   const initialValues = {
     flightRoute: "Domestic",
@@ -165,7 +175,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
     localStorage.removeItem("allFormData");
     localStorage.removeItem("disableTravelers");
     localStorage.removeItem("oldTraveller");
-    dispatch(setSearchForm(values))
+    dispatch(setSearchForm(values));
     searchFlightHandler(values);
   };
 
@@ -215,7 +225,8 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
           <Formik
             initialValues={searchForm || initialValues}
             validationSchema={validationSchema}
-            onSubmit={handleSubmit}>
+            onSubmit={handleSubmit}
+          >
             {({
               values,
               setValues,
@@ -234,21 +245,19 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                   ...prev,
                   departure: "",
                   arrival: "",
-                  tripType:"One-Way"
+                  tripType: "One-Way",
                 }));
               }, [values.flightRoute]);
               return (
                 <Form>
                   <CardLayoutBody>
                     <RadioButtons
-                    name={"flightRoute"}
+                      name={"flightRoute"}
                       value={values.flightRoute}
                       options={["Domestic", "International"]}
                       onChange={(option) => {
-                        setFieldValue("flightRoute", option)
-                      }
-                      }
-
+                        setFieldValue("flightRoute", option);
+                      }}
                     />
                     {touched.flightRoute && errors.flightRoute && (
                       <div className="mt-2 text-sm text-red-500 -bottom-6">
@@ -264,9 +273,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                         values.flightRoute == "Domestic" ? [1, 2] : []
                       }
                       options={["One-Way", "Round-Trip", "Multi-City"]}
-                      onChange={(option) =>
-                        setFieldValue("tripType", option)
-                      }
+                      onChange={(option) => setFieldValue("tripType", option)}
                     />
 
                     {errors.tripType && (
@@ -286,11 +293,11 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                               options={
                                 values.flightRoute == "Domestic"
                                   ? iranianCities.filter(
-                                    (item) => item.value != values.arrival
-                                  )
+                                      (item) => item.value != values.arrival
+                                    )
                                   : internationalCities.filter(
-                                    (item) => item.value != values.arrival
-                                  )
+                                      (item) => item.value != values.arrival
+                                    )
                               }
                               value={values.departure}
                               placeholder="Select Departure"
@@ -325,11 +332,11 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                               options={
                                 values.flightRoute == "Domestic"
                                   ? iranianCities.filter(
-                                    (item) => item.value != values.departure
-                                  )
+                                      (item) => item.value != values.departure
+                                    )
                                   : internationalCities.filter(
-                                    (item) => item.value != values.departure
-                                  )
+                                      (item) => item.value != values.departure
+                                    )
                               }
                               value={values.arrival}
                               placeholder="Select Arrival"

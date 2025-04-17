@@ -8,6 +8,10 @@ const initialState = {
   isLoadingTravelers: false,
   travelersError: null,
 
+  bookingRoutes: [],
+  isLoadingRoutes: false,
+  routesError: null,
+
   pnrData: null,
   isLoadingPNR: false,
   pnrError: null,
@@ -83,6 +87,19 @@ const bookingSlice = createSlice({
       .addCase(getTravelers.rejected, (state, action) => {
         state.isLoadingTravelers = false;
         state.travelersError = action.payload;
+      })
+
+      .addCase(getBookingRoutes.pending, (state) => {
+        state.isLoadingRoutes = true;
+        state.routesError = null;
+      })
+      .addCase(getBookingRoutes.fulfilled, (state, action) => {
+        state.isLoadingRoutes = false;
+        state.bookingRoutes = action.payload;
+      })
+      .addCase(getBookingRoutes.rejected, (state, action) => {
+        state.isLoadingRoutes = false;
+        state.routesError = action.payload;
       })
       .addCase(getPNR.pending, (state) => {
         state.isLoadingPNR = true;
@@ -261,6 +278,29 @@ export const getTravelers = createAsyncThunk(
     } catch (error) {
       const errorMessage =
         error?.response?.data?.message || "Failed to fetch travelers";
+      toast.error(errorMessage);
+      return thunkAPI.rejectWithValue(errorMessage);
+    }
+  }
+);
+
+export const getBookingRoutes = createAsyncThunk(
+  "booking/getBookingRoutes",
+  async (token, thunkAPI) => {
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/api/booking-all-active-routes`,
+        {
+          headers: {
+            Authorization: token,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return response.data.data;
+    } catch (error) {
+      const errorMessage =
+        error?.response?.data?.message || "Failed to fetch booking routes";
       toast.error(errorMessage);
       return thunkAPI.rejectWithValue(errorMessage);
     }
@@ -453,10 +493,11 @@ export const issueBooking = createAsyncThunk(
       if (response.status === 200) {
         if (!response.data?.data?.Success) {
           toast.error(
-            // response.data?.data?.Error?.Message || 
-            "Your ticket has expired")
+            // response.data?.data?.Error?.Message ||
+            "Your ticket has expired"
+          );
         } else {
-          toast.success("Booking issued successfully")
+          toast.success("Booking issued successfully");
         }
         return response.data.data;
       } else {
@@ -567,11 +608,12 @@ export const confirmBooking = createAsyncThunk(
         toast.success("Booking created successfully");
         return { status: true, message: "Booking Created" };
       } else {
-        return thunkAPI.rejectWithValue(response.data?.message || "Unexpected response");
+        return thunkAPI.rejectWithValue(
+          response.data?.message || "Unexpected response"
+        );
       }
     } catch (error) {
-      const errorMessage =
-        error.response?.data?.message || "An error occurred";
+      const errorMessage = error.response?.data?.message || "An error occurred";
       toast.error(errorMessage);
       return thunkAPI.rejectWithValue(errorMessage);
     }
@@ -595,11 +637,12 @@ export const requestRefund = createAsyncThunk(
         toast.success("Requested refund successfully");
         return { status: true, message: "Refund Requested" };
       } else {
-        return thunkAPI.rejectWithValue(response.data?.message || "Unexpected response");
+        return thunkAPI.rejectWithValue(
+          response.data?.message || "Unexpected response"
+        );
       }
     } catch (error) {
-      const errorMessage =
-        error.response?.data?.message || "An error occurred";
+      const errorMessage = error.response?.data?.message || "An error occurred";
       toast.error(errorMessage);
       return thunkAPI.rejectWithValue(errorMessage);
     }
@@ -622,11 +665,12 @@ export const getPenalty = createAsyncThunk(
         // toast.success("Requested refund successfully");
         return response.data.data;
       } else {
-        return thunkAPI.rejectWithValue(response.data?.message || "Unexpected response");
+        return thunkAPI.rejectWithValue(
+          response.data?.message || "Unexpected response"
+        );
       }
     } catch (error) {
-      const errorMessage =
-        error.response?.data?.message || "An error occurred";
+      const errorMessage = error.response?.data?.message || "An error occurred";
       toast.error(errorMessage);
       return thunkAPI.rejectWithValue(errorMessage);
     }
@@ -653,8 +697,7 @@ export const cancelFlightBooking = createAsyncThunk(
         return thunkAPI.rejectWithValue("Unexpected response from server");
       }
     } catch (error) {
-      const errorMessage =
-        error.response?.data?.message || "An error occurred";
+      const errorMessage = error.response?.data?.message || "An error occurred";
       toast.error(errorMessage);
       return thunkAPI.rejectWithValue(errorMessage);
     }
@@ -665,14 +708,11 @@ export const getOrders = createAsyncThunk(
   "booking/getOrders",
   async (token, thunkAPI) => {
     try {
-      const response = await axios.get(
-        `${BASE_URL}/api/orders/company`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
+      const response = await axios.get(`${BASE_URL}/api/orders/company`, {
+        headers: {
+          Authorization: token,
+        },
+      });
       if (response.status === 200) {
         return response.data.data;
       } else {
