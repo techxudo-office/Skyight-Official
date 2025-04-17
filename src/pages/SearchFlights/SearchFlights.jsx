@@ -109,9 +109,9 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
     });
   };
 
-  useEffect(() => {
-    dispatch(getBookingRoutes(userData.token));
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(getBookingRoutes(userData.token));
+  // }, [dispatch]);
 
   const initialValues = {
     flightRoute: "Domestic",
