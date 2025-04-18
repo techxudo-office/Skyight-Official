@@ -118,7 +118,7 @@ const FlightResults = () => {
     const dates = [];
     const originalDates = [];
     for (let i = -3; i <= 3; i++) {
-      dates.push(baseDate.add(i, "day").format("ddd, DD MMM"));
+      dates.push(baseDate.add(i, "day"));
       originalDates.push(baseDate.add(i, "day"));
     }
     setDateOptions(dates);
@@ -131,8 +131,8 @@ const FlightResults = () => {
       const flightDate = dayjs(
         flight.AirItinerary.OriginDestinationOptions[0].FlightSegment[0]
           .DepartureDate
-      ).format("ddd, DD MMM");
-      return flightDate === dates[3];
+      );
+      return flightDate.isSame(dates[3]);
     });
 
     setFilteredFlightsData(filteredFlights); // Set the initial filtered flights
@@ -146,10 +146,9 @@ const FlightResults = () => {
       const flightDate = dayjs(
         flight.AirItinerary.OriginDestinationOptions[0].FlightSegment[0]
           .DepartureDate
-      ).format("ddd, DD MMM");
-      return flightDate === date;
+      );
+      return flightDate.isSame(date);
     });
-
     setFilteredFlightsData(filteredFlights);
   };
 
