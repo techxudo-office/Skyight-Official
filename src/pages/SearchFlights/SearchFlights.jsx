@@ -270,9 +270,11 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                       value={values.tripType}
                       name={"tripType"}
                       disabledOptionindex={
-                        values.flightRoute == "Domestic" ? [1, 2] : []
+                        values.flightRoute == "Domestic" ? [1] : []
                       }
-                      options={["One-Way", "Round-Trip", "Multi-City"]}
+                      options={["One-Way", "Round-Trip"
+                        // , "Multi-City"
+                      ]}
                       onChange={(option) => setFieldValue("tripType", option)}
                     />
 
