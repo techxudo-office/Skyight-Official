@@ -570,10 +570,11 @@ export const getRoutes = createAsyncThunk(
     try {
       const response = await axios.post(
         `${BASE_URL}/api/booking-all-active-routes`,
-        {},
+        null,
         {
           headers: {
             Authorization: token,
+            accept: "application/json",
           },
         }
       );

@@ -157,7 +157,7 @@ const TravelersDetails = () => {
   };
 
   const handlePassengerForm = (setValues, passenger, travelerIndex) => {
-    const formValues = travelers.find((item) => item.email === passenger);
+    const formValues = travelers.find((item) =>( item.email === passenger.value & item.passport_number === passenger.passport));
     if (formValues) {
       setOldTraveller((prev) => [...prev, travelerIndex]);
       setValues((prev) => ({
@@ -365,7 +365,7 @@ const TravelersDetails = () => {
                                     handlePassengerForm(
                                       formikRefs.current[travelerIndex]
                                         ?.setValues,
-                                      option.value,
+                                      option,
                                       travelerIndex
                                     )
                                   }
@@ -373,10 +373,20 @@ const TravelersDetails = () => {
                                     oldTraveller.includes(travelerIndex) &&
                                     `${values.first_name} ${values.last_name}`
                                   }
-                                  options={travelers.map((item) => ({
-                                    value: item.email,
-                                    label: item.email,
-                                  }))}
+                                  options={
+                                    docType == "Domestic" ?
+                                      travelers.filter((item) => item.doc_type == "N").map((item) => ({
+                                        passport: item.passport_number,
+                                        value: item.email,
+                                        label: `${item.email}/${item.passport_number}`,
+                                      }))
+                                      :
+                                      travelers.map((item) => ({
+                                        passport: item.passport_number,
+                                        value: item.email,
+                                        label: `${item.email} | ${item.passport_number}`,
+                                      }))
+                                  }
                                 />
                                 {oldTraveller.includes(travelerIndex) && (
                                   <MdCancel
@@ -443,7 +453,7 @@ const TravelersDetails = () => {
                                                     ) || input.disabled
                                                   }
                                                   placeholder={input.placeholder}
-                                                  value={values[input.name]}
+                                                  value={input.disabled ? "IRN" : values[input.name]}
                                                   onChange={(option) =>
                                                     setFieldValue(
                                                       input.name,
