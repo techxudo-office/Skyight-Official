@@ -11,6 +11,9 @@ const initialState = {
   isLoadingForgotPassword: false,
   forgotPasswordError: null,
 
+  isLoadingResetPassword: false,
+  resetPasswordError: null,
+
   isLoadingRegister: false,
   registerError: null,
 
@@ -183,6 +186,28 @@ export const logout = createAsyncThunk(
 
 export const forgotPassword = createAsyncThunk(
   "auth/forgotPassword",
+  async (payload, thunkAPI) => {
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/api/forgot-password`,
+        payload
+      );
+      if (response.status === 200) {
+        toast.success("Forgot Password Successfully");
+        return response.data.message;
+      }
+    } catch (error) {
+      toast.success(
+        error.response?.data?.message || "Forgot password request failed"
+      );
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Forgot password request failed"
+      );
+    }
+  }
+);
+export const resetPassword = createAsyncThunk(
+  "auth/resetPassword",
   async (payload, thunkAPI) => {
     try {
       const response = await axios.post(

@@ -40,32 +40,33 @@ const FlightDetails = () => {
     const tripType = searchForm.tripType;
     const isRoundTrip = tripType === "Round-Trip";
     const flights = flightData.AirItinerary.OriginDestinationOptions;
+    let flightPayload = flights[0].FlightSegment[0]
     let payLoad = {
-      flight_duration: flights[0].FlightSegment[0].FlightDuration,
+      flight_duration: flightPayload.FlightDuration,
       origin_location_code:
-        flights[0].FlightSegment[0].DepartureAirport.LocationCode,
+        flightPayload.DepartureAirport.LocationCode,
       departure_terminal:
-        flights[0].FlightSegment[0].DepartureAirport.Terminal || "",
+        flightPayload.DepartureAirport.Terminal || "",
       destination_location_code:
-        flights[0].FlightSegment[0].ArrivalAirport.LocationCode,
+        flightPayload.ArrivalAirport.LocationCode,
       arrival_terminal:
-        flights[0].FlightSegment[0].ArrivalAirport.Terminal || "",
-      airline_code: flights[0].FlightSegment[0].OperatingAirline.Code,
-      air_equip_type: flights[0].FlightSegment[0].Equipment.AirEquipType,
-      departure_date_time: flights[0].FlightSegment[0].DepartureDateTime,
-      arrival_date_time: flights[0].FlightSegment[0].ArrivalDateTime,
-      departure_date: flights[0].FlightSegment[0].DepartureDate,
-      departure_time: flights[0].FlightSegment[0].DepartureTime,
-      arrival_date: flights[0].FlightSegment[0].ArrivalDate,
-      arrival_time: flights[0].FlightSegment[0].ArrivalTime,
-      flight_number: flights[0].FlightSegment[0].FlightNumber,
-      res_book_design_Code: flights[0].FlightSegment[0].ResBookDesigCode,
-      rph: flights[0].FlightSegment[0].RPH,
+        flightPayload.ArrivalAirport.Terminal || "",
+      airline_code: flightPayload.OperatingAirline.Code,
+      air_equip_type: flightPayload.Equipment.AirEquipType,
+      departure_date_time: flightPayload.DepartureDateTime,
+      arrival_date_time: flightPayload.ArrivalDateTime,
+      departure_date: flightPayload.DepartureDate,
+      departure_time: flightPayload.DepartureTime,
+      arrival_date: flightPayload.ArrivalDate,
+      arrival_time: flightPayload.ArrivalTime,
+      flight_number: flightPayload.FlightNumber,
+      res_book_design_Code: flightPayload.ResBookDesigCode,
+      rph: flightPayload.RPH,
       ref_number: flights[0].RefNumber,
       direction_id: flights[0].DirectionId,
       elapsed_time: flights[0].ElapsedTime,
       free_baggages: flights[0]?.FlightSegment[0].FreeBaggages,
-      booking_class_avails: flights[0].FlightSegment[0].BookingClassAvails.map(
+      booking_class_avails: flightPayload.BookingClassAvails.map(
         (item) => ({
           available_PTC: item.AvailablePTC,
           res_book_desig_code: item.ResBookDesigCode,
@@ -129,38 +130,38 @@ const FlightDetails = () => {
     };
 
     if (flights.length === 2 || isRoundTrip) {
+      let flightPayload = flights[1].FlightSegment[0];
       payLoad = {
         ...payLoad,
-
-        flight_duration_return: flights[1]?.FlightSegment[0].FlightDuration,
+        flight_duration_return: flightPayload.FlightDuration,
         origin_location_code_return:
-          flights[1]?.FlightSegment[0].DepartureAirport.LocationCode,
+          flightPayload.DepartureAirport.LocationCode,
         departure_terminal_return:
-          flights[1]?.FlightSegment[0].DepartureAirport.Terminal || "",
+          flightPayload.DepartureAirport.Terminal || "",
         destination_location_code_return:
-          flights[1]?.FlightSegment[0].ArrivalAirport.LocationCode,
+          flightPayload.ArrivalAirport.LocationCode,
         arrival_terminal_return:
-          flights[1]?.FlightSegment[0].ArrivalAirport.Terminal || "",
-        airline_code_return: flights[1]?.FlightSegment[0].OperatingAirline.Code,
+          flightPayload.ArrivalAirport.Terminal || "",
+        airline_code_return: flightPayload.OperatingAirline.Code,
         air_equip_type_return:
-          flights[1]?.FlightSegment[0].Equipment.AirEquipType,
+          flightPayload.Equipment.AirEquipType,
         departure_date_time_return:
-          flights[1]?.FlightSegment[0].DepartureDateTime,
-        arrival_date_time_return: flights[1]?.FlightSegment[0].ArrivalDateTime,
-        departure_date_return: flights[1]?.FlightSegment[0].DepartureDate,
-        departure_time_return: flights[1]?.FlightSegment[0].DepartureTime,
-        arrival_date_return: flights[1]?.FlightSegment[0].ArrivalDate,
-        arrival_time_return: flights[1]?.FlightSegment[0].ArrivalTime,
-        flight_number_return: flights[1]?.FlightSegment[0].FlightNumber,
+          flightPayload.DepartureDateTime,
+        arrival_date_time_return: flightPayload.ArrivalDateTime,
+        departure_date_return: flightPayload.DepartureDate,
+        departure_time_return: flightPayload.DepartureTime,
+        arrival_date_return: flightPayload.ArrivalDate,
+        arrival_time_return: flightPayload.ArrivalTime,
+        flight_number_return: flightPayload.FlightNumber,
         res_book_design_Code_return:
-          flights[1]?.FlightSegment[0].ResBookDesigCode,
-        rph_return: flights[1]?.FlightSegment[0].RPH,
+          flightPayload.ResBookDesigCode,
+        rph_return: flightPayload.RPH,
         ref_number_return: flights[1]?.RefNumber,
         direction_id_return: flights[1]?.DirectionId,
         elapsed_time_return: flights[1]?.ElapsedTime,
-        free_baggages_return: flights[1]?.FlightSegment[0].FreeBaggages,
+        free_baggages_return: flightPayload.FreeBaggages,
         booking_class_avails_return:
-          flights[1]?.FlightSegment[0].BookingClassAvails.map((item) => ({
+          flightPayload.BookingClassAvails.map((item) => ({
             available_PTC: item.AvailablePTC,
             res_book_desig_code: item.ResBookDesigCode,
             res_book_desig_quantity: item.ResBookDesigQuantity,
