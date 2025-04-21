@@ -8,11 +8,6 @@ import { ModalWrapper } from "../components";
 
 const PassengerDetail = ({ travelersData }) => {
   const [dropdown, setDropdown] = useState([]);
-  const [modalObject, setModalObject] = useState({
-    isOpen: false,
-    onRequestClose: "",
-    contentLabel: ""
-  });
   const handleDropdown = (index) => {
     if (dropdown.includes(index)) {
       setDropdown((prev) => prev.filter((item) => item != index));
@@ -25,9 +20,9 @@ const PassengerDetail = ({ travelersData }) => {
     return countries.alpha3ToAlpha2(alpha3) || "PK";
   };
   return (
-    <CardLayoutContainer className={" my-4 p-5"}>
+    <CardLayoutContainer className={"my-4 p-5"}>
 
-      <h2 className="text-xl text-text font-semibold mb-3">
+      <h2 className="mb-3 text-xl font-semibold text-text">
         Passenger Details
       </h2>
 
@@ -37,17 +32,17 @@ const PassengerDetail = ({ travelersData }) => {
             <React.Fragment key={index}>
               <div
                 onClick={() => handleDropdown(index)}
-                className="grid grid-cols-3 mb-2 text-base h-28 bg-bluebg  p-4 px-6 rounded-lg border border-gray py-9">
+                className="grid grid-cols-3 p-4 px-6 mb-2 text-base border rounded-lg h-28 bg-bluebg border-gray py-9">
                 <div className="flex items-center gap-3">
                   <Flag
                     code={getCountryCode(passenger.country)}
                     className="w-6 h-4 "
                   />
-                  <p className="font-semibold text-text leading-5">
+                  <p className="font-semibold leading-5 text-text">
                     {passenger.first_name} {passenger.last_name}
                   </p>
                 </div>
-                <div className="flex justify-center items-center gap-1 text-text">
+                <div className="flex items-center justify-center gap-1 text-text">
                   {passenger.passenger_type == "ADT" ? (
                     <FaUser className="text-sm" />
                   ) : passenger.passenger_type == "CHD" ? (
@@ -74,7 +69,7 @@ const PassengerDetail = ({ travelersData }) => {
               >
 
                 <div className=" mt-5 rounded-xl  p-7 bg-secondary shadow-lg border-gray border-[1px]">
-                  <h1 className="text-white font-semibold text-2xl border-b pb-3 mb-2">
+                  <h1 className="pb-3 mb-2 text-2xl font-semibold text-white border-b">
                     {passenger.first_name}'s Details
                   </h1>
                   <div className="flex flex-wrap gap-x-6 md:gap-x-10 gap-y-5">
@@ -82,8 +77,8 @@ const PassengerDetail = ({ travelersData }) => {
                       Object.entries(passenger).map(([key, value]) => {
                         if (typeof value === "object") {
                           return (
-                            <p className=" py-2 flex gap-3  border-lightgray   text-white ">
-                              <span className="capitalize font-semibold">{key.replaceAll("_", " ")}:</span>
+                            <p className="flex gap-3 py-2 text-white border-lightgray">
+                              <span className="font-semibold capitalize">{key.replaceAll("_", " ")}:</span>
                               <span className="border-b border-dashed">
                                 {(Object.values(value).join(" "))}
                               </span>
@@ -91,8 +86,8 @@ const PassengerDetail = ({ travelersData }) => {
                           )
                         } else {
                           return (
-                            <p className=" py-2 flex gap-3  border-lightgray   text-white ">
-                              <span className="capitalize font-semibold">{key.replaceAll("_", " ")}:</span>
+                            <p className="flex gap-3 py-2 text-white border-lightgray">
+                              <span className="font-semibold capitalize">{key.replaceAll("_", " ")}:</span>
                               <span className="border-b border-dashed">{value}</span>
                             </p>
                           )
