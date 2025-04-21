@@ -157,7 +157,7 @@ const TravelersDetails = () => {
   };
 
   const handlePassengerForm = (setValues, passenger, travelerIndex) => {
-    const formValues = travelers.find((item) =>( item.email === passenger.value & item.passport_number === passenger.passport));
+    const formValues = travelers.find((item) => (item.email === passenger.value & item.passport_number === passenger.passport));
     if (formValues) {
       setOldTraveller((prev) => [...prev, travelerIndex]);
       setValues((prev) => ({
@@ -381,10 +381,10 @@ const TravelersDetails = () => {
                                         label: `${item.email}/${item.passport_number}`,
                                       }))
                                       :
-                                      travelers.map((item) => ({
+                                      travelers.filter((item) => item.doc_type == "P").map((item) => ({
                                         passport: item.passport_number,
                                         value: item.email,
-                                        label: `${item.email} | ${item.passport_number}`,
+                                        label: `${item.email}/${item.passport_number}`,
                                       }))
                                   }
                                 />

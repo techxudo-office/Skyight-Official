@@ -5,7 +5,7 @@ import {
   CardLayoutBody,
   CardLayoutFooter,
 } from "../../components/CardLayout/CardLayout";
-import { Input, Button, Spinner, Select } from "../../components/components";
+import { Input, Button, Spinner, Select, PhoneNumberInput } from "../../components/components";
 import toast, { Toaster } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { createUser } from "../../_core/features/userSlice";
@@ -26,12 +26,7 @@ const inputFields = [
     placeholder: "Enter Last Name",
   },
   { name: "email", label: "Email*", type: "email", placeholder: "Enter Email" },
-  {
-    name: "mobile_number",
-    label: "Mobile Number*",
-    type: "text",
-    placeholder: "Enter Mobile Number",
-  },
+
   {
     name: "password",
     label: "Password*",
@@ -129,6 +124,7 @@ const CreateUser = () => {
       });
   };
 
+
   return (
     <>
       <Toaster />
@@ -153,6 +149,22 @@ const CreateUser = () => {
                   )}
                 </div>
               ))}
+              <div key={name} className="relative">
+                <PhoneNumberInput
+                  id={"mobile_number"}
+                  name={"mobile_number"}
+                  type={"text"}
+                  label={"Mobile Number*"}
+                  value={formData.mobile_number}
+                  onChange={(number) => {
+                    setFormData(prev => ({
+                      ...prev,
+                      mobile_number: number.country_code + number.area_code + number.number
+                    }))
+                  }}
+                  placeholder="Enter Mobile Number"
+                />
+              </div>
               <Select
                 id="roles"
                 label="Role"

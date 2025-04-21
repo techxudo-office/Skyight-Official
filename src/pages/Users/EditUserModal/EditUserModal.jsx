@@ -12,6 +12,7 @@ import {
   Spinner,
   ModalWrapper,
   Select,
+  PhoneNumberInput,
 } from "../../../components/components";
 import { useDispatch, useSelector } from "react-redux";
 import { getRoles } from "../../../_core/features/roleSlice";
@@ -45,13 +46,7 @@ const inputFields = [
     label: "Password*",
     type: "password",
     placeholder: "Enter New Password",
-  },
-  {
-    name: "mobile_number",
-    label: "Mobile Number*",
-    type: "text",
-    placeholder: "Enter Mobile Number",
-  },
+  }
 ];
 
 const initialState = {
@@ -106,6 +101,7 @@ const EditUserModal = ({ isOpen, onClose, usersData }) => {
     setFormData((prev) => ({ ...prev, role_id: role.id }));
   };
 
+
   const handleSubmit = () => {
     if (!updateUserValidation(formData, setErrors)) {
       toast.error("Please fix the errors before submitting.");
@@ -152,6 +148,22 @@ const EditUserModal = ({ isOpen, onClose, usersData }) => {
                 )}
               </div>
             ))}
+            <div key={name} className="relative">
+              <PhoneNumberInput
+                id={"mobile_number"}
+                name={"mobile_number"}
+                type={"text"}
+                label={"Mobile Number*"}
+                value={formData.mobile_number}
+                onChange={(number) => {
+                  setFormData(prev => ({
+                    ...prev,
+                    mobile_number: number.country_code + number.area_code + number.number
+                  }))
+                }}
+                placeholder="Enter Mobile Number"
+              />
+            </div>
             <div>
               <Select
                 id="roles"

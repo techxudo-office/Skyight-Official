@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   Button,
   ModalWrapper,
+  Searchbar,
   SecondaryButton,
   Table,
   Tag,
@@ -23,7 +24,7 @@ import dayjs from "dayjs";
 const Transactions = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const [filteredTransaction, setFilteredTransaction] = useState([])
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { userData } = useSelector((state) => state.auth);
   const { transactions, isLoadingTransactions } = useSelector(
@@ -51,25 +52,25 @@ const Transactions = () => {
       name: "BANK",
       selector: (row) => row.bank_name,
       sortable: false,
-      
+
     },
     {
       name: "PAYMENT DATE",
       selector: (row) => dayjs(row.payment_date).format("ddd-DD-MMM-YYYY"),
       sortable: false,
-      
+
     },
     {
       name: "AMOUNT",
       selector: (row) => row.amount,
       sortable: false,
-      
+
     },
     {
       name: "STATUS",
       selector: (row) => <Tag value={row.status} />,
       sortable: false,
-      
+
       wrap: true,
       grow: 2,
     },
@@ -84,7 +85,7 @@ const Transactions = () => {
         </span>
       ),
       sortable: false,
-      
+
     },
   ];
 
@@ -106,12 +107,13 @@ const Transactions = () => {
         </CardLayoutHeader>
 
         <CardLayoutBody removeBorder={true}>
+          <Searchbar data={transactions} onFilteredData={setFilteredTransaction} searchFields={["bank_name", "amount", "status"]} />
           <Table
             pagination={true}
             columnsData={columns}
-            tableData={transactions || []}
+            tableData={filteredTransaction || []}
             progressPending={isLoadingTransactions}
-            paginationTotalRows={transactions.length}
+            paginationTotalRows={filteredTransaction.length}
             paginationComponentOptions={{ noRowsPerPage: "10" }}
           />
         </CardLayoutBody>
@@ -181,7 +183,7 @@ const Transactions = () => {
               <p></p>
               <p className="flex items-center gap-3">
                 <strong className="text-text">Status:</strong>{" "}
-                <span><Tag value={selectedTransaction?.status}/>
+                <span><Tag value={selectedTransaction?.status} />
                 </span>
               </p>
             </div>

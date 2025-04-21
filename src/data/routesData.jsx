@@ -38,7 +38,8 @@ import {
   ForgetPassword,
   Anouncement,
   BookingHistory,
-  OrderHistory
+  OrderHistory,
+  ResetPassword
 } from "../pages/pages";
 
 export const routesData = [
@@ -50,6 +51,7 @@ export const routesData = [
   { path: "/registration", element: <Registration /> },
   { path: "/verification", element: <Verification /> },
   { path: "/forget-password", element: <ForgetPassword /> },
+  { path: "/reset-password", element: <ResetPassword /> },
   {
     path: "/dashboard",
     element: <Dashboard />,

@@ -5,12 +5,13 @@ import {
 } from "../../components/CardLayout/CardLayout";
 import { Button, Spinner, Input } from "../../components/components";
 import toast, { Toaster } from "react-hot-toast";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { forgotPassword } from "../../_core/features/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 const ForgetPassForm = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   const [email, setEmail] = useState("");
   const loading = useSelector((state) => state.auth.isLoadingForgotPassword);
 
@@ -24,7 +25,9 @@ const ForgetPassForm = () => {
       toast.error("Invalid email format");
       return;
     }
-    dispatch(forgotPassword({ email }));
+    dispatch(forgotPassword({ email })).then(() => {
+      navigate("/reset-password")
+    });
   };
 
   return (

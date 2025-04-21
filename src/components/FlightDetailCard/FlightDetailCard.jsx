@@ -99,7 +99,7 @@ const FlightDetailCard = ({ flights }) => {
                                     {flight.DepartureAirport.Terminal} <span className="text-gray-500">/ {flight.DepartureAirport.Terminal} International Airport</span>
                                 </p>
                                 <p className="text-sm text-gray-500">
-                                    {flight.FlightDuration.split(":")[0].replace(0, '')}hrs : {flight.FlightDuration.split(":")[1].replace(0, '')}mins
+                                    {flight.FlightDuration.split(":")[0]}hrs : {flight.FlightDuration.split(":")[1]}mins
                                 </p>
                                 <p className="font-semibold text-gray-700 mt-4">
                                     {flight.ArrivalAirport.Terminal} <span className="text-gray-500">/ {flight.ArrivalAirport.Terminal} International Airport</span>
