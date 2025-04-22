@@ -1,83 +1,37 @@
 import React, { useEffect, useRef, useState } from "react";
-import plane from "../../assets/images/plane.webp";
-// icons
 import { FaPlaneArrival } from "react-icons/fa";
 import { MdChildFriendly, MdSearch } from "react-icons/md";
 import { FaChild } from "react-icons/fa6";
 import { IoIosMan } from "react-icons/io";
-
 import {
   CardLayoutContainer,
   CardLayoutHeader,
   CardLayoutBody,
   CardLayoutFooter,
 } from "../../components/CardLayout/CardLayout";
-
 import {
   Select,
-  Input,
-  Spinner,
   Button,
   CustomDate,
   MultiCity,
 } from "../../components/components";
-
 import { iranianCities } from "../../data/iranianCities";
-
 import { FaPlaneDeparture } from "react-icons/fa6";
-import { FaUser } from "react-icons/fa";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
-import * as Yup from "yup";
 import toast, { Toaster } from "react-hot-toast";
 import { FlightsBanner, forBackArrows } from "../../assets/Index";
 import RadioButtons from "../../components/RadioButtons/RadioButtons";
 import { internationalCities } from "../../data/InternationalCities";
 import { useDispatch, useSelector } from "react-redux";
+import { searchFlight, setSearchForm } from "../../_core/features/bookingSlice";
+import { searchFlightValidationSchema } from "../../schema/validationSchema";
 import {
-  getBookingRoutes,
-  searchFlight,
-  setSearchForm,
-} from "../../_core/features/bookingSlice";
-
-const adultOptions = [
-  { value: "1", label: "1 Adult" },
-  { value: "2", label: "2 Adult" },
-  { value: "3", label: "3 Adult" },
-  { value: "4", label: "4 Adult" },
-  { value: "5", label: "5 Adult" },
-];
-
-const childOptions = [
-  { value: "0", label: "0 Child" },
-  { value: "1", label: "1 Child" },
-  { value: "2", label: "2 Child" },
-];
-
-const infantOptions = [
-  { value: "0", label: "0 Infant" },
-  { value: "1", label: "1 Infant" },
-  { value: "2", label: "2 Infant" },
-];
-const cabinClassOptions = [
-  { value: "Economy", label: "Economy" },
-  { value: "Business", label: "Business" },
-  { value: "First Class", label: "First Class" },
-  { value: "Premium Economy", label: "Premium Economy" },
-];
-
-const validationSchema = Yup.object().shape({
-  tripType: Yup.string().required("Please select a trip type"),
-  flightRoute: Yup.string().required("Please select a flight route"),
-  departure: Yup.string().required("Please select departure"),
-  arrival: Yup.string().required("Please select arrival"),
-  departureDate: Yup.date().required("Please select departure date"),
-  // returnDate: Yup.date().required("Please select return date"),
-  adult: Yup.string().required("Please select the number of adults"),
-  child: Yup.string().required("Please select the number of children"),
-  infant: Yup.string().required("Please select the number of infants"),
-  cabinClass: Yup.string().required("Please select the cabin class"),
-});
+  adultOptions,
+  cabinClassOptions,
+  childOptions,
+  infantOptions,
+} from "../../utils/bookingOptions";
 
 const SearchFlights = ({ OnlySearch, onSearch }) => {
   const { isLoadingSearchResults, searchForm } = useSelector(
@@ -108,10 +62,6 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
       return newState;
     });
   };
-
-  // useEffect(() => {
-  //   dispatch(getBookingRoutes(userData.token));
-  // }, [dispatch]);
 
   const initialValues = {
     flightRoute: "Domestic",
@@ -224,17 +174,10 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
 
           <Formik
             initialValues={searchForm || initialValues}
-            validationSchema={validationSchema}
+            validationSchema={searchFlightValidationSchema}
             onSubmit={handleSubmit}
           >
-            {({
-              values,
-              setValues,
-              errors,
-              touched,
-              setFieldValue,
-              isSubmitting,
-            }) => {
+            {({ values, setValues, errors, touched, setFieldValue }) => {
               useEffect(() => {
                 if (isFirstRender.current) {
                   isFirstRender.current = false; // Mark first render as done
@@ -272,9 +215,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                       disabledOptionindex={
                         values.flightRoute == "Domestic" ? [1] : []
                       }
-                      options={["One-Way", "Round-Trip"
-                        // , "Multi-City"
-                      ]}
+                      options={["One-Way", "Round-Trip"]}
                       onChange={(option) => setFieldValue("tripType", option)}
                     />
 
