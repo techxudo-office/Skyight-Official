@@ -295,11 +295,11 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                               options={
                                 values.flightRoute == "Domestic"
                                   ? iranianCities.filter(
-                                      (item) => item.value != values.arrival
-                                    )
+                                    (item) => item.value != values.arrival
+                                  )
                                   : internationalCities.filter(
-                                      (item) => item.value != values.arrival
-                                    )
+                                    (item) => item.value != values.arrival
+                                  )
                               }
                               value={values.departure}
                               placeholder="Select Departure"
@@ -334,11 +334,11 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                               options={
                                 values.flightRoute == "Domestic"
                                   ? iranianCities.filter(
-                                      (item) => item.value != values.departure
-                                    )
+                                    (item) => item.value != values.departure
+                                  )
                                   : internationalCities.filter(
-                                      (item) => item.value != values.departure
-                                    )
+                                    (item) => item.value != values.departure
+                                  )
                               }
                               value={values.arrival}
                               placeholder="Select Arrival"

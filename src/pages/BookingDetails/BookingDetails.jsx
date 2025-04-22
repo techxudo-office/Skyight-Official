@@ -37,6 +37,7 @@ import {
 } from "../../_core/features/bookingSlice";
 import { MdArrowBack, MdOutlineCancelScheduleSend } from "react-icons/md";
 import { RiRefund2Fill } from "react-icons/ri";
+import ConfirmRefund from "./ConfirmRefund/ConfirmRefund";
 
 dayjs.extend(utc); // Extend dayjs with UTC support
 
@@ -44,6 +45,7 @@ const TicketDetails = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [refundConfirmation, setRefundConfirmation] = useState(false);
   const [confirmObject, setConfirmObject] = useState({
     onAbort: () => { },
     onConfirm: () => { },
@@ -191,13 +193,15 @@ const TicketDetails = () => {
       ).unwrap();
 
       // Then show confirmation with the penalty amount
-      setConfirmObject({
-        loading: isRefundLoading,
-        text: `Are you sure you want to refund? Penalty amount: ${result.amount} PKR`,
-        status: true,
-        onAbort: () => setConfirmObject(prev => ({ ...prev, status: false })),
-        onConfirm: () => refundRequestHandler(bookingDetails),
-      });
+      // setConfirmObject({
+      //   loading: isRefundLoading,
+      //   text: `Are you sure you want to refund? Penalty amount: ${result.amount} PKR`,
+      //   status: true,
+      //   onAbort: () => setConfirmObject(prev => ({ ...prev, status: false })),
+      //   onConfirm: () => refundRequestHandler(bookingDetails),
+      // });
+      setRefundConfirmation(true);
+      setConfirmObject((prev) => ({ ...prev, status: false }));
 
     } catch (error) {
       // Handle error
@@ -270,6 +274,7 @@ const TicketDetails = () => {
     <>
       <Toaster />
       <ConfirmModal {...confirmObject} />
+      <ConfirmRefund isOpen={refundConfirmation} items={penalties?.PenaltyRS} onRequestClose={() => setRefundConfirmation(false)} />
       <div ref={printRef} className="flex flex-col w-full gap-5">
         <CardLayoutContainer>
           <CardLayoutBody className={"flex flex-wrap gap-3 justify-between"}>
