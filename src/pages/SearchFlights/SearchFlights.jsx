@@ -14,6 +14,7 @@ import {
   Button,
   CustomDate,
   MultiCity,
+  Spinner,
 } from "../../components/components";
 import { iranianCities } from "../../data/iranianCities";
 import { FaPlaneDeparture } from "react-icons/fa6";
@@ -24,7 +25,7 @@ import { FlightsBanner, forBackArrows } from "../../assets/Index";
 import RadioButtons from "../../components/RadioButtons/RadioButtons";
 import { internationalCities } from "../../data/InternationalCities";
 import { useDispatch, useSelector } from "react-redux";
-import { searchFlight, setSearchForm } from "../../_core/features/bookingSlice";
+import { getBookingRoutes, searchFlight, setSearchForm } from "../../_core/features/bookingSlice";
 import { searchFlightValidationSchema } from "../../schema/validationSchema";
 import {
   adultOptions,
@@ -164,7 +165,9 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
     }
   }, []);
   console.log(bookingRoutes, "bookingRoutes")
-  if (isLoadingRoutes) return <div className="flex items-center justify-center w-full h-screen"><Spinner /></div>
+  if (isLoadingRoutes) {
+    return <div className="flex items-center justify-center w-full h-screen"><Spinner /></div>
+  }
   return (
     <>
       <Toaster />
