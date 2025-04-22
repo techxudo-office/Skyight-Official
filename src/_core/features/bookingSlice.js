@@ -94,6 +94,7 @@ const bookingSlice = createSlice({
         state.routesError = null;
       })
       .addCase(getBookingRoutes.fulfilled, (state, action) => {
+        console.log("bookingroutes", action.payload);
         state.isLoadingRoutes = false;
         state.bookingRoutes = action.payload;
       })
@@ -290,14 +291,17 @@ export const getBookingRoutes = createAsyncThunk(
     try {
       const response = await axios.post(
         `${BASE_URL}/api/booking-all-active-routes`,
+        {},
         {
           headers: {
             Authorization: token,
             "Content-Type": "application/json",
-          },
+          }
         }
       );
-      return response.data.data;
+      console.log("bookingrotes", response);
+
+      return response.data.data.Routes || [];
     } catch (error) {
       const errorMessage =
         error?.response?.data?.message || "Failed to fetch booking routes";

@@ -80,7 +80,7 @@ const validationSchema = Yup.object().shape({
 });
 
 const SearchFlights = ({ OnlySearch, onSearch }) => {
-  const { isLoadingSearchResults, searchForm } = useSelector(
+  const { isLoadingSearchResults, searchForm, bookingRoutes, isLoadingRoutes } = useSelector(
     (state) => state.booking
   );
 
@@ -108,10 +108,6 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
       return newState;
     });
   };
-
-  // useEffect(() => {
-  //   dispatch(getBookingRoutes(userData.token));
-  // }, [dispatch]);
 
   const initialValues = {
     flightRoute: "Domestic",
@@ -196,12 +192,25 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
       }
     };
 
+
+
+
+    console.log(bookingRoutes, "bookingRoutes")
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
   const isFirstRender = useRef(true);
+
+  useEffect(() => {
+    if (userData?.token) {
+      dispatch(getBookingRoutes(userData.token))
+    }
+  }, []);
+  console.log(bookingRoutes, "bookingRoutes")
+  if (isLoadingRoutes) return <div className="flex items-center justify-center w-full h-screen"><Spinner /></div>
   return (
     <>
       <Toaster />
@@ -293,13 +302,20 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                               id="departure"
                               label="Departure From"
                               options={
-                                values.flightRoute == "Domestic"
-                                  ? iranianCities.filter(
-                                    (item) => item.value != values.arrival
-                                  )
-                                  : internationalCities.filter(
-                                    (item) => item.value != values.arrival
-                                  )
+                                // !values.arrival ? bookingRoutes?.map(route => {
+                                //   console.log(route, "route")
+                                //   return ({
+                                //     value: route.Origin,
+                                //     label: route.Origin
+                                //   })
+                                // }) :
+                                bookingRoutes?.map(route => {
+                                  console.log(route, "route")
+                                  return ({
+                                    value: route.Origin,
+                                    label: route.Origin
+                                  })
+                                })
                               }
                               value={values.departure}
                               placeholder="Select Departure"
@@ -330,15 +346,16 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                               className={"select w-full"}
                               isSelected={activeField.arrival}
                               id="arrival"
+                              isLoading={isLoadingRoutes}
                               label="Arrival To"
                               options={
-                                values.flightRoute == "Domestic"
-                                  ? iranianCities.filter(
-                                    (item) => item.value != values.departure
-                                  )
-                                  : internationalCities.filter(
-                                    (item) => item.value != values.departure
-                                  )
+                                bookingRoutes?.map(route => {
+                                  console.log(route, "route")
+                                  return ({
+                                    value: route.Destination,
+                                    label: route.Destination
+                                  })
+                                })
                               }
                               value={values.arrival}
                               placeholder="Select Arrival"
