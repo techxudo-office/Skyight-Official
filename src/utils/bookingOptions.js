@@ -23,3 +23,15 @@ export const cabinClassOptions = [
   { value: "First Class", label: "First Class" },
   { value: "Premium Economy", label: "Premium Economy" },
 ];
+
+
+export const initialState = {
+  departure: false,
+  arrival: false,
+  departureDate: false,
+  returnDate: false,
+  cabinClass: false,
+  adult: false,
+  child: false,
+  infant: false,
+};

@@ -9,48 +9,46 @@ import {
   CardLayoutBody,
   CardLayoutFooter,
 } from "../../components/CardLayout/CardLayout";
-import {
-  Select,
-  Button,
-  CustomDate,
-  MultiCity,
-} from "../../components/components";
-import { iranianCities } from "../../data/iranianCities";
-import { FaPlaneDeparture } from "react-icons/fa6";
-import { useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
+import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
-import { FlightsBanner, forBackArrows } from "../../assets/Index";
-import RadioButtons from "../../components/RadioButtons/RadioButtons";
-import { internationalCities } from "../../data/InternationalCities";
+import { FaPlaneDeparture } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
-import { searchFlight, setSearchForm } from "../../_core/features/bookingSlice";
+import { iranianCities } from "../../data/iranianCities";
+import { FlightsBanner, forBackArrows } from "../../assets/Index";
+import { internationalCities } from "../../data/InternationalCities";
+import RadioButtons from "../../components/RadioButtons/RadioButtons";
+import { Button, CustomDate, MultiCity } from "../../components/components";
 import { searchFlightValidationSchema } from "../../schema/validationSchema";
+import { searchFlight, setSearchForm } from "../../_core/features/bookingSlice";
 import {
   adultOptions,
   cabinClassOptions,
   childOptions,
   infantOptions,
+  initialState,
 } from "../../utils/bookingOptions";
+import { FormSelect } from "./FormSelect/FormSelect";
 
 const SearchFlights = ({ OnlySearch, onSearch }) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const isFirstRender = useRef(true);
+  const { userData } = useSelector((state) => state.auth);
   const { isLoadingSearchResults, searchForm } = useSelector(
     (state) => state.booking
   );
+  const [activeField, setActiveField] = useState(initialState);
 
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { userData } = useSelector((state) => state.auth);
-  const [activeField, setActiveField] = useState({
-    departure: false,
-    arrival: false,
-    departureDate: false,
-    returnDate: false,
-    cabinClass: false,
-    adult: false,
-    child: false,
-    infant: false,
-  });
+  const getCityOptions = (
+    type,
+    exclude,
+    iranianCities,
+    internationalCities
+  ) => {
+    const cities = type === "Domestic" ? iranianCities : internationalCities;
+    return cities.filter((item) => item.value !== exclude);
+  };
 
   const activateField = (fieldName) => {
     setActiveField((prev) => {
@@ -76,6 +74,36 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
     infant: infantOptions[0].value,
   };
 
+  const selectFields = [
+    {
+      id: "adult",
+      label: "Adult",
+      options: adultOptions,
+      icon: <IoIosMan />,
+      next: "child",
+    },
+    {
+      id: "child",
+      label: "Child",
+      options: childOptions,
+      icon: <FaChild />,
+      next: "infant",
+    },
+    {
+      id: "infant",
+      label: "Infant",
+      options: infantOptions,
+      icon: <MdChildFriendly />,
+      next: "cabinClass",
+    },
+    {
+      id: "cabinClass",
+      label: "Cabin Class",
+      options: cabinClassOptions,
+      icon: <MdChildFriendly />,
+    },
+  ];
+
   const searchFlightHandler = async (values) => {
     const payload = {
       flightRoute: values.flightRoute,
@@ -93,11 +121,8 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
       const response = await dispatch(
         searchFlight({ payload, token: userData?.token })
       ).unwrap();
-
-      if (
-        response?.PricedItineraries?.PricedItinerary &&
-        response.PricedItineraries.PricedItinerary.length > 0
-      ) {
+      let price = response?.PricedItineraries?.PricedItinerary || [];
+      if (price && price.length > 0) {
         navigate("/dashboard/flight-results", {
           state: {
             payload,
@@ -133,16 +158,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
     const selectRef = document.getElementsByClassName("select");
     const handleClickOutside = (event) => {
       if (selectRef.current && !selectRef.current.contains(event.target)) {
-        setActiveField({
-          departure: false,
-          arrival: false,
-          departureDate: false,
-          returnDate: false,
-          cabinClass: false,
-          adult: false,
-          child: false,
-          infant: false,
-        });
+        setActiveField(initialState);
       }
     };
 
@@ -151,7 +167,6 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-  const isFirstRender = useRef(true);
   return (
     <>
       <Toaster />
@@ -180,10 +195,9 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
             {({ values, setValues, errors, touched, setFieldValue }) => {
               useEffect(() => {
                 if (isFirstRender.current) {
-                  isFirstRender.current = false; // Mark first render as done
-                  return; // Skip effect on initial render
+                  isFirstRender.current = false;
+                  return;
                 }
-
                 setValues((prev) => ({
                   ...prev,
                   departure: "",
@@ -191,136 +205,117 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                   tripType: "One-Way",
                 }));
               }, [values.flightRoute]);
+
               return (
                 <Form>
                   <CardLayoutBody>
                     <RadioButtons
-                      name={"flightRoute"}
+                      name="flightRoute"
                       value={values.flightRoute}
                       options={["Domestic", "International"]}
-                      onChange={(option) => {
-                        setFieldValue("flightRoute", option);
-                      }}
+                      onChange={(option) =>
+                        setFieldValue("flightRoute", option)
+                      }
                     />
                     {touched.flightRoute && errors.flightRoute && (
-                      <div className="mt-2 text-sm text-red-500 -bottom-6">
+                      <div className="mt-2 text-sm text-red-500">
                         {errors.flightRoute}
                       </div>
                     )}
                   </CardLayoutBody>
+
                   <CardLayoutBody>
                     <RadioButtons
+                      name="tripType"
                       value={values.tripType}
-                      name={"tripType"}
-                      disabledOptionindex={
-                        values.flightRoute == "Domestic" ? [1] : []
-                      }
                       options={["One-Way", "Round-Trip"]}
+                      disabledOptionindex={
+                        values.flightRoute === "Domestic" ? [1] : []
+                      }
                       onChange={(option) => setFieldValue("tripType", option)}
                     />
-
                     {errors.tripType && (
-                      <div className="mt-2 text-sm text-red-500 -bottom-6">
+                      <div className="mt-2 text-sm text-red-500">
                         {errors.tripType}
                       </div>
                     )}
                   </CardLayoutBody>
+
                   {values.tripType !== "Multi-City" ? (
                     <>
                       <CardLayoutBody>
                         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 md:gap-5 mb-7">
-                          <div className="relative flex flex-col mb-5 md:flex-row max-md:items-center ">
-                            <Select
+                          <div className="relative flex flex-col mb-5 md:flex-row max-md:items-center">
+                            <FormSelect
                               id="departure"
                               label="Departure From"
-                              options={
-                                values.flightRoute == "Domestic"
-                                  ? iranianCities.filter(
-                                    (item) => item.value != values.arrival
-                                  )
-                                  : internationalCities.filter(
-                                    (item) => item.value != values.arrival
-                                  )
-                              }
+                              options={getCityOptions(
+                                values.flightRoute,
+                                values.arrival,
+                                iranianCities,
+                                internationalCities
+                              )}
                               value={values.departure}
-                              placeholder="Select Departure"
                               onChange={(option) => {
                                 setFieldValue("departure", option.value);
                                 activateField("arrival");
                               }}
-                              className={"select w-full"}
-                              optionIcons={<FaPlaneDeparture />}
-                              selectIcon={<FaPlaneDeparture />}
+                              touched={touched.departure}
+                              error={errors.departure}
+                              icons={<FaPlaneDeparture />}
                             />
-                            {touched.departure && errors.departure && (
-                              <div className="absolute left-0 mt-2 text-sm text-red-500 -bottom-6">
-                                {errors.departure}
-                              </div>
-                            )}
-                            <div className=" rounded-full border-gray border-[1px] w-fit h-fit pt-3 pl-3 p-2 z-10 -mt-3 md:-ml-3 md:mt-2 -mb-11 md:-mr-8  bg-white">
+                            <div className="rounded-full border-gray border-[1px] w-fit h-fit pt-3 pl-3 p-2 z-10 -mt-3 md:-ml-3 md:mt-2 -mb-11 md:-mr-8 bg-white">
                               <img
                                 src={forBackArrows}
                                 alt=""
-                                className="w-8 p-0 bg-white md:w-6 "
+                                className="w-8 p-0 bg-white md:w-6"
                               />
                             </div>
                           </div>
 
-                          <div className="relative mb-5">
-                            <Select
-                              className={"select w-full"}
-                              isSelected={activeField.arrival}
-                              id="arrival"
-                              label="Arrival To"
-                              options={
-                                values.flightRoute == "Domestic"
-                                  ? iranianCities.filter(
-                                    (item) => item.value != values.departure
-                                  )
-                                  : internationalCities.filter(
-                                    (item) => item.value != values.departure
-                                  )
-                              }
-                              value={values.arrival}
-                              placeholder="Select Arrival"
-                              onChange={(option) => {
-                                setFieldValue("arrival", option.value);
-                                activateField("departureDate");
-                              }}
-                              optionIcons={<FaPlaneArrival />}
-                              selectIcon={<FaPlaneArrival size={18} />}
-                            />
-                            {touched.arrival && errors.arrival && (
-                              <div className="absolute left-0 mt-2 text-sm text-red-500">
-                                {errors.arrival}
-                              </div>
+                          <FormSelect
+                            id="arrival"
+                            label="Arrival To"
+                            options={getCityOptions(
+                              values.flightRoute,
+                              values.departure,
+                              iranianCities,
+                              internationalCities
                             )}
-                          </div>
+                            value={values.arrival}
+                            onChange={(option) => {
+                              setFieldValue("arrival", option.value);
+                              activateField("departureDate");
+                            }}
+                            touched={touched.arrival}
+                            error={errors.arrival}
+                            isSelected={activeField.arrival}
+                            icons={<FaPlaneArrival />}
+                          />
 
                           <div className="relative mb-5 select">
                             <CustomDate
                               onChange={(e) => {
                                 setFieldValue("departureDate", e.target.value);
-                                if (values.tripType != "One-Way") {
-                                  activateField("returnDate");
-                                } else {
-                                  activateField("adult");
-                                }
+                                activateField(
+                                  values.tripType !== "One-Way"
+                                    ? "returnDate"
+                                    : "adult"
+                                );
                               }}
-                              pastDate={false}
                               value={values.departureDate}
                               isSelected={activeField.departureDate}
-                              name={"departureDate"}
-                              label={"Departure Date"}
-                              disabled={false}
+                              name="departureDate"
+                              label="Departure Date"
+                              pastDate={false}
                             />
-
                             {touched.departureDate && errors.departureDate && (
                               <div className="absolute left-0 mt-2 text-sm text-red-500">
                                 {errors.departureDate}
                               </div>
                             )}
                           </div>
+
                           <div className="relative mb-5 select">
                             <CustomDate
                               onChange={(e) => {
@@ -328,14 +323,14 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                                 activateField("adult");
                               }}
                               value={
-                                values.tripType == "One-Way"
+                                values.tripType === "One-Way"
                                   ? ""
                                   : values.returnDate
                               }
                               isSelected={activeField.returnDate}
-                              name={"returnDate"}
-                              label={"Return Date"}
-                              disabled={values.tripType == "One-Way"}
+                              name="returnDate"
+                              label="Return Date"
+                              disabled={values.tripType === "One-Way"}
                               pastDate={false}
                             />
                             {values.tripType !== "One-Way" &&
@@ -346,96 +341,33 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                                 </div>
                               )}
                           </div>
-                          <div className="relative mb-5 select">
-                            <Select
-                              isSelected={activeField.adult}
-                              id="adult"
-                              label="Adult"
-                              options={adultOptions}
-                              value={values.adult}
-                              placeholder="Select Adults"
-                              onChange={(option) => {
-                                setFieldValue("adult", option.value);
-                                activateField("child");
-                              }}
-                              optionIcons={<IoIosMan />}
-                              selectIcon={<IoIosMan />}
-                            />
-                            {touched.adult && errors.adult && (
-                              <div className="absolute left-0 mt-2 text-sm text-red-500">
-                                {errors.adult}
-                              </div>
-                            )}
-                          </div>
-                          <div className="relative mb-5 select">
-                            <Select
-                              isSelected={activeField.child}
-                              id="child"
-                              label="Child"
-                              options={childOptions}
-                              value={values.child}
-                              placeholder="Select Childrens"
-                              onChange={(option) => {
-                                setFieldValue("child", option.value);
-                                activateField("infant");
-                              }}
-                              optionIcons={<FaChild />}
-                              selectIcon={<FaChild />}
-                            />
-                            {touched.child && errors.child && (
-                              <div className="absolute left-0 mt-2 text-sm text-red-500">
-                                {errors.child}
-                              </div>
-                            )}
-                          </div>
-                          <div className="relative mb-5 select">
-                            <Select
-                              isSelected={activeField.infant}
-                              id="infant"
-                              label="Infant"
-                              options={infantOptions}
-                              value={values.infant}
-                              placeholder="Select Infants"
-                              onChange={(option) => {
-                                setFieldValue("infant", option.value);
-                                activateField("cabinClass");
-                              }}
-                              optionIcons={<MdChildFriendly />}
-                              selectIcon={<MdChildFriendly />}
-                            />
-                            {touched.infant && errors.infant && (
-                              <div className="absolute left-0 mt-2 text-sm text-red-500">
-                                {errors.infant}
-                              </div>
-                            )}
-                          </div>
-                          <div className="relative mb-5 select">
-                            <Select
-                              isSelected={activeField.cabinClass}
-                              id="cabinClass"
-                              label="Cabin Class"
-                              options={cabinClassOptions}
-                              value={values.cabinClass}
-                              placeholder="Select Cabin Class"
-                              onChange={(option) => {
-                                setFieldValue("cabinClass", option.value);
-                                activateField(null);
-                              }}
-                              optionIcons={<MdChildFriendly />}
-                            />
-                            {touched.cabinClass && errors.cabinClass && (
-                              <div className="absolute left-0 mt-2 text-sm text-red-500">
-                                {errors.cabinClass}
-                              </div>
-                            )}
-                          </div>
+
+                          {selectFields.map(
+                            ({ id, label, options, icon, next }) => (
+                              <FormSelect
+                                key={id}
+                                id={id}
+                                label={label}
+                                options={options}
+                                value={values[id]}
+                                onChange={(option) => {
+                                  setFieldValue(id, option.value);
+                                  if (next) activateField(next);
+                                }}
+                                touched={touched[id]}
+                                error={errors[id]}
+                                isSelected={activeField[id]}
+                                icons={icon}
+                              />
+                            )
+                          )}
                         </div>
                       </CardLayoutBody>
                       <CardLayoutFooter>
                         <div onClick={onSearch}>
                           <Button
                             icon={<MdSearch />}
-                            text={"Search Flight"}
+                            text="Search Flight"
                             type="submit"
                             disabled={isLoadingSearchResults}
                             loading={isLoadingSearchResults}
