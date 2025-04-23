@@ -41,14 +41,19 @@ export default function ConfirmRefund({
             isOpen={isOpen}
             onRequestClose={onRequestClose}
         >
-            <div className="p-6 w-full max-w-md mx-auto">
+            <div className="p-2 md:p-6 w-full max-w-md mx-auto">
                 {/* Header */}
                 <h2 className="text-2xl font-bold text-six mb-6 text-center">
                     Select Items to Refund
                 </h2>
 
                 {/* Items List */}
-                <div className=" mb-6 space-y-3">
+                <div className=" mb-6 space-y-3 min-w-80 overflow-x-auto max-md:text-sm">
+                    <span className='flex items-center justify-between text-six font-semibold mb-2 bg-background text-text p-2 rounded-md'>
+                        <p>Ticket #</p>
+                        <p className='translate-x-10'>Coupon #</p>
+                        <p>Penalty</p>
+                    </span>
                     {items.map((item, idx) => (
                         <div
                             key={item.id}
@@ -63,9 +68,10 @@ export default function ConfirmRefund({
                             />
                             <label
                                 htmlFor={`item-${idx}`}
-                                className="ml-3 flex-1 flex justify-between items-center"
+                                className="ml-3 w-full flex justify-between items-center"
                             >
-                                <span className="font-medium text-six">Ticket #{item.TicketNumber}</span>
+                                <span className="font-medium text-six"> {item.TicketNumber}</span>
+                                <span className="font-medium text-six "> {item.CouponNumber}</span>
                                 <span className="font-semibold text-primary">${item.Penalty}</span>
                             </label>
                         </div>

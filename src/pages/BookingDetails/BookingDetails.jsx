@@ -259,15 +259,15 @@ const TicketDetails = () => {
     },
     {
       name: "TICKET NUMBER",
-      selector: (row) => row.ticket_number || "-",
+      selector: (row) => row.passengertickets[0].ticket_number || "-",
       sortable: false,
     },
     // bookingDetails?.booking_status=="confirmed" &&
-    {
-      name: "COUPON NUMBER",
-      selector: (row) => row.coupen_number || "-",
-      sortable: false,
-    },
+    // {
+    //   name: "COUPON NUMBER",
+    //   selector: (row) => row.coupen_number || "-",
+    //   sortable: false,
+    // },
 
   ]
   return (

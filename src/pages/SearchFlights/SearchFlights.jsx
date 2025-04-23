@@ -9,6 +9,16 @@ import {
   CardLayoutBody,
   CardLayoutFooter,
 } from "../../components/CardLayout/CardLayout";
+import {
+  Select,
+  Button,
+  CustomDate,
+  MultiCity,
+  Spinner,
+} from "../../components/components";
+import { iranianCities } from "../../data/iranianCities";
+import { FaPlaneDeparture } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
@@ -19,6 +29,11 @@ import { FlightsBanner, forBackArrows } from "../../assets/Index";
 import { internationalCities } from "../../data/InternationalCities";
 import RadioButtons from "../../components/RadioButtons/RadioButtons";
 import { Button, CustomDate, MultiCity } from "../../components/components";
+import {
+  getBookingRoutes,
+  searchFlight,
+  setSearchForm,
+} from "../../_core/features/bookingSlice";
 import { searchFlightValidationSchema } from "../../schema/validationSchema";
 import { searchFlight, setSearchForm } from "../../_core/features/bookingSlice";
 import {
@@ -35,9 +50,8 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
   const dispatch = useDispatch();
   const isFirstRender = useRef(true);
   const { userData } = useSelector((state) => state.auth);
-  const { isLoadingSearchResults, searchForm } = useSelector(
-    (state) => state.booking
-  );
+  const { isLoadingSearchResults, searchForm, bookingRoutes, isLoadingRoutes } =
+    useSelector((state) => state.booking);
   const [activeField, setActiveField] = useState(initialState);
 
   const getCityOptions = (
@@ -162,11 +176,27 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
       }
     };
 
+    console.log(bookingRoutes, "bookingRoutes");
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  useEffect(() => {
+    if (userData?.token) {
+      dispatch(getBookingRoutes(userData.token));
+    }
+  }, []);
+  console.log(bookingRoutes, "bookingRoutes");
+  if (isLoadingRoutes) {
+    return (
+      <div className="flex items-center justify-center w-full h-screen">
+        <Spinner />
+      </div>
+    );
+  }
   return (
     <>
       <Toaster />
@@ -249,12 +279,22 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                             <FormSelect
                               id="departure"
                               label="Departure From"
-                              options={getCityOptions(
-                                values.flightRoute,
-                                values.arrival,
-                                iranianCities,
-                                internationalCities
-                              )}
+                              options={
+                                // !values.arrival ? bookingRoutes?.map(route => {
+                                //   console.log(route, "route")
+                                //   return ({
+                                //     value: route.Origin,
+                                //     label: route.Origin
+                                //   })
+                                // }) :
+                                bookingRoutes?.map((route) => {
+                                  console.log(route, "route");
+                                  return {
+                                    value: route.Origin,
+                                    label: route.Origin,
+                                  };
+                                })
+                              }
                               value={values.departure}
                               onChange={(option) => {
                                 setFieldValue("departure", option.value);
@@ -272,27 +312,28 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                               />
                             </div>
                           </div>
-
                           <FormSelect
                             id="arrival"
                             label="Arrival To"
-                            options={getCityOptions(
-                              values.flightRoute,
-                              values.departure,
-                              iranianCities,
-                              internationalCities
-                            )}
+                            className={"select w-full"}
+                            isSelected={activeField.arrival}
+                            isLoading={isLoadingRoutes}
+                            options={bookingRoutes?.map((route) => {
+                              console.log(route, "route");
+                              return {
+                                value: route.Destination,
+                                label: route.Destination,
+                              };
+                            })}
                             value={values.arrival}
+                            placeholder="Select Arrival"
                             onChange={(option) => {
                               setFieldValue("arrival", option.value);
                               activateField("departureDate");
                             }}
-                            touched={touched.arrival}
-                            error={errors.arrival}
-                            isSelected={activeField.arrival}
-                            icons={<FaPlaneArrival />}
+                            optionIcons={<FaPlaneArrival />}
+                            selectIcon={<FaPlaneArrival size={18} />}
                           />
-
                           <div className="relative mb-5 select">
                             <CustomDate
                               onChange={(e) => {
@@ -315,7 +356,6 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                               </div>
                             )}
                           </div>
-
                           <div className="relative mb-5 select">
                             <CustomDate
                               onChange={(e) => {
@@ -341,7 +381,6 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                                 </div>
                               )}
                           </div>
-
                           {selectFields.map(
                             ({ id, label, options, icon, next }) => (
                               <FormSelect
