@@ -259,7 +259,7 @@ const TicketDetails = () => {
     },
     {
       name: "TICKET NUMBER",
-      selector: (row) => row.passengertickets[0].ticket_number || "-",
+      selector: (row) => row?.passengertickets[0]?.ticket_number || "-",
       sortable: false,
     },
     // bookingDetails?.booking_status=="confirmed" &&
