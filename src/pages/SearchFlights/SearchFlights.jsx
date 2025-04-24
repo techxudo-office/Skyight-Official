@@ -252,10 +252,9 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                         <FormSelect
                           id="departure"
                           label="Select Departure"
-                          options={CityCodes?.map((route) => ({
-                            value: route.Iata,
-                            label: route.City,
-                            extraInfo: route.Iata,
+                          options={bookingRoutes?.map((route) => ({
+                            value: route.Origin,
+                            label: route.Origin,
                           }))}
                           value={values.departure}
                           onChange={(option) => {

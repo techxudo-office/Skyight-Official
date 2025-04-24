@@ -230,7 +230,7 @@ const TravelersDetails = () => {
     {
       type: "text",
       id: "passport_number",
-      label: "Passport Number",
+      label: `Passport Number`,
       name: "passport_number",
     },
     {
