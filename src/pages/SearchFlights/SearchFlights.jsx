@@ -32,6 +32,7 @@ import {
   initialState,
 } from "../../utils/bookingOptions";
 import { FormSelect } from "./FormSelect/FormSelect";
+import CityCodes from "../../AirlinesData/CityCodes";
 
 const SearchFlights = ({ OnlySearch, onSearch }) => {
   const navigate = useNavigate();
@@ -250,10 +251,11 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                       <div className="relative flex flex-col mb-5 md:flex-row max-md:items-center">
                         <FormSelect
                           id="departure"
-                          label="Departure From"
-                          options={bookingRoutes?.map((route) => ({
-                            value: route.Origin,
-                            label: route.Origin,
+                          label="Select Departure"
+                          options={CityCodes?.map((route) => ({
+                            value: route.Iata,
+                            label: route.City,
+                            extraInfo: route.Iata,
                           }))}
                           value={values.departure}
                           onChange={(option) => {
@@ -274,7 +276,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                       </div>
                       <FormSelect
                         id="arrival"
-                        label="Arrival To"
+                        label="Select Arrival"
                         className={"select w-full"}
                         isSelected={activeField.arrival}
                         isLoading={isLoadingRoutes}
