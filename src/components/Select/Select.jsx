@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from "react";
-// import { FaChevronDown } from "react-icons/fa";
 import { FaCaretDown } from "react-icons/fa";
 import { Spinner } from "../components";
 
@@ -22,26 +21,31 @@ const Select = ({
   height = "h-14",
 }) => {
   const selectRef = useRef(null);
+  const optionsListRef = useRef(null);
   const [selectStatus, setSelectStatus] = useState(false);
   const [searchValue, setSearchValue] = useState("");
+  const [visibleCount, setVisibleCount] = useState(100);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+
+  // Reset visible count when options change or dropdown closes
+  useEffect(() => {
+    setVisibleCount(100);
+  }, [options, selectStatus]);
+
   useEffect(() => {
     setSelectStatus(isSelected);
   }, [isSelected]);
 
   const selectHandler = () => {
-    if (disabled) {
-      return;
-    } else {
-      setSelectStatus((prev) => !prev);
+    if (disabled) return;
 
-      if (!selectStatus && onClick) {
-        onClick();
-      }
-    }
+    setSelectStatus((prev) => !prev);
+    if (!selectStatus && onClick) onClick();
   };
 
   const searchHandler = (e) => {
     setSearchValue(e.target.value);
+    setVisibleCount(100); // Reset visible count when searching
   };
 
   const selectOptionHandler = (option) => {
@@ -50,9 +54,27 @@ const Select = ({
     setSelectStatus(false);
   };
 
+  // Filter options based on search value
   const filteredOptions = options.filter((option) =>
     option?.label?.toLowerCase()?.includes(searchValue?.toLowerCase())
   );
+
+  // Handle scroll event for lazy loading
+  const handleScroll = () => {
+    if (!optionsListRef.current || isLoadingMore) return;
+
+    const { scrollTop, scrollHeight, clientHeight } = optionsListRef.current;
+    const isNearBottom = scrollTop + clientHeight >= scrollHeight - 20;
+
+    if (isNearBottom && visibleCount < filteredOptions.length) {
+      setIsLoadingMore(true);
+      // Simulate loading delay
+      setTimeout(() => {
+        setVisibleCount((prev) => Math.min(prev + 100, filteredOptions.length));
+        setIsLoadingMore(false);
+      }, 300);
+    }
+  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -67,22 +89,29 @@ const Select = ({
     };
   }, []);
 
+  // Slice options to only show visible count
+  const visibleOptions = filteredOptions.slice(0, visibleCount);
+
   return (
     <div
       className={`flex flex-col ${className ? className : "w-full"}`}
-      ref={selectRef}>
+      ref={selectRef}
+    >
       <div
         onMouseEnter={onMouseEnter}
         className={`relative ${height} rounded-md border border-gray flex items-center justify-between px-2 ${disabled && "bg-slate-100"
-          }`}>
+          }`}
+      >
         <label
           htmlFor={id}
-          className={` text-md bg-white font-medium  mb-2 absolute -top-3 left-3  px-1 roounded-md text-text`}>
+          className={`text-md bg-white font-medium mb-2 absolute -top-3 left-3 px-1 roounded-md text-text`}
+        >
           {label}
         </label>
         <div
           className="flex items-center justify-between w-full px-3 py-5 bg-transparent text-text"
-          onClick={selectHandler}>
+          onClick={selectHandler}
+        >
           <span className="flex items-center gap-3 text-text">
             <span className="text-primary">{selectIcon}</span>
             {(value && value) || placeholder}
@@ -108,25 +137,42 @@ const Select = ({
             {isLoading ? (
               <Spinner className={"text-primary my-2"} />
             ) : (
-              <ul className="overflow-y-auto max-h-40 ">
-                {filteredOptions.map((option, index) => (
-                  <li
-                    key={index}
-                    className={`p-3 flex items-center justify-start gap-3 text-sm  hover:bg-slate-100 ${value?.value === option.value
+              <>
+                <ul
+                  className="overflow-y-auto max-h-40"
+                  ref={optionsListRef}
+                  onScroll={handleScroll}
+                >
+                  {visibleOptions.map((option, index) => (
+                    <li
+                      key={index}
+                      className={`p-3 flex items-center justify-start gap-3 text-sm hover:bg-slate-100 ${value?.value === option.value
                         ? "text-primary font-medium"
                         : "text-slate-500"
-                      }`}
-                    onClick={() => selectOptionHandler(option)}>
-                    {optionIcons && <span>{optionIcons}</span>}
-                    {option.label} | {option.extraInfo}
-                  </li>
-                ))}
-                {filteredOptions.length === 0 && (
-                  <li className="p-3 text-sm text-text-500">
-                    No options found
-                  </li>
+                        }`}
+                      onClick={() => selectOptionHandler(option)}
+                    >
+                      {optionIcons && <span>{optionIcons}</span>}
+                      {option.label} {option.extraInfo && `| ${option.extraInfo}`}
+                    </li>
+                  ))}
+                  {filteredOptions.length === 0 && (
+                    <li className="p-3 text-sm text-text-500">
+                      No options found
+                    </li>
+                  )}
+                </ul>
+                {isLoadingMore && (
+                  <div className="flex justify-center p-2">
+                    <Spinner className="text-primary" />
+                  </div>
                 )}
-              </ul>
+                {/* {visibleCount < filteredOptions.length && !isLoadingMore && (
+                  <div className="p-2 text-xs text-center text-gray-500">
+                    Scroll down to load more options
+                  </div>
+                )} */}
+              </>
             )}
           </div>
         )}
