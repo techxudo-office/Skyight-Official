@@ -12,7 +12,7 @@ export const FormSelect = ({
   icons,
   disabled = false,
 }) => (
-  <>
+  <div className="w-full">
     <Select
       id={id}
       label={label}
@@ -26,7 +26,7 @@ export const FormSelect = ({
       selectIcon={icons}
     />
     {touched && error && (
-      <div className="absolute left-0 mt-2 text-sm text-red-500">{error}</div>
+      <div className="mt-2 text-sm text-red-500">{error}</div>
     )}
-  </>
+  </div>
 );
