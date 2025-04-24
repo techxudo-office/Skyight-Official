@@ -12,6 +12,10 @@ const initialState = {
   isLoadingRoutes: false,
   routesError: null,
 
+  allFormData: null,
+  prevTraveller: null,
+  disableTravelers: null,
+
   pnrData: null,
   isLoadingPNR: false,
   pnrError: null,
@@ -71,7 +75,17 @@ const bookingSlice = createSlice({
   initialState,
   reducers: {
     setSearchForm: (state, action) => {
-      state.searchForm = action.payload; // Save incoming object to state.companies
+      state.searchForm = action.payload;
+    },
+    setBookingStates: (state, action) => {
+      state.allFormData = action.payload.formData;
+      state.prevTraveller = action.payload.traveller;
+      state.disableTravelers = action.payload.disabled;
+    },
+    emptyBookingStates: (state, action) => {
+      state.allFormData = null;
+      state.prevTraveller = null;
+      state.disableTravelers = null;
     },
   },
   extraReducers: (builder) => {
@@ -296,7 +310,7 @@ export const getBookingRoutes = createAsyncThunk(
           headers: {
             Authorization: token,
             "Content-Type": "application/json",
-          }
+          },
         }
       );
       console.log("bookingrotes", response);
@@ -732,5 +746,6 @@ export const getOrders = createAsyncThunk(
   }
 );
 
-export const { setSearchForm } = bookingSlice.actions;
+export const { setSearchForm, setBookingStates, emptyBookingStates } =
+  bookingSlice.actions;
 export default bookingSlice.reducer;

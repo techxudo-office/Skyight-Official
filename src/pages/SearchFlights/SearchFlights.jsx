@@ -9,12 +9,7 @@ import {
   CardLayoutBody,
   CardLayoutFooter,
 } from "../../components/CardLayout/CardLayout";
-import {
-  Button,
-  CustomDate,
-  MultiCity,
-  Spinner,
-} from "../../components/components";
+import { Button, CustomDate, Spinner } from "../../components/components";
 import { FaPlaneDeparture } from "react-icons/fa6";
 import { Formik, Form } from "formik";
 import { useNavigate } from "react-router-dom";
@@ -23,6 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { FlightsBanner, forBackArrows } from "../../assets/Index";
 import RadioButtons from "../../components/RadioButtons/RadioButtons";
 import {
+  emptyBookingStates,
   getBookingRoutes,
   searchFlight,
   setSearchForm,
@@ -143,9 +139,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
   };
 
   const handleSubmit = (values) => {
-    localStorage.removeItem("allFormData");
-    localStorage.removeItem("disableTravelers");
-    localStorage.removeItem("oldTraveller");
+    dispatch(emptyBookingStates());
     dispatch(setSearchForm(values));
     searchFlightHandler(values);
   };
