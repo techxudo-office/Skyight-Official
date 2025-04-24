@@ -16,13 +16,14 @@ import { IoIosAirplane, IoMdEye } from "react-icons/io";
 import { MdChildCare, MdChildFriendly, MdPerson } from "react-icons/md";
 
 const FlightCard = ({ data, doc_type, travelers, pricingInfo }) => {
-  const [flightSegment, setFlightSegment] = useState(
+  const flightSegment =
     data.AirItinerary.OriginDestinationOptions.map(
       (item) => item.FlightSegment[0]
     )
-  );
+
   const navigate = useNavigate();
   const totalTravelers = [];
+  console.log(flightSegment, "flightSegment");
   Object.entries(travelers).forEach(([key, value]) => {
     if (value > 0) {
       totalTravelers.push(key.replace("s", ""));

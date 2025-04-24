@@ -1,4 +1,4 @@
-export default CityCodes = [
+export default [
     {
         "Iata": "AAA",
         "Name": "Anaa",

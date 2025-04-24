@@ -36,17 +36,18 @@ const FlightResults = () => {
   const [DifferenceInDates, setDifferenceInDates] = useState();
   const [TripDetail, setTripDetail] = useState({});
   const { userData } = useSelector((state) => state.auth);
+  const { searchResults } = useSelector((state) => state.booking);
 
   const navigate = useNavigate();
+  const flights =
+    searchResults?.PricedItineraries.PricedItinerary;
   useEffect(() => {
     if (location.state) {
 
-      const flights =
-        location.state.flightsData.PricedItineraries.PricedItinerary;
+
       const travelers = location.state.travelersData;
-      const priceInfo = location.state.flightsData.PricedItineraries;
       setPricingInfo(
-        location.state.flightsData.PricedItineraries.PricedItinerary.map((flight) => flight.AirItineraryPricingInfo)
+        searchResults?.PricedItineraries.PricedItinerary.map((flight) => flight.AirItineraryPricingInfo)
       );
       setFlightsData(flights);
       setTravelersData(travelers);
@@ -64,10 +65,10 @@ const FlightResults = () => {
             dayjs(returnDate).diff(dayjs(departureDate), "days")
           );
         }
-        generateDateOptions(departureDate, flights);
+        generateDateOptions(departureDate);
       }
     }
-  }, [location.state]); // Add location.state as a dependency to trigger useEffect on reload
+  }, [location.state, searchResults]); // Add location.state as a dependency to trigger useEffect on reload
 
   const searchFlightHandler = async (date, index) => {
     const original = dayjs(originalDates[index]);
@@ -113,7 +114,7 @@ const FlightResults = () => {
     }
   };
 
-  const generateDateOptions = (departureDate, flights) => {
+  const generateDateOptions = (departureDate) => {
     const baseDate = dayjs(departureDate, "YYYY-MM-DD");
     const dates = [];
     const originalDates = [];
@@ -124,6 +125,7 @@ const FlightResults = () => {
     setDateOptions(dates);
     setOriginalDates(originalDates);
     // Set the default selected date to be the center date
+
     setSelectedDate(dates[3]);
 
     // Filter the flights by the default selected date
@@ -166,7 +168,7 @@ const FlightResults = () => {
   const onChangeSearch = () => {
     setChangeFlight((Prev) => !Prev);
   };
-
+  console.log(filteredFlightsData, "filteredFlightsData")
   return (
     <div className="relative flex flex-col w-fit">
       {/* <Toaster /> */}
