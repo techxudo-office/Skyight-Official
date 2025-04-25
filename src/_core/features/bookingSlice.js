@@ -108,7 +108,6 @@ const bookingSlice = createSlice({
         state.routesError = null;
       })
       .addCase(getBookingRoutes.fulfilled, (state, action) => {
-        console.log("bookingroutes", action.payload);
         state.isLoadingRoutes = false;
         state.bookingRoutes = action.payload;
       })
@@ -313,7 +312,6 @@ export const getBookingRoutes = createAsyncThunk(
           },
         }
       );
-      console.log("bookingrotes", response);
 
       return response.data.data.Routes || [];
     } catch (error) {

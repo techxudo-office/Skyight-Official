@@ -154,7 +154,6 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
       }
     };
 
-    console.log(bookingRoutes, "bookingRoutes");
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
@@ -167,7 +166,6 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
       dispatch(getBookingRoutes(userData.token));
     }
   }, []);
-  console.log(bookingRoutes, "bookingRoutes");
   if (isLoadingRoutes) {
     return (
       <div className="flex items-center justify-center w-full h-screen">
