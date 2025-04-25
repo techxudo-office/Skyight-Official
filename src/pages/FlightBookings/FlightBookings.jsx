@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Searchbar, SecondaryButton, Table, Tag } from "../../components/components";
+import { ExcelExportButton, Searchbar, SecondaryButton, Table, Tag } from "../../components/components";
 import { useNavigate } from "react-router-dom";
 import {
   CardLayoutContainer,
@@ -43,7 +43,7 @@ const FlightBookings = () => {
         </span>
       ),
       sortable: false,
-      
+
       wrap: true,
       grow: 4,
     },
@@ -51,14 +51,14 @@ const FlightBookings = () => {
       name: "PNR",
       selector: (row) => row.booking_reference_id,
       sortable: false,
-      
+
       grow: 2
     },
     {
       name: "TOTAL FARE",
       selector: (row) => row.total_fare,
       sortable: false,
-      
+
       grow: 2,
 
     },
@@ -66,7 +66,7 @@ const FlightBookings = () => {
       name: "STATUS",
       selector: (row) => <Tag value={row.booking_status} />,
       sortable: false,
-      
+
       wrap: true,
       grow: 4
     },
@@ -74,7 +74,7 @@ const FlightBookings = () => {
       name: "CREATED AT",
       selector: (row) => dayjs(row.created_at).format("MMM-DD-YYYY"),
       sortable: false,
-      
+
       grow: 2,
 
     },
@@ -92,7 +92,7 @@ const FlightBookings = () => {
         </span>
       ),
       sortable: false,
-      
+
     },
   ];
 
@@ -123,6 +123,10 @@ const FlightBookings = () => {
           </div>
         </CardLayoutHeader>
         <CardLayoutBody removeBorder={true}>
+          <ExcelExportButton
+            data={filteredData || []}
+            fileName="FlightBookings"
+          />
           <Searchbar onFilteredData={setFilteredData} data={flightBookings} />
           <Table
             pagination={true}
