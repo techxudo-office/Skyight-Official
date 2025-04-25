@@ -233,7 +233,7 @@ const Finalticket = ({ downloadFromParent, id }) => {
                                         <span >{travelerInfo.PassengerTypeCode} Base Price:</span>{" "}
                                         <span className="font-semibold border-dashed border-b-2 border-primary pb-1">
                                             {(
-                                                priceInfo[index]?.PassengerFare.BaseFare?.Amount /
+                                                priceInfo[index]?.PassengerFare.BaseFare?.pkrBaseFare /
                                                 priceInfo[index]?.PassengerTypeQuantity?.Quantity
                                             )?.toLocaleString()}{" "}
                                             {priceInfo[index]?.PassengerFare.BaseFare.CurrencyCode || "PKR"}
@@ -246,7 +246,7 @@ const Finalticket = ({ downloadFromParent, id }) => {
                                                 priceInfo[index]?.PassengerFare.Taxes?.Tax.map((tax, i) => (
                                                     <div className="pl-3 flex gap-2">
                                                         <p key={i}>{tax.Name}:</p>
-                                                        <p className="border-b-2 border-dashed border-primary font-semibold">{(tax.Amount).toLocaleString()} PKR</p>
+                                                        <p className="border-b-2 border-dashed border-primary font-semibold">{(tax.pkrAmount).toLocaleString()} PKR</p>
                                                     </div>
                                                 ))
                                             }{" "}
@@ -257,7 +257,7 @@ const Finalticket = ({ downloadFromParent, id }) => {
                                         <span>{travelerInfo.PassengerTypeCode} Total Price:</span>{" "}
                                         <span className="border-b-2 pb-1 border-dashed border-primary font-semibold">
                                             {(
-                                                priceInfo[index]?.PassengerFare.TotalFare?.Amount /
+                                                priceInfo[index]?.PassengerFare.TotalFare?.pkrTotalFare /
                                                 priceInfo[index]?.PassengerTypeQuantity?.Quantity
                                             )?.toLocaleString()}{" "}
                                             {priceInfo[index]?.PassengerFare.TotalFare.CurrencyCode || "PKR"}

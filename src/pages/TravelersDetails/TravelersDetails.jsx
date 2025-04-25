@@ -230,7 +230,7 @@ const TravelersDetails = () => {
     {
       type: "text",
       id: "passport_number",
-      label: `Passport Number`,
+      label: `${docType === "Domestic" ? "National ID" : "Passport Number"}`,
       name: "passport_number",
     },
     {
@@ -387,7 +387,7 @@ const TravelersDetails = () => {
                                         .map((item) => ({
                                           passport: item.passport_number,
                                           value: item.email,
-                                          label: `${item.email}/${item.passport_number}`,
+                                          label: `${item.email} | ${item.passport_number}`,
                                         }))
                                       : travelers
                                         .filter(

@@ -67,7 +67,7 @@ export default function PriceSummary({ pricingInfo, travelers }) {
                       (tax, i) => (
                         <div className="flex items-center justify-between pb-1">
                           <span className="text-text">{tax.Name} tax:</span>
-                          <span>{Number(tax.Amount).toLocaleString()}</span>
+                          <span>{Number(tax.pkrTax).toLocaleString()}</span>
                         </div>
                       )
                     )}

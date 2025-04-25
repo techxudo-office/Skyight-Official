@@ -33,6 +33,7 @@ import {
 } from "../../utils/bookingOptions";
 import { FormSelect } from "./FormSelect/FormSelect";
 import CityCodes from "../../AirlinesData/CityCodes";
+import dayjs from "dayjs";
 
 const SearchFlights = ({ OnlySearch, onSearch }) => {
   const navigate = useNavigate();
@@ -57,11 +58,11 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
   const initialValues = {
     flightRoute: "Domestic",
     tripType: "One-Way",
-    departure: "",
+    departure: dayjs().format("YYYY-MM-DD"),
     arrival: "",
     departureDate: "",
     returnDate: "",
-    cabinClass: "",
+    cabinClass: cabinClassOptions[0].value,
     adult: adultOptions[0].value,
     child: childOptions[0].value,
     infant: infantOptions[0].value,
@@ -170,7 +171,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
   if (isLoadingRoutes) {
     return (
       <div className="flex items-center justify-center w-full h-screen">
-        <Spinner />
+        <Spinner className={"text-primary"} />
       </div>
     );
   }
@@ -223,9 +224,11 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                         setFieldValue("flightRoute", option)
                       }
                     />
+                    <p className="text-text text-sm pt-3 italic">Note: Select 'Domestic' if traveling with your national ID; otherwise, choose 'International'</p>
                     {touched.flightRoute && errors.flightRoute && (
                       <div className="mt-2 text-sm text-red-500">
                         {errors.flightRoute}
+
                       </div>
                     )}
                   </CardLayoutBody>
@@ -259,6 +262,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                           value={values.departure}
                           onChange={(option) => {
                             setFieldValue("departure", option.value);
+                            setFieldValue("arrival", "");
                             activateField("arrival");
                           }}
                           touched={touched.departure}
