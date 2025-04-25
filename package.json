@@ -40,6 +40,7 @@
     "react-world-flags": "^1.6.0",
     "redux-persist": "^6.0.0",
     "slick-carousel": "^1.8.1",
+    "xlsx": "^0.18.5",
     "yup": "^1.4.0"
   },
   "devDependencies": {
