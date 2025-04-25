@@ -11,7 +11,6 @@ export default function ConfirmRefund({
 }) {
     const [selectedItems, setSelectedItems] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-    console.log("items", items)
     const handleCheckboxChange = (itemId) => {
         setSelectedItems(prev =>
             prev.includes(itemId)

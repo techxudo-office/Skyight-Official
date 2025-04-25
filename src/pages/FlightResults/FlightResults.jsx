@@ -168,7 +168,6 @@ const FlightResults = () => {
   const onChangeSearch = () => {
     setChangeFlight((Prev) => !Prev);
   };
-  console.log(filteredFlightsData, "filteredFlightsData")
   return (
     <div className="relative flex flex-col w-fit">
       {/* <Toaster /> */}

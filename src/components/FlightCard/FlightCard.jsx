@@ -23,7 +23,6 @@ const FlightCard = ({ data, doc_type, travelers, pricingInfo }) => {
 
   const navigate = useNavigate();
   const totalTravelers = [];
-  console.log(flightSegment, "flightSegment");
   Object.entries(travelers).forEach(([key, value]) => {
     if (value > 0) {
       totalTravelers.push(key.replace("s", ""));
