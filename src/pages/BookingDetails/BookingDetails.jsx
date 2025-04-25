@@ -228,7 +228,6 @@ const TicketDetails = () => {
       selector: (row) => dayjs(row.birth_date).format("D-MMM-YYYY"),
       sortable: false,
 
-
     },
     {
       name: "PASSPORT NUMBER",

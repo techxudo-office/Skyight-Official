@@ -42,11 +42,11 @@ const Roles = () => {
       selector: (row) => row.role,
       sortable: false,
     },
-    {
-      name: "ROLE ID",
-      selector: (row) => row.id,
-      sortable: false,
-    },
+    // {
+    //   name: "ROLE ID",
+    //   selector: (row) => row.id,
+    //   sortable: false,
+    // },
     {
       name: "STATUS",
       selector: (row) => <Tag value={row.is_deleted ? "inactive" : "active"} />,
@@ -65,15 +65,6 @@ const Roles = () => {
           >
             <MdEditSquare title="Edit" className="text-blue-500" />
           </span>
-          {/* <span
-            className="text-xl cursor-pointer"
-            onClick={() => {
-              setModalStatus(true);
-              setDeleteId(row.id);
-            }}
-          >
-            <MdAutoDelete title="Delete" className="text-red-500" />
-          </span> */}
         </div>
       ),
       sortable: false,
