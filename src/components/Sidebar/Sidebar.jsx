@@ -137,15 +137,16 @@ const Sidebar = ({ status, updateStatus }) => {
                 onChange={handleImageChange}
               />
             </div>
-            <div>
-              <h3
-                className={`font-semibold text-text ${
-                  !mobileView ? (status ? "text-lg" : "text-sm") : ""
-                }`}
-              >
-                {`${userData?.user?.first_name} ${userData?.user?.last_name}`}
-              </h3>
-            </div>
+            {status && (
+              <div>
+                <h3 className={`font-semibold text-text text-lg`}>
+                  {`${userData?.user?.first_name} ${userData?.user?.last_name}`}
+                </h3>
+                <h3 className={` text-text text-center`}>
+                  {userData?.user?.role?.role}
+                </h3>
+              </div>
+            )}
           </CardLayoutHeader>
         </CardLayoutContainer>
         <div className="px-3">

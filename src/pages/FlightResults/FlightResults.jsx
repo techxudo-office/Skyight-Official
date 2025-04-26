@@ -7,18 +7,15 @@ import {
   FlightCard,
   Spinner,
 } from "../../components/components";
-import { useLocation, useNavigate } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
-
 import dayjs from "dayjs";
-/* Slick Slider CSS */
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import "./FlightResult.css";
+import toast from "react-hot-toast";
+import { useLocation, useNavigate } from "react-router-dom";
 import SearchFlights from "../SearchFlights/SearchFlights";
-import TravelersDetails from "../TravelersDetails/TravelersDetails";
 import { searchFlight } from "../../_core/features/bookingSlice";
 import { useDispatch, useSelector } from "react-redux";
+import "./FlightResult.css";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const FlightResults = () => {
   const location = useLocation();
@@ -39,15 +36,14 @@ const FlightResults = () => {
   const { searchResults } = useSelector((state) => state.booking);
 
   const navigate = useNavigate();
-  const flights =
-    searchResults?.PricedItineraries.PricedItinerary;
+  const flights = searchResults?.PricedItineraries.PricedItinerary;
   useEffect(() => {
     if (location.state) {
-
-
       const travelers = location.state.travelersData;
       setPricingInfo(
-        searchResults?.PricedItineraries.PricedItinerary.map((flight) => flight.AirItineraryPricingInfo)
+        searchResults?.PricedItineraries.PricedItinerary.map(
+          (flight) => flight.AirItineraryPricingInfo
+        )
       );
       setFlightsData(flights);
       setTravelersData(travelers);
@@ -68,7 +64,7 @@ const FlightResults = () => {
         generateDateOptions(departureDate);
       }
     }
-  }, [location.state, searchResults]); // Add location.state as a dependency to trigger useEffect on reload
+  }, [location.state, searchResults]);
 
   const searchFlightHandler = async (date, index) => {
     const original = dayjs(originalDates[index]);
@@ -124,11 +120,9 @@ const FlightResults = () => {
     }
     setDateOptions(dates);
     setOriginalDates(originalDates);
-    // Set the default selected date to be the center date
 
     setSelectedDate(dates[3]);
 
-    // Filter the flights by the default selected date
     const filteredFlights = flights.filter((flight) => {
       const flightDate = dayjs(
         flight.AirItinerary.OriginDestinationOptions[0].FlightSegment[0]
@@ -137,13 +131,12 @@ const FlightResults = () => {
       return flightDate.isSame(dates[3]);
     });
 
-    setFilteredFlightsData(filteredFlights); // Set the initial filtered flights
+    setFilteredFlightsData(filteredFlights);
   };
 
   const handleDateSelect = (date, index) => {
     setSelectedDate(date);
     searchFlightHandler(date, index);
-    // Filter flights based on the selected date
     const filteredFlights = flightsData.filter((flight) => {
       const flightDate = dayjs(
         flight.AirItinerary.OriginDestinationOptions[0].FlightSegment[0]
@@ -153,25 +146,12 @@ const FlightResults = () => {
     });
     setFilteredFlightsData(filteredFlights);
   };
-
-  const sliderSettings = {
-    dots: false,
-    infinite: false,
-    speed: 500,
-    slidesToShow: 6,
-    slidesToScroll: 1,
-    focusOnSelect: true,
-    afterChange: (current) => {
-      handleDateSelect(dateOptions[current]);
-    },
-  };
   const onChangeSearch = () => {
     setChangeFlight((Prev) => !Prev);
   };
   return (
     <div className="relative flex flex-col w-fit">
-      {/* <Toaster /> */}
-      {ChangeFlight ? (
+      {ChangeFlight && (
         <div className="fixed top-0 flex justify-center items-center p-32 backdrop-blur-sm left-0 w-full h-screen z-[999]">
           <div className="shadow-xl w-[1000px] rounded-md relative">
             <Button
@@ -179,24 +159,16 @@ const FlightResults = () => {
               text={"Close"}
               className="absolute right-3 top-3"
             />
-            <SearchFlights
-              OnlySearch={true}
-            //  onSearch={()=>setChangeFlight(false)}
-            />
+            <SearchFlights OnlySearch={true} />
           </div>
         </div>
-      ) : (
-        ""
       )}
-
-      {/* flight info  */}
       <ChangeSearch
         tripDetail={TripDetail}
         flights={filteredFlightsData.length}
         onclick={onChangeSearch}
       />
       <AvailableFlights flights={flightsData} />
-      {/* Date Slider */}
       <DateSlider
         ref={sliderRef}
         selectedDate={selectedDate}
@@ -204,7 +176,6 @@ const FlightResults = () => {
         dateOptions={dateOptions}
         differenceInDates={DifferenceInDates}
       />
-      {/* Filtered Flights Data */}
       {filteredFlightsData.length > 0 ? (
         filteredFlightsData.map((item, index) => (
           <FlightCard
