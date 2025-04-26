@@ -42,8 +42,8 @@ const Finalticket = ({ downloadFromParent, id }) => {
             });
 
             // Convert 1300px to mm (1px ≈ 0.264583mm)
-            const pdfWidth = 200;
-            const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+            const pdfWidth = 400;
+            const pdfHeight = (canvas.height * pdfWidth) / 800;
 
             // Create PDF with exact element width
             const pdf = new jsPDF("p", "mm", [pdfWidth, pdfHeight]);
@@ -95,18 +95,18 @@ const Finalticket = ({ downloadFromParent, id }) => {
 
 
     return (
-        <>{downloadFromParent &&
-            <CustomTooltip content={"Allow Download Multiple Files"}>
-                <Button
-                    loading={downloadingAll}
-                    icon={<MdDownload />}
-                    onClick={downloadAllTicketsFromParent}
-                    className="bg-green-600 hover:bg-green-700"
-                />
-            </CustomTooltip>
-        }
-            <div className={`md:p-4 w-[1000px] text-text mx-auto max-md:text-sm ${downloadFromParent ? "fixed -top-[9999] -right-[9999px] " : ""}`}>
-                {/* Download All Button - Added at the top */}
+        <>
+            {downloadFromParent && (
+                <CustomTooltip content={"Allow Download Multiple Files"}>
+                    <Button
+                        loading={downloadingAll}
+                        icon={<MdDownload />}
+                        onClick={downloadAllTicketsFromParent}
+                    />
+                </CustomTooltip>
+            )}
+
+            <div className={`md:p-4 w-[1000px] text-text mx-auto max-md:text-sm ${downloadFromParent ? "fixed -top-[9999] -right-[9999px]" : ""}`}>
                 {travelers.length > 1 && !downloadFromParent && (
                     <div className="text-center mb-4">
                         <CustomTooltip content={"Allow Download Multiple Files"}>
@@ -115,177 +115,163 @@ const Finalticket = ({ downloadFromParent, id }) => {
                                 text={`Download All Tickets (${travelers.length})`}
                                 icon={<MdDownload />}
                                 onClick={downloadAllTickets}
-                                className="bg-green-600 hover:bg-green-700"
                             />
                         </CustomTooltip>
-
                     </div>
                 )}
 
                 {travelers.map((travelerInfo, index) => {
                     const traveler = travelerInfo?.PersonName;
                     const ticketInfo = travelerInfo?.ETicketInfos?.[0];
+                    const cabinClass = originDestinationOptions[0]?.CabinClass;
 
                     return (
-                        <div key={index} className="lg:w-[90%] mb-8 mx-auto bg-white shadow-lg rounded-lg overflow-hidden border border-gray-300">
-                            <div className="bg-white max-md:absolute -right-[9999px]" ref={(el) => (ticketRefs.current[index] = el)}>
-                                {/* Header Section */}
-                                <div className="bg-primary text-white text-xl font-bold py-3 px-5 flex flex-wrap gap-3 justify-between">
-                                    <span className="text-2xl">Ticket - Traveler {index + 1}</span>
-                                    <span className="text-lg pr-5">E-Ticket No: {ticketInfo?.ETicketNo || "N/A"}</span>
+                        <div key={index} className="mb-8 mx-auto bg-white rounded-lg  shadow-xl border-2  w-[900px]">
+                            {/* Ticket Stub */}
+                            <div className="bg-primary text-white py-2 px-4 flex justify-between items-center">
+                                <div className="flex items-center gap-2">
+                                    <IoMdAirplane className="text-xl" />
+                                    <span className="font-bold">E-Ticket</span>
                                 </div>
-
-                                {/* Passenger Info */}
-                                <div className="p-5 border-b ">
-                                    <p className="text-xl font-semibold">
-                                        {traveler?.NameTitle} {traveler?.GivenName} {traveler?.Surname}
-                                    </p>
-                                    <p className="text-lg text-text">Date of Issue: 07 Mar 2025</p>
-                                </div>
-
-                                {/* Flight Details */}
-                                <div className="p-4 bg-white border-b">
-                                    <h3 className="font-bold text-xl mb-2 text-primary">Flight Details</h3>
-                                    <div className="w-full">
-                                        {originDestinationOptions.map((option, optionIndex) =>
-                                            option.FlightSegment.map((flightSegment, segmentIndex) => (
-                                                <div
-                                                    key={`${optionIndex}-${segmentIndex}`}
-                                                    className="flex text-lg flex-wrap gap-y-5 gap-x-10 rounded-lg bg-white mb-4 "
-                                                >
-                                                    {/* Airline */}
-                                                    <div className="flex gap-2">
-                                                        <span className="text-text">Airline:</span>
-                                                        <span className="border-b-2 border-dashed border-primary font-semibold">
-                                                            {flightSegment?.OperatingAirline?.Code} {flightSegment?.FlightNumber}
-                                                        </span>
-                                                    </div>
-
-                                                    {/* Depart */}
-                                                    <div className="flex gap-2">
-                                                        <span className="text-text ">Depart:</span>
-                                                        <span className="border-b-2 border-dashed border-primary font-semibold">
-                                                            {flightSegment?.DepartureAirport?.LocationCode} ({flightSegment?.DepartureAirport?.Terminal})
-                                                        </span>
-                                                    </div>
-                                                    {/* Arrive */}
-                                                    <div className="flex gap-2">
-                                                        <span className="text-text ">Arrive:</span>
-                                                        <span className="border-b-2 border-dashed border-primary font-semibold">
-                                                            {flightSegment?.ArrivalAirport?.LocationCode} ({flightSegment?.ArrivalAirport?.Terminal})
-                                                        </span>
-                                                    </div>
-                                                    <div className="flex gap-2">
-                                                        <span className="text-text ">Departure Date:</span>
-                                                        <span className="border-b-2 border-dashed border-primary font-semibold">
-                                                            {flightSegment?.DepartureDate} {flightSegment?.DepartureTime}
-                                                        </span>
-                                                    </div>
-
-                                                    <div className="flex gap-2">
-                                                        <span className="text-text ">Arrival Date:</span>
-                                                        <span className="border-b-2 border-dashed border-primary font-semibold">
-                                                            {flightSegment?.ArrivalDate} {flightSegment?.ArrivalTime}
-                                                        </span>
-                                                    </div>
-                                                    <div className="flex gap-2">
-                                                        <span className="text-text ">Cabin:</span>
-                                                        <span className="border-b-2 border-dashed border-primary font-semibold">
-                                                            {option.CabinClass == "Y" ? "Economy" : option.CabinClass == "J" ? "Business" : option.CabinClass == "F" ? "First Class" : option.CabinClass == "W" ? "Premium Economy" : option.CabinClass}
-                                                        </span>
-                                                    </div>
-
-                                                    {/* Type */}
-                                                    <div className="flex gap-2">
-                                                        <span className="text-text ">Type:</span>
-                                                        <span className="border-b-2 border-dashed border-primary font-semibold">{travelerInfo.PassengerTypeCode}</span>
-                                                    </div>
-
-                                                    {/* Duration */}
-                                                    <div className="flex gap-2">
-                                                        <span className="text-text ">Duration:</span>
-                                                        <span className="border-b-2 border-dashed border-primary font-semibold">
-                                                            {`${(flightSegment?.FlightDuration).split(":")[0]} hr ${(flightSegment?.FlightDuration).split(":")[1]} min ` || "N/A"}
-                                                        </span>
-                                                    </div>
-
-                                                    {/* PNR */}
-                                                    <div className="flex gap-2">
-                                                        <span className="text-text ">PNR:</span>
-                                                        <span className="border-b-2 border-dashed border-primary font-semibold">{bookingInfo?.Id || "N/A"}</span>
-                                                    </div>
-
-                                                    {/* Baggage */}
-                                                    <div className="flex gap-2">
-                                                        <span className="text-text ">Free Baggages:</span>
-                                                        <span className="border-b-2 border-dashed border-primary font-semibold">{flightSegment?.FreeBaggages || "N/A"}</span>
-                                                    </div>
-                                                </div>
-                                            ))
-                                        )}
-                                    </div>
-                                </div>
-
-                                {/* Price Details */}
-                                <div className="p-5 border-b text-lg flex flex-col gap-2">
-                                    <h3 className="font-bold text-xl text-primary">Price Details</h3>
-                                    <p>
-                                        <span >{travelerInfo.PassengerTypeCode} Base Price:</span>{" "}
-                                        <span className="font-semibold border-dashed border-b-2 border-primary pb-1">
-                                            {(
-                                                priceInfo[index]?.PassengerFare.BaseFare?.pkrBaseFare /
-                                                priceInfo[index]?.PassengerTypeQuantity?.Quantity
-                                            )?.toLocaleString()}{" "}
-                                            {priceInfo[index]?.PassengerFare.BaseFare.CurrencyCode || "PKR"}
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <span >{travelerInfo.PassengerTypeCode} Taxes:</span>{" "}
-                                        <span className=" ">
-                                            {
-                                                priceInfo[index]?.PassengerFare.Taxes?.Tax.map((tax, i) => (
-                                                    <div className="pl-3 flex gap-2">
-                                                        <p key={i}>{tax.Name}:</p>
-                                                        <p className="border-b-2 border-dashed border-primary font-semibold">{(tax.pkrAmount).toLocaleString()} PKR</p>
-                                                    </div>
-                                                ))
-                                            }{" "}
-                                        </span>
-                                    </p>
-
-                                    <p>
-                                        <span>{travelerInfo.PassengerTypeCode} Total Price:</span>{" "}
-                                        <span className="border-b-2 pb-1 border-dashed border-primary font-semibold">
-                                            {(
-                                                priceInfo[index]?.PassengerFare.TotalFare?.pkrTotalFare /
-                                                priceInfo[index]?.PassengerTypeQuantity?.Quantity
-                                            )?.toLocaleString()}{" "}
-                                            {priceInfo[index]?.PassengerFare.TotalFare.CurrencyCode || "PKR"}
-                                        </span>
-                                    </p>
-                                </div>
-
-                                {/* Fare Conditions */}
-                                <div className="p-5 ">
-                                    <h3 className="font-bold text-xl text-primary">Fare Conditions</h3>
-                                    <ul className="list-disc  ml-5 text-text">
-                                        <li>Cancellation charges as per airline rules.</li>
-                                        <li>Date change charges as applicable.</li>
-                                        <li><strong>E-Ticket Notice:</strong> Terms & conditions apply.</li>
-                                        <li><strong>Check-in Time:</strong> Domestic - 1 hour, International - 3 hours.</li>
-                                        <li><strong>Passport/Visa/Health:</strong> Ensure valid documents.</li>
-                                    </ul>
+                                <div className="text-sm">
+                                    <span className="font-semibold">E-Ticket: </span>
+                                    {ticketInfo?.ETicketNo || "N/A"}
                                 </div>
                             </div>
 
-                            {/* Download Button */}
-                            <div className="p-5 text-center">
+                            {/* Main Ticket */}
+                            <div className="bg-white" ref={(el) => (ticketRefs.current[index] = el)}>
+                                {/* Passenger Header */}
+                                <div className="bg-gradient-to-r bg-primary border-t border-white text-white p-4">
+                                    <div className="flex justify-between items-center">
+                                        <div>
+                                            <p className="text-2xl font-bold">
+                                                {traveler?.NameTitle} {traveler?.GivenName} {traveler?.Surname}
+                                            </p>
+                                            <p className="text-sm opacity-90">
+                                                {travelerInfo.PassengerTypeCode} • {cabinClass === "Y" ? "ECONOMY" : cabinClass === "J" ? "BUSINESS" : cabinClass === "F" ? "FIRST CLASS" : cabinClass}
+                                            </p>
+                                        </div>
+                                        <div className="text-right">
+                                            <p className="text-xl font-bold">{bookingInfo?.Id || "N/A"}</p>
+                                            <p className="text-sm opacity-90">BOOKING REFERENCE</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Flight Details */}
+                                <div className="p-5 grid grid-cols-2 gap-4 border-b">
+                                    {originDestinationOptions.map((option, optionIndex) =>
+                                        option.FlightSegment.map((flightSegment, segmentIndex) => (
+                                            <React.Fragment key={`${optionIndex}-${segmentIndex}`}>
+                                                <div className="col-span-2 mb-4">
+                                                    <div className="flex justify-between items-center bg-gray-50 p-3 rounded-lg">
+                                                        <div className="text-center">
+                                                            <p className="text-3xl font-bold">{flightSegment?.DepartureAirport?.LocationCode}</p>
+                                                            <p className="text-sm text-gray-600">Departure</p>
+                                                        </div>
+                                                        <div className="flex flex-col items-center">
+                                                            <div className="flex items-center gap-2 text-5xl">
+                                                                <div className="h-[2px] w-32 bg-primary"></div>
+                                                                <IoMdAirplane className="text-primary transform rotate-90" />
+                                                                <div className="h-[2px] w-32 bg-primary"></div>
+                                                            </div>
+                                                            <p className=" text-gray-500 mt-1">
+                                                                {`${flightSegment?.FlightDuration.split(":")[0]}h ${flightSegment?.FlightDuration.split(":")[1]}m`}
+                                                            </p>
+                                                        </div>
+                                                        <div className="text-center">
+                                                            <p className="text-3xl font-bold">{flightSegment?.ArrivalAirport?.LocationCode}</p>
+                                                            <p className="text-sm text-gray-600">Arrival</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div className="space-y-3">
+                                                    <div>
+                                                        <p className="text-lg text-gray-500">AIRLINE</p>
+                                                        <p className="font-semibold">{flightSegment?.OperatingAirline?.Code} {flightSegment?.FlightNumber}</p>
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-lg text-gray-500">DEPARTS</p>
+                                                        <p className="font-semibold">{flightSegment?.DepartureDate} at {flightSegment?.DepartureTime}</p>
+                                                        <p className="text-sm">Terminal: {flightSegment?.DepartureAirport?.Terminal || "N/A"}</p>
+                                                    </div>
+                                                </div>
+
+                                                <div className="space-y-3">
+                                                    <div>
+                                                        <p className="text-lg text-gray-500">FLIGHT DATE</p>
+                                                        <p className="font-semibold">{flightSegment?.DepartureDate}</p>
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-lg text-gray-500">ARRIVES</p>
+                                                        <p className="font-semibold">{flightSegment?.ArrivalDate} at {flightSegment?.ArrivalTime}</p>
+                                                        <p className="text-sm">Terminal: {flightSegment?.ArrivalAirport?.Terminal || "N/A"}</p>
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-span-2 grid grid-cols-2 gap-4 mt-4">
+                                                    <div>
+                                                        <p className="text-lg text-gray-500">BAGGAGE</p>
+                                                        <p className="font-semibold">{flightSegment?.FreeBaggages || "N/A"}</p>
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-lg text-gray-500">SEAT</p>
+                                                        <p className="font-semibold">-</p>
+                                                    </div>
+                                                </div>
+                                            </React.Fragment>
+                                        ))
+                                    )}
+                                </div>
+
+                                {/* Price Section */}
+                                <div className="p-5 bg-gray-50">
+                                    <h3 className="font-bold text-lg text-primary mb-3">FARE DETAILS</h3>
+                                    <div className="grid grid-cols-3 gap-4">
+                                        <div className="bg-white p-3 rounded-lg shadow-sm">
+                                            <p className="text-lg text-gray-500">BASE FARE</p>
+                                            <p className="font-bold">
+                                                {(
+                                                    priceInfo[index]?.PassengerFare.BaseFare?.pkrBaseFare /
+                                                    priceInfo[index]?.PassengerTypeQuantity?.Quantity
+                                                )?.toLocaleString()} {priceInfo[index]?.PassengerFare.BaseFare.CurrencyCode || "PKR"}
+                                            </p>
+                                        </div>
+                                        <div className="bg-white p-3 rounded-lg shadow-sm">
+                                            <p className="text-lg text-gray-500">TAXES & FEES</p>
+                                            <p className="font-bold">
+                                                {priceInfo[index]?.PassengerFare.Taxes?.Tax.reduce((sum, tax) => sum + tax.pkrAmount, 0)?.toLocaleString()} PKR
+                                            </p>
+                                        </div>
+                                        <div className="bg-blue-100 p-3 rounded-lg shadow-sm">
+                                            <p className="text-lg text-primary">TOTAL</p>
+                                            <p className="font-bold text-blue-700">
+                                                {(
+                                                    priceInfo[index]?.PassengerFare.TotalFare?.pkrTotalFare /
+                                                    priceInfo[index]?.PassengerTypeQuantity?.Quantity
+                                                )?.toLocaleString()} {priceInfo[index]?.PassengerFare.TotalFare.CurrencyCode || "PKR"}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Footer */}
+                                <div className="p-4 bg-gray-100 text-center text-lg text-gray-600 border-t">
+                                    <p>Please check in at least 2 hours before departure for domestic flights</p>
+                                    <p>and 3 hours for international flights. Have a pleasant journey!</p>
+                                </div>
+                            </div>
+
+                            {/* Download Button (unchanged) */}
+                            <div className="p-4 text-center bg-gray-50 border-t">
                                 <Button
                                     loading={loading === index}
-                                    text={"Download PDF"}
+                                    text={"Download E-Ticket"}
                                     icon={<MdDownload />}
                                     onClick={() => downloadPDF(index)}
-                                    className=""
+                                    className="bg-primary hover:bg-blue-700 text-white"
                                 />
                             </div>
                         </div>

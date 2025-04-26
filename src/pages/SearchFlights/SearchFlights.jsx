@@ -187,7 +187,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
           />
         )}
 
-        <CardLayoutContainer className={"mb-10"}>
+        <CardLayoutContainer className={"mb-10 bg-white"}>
           <CardLayoutHeader
             heading="Search Flight"
             className={"flex items-center justify-between "}

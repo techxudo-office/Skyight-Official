@@ -28,7 +28,8 @@ const FlightCard = ({ data, doc_type, travelers, pricingInfo }) => {
       totalTravelers.push(key.replace("s", ""));
     }
   });
-
+  console.log(travelers, "travelers")
+  console.log(totalTravelers, "travelers")
   const viewDetails = () => {
     navigate("/dashboard/travelers-details", {
       state: { data, doc_type, travelers, pricingInfo },
@@ -140,7 +141,9 @@ const FlightCard = ({ data, doc_type, travelers, pricingInfo }) => {
                     <span>
                       <FaMoneyBillAlt />
                     </span>
-                    <span className="">{(pricingInfo.PTC_FareBreakdowns[index].PassengerFare.TotalFare.pkrTotalFare).toLocaleString()} PKR</span>
+                    <span className="flex items-end">{(pricingInfo.PTC_FareBreakdowns[index].PassengerFare.TotalFare.pkrTotalFare).toLocaleString()}
+                      {travelers[`${item}s`] !== 1 &&
+                        <p> (x{travelers[`${item}s`]})</p>}  PKR</span>
                   </h2>
                 </div>
               ))}

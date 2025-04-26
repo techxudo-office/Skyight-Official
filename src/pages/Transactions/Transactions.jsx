@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   Button,
+  ExcelExportButton,
   ModalWrapper,
   Searchbar,
   SecondaryButton,
@@ -107,6 +108,10 @@ const Transactions = () => {
         </CardLayoutHeader>
 
         <CardLayoutBody removeBorder={true}>
+          <ExcelExportButton
+            data={filteredTransaction || []}
+            fileName="Transactions"
+          />
           <Searchbar data={transactions} onFilteredData={setFilteredTransaction} searchFields={["bank_name", "amount", "status"]} />
           <Table
             pagination={true}

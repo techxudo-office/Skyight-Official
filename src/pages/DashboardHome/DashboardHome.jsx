@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   DashboardCards,
+  ExcelExportButton,
   Searchbar,
   Table,
   Tag,
@@ -86,7 +87,7 @@ const DashboardHome = () => {
         </span>
       ),
       sortable: false,
-      
+
       wrap: true,
       grow: 4,
     },
@@ -94,21 +95,21 @@ const DashboardHome = () => {
       name: "PNR",
       selector: (row) => row.booking_reference_id,
       sortable: false,
-      
+
       grow: 2,
     },
     {
       name: "TOTAL FARE",
       selector: (row) => row.total_fare,
       sortable: false,
-      
+
       grow: 2,
     },
     {
       name: "STATUS",
       selector: (row) => <Tag value={row.booking_status} />,
       sortable: false,
-      
+
       wrap: true,
       grow: 3,
     },
@@ -117,7 +118,7 @@ const DashboardHome = () => {
       name: "CREATED AT",
       selector: (row) => dayjs(row.created_at).format("MMM-DD-YYYY"),
       sortable: false,
-      
+
       grow: 2,
     },
     {
@@ -135,7 +136,7 @@ const DashboardHome = () => {
         </span>
       ),
       sortable: false,
-      
+
       grow: 2,
     },
   ];
@@ -177,6 +178,10 @@ const DashboardHome = () => {
           className="flex items-center justify-between"
         ></CardLayoutHeader>
         <CardLayoutBody removeBorder={true}>
+          <ExcelExportButton
+            data={filteredData || []}
+            fileName="FlightBookings"
+          />
           <Searchbar className={"mb-7"} data={flightBookings} onFilteredData={setFilteredData} />
           <Table
             pagination={true}

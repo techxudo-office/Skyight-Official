@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   CardLayoutContainer,
   CardLayoutHeader,
 } from "../../components/CardLayout/CardLayout";
-import { Loader, Table, Tag } from "../../components/components";
+import { ExcelExportButton, Loader, Searchbar, Table, Tag } from "../../components/components";
 import dayjs from "dayjs";
 import { Toaster } from "react-hot-toast";
 import { getFlightBookings } from "../../_core/features/bookingSlice";
@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 const BookingHistory = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [filteredData, setFilteredData] = useState([]);
   const userData = useSelector((state) => state.auth.userData);
   const { flightBookings, isLoadingFlightBookings, flightBookingsError } =
     useSelector((state) => state.booking);
@@ -49,31 +50,31 @@ const BookingHistory = () => {
         </span>
       ),
       sortable: false,
-      
+
     },
     {
       name: "PNR",
       selector: (row) => row.booking_reference_id,
       sortable: false,
-      
+
     },
     {
       name: "TOTAL FARE",
       selector: (row) => row.total_fare,
       sortable: false,
-      
+
     },
     {
       name: "STATUS",
       selector: (row) => <Tag value={row.booking_status} />,
       sortable: false,
-      
+
     },
     {
       name: "CREATED AT",
       selector: (row) => dayjs(row.created_at).format("MMM-DD-YYYY"),
       sortable: false,
-      
+
     },
     {
       name: "",
@@ -89,24 +90,32 @@ const BookingHistory = () => {
         </span>
       ),
       sortable: false,
-      
+
     },
   ];
   const bookedBookings = flightBookings?.filter((item) => item.booking_status === "booked")
   return (
     <>
       <Toaster />
-      <CardLayoutContainer>
+      <CardLayoutContainer >
         <CardLayoutHeader heading={"Booking History"} />
+        <ExcelExportButton
+          data={filteredData || []}
+          fileName="FlightBookings"
+        />
+        <Searchbar onFilteredData={setFilteredData} data={bookedBookings} />
+
         <Table
           columnsData={columns}
-          tableData={bookedBookings || []}
+          tableData={filteredData || []}
           pagination={true}
           progressPending={isLoadingFlightBookings}
-          paginationTotalRows={bookedBookings?.length}
+          paginationTotalRows={filteredData?.length}
           paginationComponentOptions={{ noRowsPerPage: "10" }}
         />
       </CardLayoutContainer>
+
+
     </>
   );
 };

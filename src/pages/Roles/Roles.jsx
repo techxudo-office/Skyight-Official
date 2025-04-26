@@ -120,6 +120,10 @@ const Roles = () => {
           </div>
         </CardLayoutHeader>
         <CardLayoutBody removeBorder={true}>
+          <ExcelExportButton
+            data={roles || []}
+            fileName="roles"
+          />
           <Table
             pagination={true}
             columnsData={roleColumns}

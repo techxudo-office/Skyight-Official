@@ -265,7 +265,7 @@ const TravelersDetails = () => {
                   key === "adults" ? "ADT" : key === "childs" ? "CHD" : "INF";
 
                 return (
-                  <CardLayoutContainer key={`${key}-${i}`} className={"mb-5"}>
+                  <CardLayoutContainer key={`${key}-${i}`} className={"mb-5 bg-white"}>
                     <CardLayoutHeader>
                       <h2 className="text-2xl font-semibold capitalize text-text">
                         Travelers Detail {docType}

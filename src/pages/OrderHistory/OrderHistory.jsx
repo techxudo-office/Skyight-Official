@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  CardLayoutBody,
   CardLayoutContainer,
   CardLayoutHeader,
 } from "../../components/CardLayout/CardLayout";
-import { Loader, Table, Tag } from "../../components/components";
+import { ExcelExportButton, Loader, Searchbar, Table, Tag } from "../../components/components";
 import dayjs from "dayjs";
 import { Toaster } from "react-hot-toast";
 import { getOrders, getPNR } from "../../_core/features/bookingSlice";
@@ -25,14 +26,14 @@ const OrderHistory = () => {
   const { orders, isLoadingOrders, orderError, pnrData, isLoadingPNR } = useSelector(
     (state) => state.booking
   );
+  const [filteredData, setFilteredData] = useState([]);
 
   useEffect(() => {
     if (!userData?.token) return;
     dispatch(getOrders(userData.token));
   }, [dispatch, userData?.token]);
 
-  if (isLoadingOrders) return <Loader />;
-  if (orderError) return <p>Error: {orderError}</p>;
+
 
   const columnsData = [
     {
@@ -49,32 +50,32 @@ const OrderHistory = () => {
         </span>
       ),
       sortable: false,
-      
+
     },
     {
       name: "TRIP TYPE",
       selector: (row) => row?.trip_type,
       sortable: false,
-      
+
     },
     {
       name: "DATE",
       selector: (row) => dayjs(row.created_at).format("DD-MMM-YYYY"),
       sortable: false,
-      
+
     },
     {
       name: "STATUS",
       selector: (row) => <Tag value={row?.booking_status} />,
       sortable: false,
-      
+
     },
     {
       name: "PRICE",
       selector: (row) => row?.rate,
       sortable: false,
       minwidth: "200px",
-      
+
     },
     {
       name: "",
@@ -96,24 +97,34 @@ const OrderHistory = () => {
         </div>
       ),
       sortable: false,
-      
+
     }
   ];
-
+  if (isLoadingOrders) return <Loader />;
+  // if (orderError) return <p>Error: {orderError}</p>;
   return (
     <>
       <Toaster />
       <CardLayoutContainer className={"z-10 "}>
 
         <CardLayoutHeader heading={"Order History"} />
-        <Table
-          columnsData={columnsData}
-          tableData={orders || []}
-          pagination={true}
-          progressPending={isLoadingOrders}
-          paginationTotalRows={orders?.length}
-          paginationComponentOptions={{ noRowsPerPage: "10" }}
-        />
+        <CardLayoutBody>
+          <ExcelExportButton
+            data={filteredData || []}
+            fileName="FlightBookings"
+          />
+          <Searchbar data={orders} onFilteredData={setFilteredData} />
+          <Table
+            columnsData={columnsData}
+            tableData={filteredData || []}
+            pagination={true}
+            progressPending={isLoadingOrders}
+            paginationTotalRows={filteredData?.length}
+            paginationComponentOptions={{ noRowsPerPage: "10" }}
+          />
+
+        </CardLayoutBody>
+
       </CardLayoutContainer>
     </>
   );

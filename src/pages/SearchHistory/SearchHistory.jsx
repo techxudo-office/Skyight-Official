@@ -5,7 +5,7 @@ import {
   CardLayoutContainer,
   CardLayoutHeader,
 } from "../../components/CardLayout/CardLayout";
-import { Button, Loader, Searchbar, Table } from "../../components/components";
+import { Button, ExcelExportButton, Loader, Searchbar, Table } from "../../components/components";
 import dayjs from "dayjs";
 import { searchFlight } from "../../_core/features/bookingSlice";
 import toast, { Toaster } from "react-hot-toast";
@@ -87,7 +87,7 @@ const SearchHistory = () => {
       name: "Search On",
       selector: (row) => dayjs(row.created_at).format("DD-MMM-YYYY | h:m a"),
       sortable: false,
-      
+
     },
     {
       name: "ROUTE",
@@ -103,7 +103,7 @@ const SearchHistory = () => {
         </span>
       ),
       sortable: false,
-      
+
     },
     {
       name: "Travel Date",
@@ -112,7 +112,7 @@ const SearchHistory = () => {
           "DD-MMM-YYYY"
         ),
       sortable: false,
-      
+
     },
     {
       name: "Results",
@@ -126,7 +126,7 @@ const SearchHistory = () => {
         );
       },
       sortable: false,
-      
+
     },
   ];
 
@@ -135,6 +135,10 @@ const SearchHistory = () => {
       <Toaster />
       <CardLayoutContainer>
         <CardLayoutHeader heading={"Search History"} />
+        <ExcelExportButton
+          data={filteredData || []}
+          fileName="Search History"
+        />
         <Searchbar onFilteredData={setFilteredData} data={SearchHistory} />
         <Table
           columnsData={columnsData}

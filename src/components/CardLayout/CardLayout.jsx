@@ -56,7 +56,7 @@ export const CardLayoutContainer = ({
       }}
     >
       <div
-        className={`w-full rounded-lg ${removeBg ? "bg-none" : "bg-white shadow-sm"
+        className={`w-full rounded-lg ${removeBg ? "bg-none" : " shadow-sm"
           } ${className}`}
       >
         {children}
