@@ -9,7 +9,6 @@ import { FaPlus } from "react-icons/fa6";
 import { MdAutoDelete } from "react-icons/md";
 
 import {
-  ConfirmModal,
   SecondaryButton,
   Table,
   Tag,
@@ -120,10 +119,6 @@ const Roles = () => {
           </div>
         </CardLayoutHeader>
         <CardLayoutBody removeBorder={true}>
-          <ExcelExportButton
-            data={roles || []}
-            fileName="roles"
-          />
           <Table
             pagination={true}
             columnsData={roleColumns}
