@@ -31,6 +31,10 @@ export default function PriceSummary({ pricingInfo, travelers }) {
             </p>
           </div>
         ))}
+        <div className="flex justify-between items-center  py-3 text-xl text-primary">
+          <p>Total:</p>
+          <p>{totalFare.TotalFare.pkrTotalFare.toFixed(2)}</p>
+        </div>
         <div className="flex flex-col gap-3 pt-5">
           <p
             onClick={() => setFareBreakdown((prev) => !prev)}
@@ -38,7 +42,7 @@ export default function PriceSummary({ pricingInfo, travelers }) {
             Fare Break Down{" "}
             <span>
               <FaChevronCircleDown
-                className={`text-primary ${fareBreakdown ? "rotate-180" : "rotate-0"
+                className={`text-primary text-2xl ${fareBreakdown ? "rotate-180" : "rotate-0"
                   } transition-all duration-300 ease-in-out `}
               />
             </span>

@@ -129,16 +129,16 @@ const RegistrationForm = () => {
 
   const cityOptions = formik.values.country.value
     ? City.getCitiesOfCountry(formik.values.country.value).map((city) => ({
-        label: city.name,
-        value: city.name,
-      }))
+      label: city.name,
+      value: city.name,
+    }))
     : [];
 
 
   return (
     <>
       <Toaster />
-      <CardLayoutContainer className="hide-scrollbar max-w-[900px] h-[550px] m-auto p-0 shadow-3xl overflow-y-scroll">
+      <CardLayoutContainer className="hide-scrollbar bg-white max-w-[900px] h-[550px] m-auto p-0 shadow-3xl overflow-y-scroll">
         <CardLayoutBody removeBorder padding="p-0" className="flex">
           <div className="flex-1 p-16">
             <h3 className="mb-10 text-4xl font-extrabold text-center">
@@ -203,9 +203,8 @@ const RegistrationForm = () => {
                 return (
                   <div
                     key={name}
-                    className={`relative ${
-                      formik.touched[name] && formik.errors[name] ? "mb-5" : ""
-                    }`}
+                    className={`relative ${formik.touched[name] && formik.errors[name] ? "mb-5" : ""
+                      }`}
                   >
                     <Input
                       id={name}

@@ -7,6 +7,7 @@ import html2canvas from "html2canvas";
 import { useDispatch, useSelector } from "react-redux";
 import { MdDownload } from "react-icons/md";
 import { getPNR } from "../../_core/features/bookingSlice";
+import dayjs from "dayjs";
 
 const Finalticket = ({ downloadFromParent, id }) => {
 
@@ -30,34 +31,44 @@ const Finalticket = ({ downloadFromParent, id }) => {
 
     // Function to download a specific ticket as a PDF
     const downloadPDF = async (index) => {
-        setLoading(index); // Set loader for the specific ticket
-
+        setLoading(index);
         const ticketElement = ticketRefs.current[index];
         if (!ticketElement) return;
 
+        const originalStyles = {
+            width: ticketElement.style.width,
+            overflow: ticketElement.style.overflow,
+        };
+
         try {
-            // Capture the element with forced width
+            // Force consistent dimensions
+            ticketElement.style.width = "900px"; // Match your ticket's actual width
+            ticketElement.style.overflow = "visible";
+
             const canvas = await html2canvas(ticketElement, {
-                scale: 2,
+                scale: 3, // Increase scale for better quality
+                logging: true,
+                useCORS: true,
+                scrollY: -window.scrollY,
+                windowWidth: ticketElement.scrollWidth,
+                windowHeight: ticketElement.scrollHeight,
             });
 
-            // Convert 1300px to mm (1px ≈ 0.264583mm)
-            const pdfWidth = 400;
-            const pdfHeight = (canvas.height * pdfWidth) / 800;
+            // Calculate PDF dimensions
+            const imgWidth = 210; // A4 width in mm
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-            // Create PDF with exact element width
-            const pdf = new jsPDF("p", "mm", [pdfWidth, pdfHeight]);
-
-            // Convert canvas to PNG
-            const imgData = canvas.toDataURL("image/png");
-
-            // Add image to PDF
-            pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+            // Create PDF
+            const pdf = new jsPDF("p", "mm", "a4");
+            pdf.addImage(canvas, "PNG", 0, 0, imgWidth, imgHeight);
             pdf.save(`ticket_traveler_${index + 1}.pdf`);
         } catch (error) {
             console.error("Error generating PDF:", error);
         } finally {
-            setLoading(null); // Remove loader after download
+            // Restore original styles
+            ticketElement.style.width = originalStyles.width;
+            ticketElement.style.overflow = originalStyles.overflow;
+            setLoading(null);
         }
     };
 
@@ -128,13 +139,13 @@ const Finalticket = ({ downloadFromParent, id }) => {
                     return (
                         <div key={index} className="mb-8 mx-auto bg-white rounded-lg  shadow-xl border-2  w-[900px]">
                             {/* Ticket Stub */}
-                            <div className="bg-primary text-white py-2 px-4 flex justify-between items-center">
+                            <div className="bg-primary text-white py-2 px-4 flex justify-end gap-4 items-center">
                                 <div className="flex items-center gap-2">
                                     <IoMdAirplane className="text-xl" />
                                     <span className="font-bold">E-Ticket</span>
                                 </div>
                                 <div className="text-sm">
-                                    <span className="font-semibold">E-Ticket: </span>
+                                    <span className="font-semibold"> </span>
                                     {ticketInfo?.ETicketNo || "N/A"}
                                 </div>
                             </div>
@@ -160,11 +171,11 @@ const Finalticket = ({ downloadFromParent, id }) => {
                                 </div>
 
                                 {/* Flight Details */}
-                                <div className="p-5 grid grid-cols-2 gap-4 border-b">
+                                <div className="p-5  gap-4 border-b">
                                     {originDestinationOptions.map((option, optionIndex) =>
                                         option.FlightSegment.map((flightSegment, segmentIndex) => (
                                             <React.Fragment key={`${optionIndex}-${segmentIndex}`}>
-                                                <div className="col-span-2 mb-4">
+                                                <div className=" mb-4">
                                                     <div className="flex justify-between items-center bg-gray-50 p-3 rounded-lg">
                                                         <div className="text-center">
                                                             <p className="text-3xl font-bold">{flightSegment?.DepartureAirport?.LocationCode}</p>
@@ -186,41 +197,59 @@ const Finalticket = ({ downloadFromParent, id }) => {
                                                         </div>
                                                     </div>
                                                 </div>
-
-                                                <div className="space-y-3">
-                                                    <div>
-                                                        <p className="text-lg text-gray-500">AIRLINE</p>
-                                                        <p className="font-semibold">{flightSegment?.OperatingAirline?.Code} {flightSegment?.FlightNumber}</p>
+                                                <div className="flex justify-between">
+                                                    <div className="flex justify-between flex-col gap-6">
+                                                        <div>
+                                                            <p className="text-lg text-gray-500">AIRLINE</p>
+                                                            <p className="font-semibold">{flightSegment?.OperatingAirline?.Code} {flightSegment?.FlightNumber}</p>
+                                                        </div>
+                                                        <div>
+                                                            <p className="text-lg text-gray-500">DEPARTS</p>
+                                                            <p className="font-semibold">{
+                                                                dayjs(flightSegment?.DepartureDate).format("DD MMM YYYY") || "N/A"
+                                                            } at {flightSegment?.DepartureTime}</p>
+                                                            <p className="">Terminal: {flightSegment?.DepartureAirport?.Terminal || "N/A"}</p>
+                                                        </div>
+                                                        <div>
+                                                            <p className="text-lg text-gray-500">{travelerInfo?.Document.DocType === "N" ? "NATIONAL ID" : "PASSPORT"}</p>
+                                                            <p className="font-semibold">{travelerInfo?.Document.DocID}</p>
+                                                        </div>
                                                     </div>
-                                                    <div>
-                                                        <p className="text-lg text-gray-500">DEPARTS</p>
-                                                        <p className="font-semibold">{flightSegment?.DepartureDate} at {flightSegment?.DepartureTime}</p>
-                                                        <p className="text-sm">Terminal: {flightSegment?.DepartureAirport?.Terminal || "N/A"}</p>
+
+                                                    <div className="flex justify-between flex-col gap-6">
+                                                        <div>
+                                                            <p className="text-lg text-gray-500">FLIGHT DATE</p>
+                                                            <p className="font-semibold">{flightSegment?.DepartureDate}</p>
+                                                        </div>
+                                                        <div>
+                                                            <p className="text-lg text-gray-500">ARRIVES</p>
+                                                            <p className="font-semibold">{
+                                                                dayjs(flightSegment?.ArrivalDate).format("DD MMM YYYY") || "N/A"
+                                                            } at {flightSegment?.ArrivalTime}</p>
+                                                            <p className="">Terminal: {flightSegment?.ArrivalAirport?.Terminal || "N/A"}</p>
+                                                        </div>
+                                                        <div>
+                                                            <p className="text-lg text-gray-500">NATIONALITY</p>
+                                                            <p className="font-semibold">{travelerInfo?.Document.Nationality || "-"}</p>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="flex justify-between flex-col gap-6">
+                                                        <div>
+                                                            <p className="text-lg text-gray-500">BAGGAGE</p>
+                                                            <p className="font-semibold">{flightSegment?.FreeBaggages || "N/A"}</p>
+                                                        </div>
+                                                        <div>
+                                                            <p className="text-lg text-gray-500">SEAT</p>
+                                                            <p className="font-semibold">-</p>
+                                                        </div>
+                                                        <div>
+                                                            <p className="text-lg text-gray-500 pt-5">EXPIRE DATE</p>
+                                                            <p className="font-semibold">{travelerInfo?.Document.ExpireDate || "-"}</p>
+                                                        </div>
                                                     </div>
                                                 </div>
 
-                                                <div className="space-y-3">
-                                                    <div>
-                                                        <p className="text-lg text-gray-500">FLIGHT DATE</p>
-                                                        <p className="font-semibold">{flightSegment?.DepartureDate}</p>
-                                                    </div>
-                                                    <div>
-                                                        <p className="text-lg text-gray-500">ARRIVES</p>
-                                                        <p className="font-semibold">{flightSegment?.ArrivalDate} at {flightSegment?.ArrivalTime}</p>
-                                                        <p className="text-sm">Terminal: {flightSegment?.ArrivalAirport?.Terminal || "N/A"}</p>
-                                                    </div>
-                                                </div>
-
-                                                <div className="col-span-2 grid grid-cols-2 gap-4 mt-4">
-                                                    <div>
-                                                        <p className="text-lg text-gray-500">BAGGAGE</p>
-                                                        <p className="font-semibold">{flightSegment?.FreeBaggages || "N/A"}</p>
-                                                    </div>
-                                                    <div>
-                                                        <p className="text-lg text-gray-500">SEAT</p>
-                                                        <p className="font-semibold">-</p>
-                                                    </div>
-                                                </div>
                                             </React.Fragment>
                                         ))
                                     )}
@@ -234,8 +263,7 @@ const Finalticket = ({ downloadFromParent, id }) => {
                                             <p className="text-lg text-gray-500">BASE FARE</p>
                                             <p className="font-bold">
                                                 {(
-                                                    priceInfo[index]?.PassengerFare.BaseFare?.pkrBaseFare /
-                                                    priceInfo[index]?.PassengerTypeQuantity?.Quantity
+                                                    priceInfo[index]?.PassengerFare.BaseFare?.pkrBaseFare
                                                 )?.toLocaleString()} {priceInfo[index]?.PassengerFare.BaseFare.CurrencyCode || "PKR"}
                                             </p>
                                         </div>
@@ -247,10 +275,9 @@ const Finalticket = ({ downloadFromParent, id }) => {
                                         </div>
                                         <div className="bg-blue-100 p-3 rounded-lg shadow-sm">
                                             <p className="text-lg text-primary">TOTAL</p>
-                                            <p className="font-bold text-blue-700">
+                                            <p className="font-bold text-primary">
                                                 {(
-                                                    priceInfo[index]?.PassengerFare.TotalFare?.pkrTotalFare /
-                                                    priceInfo[index]?.PassengerTypeQuantity?.Quantity
+                                                    priceInfo[index]?.PassengerFare.TotalFare?.pkrTotalFare
                                                 )?.toLocaleString()} {priceInfo[index]?.PassengerFare.TotalFare.CurrencyCode || "PKR"}
                                             </p>
                                         </div>
