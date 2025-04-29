@@ -100,7 +100,7 @@ const DashboardHome = () => {
     },
     {
       name: "TOTAL FARE",
-      selector: (row) => row.total_fare,
+      selector: (row) => parseFloat(row.total_fare).toFixed(2),
       sortable: false,
 
       grow: 2,

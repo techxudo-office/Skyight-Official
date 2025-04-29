@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { Button, CustomTooltip, Spinner } from "../../components/components";
-import { IoMdAirplane } from "react-icons/io";
+import { IoIosAirplane, IoMdAirplane } from "react-icons/io";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { useDispatch, useSelector } from "react-redux";
@@ -141,7 +141,7 @@ const Finalticket = ({ downloadFromParent, id }) => {
                             {/* Ticket Stub */}
                             <div className="bg-primary text-white py-2 px-4 flex justify-end gap-4 items-center">
                                 <div className="flex items-center gap-2">
-                                    <IoMdAirplane className="text-xl" />
+                                    <IoIosAirplane className="text-xl " />
                                     <span className="font-bold">E-Ticket</span>
                                 </div>
                                 <div className="text-sm">
@@ -184,7 +184,7 @@ const Finalticket = ({ downloadFromParent, id }) => {
                                                         <div className="flex flex-col items-center">
                                                             <div className="flex items-center gap-2 text-5xl">
                                                                 <div className="h-[2px] w-32 bg-primary"></div>
-                                                                <IoMdAirplane className="text-primary transform rotate-90" />
+                                                                <IoIosAirplane className="text-primary transform " />
                                                                 <div className="h-[2px] w-32 bg-primary"></div>
                                                             </div>
                                                             <p className=" text-gray-500 mt-1">
@@ -277,7 +277,8 @@ const Finalticket = ({ downloadFromParent, id }) => {
                                             <p className="text-lg text-primary">TOTAL</p>
                                             <p className="font-bold text-primary">
                                                 {(
-                                                    priceInfo[index]?.PassengerFare.TotalFare?.pkrTotalFare
+                                                    priceInfo[index]?.PassengerFare.TotalFare?.pkrTotalFare /
+                                                    priceInfo[index]?.PassengerTypeQuantity.Quantity
                                                 )?.toLocaleString()} {priceInfo[index]?.PassengerFare.TotalFare.CurrencyCode || "PKR"}
                                             </p>
                                         </div>
@@ -285,7 +286,7 @@ const Finalticket = ({ downloadFromParent, id }) => {
                                 </div>
 
                                 {/* Footer */}
-                                <div className="p-4 bg-gray-100 text-center text-lg text-gray-600 border-t">
+                                <div className="p-4 bg-gray-100 text-center text-sm text-gray-600 border-t">
                                     <p>Please check in at least 2 hours before departure for domestic flights</p>
                                     <p>and 3 hours for international flights. Have a pleasant journey!</p>
                                 </div>

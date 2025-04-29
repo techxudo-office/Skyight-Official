@@ -10,9 +10,10 @@ import {
 } from "react-icons/md";
 import { Formik, Form } from "formik";
 import { useDispatch, useSelector } from "react-redux";
-import { countries } from "../../data/countriesData";
-import { iranianCities } from "../../data/iranianCities";
+// import { countries } from "../../data/countriesData";
+// import { iranianCities } from "../../data/iranianCities";
 import { travelerDetailScehma } from "../../validations";
+import { Country, City } from "country-state-city";
 import {
   getTravelers,
   setBookingStates,
@@ -178,7 +179,10 @@ const TravelersDetails = () => {
 
   if (!flightData || !travelersData)
     return <Spinner className={"text-primary"} />;
-
+  const countries = Country.getAllCountries().map(country => ({
+    label: country.name,
+    value: country.isoCode,
+  }));
   const travelersDetailsInputs = [
     {
       type: "select",
@@ -210,7 +214,7 @@ const TravelersDetails = () => {
       id: "city",
       label: "City",
       name: "city",
-      options: iranianCities,
+      options: [], // Will be populated dynamically
     },
     {
       type: "date",
@@ -396,7 +400,7 @@ const TravelersDetails = () => {
                                         .map((item) => ({
                                           passport: item.passport_number,
                                           value: item.email,
-                                          label: `${item.email}/${item.passport_number}`,
+                                          label: `${item.email} | ${item.passport_number}`,
                                         }))
                                   }
                                 />
@@ -458,24 +462,19 @@ const TravelersDetails = () => {
                                                 <Select
                                                   id={input.id}
                                                   label={input.label}
-                                                  options={input.options}
+                                                  options={input.id === "city" && values.country ?
+                                                    City.getCitiesOfCountry(values.country).map(city => ({
+                                                      label: city.name,
+                                                      value: city.name,
+                                                    }))
+                                                    : input.options}
                                                   disabled={
-                                                    disableAddTraveler.includes(
-                                                      travelerIndex
-                                                    ) || input.disabled
+                                                    disableAddTraveler.includes(travelerIndex) ||
+                                                    (input.id === "city" ? !values.country : input.disabled)
                                                   }
                                                   placeholder={input.placeholder}
-                                                  value={
-                                                    input.disabled
-                                                      ? "IRN"
-                                                      : values[input.name]
-                                                  }
-                                                  onChange={(option) =>
-                                                    setFieldValue(
-                                                      input.name,
-                                                      option.value
-                                                    )
-                                                  }
+                                                  value={values[input.name]}
+                                                  onChange={(option) => setFieldValue(input.name, option.value)}
                                                 />
                                               ) : input.type === "date" ? (
                                                 <CustomDate
