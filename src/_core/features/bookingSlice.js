@@ -317,7 +317,7 @@ export const getBookingRoutes = createAsyncThunk(
     } catch (error) {
       const errorMessage =
         error?.response?.data?.message || "Failed to fetch booking routes";
-      toast.error(errorMessage);
+      // toast.error(errorMessage);
       return thunkAPI.rejectWithValue(errorMessage);
     }
   }
@@ -513,7 +513,6 @@ export const issueBooking = createAsyncThunk(
             "Your ticket has expired"
           );
         } else {
-          toast.success("Booking issued successfully");
         }
         return response.data.data;
       } else {

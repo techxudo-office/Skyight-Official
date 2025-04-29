@@ -5,25 +5,18 @@ import {
   CardLayoutContainer,
   CardLayoutHeader,
   CardLayoutBody,
-  CardLayoutFooter,
 } from "../../components/CardLayout/CardLayout";
 import {
   Button,
   ConfirmModal,
   Tag,
-  DownloadButton,
   Table,
   Spinner,
   CustomTooltip,
 } from "../../components/components";
 import toast, { Toaster } from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
-import {
-  IoIosAirplane,
-  IoMdCash,
-  IoMdClock,
-  IoMdPaperPlane,
-} from "react-icons/io";
+import { IoIosAirplane, IoMdClock, IoMdPaperPlane } from "react-icons/io";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { useDispatch, useSelector } from "react-redux";
@@ -39,7 +32,7 @@ import { MdArrowBack, MdOutlineCancelScheduleSend } from "react-icons/md";
 import { RiRefund2Fill } from "react-icons/ri";
 import ConfirmRefund from "./ConfirmRefund/ConfirmRefund";
 
-dayjs.extend(utc); // Extend dayjs with UTC support
+dayjs.extend(utc);
 
 const TicketDetails = () => {
   const location = useLocation();
@@ -47,8 +40,8 @@ const TicketDetails = () => {
   const dispatch = useDispatch();
   const [refundConfirmation, setRefundConfirmation] = useState(false);
   const [confirmObject, setConfirmObject] = useState({
-    onAbort: () => { },
-    onConfirm: () => { },
+    onAbort: () => {},
+    onConfirm: () => {},
     status: false,
     text: "",
     loading: false,
@@ -62,7 +55,7 @@ const TicketDetails = () => {
     isRefundLoading,
     isCancelling,
     isPenaltyLoading,
-    penalties
+    penalties,
   } = useSelector((state) => state.booking);
   // const [bookingDetails, setBookingDetails] = useState();
 
@@ -87,6 +80,9 @@ const TicketDetails = () => {
           getBookingDetails({ id: location.state.id, token: userData?.token })
         );
         setConfirmObject((prev) => ({ ...prev, status: false }));
+        setTimeout(() => {
+          toast.success("Booking issued successfully");
+        }, 500);
       })
       .catch((error) => {
         dispatch(
@@ -149,7 +145,6 @@ const TicketDetails = () => {
       });
   };
 
-
   useEffect(() => {
     if (location.state && userData?.token) {
       const refId = location.state.id;
@@ -166,7 +161,6 @@ const TicketDetails = () => {
   const timeLimit = dayjs(bookingDetails?.Timelimit);
   // const timeLimitLocal = (bookingDetails?.Timelimit).toISOString();
 
-
   const timelimit = new Date(bookingDetails?.Timelimit);
   const localTimeLimit = timelimit.toLocaleString("en-GB");
 
@@ -174,17 +168,15 @@ const TicketDetails = () => {
     return <Spinner className={"text-primary"} />;
   }
   const getPenaltyPayload = {
-    Items:
-      bookingDetails?.passengers.flatMap((traveler) =>
-        traveler.passengertickets.map((ticket) => ({
-          ticket_number: ticket.ticket_number,
-          coupon_number: ticket.coupen_number,
-          reference: "",
-          zero_penalty: true,
-        }))
-      )
-
-  }
+    Items: bookingDetails?.passengers.flatMap((traveler) =>
+      traveler.passengertickets.map((ticket) => ({
+        ticket_number: ticket.ticket_number,
+        coupon_number: ticket.coupen_number,
+        reference: "",
+        zero_penalty: true,
+      }))
+    ),
+  };
   const handleRefund = async () => {
     try {
       // First fetch penalty data
@@ -202,54 +194,41 @@ const TicketDetails = () => {
       // });
       setRefundConfirmation(true);
       setConfirmObject((prev) => ({ ...prev, status: false }));
-
     } catch (error) {
       // Handle error
       toast.error("Failed to get penalty:", error);
     }
-  }
+  };
   const passengerColumnData = [
     {
       name: "NAME",
       selector: (row) => row.given_name,
       sortable: false,
-
-
     },
     {
       name: "TYPE",
       selector: (row) => row.passenger_type_code,
       sortable: false,
-
-
     },
     {
       name: "BIRTH DATE",
       selector: (row) => dayjs(row.birth_date).format("D-MMM-YYYY"),
       sortable: false,
-
     },
     {
       name: "PASSPORT NUMBER",
       selector: (row) => row.doc_id,
       sortable: false,
-
-
     },
     {
       name: "EXPIRY",
-      selector: (row) =>
-        dayjs(row.expire_date).format("D-MMM-YYYY"),
+      selector: (row) => dayjs(row.expire_date).format("D-MMM-YYYY"),
       sortable: false,
-
-
     },
     {
       name: "ISSUANCE",
       selector: (row) => row.doc_issue_country,
       sortable: false,
-
-
     },
     {
       name: "NATIONALITY",
@@ -267,13 +246,16 @@ const TicketDetails = () => {
     //   selector: (row) => row.coupen_number || "-",
     //   sortable: false,
     // },
-
-  ]
+  ];
   return (
     <>
       <Toaster />
       <ConfirmModal {...confirmObject} />
-      <ConfirmRefund isOpen={refundConfirmation} items={penalties?.PenaltyRS} onRequestClose={() => setRefundConfirmation(false)} />
+      <ConfirmRefund
+        isOpen={refundConfirmation}
+        items={penalties?.PenaltyRS}
+        onRequestClose={() => setRefundConfirmation(false)}
+      />
       <div ref={printRef} className="flex flex-col w-full gap-5">
         <CardLayoutContainer>
           <CardLayoutBody className={"flex flex-wrap gap-3 justify-between"}>
@@ -405,9 +387,9 @@ const TicketDetails = () => {
           <div className="flex flex-col gap-3 p-4 text-text">
             <div>
               <span className="font-semibold">Booked On: </span>
-              {dayjs
-                .utc(bookingDetails?.created_at)
-                .format("DD MMM YYYY, h:mm a")}
+              {dayjs(bookingDetails?.created_at.toLocaleString()).format(
+                "DD MMM YYYY, h:mm a"
+              )}
             </div>
             <div>
               <span className="font-semibold">Booked by: </span>
