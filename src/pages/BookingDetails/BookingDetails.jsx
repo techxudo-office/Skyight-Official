@@ -249,7 +249,7 @@ const TicketDetails = () => {
   ];
   return (
     <>
-      <Toaster />
+      
       <ConfirmModal {...confirmObject} />
       <ConfirmRefund
         isOpen={refundConfirmation}

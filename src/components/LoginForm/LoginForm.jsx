@@ -58,7 +58,7 @@ const LoginForm = () => {
 
   return (
     <>
-      <Toaster />
+      
       <CardLayoutContainer className="max-w-[900px] m-auto p-0 shadow-3xl bg-white">
         <CardLayoutBody removeBorder padding="p-0" className="flex">
           <div className="flex-1 p-16">

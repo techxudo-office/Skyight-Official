@@ -132,7 +132,7 @@ const SearchHistory = () => {
 
   return (
     <>
-      <Toaster />
+      
       <CardLayoutContainer>
         <CardLayoutHeader heading={"Search History"} />
         <ExcelExportButton

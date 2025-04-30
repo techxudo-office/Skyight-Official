@@ -154,7 +154,7 @@ const FlightDetails = () => {
 
   return (
     <>
-      <Toaster />
+      
       <div className="w-full flex flex-col">
         <CardLayoutContainer className={"mb-5"}>
           <CardLayoutHeader

@@ -82,7 +82,7 @@ const Navbar = ({ hideLinks }) => {
 
   return (
     <>
-      <Toaster />
+      
       <nav className="bg-white shadow-md py-4">
         <div className="container mx-auto flex items-center justify-between ps-3 pe-6">
           <Link to="/">

@@ -17,7 +17,6 @@ const Layout = () => {
   };
 
   if (!userData?.token) {
-    toast.success("Logged out successfully");
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
@@ -46,7 +45,7 @@ const Layout = () => {
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
             {<Headline status={headline} onClose={() => setHeadline(false)} />}
-            <div className="flex flex-col items-center  justify-center w-full px-4 pt-28">
+            <div className="flex flex-col items-center justify-center w-full px-4 pt-28">
 
               <Outlet />
             </div>

@@ -96,7 +96,7 @@ const BookingHistory = () => {
   const bookedBookings = flightBookings?.filter((item) => item.booking_status === "booked")
   return (
     <>
-      <Toaster />
+      
       <CardLayoutContainer >
         <CardLayoutHeader heading={"Booking History"} />
         <ExcelExportButton

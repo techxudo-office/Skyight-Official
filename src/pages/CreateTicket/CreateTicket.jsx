@@ -71,7 +71,7 @@ const CreateTicket = () => {
 
   return (
     <>
-      <Toaster />
+      
       <CardLayoutContainer>
         <CardLayoutHeader
           heading="Create Ticket"

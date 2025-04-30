@@ -244,7 +244,7 @@ const MultiCity = ({ OnlySearch, onSearch }) => {
     }
     return (
         <>
-            <Toaster />
+            
             <Formik
                 initialValues={initialValues}
                 validationSchema={validationSchema}

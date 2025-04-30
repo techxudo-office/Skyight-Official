@@ -127,7 +127,7 @@ const CreateUser = () => {
 
   return (
     <>
-      <Toaster />
+      
       <CardLayoutContainer>
         <CardLayoutHeader heading="Create User" />
         <form onSubmit={handleSubmit} noValidate>

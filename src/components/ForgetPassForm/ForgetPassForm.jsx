@@ -32,7 +32,7 @@ const ForgetPassForm = () => {
 
   return (
     <>
-      <Toaster />
+      
       <CardLayoutContainer className="hide-scrollbar max-w-[900px] h-[500px] m-auto p-0 shadow-3xl overflow-y-scroll">
         <CardLayoutBody removeBorder padding="p-0" className="flex">
           <div className="flex-1 flex items-center justify-center">
