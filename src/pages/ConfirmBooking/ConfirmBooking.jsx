@@ -34,10 +34,10 @@ const FlightDetails = () => {
 
   const confirmBookingHandler = async () => {
     const { tripType } = searchForm;
+    console.log(tripType, "tripType");
     const isRoundTrip = tripType === "Round-Trip";
 
-    const itineraries =
-      data?.flightData.AirItinerary.OriginDestinationOptions;
+    const itineraries = data?.flightData.AirItinerary.OriginDestinationOptions;
     const firstItin = itineraries[0];
     const firstSeg = firstItin.FlightSegment[0];
 
@@ -160,10 +160,7 @@ const FlightDetails = () => {
       <div className="flex flex-col w-full">
         <FlightDetailCard flights={data?.flightData} />
         <div className="py-2"></div>
-        <PriceSummary
-          pricingInfo={pricing}
-          travelers={data?.travelersData}
-        />
+        <PriceSummary pricingInfo={pricing} travelers={data?.travelersData} />
         <PassengerDetail travelersData={data?.allTravelersData} />
 
         <div className="flex items-center justify-end gap-3 my-4">

@@ -31,10 +31,9 @@ const ResetPasswordform = () => {
 
     return (
         <>
-            
             <CardLayoutContainer className="hide-scrollbar max-w-[900px] h-[500px] m-auto p-0 shadow-3xl overflow-y-scroll">
                 <CardLayoutBody removeBorder padding="p-0" className="flex">
-                    <div className="flex-1 flex items-center justify-center">
+                    <div className="flex items-center justify-center flex-1">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
@@ -235,10 +234,10 @@ const ResetPasswordform = () => {
                     </div>
 
                     <div className="flex-1 p-16">
-                        <h3 className="text-4xl font-extrabold text-center mb-5">
+                        <h3 className="mb-5 text-4xl font-extrabold text-center">
                             Reset Your Password
                         </h3>
-                        <h3 className="text-md text-slate-500 text-start mb-10 mx-2">
+                        <h3 className="mx-2 mb-10 text-md text-slate-500 text-start">
                             Enter your password to reset your account password. We will send a
                             mail to your mailbox.
                         </h3>
@@ -259,7 +258,7 @@ const ResetPasswordform = () => {
                             <div className="flex items-center justify-end px-1 mt-[-10px]">
                                 <Link
                                     to={"/login"}
-                                    className="text-end text-primary hover:text-secondary transition-all">
+                                    className="transition-all text-end text-primary hover:text-secondary">
                                     Back to Login?
                                 </Link>
                             </div>
