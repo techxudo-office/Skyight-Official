@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { Sidebar, Header, Backbutton, Modal, Headline } from "../components/components";
 import { logo } from "../assets/Index";
+import { useSelector } from "react-redux";
+import toast from "react-hot-toast";
 
 const Layout = () => {
 
@@ -13,6 +15,11 @@ const Layout = () => {
     setSidebarStatus(status);
   };
 
+  if (!userData?.token) {
+    toast.success("Logged out successfully");
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
   return (
     <>
       <Header
@@ -20,20 +27,21 @@ const Layout = () => {
         setSidebarStatusHandler={setSidebarStatusHandler}
       />
       <div className="flex h-screen">
-        {/* <Modal
+        {/* 
+        <Modal
           title={'Session Expired'}
           imgsrc={logo}
           btnText={'signup / login'}
-          Message={' Your session has expired. Please sign up or log in again to continue.'}
+          Message={'Your session has expired. Please sign up or log in again to continue.'}
           active={ModalStatus}
           onClose={() => setModalStatus(false)}
           toggle={true}
-        /> */}
+        /> 
+        */}
         <Sidebar status={sidebarStatus} updateStatus={setSidebarStatus} />
         <div className="flex-1 w-full md:w-4/5">
-
           <div
-            className="flex flex-col justify-between items-center h-[100vh]  bg-slate-100 overflow-scroll"
+            className="flex flex-col justify-between items-center h-[100vh] bg-slate-100 overflow-scroll"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
             {<Headline status={headline} onClose={() => setHeadline(false)} />}
@@ -41,7 +49,6 @@ const Layout = () => {
 
               <Outlet />
             </div>
-
           </div>
         </div>
       </div>
