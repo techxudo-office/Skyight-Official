@@ -4,7 +4,7 @@ import {
   CardLayoutBody,
 } from "../../components/CardLayout/CardLayout";
 import { Button, Spinner } from "../../components/components";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { resendCode, verifyOTP } from "../../_core/features/authSlice";
@@ -85,7 +85,7 @@ const VerificationForm = () => {
 
   return (
     <>
-      <Toaster />
+      
       <CardLayoutContainer className="hide-scrollbar max-w-[900px] h-[500px] m-auto p-0 shadow-3xl overflow-y-scroll">
         <CardLayoutBody removeBorder padding="p-0" className="flex">
           <div className="flex items-center justify-center flex-1">

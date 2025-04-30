@@ -137,7 +137,7 @@ const RegistrationForm = () => {
 
   return (
     <>
-      <Toaster />
+      
       <CardLayoutContainer className="hide-scrollbar bg-white max-w-[900px] h-[550px] m-auto p-0 shadow-3xl overflow-y-scroll">
         <CardLayoutBody removeBorder padding="p-0" className="flex">
           <div className="flex-1 p-16">

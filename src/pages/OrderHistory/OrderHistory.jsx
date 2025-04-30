@@ -104,7 +104,7 @@ const OrderHistory = () => {
   // if (orderError) return <p>Error: {orderError}</p>;
   return (
     <>
-      <Toaster />
+      
       <CardLayoutContainer className={"z-10 "}>
 
         <CardLayoutHeader heading={"Order History"} />

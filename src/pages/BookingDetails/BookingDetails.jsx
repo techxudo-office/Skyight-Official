@@ -14,7 +14,7 @@ import {
   Spinner,
   CustomTooltip,
 } from "../../components/components";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
 import { IoIosAirplane, IoMdClock, IoMdPaperPlane } from "react-icons/io";
 import dayjs from "dayjs";
@@ -249,7 +249,7 @@ const TicketDetails = () => {
   ];
   return (
     <>
-      <Toaster />
+      
       <ConfirmModal {...confirmObject} />
       <ConfirmRefund
         isOpen={refundConfirmation}

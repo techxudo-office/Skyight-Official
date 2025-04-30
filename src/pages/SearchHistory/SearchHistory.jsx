@@ -8,7 +8,7 @@ import {
 import { Button, ExcelExportButton, Loader, Searchbar, Table } from "../../components/components";
 import dayjs from "dayjs";
 import { searchFlight } from "../../_core/features/bookingSlice";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { IoIosAirplane } from "react-icons/io";
 
@@ -132,7 +132,7 @@ const SearchHistory = () => {
 
   return (
     <>
-      <Toaster />
+      
       <CardLayoutContainer>
         <CardLayoutHeader heading={"Search History"} />
         <ExcelExportButton

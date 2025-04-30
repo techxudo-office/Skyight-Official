@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
-import { Sidebar, Header, Backbutton, Modal, Headline } from "../components/components";
-import { logo } from "../assets/Index";
+import { Sidebar, Header, Headline } from "../components/components";
 import { useSelector } from "react-redux";
-import toast from "react-hot-toast";
 
 const Layout = () => {
   const location = useLocation();
@@ -17,7 +15,6 @@ const Layout = () => {
   };
 
   if (!userData?.token) {
-    toast.success("Logged out successfully");
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 

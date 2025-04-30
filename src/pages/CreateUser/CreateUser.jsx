@@ -6,7 +6,7 @@ import {
   CardLayoutFooter,
 } from "../../components/CardLayout/CardLayout";
 import { Input, Button, Spinner, Select, PhoneNumberInput } from "../../components/components";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { createUser } from "../../_core/features/userSlice";
 import { getRoles } from "../../_core/features/roleSlice";
@@ -127,7 +127,7 @@ const CreateUser = () => {
 
   return (
     <>
-      <Toaster />
+      
       <CardLayoutContainer>
         <CardLayoutHeader heading="Create User" />
         <form onSubmit={handleSubmit} noValidate>

@@ -28,7 +28,7 @@ import {
   Select,
   Input,
 } from "../../components/components";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 const titleOptions = [
   { label: "Mr", value: "Mr" },
@@ -154,7 +154,7 @@ const FlightDetails = () => {
 
   return (
     <>
-      <Toaster />
+      
       <div className="w-full flex flex-col">
         <CardLayoutContainer className={"mb-5"}>
           <CardLayoutHeader

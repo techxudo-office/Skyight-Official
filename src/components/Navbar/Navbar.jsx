@@ -6,7 +6,7 @@ import { FaUser } from "react-icons/fa";
 import { FiLogIn, FiLogOut } from "react-icons/fi";
 import { RiDashboardFill } from "react-icons/ri";
 import { AuthContext } from "../../context/AuthContext";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 import logo from "../../assets/logo/logo.png";
 import planeIcon from "../../assets/icons/plane.png";
@@ -82,7 +82,7 @@ const Navbar = ({ hideLinks }) => {
 
   return (
     <>
-      <Toaster />
+      
       <nav className="bg-white shadow-md py-4">
         <div className="container mx-auto flex items-center justify-between ps-3 pe-6">
           <Link to="/">

@@ -11,7 +11,7 @@ import {
 import dayjs from "dayjs";
 import { CustomTooltip, Spinner, Tag } from "../components";
 import { IoIosAirplane } from "react-icons/io";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 const TableNew = ({
   columnsToView,
@@ -137,7 +137,7 @@ const TableNew = ({
   }, [finalRowsPerPage, setPageSize]);
   return (
     <div className="">
-      <Toaster />
+      
       <div className="container mx-auto overflow-x-auto shadow-md max-w- scrollbar-hide">
         <table
           className="min-w-full overflow-hidden bg-white rounded-lg "
