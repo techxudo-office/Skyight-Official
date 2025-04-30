@@ -162,7 +162,6 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
 
   return (
     <>
-      <Toaster position="top-center" reverseOrder={false} />
       <div className="flex flex-col items-center justify-center w-full">
         {!OnlySearch && (
           <img
@@ -193,7 +192,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                       setFieldValue("flightRoute", val)
                     }}
                   />
-                  <p className="text-text text-sm pt-3 italic">
+                  <p className="pt-3 text-sm italic text-text">
                     Note: Select 'Domestic' if traveling with your national ID
                   </p>
                 </CardLayoutBody>
