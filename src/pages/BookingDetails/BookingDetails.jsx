@@ -40,8 +40,8 @@ const TicketDetails = () => {
   const dispatch = useDispatch();
   const [refundConfirmation, setRefundConfirmation] = useState(false);
   const [confirmObject, setConfirmObject] = useState({
-    onAbort: () => {},
-    onConfirm: () => {},
+    onAbort: () => { },
+    onConfirm: () => { },
     status: false,
     text: "",
     loading: false,
@@ -173,7 +173,7 @@ const TicketDetails = () => {
         ticket_number: ticket.ticket_number,
         coupon_number: ticket.coupen_number,
         reference: "",
-        zero_penalty: true,
+        zero_penalty: false,
       }))
     ),
   };

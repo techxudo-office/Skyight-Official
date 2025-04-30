@@ -564,16 +564,16 @@ export const searchFlight = createAsyncThunk(
       });
 
       if (response.status === 200) {
-        if (!response.data.data || response.data.data.length === 0) {
-          throw new Error("No Flight Found!");
+        if (!response.data.data || response.data.data.length === 0 || response.data.data.PricedItineraries.PricedItinerary.length === 0 || response.data.data.PricedItineraries.PricedItinerary === null) {
+          throw new Error(response?.data?.data?.message || "No Flight Found!");
         }
         return response.data.data;
       } else {
-        throw new Error(response.data.message || "Failed to search Flights");
+        throw new Error(response.data.message || "No Flight Found!");
       }
     } catch (error) {
       const errorMessage =
-        error?.response?.data?.message || "Failed to search Flights";
+        error?.response?.data?.message || "No Flight Found!";
       return thunkAPI.rejectWithValue(errorMessage);
     }
   }

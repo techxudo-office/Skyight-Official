@@ -16,8 +16,10 @@ import { useDispatch, useSelector } from "react-redux";
 import "./FlightResult.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { MdArrowBack } from "react-icons/md";
 
 const FlightResults = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
   const sliderRef = useRef(null);
@@ -33,9 +35,20 @@ const FlightResults = () => {
   const [DifferenceInDates, setDifferenceInDates] = useState();
   const [TripDetail, setTripDetail] = useState({});
   const { userData } = useSelector((state) => state.auth);
-  const { searchResults } = useSelector((state) => state.booking);
+  const { searchResults, isLoadingSearchResults } = useSelector((state) => state.booking);
 
-  const navigate = useNavigate();
+  // if (!searchResults?.PricedItineraries.PricedItinerary) {
+  //   return <div>
+  //     <p className="pb-4">No Flights Found</p>
+  //     <Button text={"Go Back"}
+  //       icon={<MdArrowBack />}
+  //       onClick={() => {
+  //         navigate(-1);
+  //       }}
+  //     />
+  //   </div>
+  // }
+
   const flights = searchResults?.PricedItineraries.PricedItinerary;
   useEffect(() => {
     if (location.state) {
@@ -105,7 +118,7 @@ const FlightResults = () => {
       if (Array.isArray(error)) {
         error.forEach((msg) => toast.error(msg.toUpperCase()));
       } else {
-        toast.error(error || "Failed to search flights");
+        toast.error(error || "No flights found");
       }
     }
   };
@@ -176,23 +189,23 @@ const FlightResults = () => {
         dateOptions={dateOptions}
         differenceInDates={DifferenceInDates}
       />
-      {filteredFlightsData.length > 0 ? (
-        filteredFlightsData.map((item, index) => (
-          <FlightCard
-            key={index}
-            data={item}
-            doc_type={TripDetail.flightRoute}
-            pricingInfo={pricingInfo[index]}
-            travelers={travelersData}
-          />
-        ))
-      ) : noFlight ? (
-        <p className="w-full py-5 text-center capitalize text-text">
-          no flight found
-        </p>
-      ) : (
-        <Spinner className={"border-primary"} />
-      )}
+      {
+        isLoadingSearchResults
+          ? <Spinner className={"border-primary"} />
+          : filteredFlightsData.length > 0 ? (
+            filteredFlightsData.map((item, index) => (
+              <FlightCard
+                key={index}
+                data={item}
+                doc_type={TripDetail.flightRoute}
+                pricingInfo={pricingInfo[index]}
+                travelers={travelersData}
+              />
+            ))
+          ) : <p className="w-full py-5 text-center capitalize text-text">
+            no flight found
+          </p>
+      }
     </div>
   );
 };

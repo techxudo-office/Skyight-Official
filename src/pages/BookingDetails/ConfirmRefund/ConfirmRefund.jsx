@@ -71,7 +71,7 @@ export default function ConfirmRefund({
                             >
                                 <span className="font-medium text-six"> {item.TicketNumber}</span>
                                 <span className="font-medium text-six "> {item.CouponNumber}</span>
-                                <span className="font-semibold text-primary">${item.Penalty}</span>
+                                <span className="font-semibold text-primary">PKR {item.pkrPenalty.toLocaleString()}</span>
                             </label>
                         </div>
                     ))}

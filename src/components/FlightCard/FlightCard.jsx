@@ -40,13 +40,13 @@ const FlightCard = ({ data, doc_type, travelers, pricingInfo }) => {
     <>
       <CardLayoutContainer className={"mb-5"}>
         <CardLayoutHeader className={""}>
-          <div className="mb-3 text-sm text-text">
+          {/* <div className="mb-3 text-sm text-text">
             <h2 className="font-semibold text-text">
               {data.AirItinerary.OriginDestinationOptions.length === 1 ?
                 "Non Stop (fix)" : `Stops: ${data.AirItinerary.OriginDestinationOptions.length}`
               }
             </h2>
-          </div>
+          </div> */}
           {flightSegment.map((flights, idx) => (
             <div
               key={idx}

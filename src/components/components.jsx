@@ -49,3 +49,4 @@ export { default as PhoneNumberInput } from "./PhoneNumberInput/PhoneNumberInput
 export { default as ModalWrapper } from "./ModalWrapper/ModalWrapper";
 export { default as ResetPasswordform } from "./ResetPasswordform/ResetPasswordform";
 export { default as ExcelExportButton } from "./ExcelExportButton/ExcelExportButton";
+export { default as Headline } from "./Headline/Headline";

@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
-import { Sidebar, Header, Backbutton, Modal } from "../components/components";
+import { Sidebar, Header, Backbutton, Modal, Headline } from "../components/components";
 import { logo } from "../assets/Index";
 
 const Layout = () => {
+
   const [sidebarStatus, setSidebarStatus] = useState(true);
+  const [headline, setHeadline] = useState(true);
   // const [ModalStatus, setModalStatus] = useState(false);
 
   const setSidebarStatusHandler = (status) => {
@@ -34,8 +36,9 @@ const Layout = () => {
             className="flex flex-col justify-between items-center h-[100vh]  bg-slate-100 overflow-scroll"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
-
+            {<Headline status={headline} onClose={() => setHeadline(false)} />}
             <div className="flex flex-col items-center  justify-center w-full px-4 pt-28">
+
               <Outlet />
             </div>
 

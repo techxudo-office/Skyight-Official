@@ -31,8 +31,8 @@ import { FlightsBanner, forBackArrows } from "../../assets/Index";
 const TRIP_TYPES = ["One-Way", "Round-Trip"];
 const FLIGHT_ROUTES = ["Domestic", "International"];
 const INITIAL_VALUES = {
-  flightRoute: "Domestic",
-  tripType: "One-Way",
+  flightRoute: FLIGHT_ROUTES[0],
+  tripType: TRIP_TYPES[0],
   departure: "",
   arrival: "",
   departureDate: "",
@@ -122,7 +122,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
         },
       });
     } catch (error) {
-      toast.error(error.message || "Failed to search flights");
+      toast.error(error.message || "No flights found");
     }
   }, [dispatch, userData, navigate]);
 
@@ -188,7 +188,10 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                     name="flightRoute"
                     value={values.flightRoute}
                     options={FLIGHT_ROUTES}
-                    onChange={(val) => setFieldValue("flightRoute", val)}
+                    onChange={(val) => {
+                      setFieldValue("returnDate", "");
+                      setFieldValue("flightRoute", val)
+                    }}
                   />
                   <p className="text-text text-sm pt-3 italic">
                     Note: Select 'Domestic' if traveling with your national ID
@@ -198,10 +201,13 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                 <CardLayoutBody>
                   <RadioButtons
                     name="tripType"
-                    value={values.tripType}
+                    value={values.flightRoute === "Domestic" ? "One-Way" : values.tripType}
                     options={TRIP_TYPES}
                     disabledOptions={values.flightRoute === "Domestic" ? [1] : []}
-                    onChange={(val) => setFieldValue("tripType", val)}
+                    onChange={(val) => {
+                      setFieldValue("returnDate", "");
+                      setFieldValue("tripType", val)
+                    }}
                   />
                 </CardLayoutBody>
 
@@ -266,7 +272,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                       isSelected={activeField.returnDate}
                       pastDate={false}
                       onChange={(e) => setFieldValue("returnDate", e.target.value)}
-                      disabled={values.tripType === "One-Way"}
+                      disabled={values.tripType === "One-Way" || values.flightRoute === "Domestic"}
                       minDate={values.departureDate || dayjs().format("YYYY-MM-DD")}
                     />
 
