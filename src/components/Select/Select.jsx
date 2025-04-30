@@ -56,7 +56,7 @@ const Select = ({
 
   // Filter options based on search value
   const filteredOptions = options.filter((option) =>
-    option?.label?.toLowerCase()?.includes(searchValue?.toLowerCase())
+    option?.label?.toString().toLowerCase()?.includes(searchValue?.toString()?.toLowerCase())
   );
 
   // Handle scroll event for lazy loading

@@ -5,42 +5,39 @@ export default function RadioButtons({
   value,
   name,
   onChange,
-  disabledOptionindex = []
+  disabledOptions = []
 }) {
   return (
     <div className="flex space-x-4">
       {options.map((option, idx) => {
-        const isDisabled = disabledOptionindex.includes(idx);
+        const isDisabled = disabledOptions.includes(idx);
         const isSelected = value === option;
-        
+
         return (
           <label
             key={option}
-            className={`flex items-center space-x-2 ${
-              isDisabled ? 'cursor-not-allowed' : 'cursor-pointer'
-            }`}
+            className={`flex items-center space-x-2 ${isDisabled ? 'cursor-not-allowed' : 'cursor-pointer'
+              }`}
           >
             <div
-              className={`w-4 h-4 rounded-full border-[1px] flex items-center justify-center transition-all ${
-                isDisabled 
-                  ? "border-background" 
-                  : isSelected 
-                    ? "border-primary" 
-                    : "border-text"
-              }`}
+              className={`w-4 h-4 rounded-full border-[1px] flex items-center justify-center transition-all ${isDisabled
+                ? "border-background"
+                : isSelected
+                  ? "border-primary"
+                  : "border-text"
+                }`}
             >
               {isSelected && !isDisabled && (
                 <div className="w-2 h-2 bg-primary rounded-full"></div>
               )}
             </div>
             <span
-              className={`text-sm ${
-                isDisabled 
-                  ? "text-background" 
-                  : isSelected 
-                    ? "text-primary font-medium" 
-                    : "text-text"
-              }`}
+              className={`text-sm ${isDisabled
+                ? "text-background"
+                : isSelected
+                  ? "text-primary font-medium"
+                  : "text-text"
+                }`}
             >
               {option}
             </span>
