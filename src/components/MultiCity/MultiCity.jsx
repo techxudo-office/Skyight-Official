@@ -22,7 +22,7 @@ import { FaPlaneDeparture } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { forBackArrows } from "../../assets/Index";
 
 

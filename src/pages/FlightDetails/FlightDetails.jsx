@@ -28,7 +28,7 @@ import {
   Select,
   Input,
 } from "../../components/components";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 const titleOptions = [
   { label: "Mr", value: "Mr" },

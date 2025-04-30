@@ -11,7 +11,7 @@ import {
 import dayjs from "dayjs";
 import { CustomTooltip, Spinner, Tag } from "../components";
 import { IoIosAirplane } from "react-icons/io";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 const TableNew = ({
   columnsToView,

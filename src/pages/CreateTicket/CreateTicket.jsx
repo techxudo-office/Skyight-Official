@@ -7,7 +7,7 @@ import {
 } from "../../components/CardLayout/CardLayout";
 import { Input, Button, Spinner, TextArea } from "../../components/components";
 import { useNavigate } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { createTicket } from "../../_core/features/ticketSlice";
 

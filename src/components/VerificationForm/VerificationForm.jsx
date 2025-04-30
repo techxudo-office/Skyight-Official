@@ -4,7 +4,7 @@ import {
   CardLayoutBody,
 } from "../../components/CardLayout/CardLayout";
 import { Button, Spinner } from "../../components/components";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { resendCode, verifyOTP } from "../../_core/features/authSlice";

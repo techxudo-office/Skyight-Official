@@ -5,7 +5,7 @@ import { IoIosMan } from "react-icons/io";
 import { Formik, Form } from "formik";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 
 // Optimized imports

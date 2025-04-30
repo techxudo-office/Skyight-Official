@@ -6,7 +6,7 @@ import { FaUser } from "react-icons/fa";
 import { FiLogIn, FiLogOut } from "react-icons/fi";
 import { RiDashboardFill } from "react-icons/ri";
 import { AuthContext } from "../../context/AuthContext";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 import logo from "../../assets/logo/logo.png";
 import planeIcon from "../../assets/icons/plane.png";
