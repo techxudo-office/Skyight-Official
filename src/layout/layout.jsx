@@ -1,14 +1,15 @@
 import React, { useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { Sidebar, Header, Backbutton, Modal, Headline } from "../components/components";
 import { logo } from "../assets/Index";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 
 const Layout = () => {
-
+  const location = useLocation();
   const [sidebarStatus, setSidebarStatus] = useState(true);
   const [headline, setHeadline] = useState(true);
+  const { userData } = useSelector((state) => state.auth);
   // const [ModalStatus, setModalStatus] = useState(false);
 
   const setSidebarStatusHandler = (status) => {
