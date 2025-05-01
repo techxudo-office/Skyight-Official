@@ -5,7 +5,6 @@ import { CgMenuRightAlt } from "react-icons/cg";
 import { FaUser } from "react-icons/fa";
 import { FiLogIn, FiLogOut } from "react-icons/fi";
 import { RiDashboardFill } from "react-icons/ri";
-import { AuthContext } from "../../context/AuthContext";
 import toast from "react-hot-toast";
 
 import logo from "../../assets/logo/logo.png";
