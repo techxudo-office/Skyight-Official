@@ -7,6 +7,8 @@ import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
+import { City, Country } from "country-state-city";
+
 
 // Optimized imports
 import {
@@ -26,6 +28,9 @@ import {
 import { searchFlightValidationSchema } from "../../schema/validationSchema";
 import { FormSelect } from "./FormSelect/FormSelect";
 import { FlightsBanner, forBackArrows } from "../../assets/Index";
+import CityCodes from "../../AirlinesData/CityCodes";
+import airports from 'airports';
+import airportCodes from 'airport-codes';
 
 // Constants
 const TRIP_TYPES = ["One-Way", "Round-Trip"];
@@ -74,6 +79,11 @@ const SELECT_FIELDS = [
 ];
 
 const SearchFlights = ({ OnlySearch, onSearch }) => {
+  const [countryName, setCountryName] = useState(null);
+
+  // Example usage, replace with your city name
+  // console.log(countryName, "countryName");
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { userData } = useSelector((state) => state.auth);
@@ -159,6 +169,20 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
       </div>
     );
   }
+  const getCountryByIata = (code) => {
+    // Convert to uppercase to match IATA format
+    const upperCode = code.toUpperCase().trim();
+
+    // Find airport in the dataset
+    const airport = airportCodes.findWhere({ iata: upperCode });
+
+    if (!airport) {
+      throw new Error(`No airport found for IATA code: ${code}`);
+    }
+
+    console.log(airport.get('country')) // Note: Typo in package ("country" is misspelled as "country")
+
+  }
 
   return (
     <>
@@ -188,6 +212,9 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                     value={values.flightRoute}
                     options={FLIGHT_ROUTES}
                     onChange={(val) => {
+                      if (val === "Domestic") {
+                        setFieldValue("tripType", "One-Way");
+                      }
                       setFieldValue("returnDate", "");
                       setFieldValue("flightRoute", val)
                     }}
@@ -215,6 +242,8 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                     {/* Departure/Arrival Section */}
                     <div className="relative flex flex-col mb-5 md:flex-row max-md:items-center">
                       <FormSelect
+                        touched={touched.departure}
+                        error={errors.departure}
                         id="departure"
                         label="Select Departure"
                         options={bookingRoutes?.map(({ Origin }) => ({
@@ -226,6 +255,8 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                           setFieldValue("departure", option.value);
                           setFieldValue("arrival", "");
                           activateField("arrival");
+                          getCountryByIata(option.value)
+
                         }}
                         icon={<FaPlaneDeparture />}
                       />
@@ -235,6 +266,8 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                     </div>
 
                     <FormSelect
+                      touched={touched.arrival}
+                      error={errors.arrival}
                       id="arrival"
                       label="Select Arrival"
                       disabled={!values.departure}
@@ -252,6 +285,8 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
 
                     {/* Date Pickers */}
                     <CustomDate
+                      touched={touched.departureDate}
+                      error={errors.departureDate}
                       name="departureDate"
                       label="Departure Date"
                       value={values.departureDate}
@@ -262,22 +297,27 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                         activateField(values.tripType !== "One-Way" ? "returnDate" : "adult");
                       }}
                       minDate={dayjs().format("YYYY-MM-DD")}
+
                     />
 
                     <CustomDate
+                      touched={touched.returnDate}
+                      error={errors.returnDate}
                       name="returnDate"
                       label="Return Date"
                       value={values.returnDate}
                       isSelected={activeField.returnDate}
                       pastDate={false}
                       onChange={(e) => setFieldValue("returnDate", e.target.value)}
-                      disabled={values.tripType === "One-Way" || values.flightRoute === "Domestic"}
+                      disabled={values.tripType === "One-Way" || values.flightRoute === "Domestic" || values.departureDate === ""}
                       minDate={values.departureDate || dayjs().format("YYYY-MM-DD")}
                     />
 
                     {/* Passenger/Cabin Selectors */}
                     {SELECT_FIELDS.map((field) => (
                       <FormSelect
+                        touched={touched[field.id]}
+                        error={errors[field.id]}
                         key={field.id}
                         icons={field.icon}
                         {...field}

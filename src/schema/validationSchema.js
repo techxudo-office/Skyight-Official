@@ -50,7 +50,12 @@ export const searchFlightValidationSchema = Yup.object().shape({
   departure: Yup.string().required("Please select departure"),
   arrival: Yup.string().required("Please select arrival"),
   departureDate: Yup.date().required("Please select departure date"),
-  // returnDate: Yup.date().required("Please select return date"),
+  returnDate: Yup.date()
+    .when('tripType', {
+      is: (tripType) => tripType === 'Round-Trip',
+      then: (schema) => schema.required("Please select return date"),
+      otherwise: (schema) => schema.notRequired()
+    }),
   adult: Yup.string().required("Please select the number of adults"),
   child: Yup.string().required("Please select the number of children"),
   infant: Yup.string().required("Please select the number of infants"),
