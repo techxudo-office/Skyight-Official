@@ -28,8 +28,6 @@ const FlightCard = ({ data, doc_type, travelers, pricingInfo }) => {
       totalTravelers.push(key.replace("s", ""));
     }
   });
-  console.log(travelers, "travelers")
-  console.log(totalTravelers, "travelers")
   const viewDetails = () => {
     navigate("/dashboard/travelers-details", {
       state: { data, doc_type, travelers, pricingInfo },

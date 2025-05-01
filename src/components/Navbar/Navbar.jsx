@@ -5,16 +5,15 @@ import { CgMenuRightAlt } from "react-icons/cg";
 import { FaUser } from "react-icons/fa";
 import { FiLogIn, FiLogOut } from "react-icons/fi";
 import { RiDashboardFill } from "react-icons/ri";
-import { AuthContext } from "../../context/AuthContext";
 import toast from "react-hot-toast";
 
 import logo from "../../assets/logo/logo.png";
 import planeIcon from "../../assets/icons/plane.png";
+import { useSelector } from "react-redux";
 
 const Navbar = ({ hideLinks }) => {
   const navigate = useNavigate();
-  const { authToken, updateAuthToken } = useContext(AuthContext);
-
+  const { userData } = useSelector((state) => state.auth);
   const [dropdownStatus, setDropDownStatus] = useState(false);
 
   const dropdownHandler = () => {
@@ -24,7 +23,6 @@ const Navbar = ({ hideLinks }) => {
   const logoutHandler = () => {
     dropdownHandler();
     toast.success("Logout Successfully");
-    updateAuthToken();
   };
 
   const protectedOptions = [
@@ -83,8 +81,8 @@ const Navbar = ({ hideLinks }) => {
   return (
     <>
       
-      <nav className="bg-white shadow-md py-4">
-        <div className="container mx-auto flex items-center justify-between ps-3 pe-6">
+      <nav className="py-4 bg-white shadow-md">
+        <div className="container flex items-center justify-between mx-auto ps-3 pe-6">
           <Link to="/">
             <div className="flex items-center gap-3 ">
               <img src={logo} alt="logo" className="h-14" />
@@ -96,7 +94,7 @@ const Navbar = ({ hideLinks }) => {
 
           <ul
             style={{ display: hideLinks && "none" }}
-            className="flex justify-end flex-grow space-x-8 items-center"
+            className="flex items-center justify-end flex-grow space-x-8"
           >
             {navLinksData &&
               navLinksData.map((link, index) => {
@@ -106,7 +104,7 @@ const Navbar = ({ hideLinks }) => {
                     onClick={() => {
                       navigationHandler(link.path);
                     }}
-                    className="text-slate-400 text-md hover:text-lg transition-all hover:text-primary font-semibold cursor-pointer hover:underline"
+                    className="font-semibold transition-all cursor-pointer text-slate-400 text-md hover:text-lg hover:text-primary hover:underline"
                   >
                     {link.name}
                   </li>
@@ -117,7 +115,7 @@ const Navbar = ({ hideLinks }) => {
               <div className="px-3">
                 <div
                   onClick={dropdownHandler}
-                  className="flex items-center justify-center rounded-full px-3 py-2 gap-2 border-2 border-primary hover:border-secondary text-primary hover:text-secondary transition-all text-4xl cursor-pointer"
+                  className="flex items-center justify-center gap-2 px-3 py-2 text-4xl transition-all border-2 rounded-full cursor-pointer border-primary hover:border-secondary text-primary hover:text-secondary"
                 >
                   <img
                     src={planeIcon}
@@ -131,7 +129,7 @@ const Navbar = ({ hideLinks }) => {
                 <Dropdown
                   status={dropdownStatus}
                   changeStatus={setDropDownStatus}
-                  options={authToken ? protectedOptions : unProtectedOptions}
+                  options={userData?.token ? protectedOptions : unProtectedOptions}
                   right={"-100"}
                 />
               </div>

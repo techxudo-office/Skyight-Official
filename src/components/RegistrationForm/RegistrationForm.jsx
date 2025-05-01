@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   CardLayoutContainer,
   CardLayoutBody,
@@ -128,16 +128,22 @@ const RegistrationForm = () => {
   }));
 
   const cityOptions = formik.values.country.value
-    ? City.getCitiesOfCountry(formik.values.country.value).map((city) => ({
-      label: city.name,
-      value: city.name,
-    }))
+    ? City.getCitiesOfCountry(formik.values.country.value).map((city) => {
+        // console.log(city);
+        return {
+          label: city.name,
+          value: city.name,
+        };
+      })
     : [];
 
+  // useEffect(() => {
+  //   console.log(countryOptions, "countryOptions");
+  //   console.log(cityOptions, "cityOptions");
+  // }, [countryOptions, cityOptions]);
 
   return (
     <>
-      
       <CardLayoutContainer className="hide-scrollbar bg-white max-w-[900px] h-[550px] m-auto p-0 shadow-3xl overflow-y-scroll">
         <CardLayoutBody removeBorder padding="p-0" className="flex">
           <div className="flex-1 p-16">
@@ -182,7 +188,8 @@ const RegistrationForm = () => {
                         options={cityOptions}
                         value={formik.values.city}
                         onChange={(selectedOption) => {
-                          formik.setFieldValue("city", selectedOption.value);
+                          console.log(selectedOption, "selectedOptionCity");
+                          formik.setFieldValue("city", selectedOption.label);
                         }}
                         onBlur={formik.handleBlur}
                         placeholder={
@@ -203,8 +210,9 @@ const RegistrationForm = () => {
                 return (
                   <div
                     key={name}
-                    className={`relative ${formik.touched[name] && formik.errors[name] ? "mb-5" : ""
-                      }`}
+                    className={`relative ${
+                      formik.touched[name] && formik.errors[name] ? "mb-5" : ""
+                    }`}
                   >
                     <Input
                       id={name}
