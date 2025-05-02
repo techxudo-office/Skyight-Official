@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FaChevronCircleUp, FaChevronCircleDown } from "react-icons/fa";
+import airportCodes from 'airport-codes';
 import {
   MdAdd,
   MdArrowBack,
@@ -103,7 +104,7 @@ const TravelersDetails = () => {
   const handleSubmit = (travelerIndex, values) => {
     const payload = {
       ...values,
-      country: docType === "Domestic" ? "IRN" : values.country,
+      // country: docType === "Domestic" ? "IRN" : values.country,
       doc_type: docType === "Domestic" ? "N" : "P",
     };
 
@@ -183,6 +184,19 @@ const TravelersDetails = () => {
     label: country.name,
     value: country.isoCode,
   }));
+
+  function checkIranAirports(iata1, iata2) {
+    // Get airport data for both codes
+    const airport1 = airportCodes.findWhere({ iata: iata1.toUpperCase() });
+    const airport2 = airportCodes.findWhere({ iata: iata2.toUpperCase() });
+
+    // Check if both airports exist and are in Iran (country code 'IR')
+    const bothInIran = airport1 && airport2 &&
+      airport1.get('country') === 'IR' &&
+      airport2.get('country') === 'IR';
+
+    return bothInIran ? 'N' : 'P';
+  }
   const travelersDetailsInputs = [
     {
       type: "select",
