@@ -1,17 +1,16 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   CardLayoutContainer,
   CardLayoutBody,
 } from "../../components/CardLayout/CardLayout";
 import { Button, Spinner, Input } from "../../components/components";
 import toast from "react-hot-toast";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { forgotPassword } from "../../_core/features/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 const ForgetPassForm = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate()
   const [email, setEmail] = useState("");
   const loading = useSelector((state) => state.auth.isLoadingForgotPassword);
 
@@ -26,22 +25,22 @@ const ForgetPassForm = () => {
       return;
     }
     dispatch(forgotPassword({ email })).then(() => {
-      navigate("/reset-password")
+      // navigate("/reset-password")
     });
   };
 
   return (
     <>
-      
       <CardLayoutContainer className="hide-scrollbar max-w-[900px] h-[500px] m-auto p-0 shadow-3xl overflow-y-scroll">
         <CardLayoutBody removeBorder padding="p-0" className="flex">
-          <div className="flex-1 flex items-center justify-center">
+          <div className="flex items-center justify-center flex-1">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 395 274"
               width={395}
-              height={200}>
+              height={200}
+            >
               <g filter="url(#password_svg__a)">
                 <path
                   fill="#fff"
@@ -136,7 +135,8 @@ const ForgetPassForm = () => {
                   x2="234.94"
                   y1="198.71"
                   y2="164.95"
-                  gradientUnits="userSpaceOnUse">
+                  gradientUnits="userSpaceOnUse"
+                >
                   <stop stopColor="#9076C9" />
                   <stop offset="0.77" stopColor="#CBD0E3" />
                   <stop offset={1} stopColor="#E1E7FF" />
@@ -147,7 +147,8 @@ const ForgetPassForm = () => {
                   x2="214.44"
                   y1="-31.54"
                   y2="152.33"
-                  gradientUnits="userSpaceOnUse">
+                  gradientUnits="userSpaceOnUse"
+                >
                   <stop stopColor="#E6E5F7" />
                   <stop offset="0.34" stopColor="#F5EBF4" />
                   <stop offset="0.57" stopColor="#FBCBD7" />
@@ -160,7 +161,8 @@ const ForgetPassForm = () => {
                   x2="163.37"
                   y1="156.49"
                   y2="186.05"
-                  gradientUnits="userSpaceOnUse">
+                  gradientUnits="userSpaceOnUse"
+                >
                   <stop stopColor="#F55F30" />
                   <stop offset="0.63" stopColor="#FF9A9A" />
                   <stop offset={1} stopColor="#FFC93D" />
@@ -171,7 +173,8 @@ const ForgetPassForm = () => {
                   x2="294.63"
                   y1="170.7"
                   y2="66.94"
-                  gradientUnits="userSpaceOnUse">
+                  gradientUnits="userSpaceOnUse"
+                >
                   <stop stopColor="#F55F30" />
                   <stop offset={1} stopColor="#FFC93D" />
                 </linearGradient>
@@ -182,7 +185,8 @@ const ForgetPassForm = () => {
                   x="0.59"
                   y="151.05"
                   colorInterpolationFilters="sRGB"
-                  filterUnits="userSpaceOnUse">
+                  filterUnits="userSpaceOnUse"
+                >
                   <feFlood floodOpacity={0} result="BackgroundImageFix" />
                   <feColorMatrix
                     in="SourceAlpha"
@@ -210,7 +214,8 @@ const ForgetPassForm = () => {
                   x="188.89"
                   y="138.14"
                   colorInterpolationFilters="sRGB"
-                  filterUnits="userSpaceOnUse">
+                  filterUnits="userSpaceOnUse"
+                >
                   <feFlood floodOpacity={0} result="BackgroundImageFix" />
                   <feColorMatrix
                     in="SourceAlpha"
@@ -236,10 +241,10 @@ const ForgetPassForm = () => {
           </div>
 
           <div className="flex-1 p-16">
-            <h3 className="text-4xl font-extrabold text-center mb-5">
+            <h3 className="mb-5 text-4xl font-extrabold text-center">
               Forgot Password?
             </h3>
-            <h3 className="text-md text-slate-500 text-start mb-10 mx-2">
+            <h3 className="mx-2 mb-10 text-md text-slate-500 text-start">
               Enter your email to reset your account password. We will send a
               mail to your mailbox.
             </h3>
@@ -260,7 +265,8 @@ const ForgetPassForm = () => {
               <div className="flex items-center justify-end px-1 mt-[-10px]">
                 <Link
                   to={"/login"}
-                  className="text-end text-primary hover:text-secondary transition-all">
+                  className="transition-all text-end text-primary hover:text-secondary"
+                >
                   Back to Login?
                 </Link>
               </div>

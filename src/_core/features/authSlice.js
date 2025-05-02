@@ -211,7 +211,7 @@ export const resetPassword = createAsyncThunk(
   async (payload, thunkAPI) => {
     try {
       const response = await axios.post(
-        `${BASE_URL}/api/forgot-password`,
+        `${BASE_URL}/api/reset-password`,
         payload
       );
       if (response.status === 200) {

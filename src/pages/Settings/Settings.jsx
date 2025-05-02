@@ -86,10 +86,10 @@ const Settings = () => {
       password: profileData.password,
     };
 
-    if (!updateAccountValidation(payload, setErrors)) {
-      toast.error("Please fix the errors before submitting.");
-      return;
-    }
+    // if (!updateAccountValidation(payload, setErrors)) {
+    //   toast.error("Please fix the errors before submitting.");
+    //   return;
+    // }
 
     dispatch(
       updateAccount({
@@ -105,9 +105,10 @@ const Settings = () => {
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
+      console.log(file)
       const imageUrl = URL.createObjectURL(file);
-      // dispatch(uploadUserImage({ img: imageUrl, token: userData?.token }));
-      setProfileImage(imageUrl);
+      dispatch(uploadUserImage({ img: file, token: userData?.token }));
+      // setProfileImage(imageUrl);
     }
   };
 
