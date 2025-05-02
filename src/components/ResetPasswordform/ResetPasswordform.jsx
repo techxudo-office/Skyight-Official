@@ -1,34 +1,48 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     CardLayoutContainer,
     CardLayoutBody,
 } from "../../components/CardLayout/CardLayout";
 import { Button, Spinner, Input } from "../../components/components";
 import toast from "react-hot-toast";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { forgotPassword, resetPassword } from "../../_core/features/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 const ResetPasswordform = () => {
     const dispatch = useDispatch();
+    const location = useLocation();
+    const [token, setToken] = useState("");
     const [password, setPassword] = useState("");
     const loading = useSelector((state) => state.auth.isLoadingForgotPassword);
 
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const extractedToken = params.get("token");
+        if (extractedToken) {
+            setToken(extractedToken);
+        } else {
+            toast.error("Invalid or missing token.");
+        }
+    }, [location.search]);
+
     const validatePassword = (password) => {
-        // Check if password contains at least 8 letters (a-z, A-Z)
         const letterRegex = /[a-zA-Z]/g;
         const letterMatches = password.match(letterRegex) || [];
         return letterMatches.length >= 8;
     };
 
     const resetPasswordHandler = () => {
-        if (!validatePassword(password)) {
-            toast.error("Invalid password format");
-            return;
-        }
-        dispatch(resetPassword({ password }));
+        // if (!validatePassword(password)) {
+        //   toast.error("Invalid password format");
+        //   return;
+        // }
+        dispatch(resetPassword({ password, token }))
+            .unwrap()
+            .then(() => {
+                navigate("/login");
+            });
     };
-
     return (
         <>
             <CardLayoutContainer className="hide-scrollbar max-w-[900px] h-[500px] m-auto p-0 shadow-3xl overflow-y-scroll">
@@ -39,7 +53,8 @@ const ResetPasswordform = () => {
                             fill="none"
                             viewBox="0 0 395 274"
                             width={395}
-                            height={200}>
+                            height={200}
+                        >
                             <g filter="url(#password_svg__a)">
                                 <path
                                     fill="#fff"
@@ -134,7 +149,8 @@ const ResetPasswordform = () => {
                                     x2="234.94"
                                     y1="198.71"
                                     y2="164.95"
-                                    gradientUnits="userSpaceOnUse">
+                                    gradientUnits="userSpaceOnUse"
+                                >
                                     <stop stopColor="#9076C9" />
                                     <stop offset="0.77" stopColor="#CBD0E3" />
                                     <stop offset={1} stopColor="#E1E7FF" />
@@ -145,7 +161,8 @@ const ResetPasswordform = () => {
                                     x2="214.44"
                                     y1="-31.54"
                                     y2="152.33"
-                                    gradientUnits="userSpaceOnUse">
+                                    gradientUnits="userSpaceOnUse"
+                                >
                                     <stop stopColor="#E6E5F7" />
                                     <stop offset="0.34" stopColor="#F5EBF4" />
                                     <stop offset="0.57" stopColor="#FBCBD7" />
@@ -158,7 +175,8 @@ const ResetPasswordform = () => {
                                     x2="163.37"
                                     y1="156.49"
                                     y2="186.05"
-                                    gradientUnits="userSpaceOnUse">
+                                    gradientUnits="userSpaceOnUse"
+                                >
                                     <stop stopColor="#F55F30" />
                                     <stop offset="0.63" stopColor="#FF9A9A" />
                                     <stop offset={1} stopColor="#FFC93D" />
@@ -169,7 +187,8 @@ const ResetPasswordform = () => {
                                     x2="294.63"
                                     y1="170.7"
                                     y2="66.94"
-                                    gradientUnits="userSpaceOnUse">
+                                    gradientUnits="userSpaceOnUse"
+                                >
                                     <stop stopColor="#F55F30" />
                                     <stop offset={1} stopColor="#FFC93D" />
                                 </linearGradient>
@@ -180,7 +199,8 @@ const ResetPasswordform = () => {
                                     x="0.59"
                                     y="151.05"
                                     colorInterpolationFilters="sRGB"
-                                    filterUnits="userSpaceOnUse">
+                                    filterUnits="userSpaceOnUse"
+                                >
                                     <feFlood floodOpacity={0} result="BackgroundImageFix" />
                                     <feColorMatrix
                                         in="SourceAlpha"
@@ -208,7 +228,8 @@ const ResetPasswordform = () => {
                                     x="188.89"
                                     y="138.14"
                                     colorInterpolationFilters="sRGB"
-                                    filterUnits="userSpaceOnUse">
+                                    filterUnits="userSpaceOnUse"
+                                >
                                     <feFlood floodOpacity={0} result="BackgroundImageFix" />
                                     <feColorMatrix
                                         in="SourceAlpha"
@@ -258,14 +279,15 @@ const ResetPasswordform = () => {
                             <div className="flex items-center justify-end px-1 mt-[-10px]">
                                 <Link
                                     to={"/login"}
-                                    className="transition-all text-end text-primary hover:text-secondary">
+                                    className="transition-all text-end text-primary hover:text-secondary"
+                                >
                                     Back to Login?
                                 </Link>
                             </div>
 
                             <div className="flex items-center justify-center mt-3">
                                 <Button
-                                    text={loading ? <Spinner /> : "Forget Password"}
+                                    text={loading ? <Spinner /> : "Reset Password"}
                                     onClick={resetPasswordHandler}
                                     disabled={loading}
                                 />
