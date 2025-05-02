@@ -1,80 +1,21 @@
-import React, { useEffect } from "react";
 import {
   CardLayoutContainer,
   CardLayoutBody,
 } from "../../components/CardLayout/CardLayout";
-import { Input, Button, Spinner, Select } from "../../components/components";
+import {
+  Input,
+  Button,
+  Spinner,
+  Select,
+  PhoneNumberInput,
+} from "../../components/components";
 import { useFormik } from "formik";
 import { useNavigate, Link } from "react-router-dom";
-import { Toaster } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { register } from "../../_core/features/authSlice";
 import { registrationValidationSchema } from "../../schema/validationSchema";
 import { Country, City } from "country-state-city";
-
-const formFields = [
-  {
-    name: "company_name",
-    label: "Company Name*",
-    placeholder: "Skyight",
-    type: "text",
-  },
-  {
-    name: "first_name",
-    label: "First Name*",
-    placeholder: "John",
-    type: "text",
-  },
-  {
-    name: "last_name",
-    label: "Last Name*",
-    placeholder: "Albert",
-    type: "text",
-  },
-  {
-    name: "email",
-    label: "Email Address*",
-    placeholder: "abc.xcv@gmail.com",
-    type: "email",
-  },
-  {
-    name: "phone_number",
-    label: "Phone Number*",
-    placeholder: "+923312334567",
-    type: "text",
-  },
-  {
-    name: "mobile_number",
-    label: "Mobile Number*",
-    placeholder: "03312334567",
-    type: "text",
-  },
-  {
-    name: "password",
-    label: "Set Password*",
-    placeholder: "********",
-    type: "password",
-  },
-  {
-    name: "country",
-    label: "Country*",
-    placeholder: "Select a country  ",
-    type: "text",
-  },
-  { name: "city", label: "City*", placeholder: "Karachi", type: "text" },
-  {
-    name: "address",
-    label: "Address*",
-    placeholder: "House no. abc near xvc mart",
-    type: "text",
-  },
-  {
-    name: "website",
-    label: "Website Url*",
-    placeholder: "www.skyight.com",
-    type: "text",
-  },
-];
+import { formFields } from "../../utils/inputFields";
 
 const RegistrationForm = () => {
   const navigate = useNavigate();
@@ -128,19 +69,11 @@ const RegistrationForm = () => {
   }));
 
   const cityOptions = formik.values.country.value
-    ? City.getCitiesOfCountry(formik.values.country.value).map((city) => {
-        // console.log(city);
-        return {
-          label: city.name,
-          value: city.name,
-        };
-      })
+    ? City.getCitiesOfCountry(formik.values.country.value).map((city) => ({
+        label: city.name,
+        value: city.name,
+      }))
     : [];
-
-  // useEffect(() => {
-  //   console.log(countryOptions, "countryOptions");
-  //   console.log(cityOptions, "cityOptions");
-  // }, [countryOptions, cityOptions]);
 
   return (
     <>
@@ -188,7 +121,6 @@ const RegistrationForm = () => {
                         options={cityOptions}
                         value={formik.values.city}
                         onChange={(selectedOption) => {
-                          console.log(selectedOption, "selectedOptionCity");
                           formik.setFieldValue("city", selectedOption.label);
                         }}
                         onBlur={formik.handleBlur}
@@ -207,6 +139,7 @@ const RegistrationForm = () => {
                     </div>
                   );
                 }
+
                 return (
                   <div
                     key={name}
@@ -214,16 +147,37 @@ const RegistrationForm = () => {
                       formik.touched[name] && formik.errors[name] ? "mb-5" : ""
                     }`}
                   >
-                    <Input
-                      id={name}
-                      name={name}
-                      label={label}
-                      placeholder={placeholder}
-                      type={type}
-                      value={formik.values[name]}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                    />
+                    {name === "phone_number" || name === "mobile_number" ? (
+                      <PhoneNumberInput
+                        id={1}
+                        name={label}
+                        label={label}
+                        className="self-center"
+                        value={formik.values.mobile_number}
+                        onChange={(number) =>
+                          formik.setFieldValue(
+                            name === "phone_number"
+                              ? "phone_number"
+                              : "mobile_number",
+                            number.country_code +
+                              number.area_code +
+                              number.number
+                          )
+                        }
+                        placeholder={label}
+                      />
+                    ) : (
+                      <Input
+                        id={name}
+                        name={name}
+                        label={label}
+                        placeholder={placeholder}
+                        type={type}
+                        value={formik.values[name]}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      />
+                    )}
                     {formik.touched[name] && formik.errors[name] && (
                       <div className="absolute left-0 mt-2 text-sm text-red-500">
                         {formik.errors[name]}
