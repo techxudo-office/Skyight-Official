@@ -6,7 +6,7 @@ import {
 import { Button, Spinner, Input } from "../../components/components";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
-import { forgotPassword } from "../../_core/features/authSlice";
+import { forgotPassword, resetPassword } from "../../_core/features/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 const ResetPasswordform = () => {
@@ -26,7 +26,7 @@ const ResetPasswordform = () => {
             toast.error("Invalid password format");
             return;
         }
-        dispatch(forgotPassword({ password }));
+        dispatch(resetPassword({ password }));
     };
 
     return (

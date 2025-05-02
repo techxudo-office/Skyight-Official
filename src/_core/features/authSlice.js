@@ -208,10 +208,10 @@ export const forgotPassword = createAsyncThunk(
 );
 export const resetPassword = createAsyncThunk(
   "auth/resetPassword",
-  async (payload, thunkAPI) => {
+  async ({ token, payload, code }, thunkAPI) => {
     try {
       const response = await axios.post(
-        `${BASE_URL}/api/forgot-password`,
+        `${BASE_URL}/api/reset-password/${token}`,
         payload
       );
       if (response.status === 200) {

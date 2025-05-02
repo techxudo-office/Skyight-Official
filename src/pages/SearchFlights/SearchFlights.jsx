@@ -180,9 +180,11 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
       throw new Error(`No airport found for IATA code: ${code}`);
     }
 
-    console.log(airport.get('country')) // Note: Typo in package ("country" is misspelled as "country")
+    setCountryName(airport.get('country')) // Note: Typo in package ("country" is misspelled as "country")
 
   }
+  console.log(countryName)
+
 
   return (
     <>

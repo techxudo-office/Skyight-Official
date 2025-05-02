@@ -132,8 +132,8 @@ const SearchHistory = () => {
 
   return (
     <>
-      
-      <CardLayoutContainer>
+
+      <CardLayoutContainer removeBg={true}>
         <CardLayoutHeader heading={"Search History"} />
         <ExcelExportButton
           data={filteredData || []}

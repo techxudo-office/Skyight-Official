@@ -104,11 +104,11 @@ const OrderHistory = () => {
   // if (orderError) return <p>Error: {orderError}</p>;
   return (
     <>
-      
-      <CardLayoutContainer className={"z-10 "}>
+
+      <CardLayoutContainer className={"z-10 "} removeBg={true}>
 
         <CardLayoutHeader heading={"Order History"} />
-        <CardLayoutBody>
+        <CardLayoutBody removeBorder={true}>
           <ExcelExportButton
             data={filteredData || []}
             fileName="FlightBookings"

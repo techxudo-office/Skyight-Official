@@ -127,7 +127,7 @@ const CreateUser = () => {
 
   return (
     <>
-      
+
       <CardLayoutContainer>
         <CardLayoutHeader heading="Create User" />
         <form onSubmit={handleSubmit} noValidate>
@@ -159,7 +159,7 @@ const CreateUser = () => {
                   onChange={(number) => {
                     setFormData(prev => ({
                       ...prev,
-                      mobile_number: number.country_code + number.area_code + number.number
+                      mobile_number: `+${number.country_code + number.area_code + number.number}`
                     }))
                   }}
                   placeholder="Enter Mobile Number"
