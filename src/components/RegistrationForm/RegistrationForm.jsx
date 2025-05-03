@@ -159,9 +159,7 @@ const RegistrationForm = () => {
                             name === "phone_number"
                               ? "phone_number"
                               : "mobile_number",
-                            number.country_code +
-                              number.area_code +
-                              number.number
+                            `+${number.country_code}${number.area_code}${number.number}`
                           )
                         }
                         placeholder={label}
