@@ -46,7 +46,7 @@ export const registrationValidationSchema = Yup.object({
 
 export const searchFlightValidationSchema = Yup.object().shape({
   tripType: Yup.string().required("Please select a trip type"),
-  flightRoute: Yup.string().required("Please select a flight route"),
+  // flightRoute: Yup.string().required("Please select a flight route"),
   departure: Yup.string().required("Please select departure"),
   arrival: Yup.string().required("Please select arrival"),
   departureDate: Yup.date().required("Please select departure date"),

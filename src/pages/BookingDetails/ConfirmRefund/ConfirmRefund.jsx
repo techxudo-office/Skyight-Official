@@ -80,7 +80,7 @@ export default function ConfirmRefund({
 
                 {/* Actions */}
                 <div className="flex justify-end space-x-3">
-                    <Button onClick={onRequestClose} loading={loading} text={"Cancel"} className='bg-red-700 hover:bg-red-600' />
+                    <Button onClick={onRequestClose} text={"Cancel"} className='bg-red-700 hover:bg-red-600' />
                     <Button
                         onClick={onRefund}
                         loading={loading}

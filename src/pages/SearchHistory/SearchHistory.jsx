@@ -37,7 +37,7 @@ const SearchHistory = () => {
       values.trip_type === "Return" ? "International" : "Domestic";
 
     const payload = {
-      flightRoute: flightType,
+      // flightRoute: flightType,
       tripType: values.trip_type,
       originCode: values.origin_destinations[0].origin_location_code,
       destinationCode: values.origin_destinations[0].destination_location_code,

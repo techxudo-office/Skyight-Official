@@ -197,7 +197,6 @@ const FlightResults = () => {
               <FlightCard
                 key={index}
                 data={item}
-                doc_type={TripDetail.flightRoute}
                 pricingInfo={pricingInfo[index]}
                 travelers={travelersData}
               />

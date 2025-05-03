@@ -34,9 +34,9 @@ import airportCodes from 'airport-codes';
 
 // Constants
 const TRIP_TYPES = ["One-Way", "Round-Trip"];
-const FLIGHT_ROUTES = ["Domestic", "International"];
+// const FLIGHT_ROUTES = ["Domestic", "International"];
 const INITIAL_VALUES = {
-  flightRoute: FLIGHT_ROUTES[0],
+  // flightRoute: FLIGHT_ROUTES[0],
   tripType: TRIP_TYPES[0],
   departure: "",
   arrival: "",
@@ -101,7 +101,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
   const searchFlightHandler = useCallback(async (values) => {
     try {
       const payload = {
-        flightRoute: values.flightRoute,
+        // flightRoute: values.flightRoute,
         tripType: values.tripType === "Round-Trip" ? "Return" : "OneWay",
         originCode: values.departure,
         destinationCode: values.arrival,
@@ -208,7 +208,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
           >
             {({ values, setFieldValue, errors, touched }) => (
               <Form>
-                <CardLayoutBody>
+                {/* <CardLayoutBody>
                   <RadioButtons
                     name="flightRoute"
                     value={values.flightRoute}
@@ -224,14 +224,13 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                   <p className="pt-3 text-sm italic text-text">
                     Note: Select 'Domestic' if traveling with your national ID
                   </p>
-                </CardLayoutBody>
+                </CardLayoutBody> */}
 
                 <CardLayoutBody>
                   <RadioButtons
                     name="tripType"
-                    value={values.flightRoute === "Domestic" ? "One-Way" : values.tripType}
+                    value={values.tripType}
                     options={TRIP_TYPES}
-                    disabledOptions={values.flightRoute === "Domestic" ? [1] : []}
                     onChange={(val) => {
                       setFieldValue("returnDate", "");
                       setFieldValue("tripType", val)
@@ -311,7 +310,7 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
                       isSelected={activeField.returnDate}
                       pastDate={false}
                       onChange={(e) => setFieldValue("returnDate", e.target.value)}
-                      disabled={values.tripType === "One-Way" || values.flightRoute === "Domestic" || values.departureDate === ""}
+                      disabled={values.tripType === "One-Way" || values.departureDate === ""}
                       minDate={values.departureDate || dayjs().format("YYYY-MM-DD")}
                     />
 

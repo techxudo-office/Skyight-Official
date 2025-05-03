@@ -55,7 +55,9 @@ const TravelersDetails = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const destinationCode = location.state.data.AirItinerary.OriginDestinationOptions[0].FlightSegment[0].ArrivalAirport.LocationCode
 
+  const originCode = location.state.data.AirItinerary.OriginDestinationOptions[0].FlightSegment[0].DepartureAirport.LocationCode
   const { userData } = useSelector((state) => state.auth);
   const {
     travelers,
@@ -90,9 +92,11 @@ const TravelersDetails = () => {
       setFlightData(location.state.data);
       setTravelersData(location.state.travelers);
       setPricingInfo(location.state.pricingInfo);
-      setDocType(location.state.doc_type);
     }
   }, [location.state]);
+
+  console.log(originCode, destinationCode
+    , "flightdata")
   useEffect(() => {
     setTimeout(() => {
       if (successPopup.active) {
@@ -104,8 +108,7 @@ const TravelersDetails = () => {
   const handleSubmit = (travelerIndex, values) => {
     const payload = {
       ...values,
-      // country: docType === "Domestic" ? "IRN" : values.country,
-      doc_type: docType === "Domestic" ? "N" : "P",
+      doc_type: checkIranAirports(values.country),
     };
 
     setDisableAddTraveler((prev) => [...prev, travelerIndex]);
@@ -185,18 +188,21 @@ const TravelersDetails = () => {
     value: country.isoCode,
   }));
 
-  function checkIranAirports(iata1, iata2) {
+  function checkIranAirports(nationality) {
     // Get airport data for both codes
-    const airport1 = airportCodes.findWhere({ iata: iata1.toUpperCase() });
-    const airport2 = airportCodes.findWhere({ iata: iata2.toUpperCase() });
-
+    const airport1 = airportCodes.findWhere({ iata: originCode.toUpperCase() });
+    const airport2 = airportCodes.findWhere({ iata: destinationCode.toUpperCase() });
+    console.log(airport1.get('country'), airport2.get('country'))
     // Check if both airports exist and are in Iran (country code 'IR')
     const bothInIran = airport1 && airport2 &&
-      airport1.get('country') === 'IR' &&
-      airport2.get('country') === 'IR';
+      airport1.get('country') === 'Iran' &&
+      airport2.get('country') === 'Iran';
 
-    return bothInIran ? 'N' : 'P';
+    return (bothInIran
+      && (nationality == "IRN" || nationality == "IR"))
+      ? 'N' : 'P';
   }
+  console.log(allTravelersData)
   const travelersDetailsInputs = [
     {
       type: "select",
@@ -221,7 +227,6 @@ const TravelersDetails = () => {
       label: "Country",
       name: "country",
       options: countries,
-      disabled: docType === "Domestic",
     },
     {
       type: "select",
@@ -248,7 +253,7 @@ const TravelersDetails = () => {
     {
       type: "text",
       id: "passport_number",
-      label: `${docType === "Domestic" ? "National ID" : "Passport Number"}`,
+      label: "",
       name: "passport_number",
     },
     {
@@ -286,7 +291,7 @@ const TravelersDetails = () => {
                   <CardLayoutContainer key={`${key}-${i}`} className={"mb-5 bg-white"}>
                     <CardLayoutHeader>
                       <h2 className="text-2xl font-semibold capitalize text-text">
-                        Travelers Detail {docType}
+                        Travelers Detail
                       </h2>
                     </CardLayoutHeader>
                     <CardLayoutHeader
@@ -339,7 +344,7 @@ const TravelersDetails = () => {
                           area_code: "",
                           number: "",
                         },
-                        country: docType === "Domestic" ? "IRN" : "",
+                        country: "",
                         city: "",
                         date_of_birth: "",
                         passenger_type: travelertype,
@@ -397,25 +402,12 @@ const TravelersDetails = () => {
                                     `${values.first_name} ${values.last_name}`
                                   }
                                   options={
-                                    docType == "Domestic"
-                                      ? travelers
-                                        .filter(
-                                          (item) => item.doc_type == "N"
-                                        )
-                                        .map((item) => ({
-                                          passport: item.passport_number,
-                                          value: item.email,
-                                          label: `${item.email} | ${item.passport_number}`,
-                                        }))
-                                      : travelers
-                                        .filter(
-                                          (item) => item.doc_type == "P"
-                                        )
-                                        .map((item) => ({
-                                          passport: item.passport_number,
-                                          value: item.email,
-                                          label: `${item.email} | ${item.passport_number}`,
-                                        }))
+                                    travelers
+                                      .map((item) => ({
+                                        passport: item.passport_number,
+                                        value: item.email,
+                                        label: `${item.email} | ${item.passport_number}`,
+                                      }))
                                   }
                                 />
                                 {oldTraveller.includes(travelerIndex) && (
@@ -549,10 +541,13 @@ const TravelersDetails = () => {
                                                 <Input
                                                   id={input.id}
                                                   name={input.name}
-                                                  label={input.label}
+                                                  label={
+                                                    input.id == "passport_number"
+                                                      ? checkIranAirports(values.country) == "N" ? "National Id" : "Passport"
+                                                      : input.label}
                                                   type={input.type}
                                                   placeholder={input.placeholder}
-                                                  disabled={disableAddTraveler.includes(
+                                                  disabled={input.disabled || disableAddTraveler.includes(
                                                     travelerIndex
                                                   )}
                                                   value={values[input.name]}
@@ -645,27 +640,28 @@ const TravelersDetails = () => {
                                           <h1 className="pb-3 text-2xl font-semibold text-text">
                                             Travelers Detail
                                           </h1>
-                                          {Object.entries(values).map(
-                                            ([key, value]) => (
-                                              <p
-                                                key={key}
-                                                className="flex justify-between py-4 text-sm font-semibold border-b border-lightgray text-text"
-                                              >
-                                                <span className="capitalize">
-                                                  {" "}
-                                                  {key.replace(/_/g, " ")}{" "}
-                                                </span>
+                                          {Object.entries(values).filter(([key, value]) => key != "doc_type" &&
+                                            key != "passport_number").map(
+                                              ([key, value]) => (
+                                                <p
+                                                  key={key}
+                                                  className="flex justify-between py-4 text-sm font-semibold border-b border-lightgray text-text"
+                                                >
+                                                  <span className="capitalize">
+                                                    {" "}
+                                                    {key.replace(/_/g, " ")}{" "}
+                                                  </span>
 
-                                                <span>
-                                                  {typeof value === "object"
-                                                    ? Object.values(value).map(
-                                                      (num) => num
-                                                    )
-                                                    : value}
-                                                </span>
-                                              </p>
-                                            )
-                                          )}
+                                                  <span>
+                                                    {typeof value === "object"
+                                                      ? Object.values(value).map(
+                                                        (num) => num
+                                                      )
+                                                      : value}
+                                                  </span>
+                                                </p>
+                                              )
+                                            )}
                                         </div>
                                       </div>
                                     </div>
