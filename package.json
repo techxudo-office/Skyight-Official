@@ -10,6 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/cache": "^11.14.0",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
     "@mui/x-date-pickers": "^7.25.0",
     "@radix-ui/react-tooltip": "^1.1.8",
     "@reduxjs/toolkit": "^2.6.0",
@@ -43,6 +46,7 @@
     "react-world-flags": "^1.6.0",
     "redux-persist": "^6.0.0",
     "slick-carousel": "^1.8.1",
+    "styled-components": "^6.1.17",
     "xlsx": "^0.18.5",
     "yup": "^1.4.0"
   },
