@@ -1,6 +1,4 @@
 import React, { useEffect, useState, useRef } from "react";
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
 import {
   CardLayoutContainer,
   CardLayoutHeader,
@@ -59,18 +57,6 @@ const TicketDetails = () => {
   } = useSelector((state) => state.booking);
   // const [bookingDetails, setBookingDetails] = useState();
 
-  const printRef = useRef();
-
-  const downloadAsPDF = async () => {
-    const element = printRef.current;
-    const canvas = await html2canvas(element);
-    const imgData = canvas.toDataURL("image/png");
-    const pdf = new jsPDF("p", "mm", "a4");
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-    pdf.save("download.pdf");
-  };
 
   const handleIssue = async (pnr) => {
     dispatch(issueBooking({ pnr, token: userData?.token }))
@@ -124,10 +110,10 @@ const TicketDetails = () => {
   };
 
   const refundRequestHandler = async (flight) => {
-    setConfirmObject((prev) => ({ ...prev, status: false }));
-
+    const totalPenalty = penalties?.PenaltyRS.reduce((sum, ticket) => sum + ticket.pkrPenalty, 0)
     const bookingId = {
       booking_id: flight.id,
+      refunded_amount: totalPenalty
     };
     dispatch(requestRefund({ data: bookingId, token: userData?.token }))
       .unwrap()
@@ -135,13 +121,12 @@ const TicketDetails = () => {
         dispatch(
           getBookingDetails({ id: location.state.id, token: userData?.token })
         );
-        setConfirmObject((prev) => ({ ...prev, status: false }));
+        setRefundConfirmation(false)
       })
       .catch((error) => {
         dispatch(
           getBookingDetails({ id: location.state.id, token: userData?.token })
         );
-        setConfirmObject((prev) => ({ ...prev, status: false }));
       });
   };
 
@@ -182,7 +167,7 @@ const TicketDetails = () => {
       // First fetch penalty data
       const result = await dispatch(
         getPenalty({ data: getPenaltyPayload, token: userData?.token })
-      ).unwrap();
+      ).unwrap()
 
       // Then show confirmation with the penalty amount
       // setConfirmObject({
@@ -249,14 +234,16 @@ const TicketDetails = () => {
   ];
   return (
     <>
-      
+
       <ConfirmModal {...confirmObject} />
       <ConfirmRefund
         isOpen={refundConfirmation}
         items={penalties?.PenaltyRS}
+        loading={isRefundLoading}
+        onRefund={() => refundRequestHandler(bookingDetails)}
         onRequestClose={() => setRefundConfirmation(false)}
       />
-      <div ref={printRef} className="flex flex-col w-full gap-5">
+      <div className="flex flex-col w-full gap-5">
         <CardLayoutContainer>
           <CardLayoutBody className={"flex flex-wrap gap-3 justify-between"}>
             <div className="flex flex-col gap-3">
