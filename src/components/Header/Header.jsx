@@ -92,7 +92,6 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
   ];
 
   const logoutHandler = () => {
-    localStorage.removeItem("auth_token");
     dispatch({ type: "user/logout" });
     toast.success("Logged out successfully");
     navigate("/login");

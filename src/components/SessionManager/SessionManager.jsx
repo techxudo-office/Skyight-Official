@@ -27,7 +27,9 @@ export default function SessionManager() {
     const { exp } = jwtDecode(userData?.token);
     const expireMs = exp * 1000 - Date.now();
     if (expireMs <= 0) {
-      dispatch(logout());
+      dispatch({ type: "user/logout" });
+      navigate("/login");
+      toast.error("Session expired");
       return;
     }
 
@@ -38,9 +40,7 @@ export default function SessionManager() {
 
     // schedule actual logout
     logoutTimer.current = setTimeout(() => {
-      localStorage.removeItem("auth_token");
       dispatch({ type: "user/logout" });
-      toast.success("Logged out successfully");
       navigate("/login");
       toast.error("Session expired");
     }, expireMs);

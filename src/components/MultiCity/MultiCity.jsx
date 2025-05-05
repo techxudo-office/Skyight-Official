@@ -16,7 +16,6 @@ import {
 import { Select, Input, Spinner, Button, CustomDate } from "../../components/components";
 
 import { iranianCities } from "../../data/iranianCities";
-// import { searchFlight } from "../../utils/api_handler";
 
 import { FaPlaneDeparture } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
@@ -125,10 +124,6 @@ const MultiCity = ({ OnlySearch, onSearch }) => {
     //     });
     // };
 
-    const loadFormData = () => {
-        const storedValues = localStorage.getItem("flightSearchForm");
-        return storedValues ? JSON.parse(storedValues) : null;
-    };
 
 
 
@@ -184,13 +179,7 @@ const MultiCity = ({ OnlySearch, onSearch }) => {
     //     }
     // };
 
-    const handleSubmit = (values) => {
-        // localStorage.setItem("flightSearchForm", JSON.stringify(values));
-        // setFormData(values)
-
-        // searchFlightHandler(values)
-
-    };
+    const handleSubmit = (values) => {};
 
     useEffect(() => {
         const selectRef = document.getElementsByClassName('select')

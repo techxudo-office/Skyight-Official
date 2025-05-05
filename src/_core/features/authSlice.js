@@ -47,9 +47,6 @@ const authSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.isLoading = false;
         state.userData = action.payload;
-        if (action.payload?.token) {
-          localStorage.setItem("auth_token", action.payload.token);
-        }
       })
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;
@@ -57,7 +54,6 @@ const authSlice = createSlice({
       })
       .addCase(logout.fulfilled, (state) => {
         state.userData = null;
-        localStorage.removeItem("auth_token");
       })
       .addCase(forgotPassword.pending, (state) => {
         state.isLoadingForgotPassword = true;
