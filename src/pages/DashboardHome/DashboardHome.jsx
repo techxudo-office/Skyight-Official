@@ -152,57 +152,62 @@ const DashboardHome = () => {
   }, [dispatch, userData?.user?.company_id]);
 
   return (
-    <div className="flex flex-col w-full">
-      <div className="w-full p-3">
-        <h2 className="text-3xl font-semibold text-text mb-7">
-          Featured Flights
-        </h2>
-        <div className="w-full overflow-x-hidden">
-          {flightBookings?.length > 0 ? (
-            <Slider {...settings} className="flex gap-3 ">
-              {flightBookings.map((item, index) => (
-                <DashboardCards key={index} index={index} data={item} />
-              ))}
-            </Slider>
-          ) : (
-            <div className="w-full text-center text-gray-500">
-              No Featured Flights
-            </div>
-          )}
+    <>
+      <div className="flex flex-col w-full">
+        <div className="w-full p-3">
+          <h2 className="text-3xl font-semibold text-text mb-7">
+            Featured Flights
+          </h2>
+          <div className="w-full overflow-x-hidden">
+            {flightBookings?.length > 0 ? (
+              <Slider {...settings} className="flex gap-3 ">
+                {flightBookings.map((item, index) => (
+                  <DashboardCards key={index} index={index} data={item} />
+                ))}
+              </Slider>
+            ) : (
+              <div className="w-full text-center text-gray-500">
+                No Featured Flights
+              </div>
+            )}
+          </div>
         </div>
+        <CardLayoutContainer removeBg={true} className={"mt-5"}>
+          <CardLayoutHeader
+            removeBorder={true}
+            heading={"Flight Bookings"}
+            className="flex items-center justify-between"
+          ></CardLayoutHeader>
+          <CardLayoutBody removeBorder={true}>
+            <ExcelExportButton
+              data={filteredData || []}
+              fileName="FlightBookings"
+            />
+            <Searchbar className={"mb-7"} data={flightBookings} onFilteredData={setFilteredData} />
+            <Table
+              pagination={true}
+              columnsData={columns}
+              tableData={filteredData || []}
+              progressPending={isLoadingFlightBookings}
+              paginationTotalRows={filteredData.length}
+              paginationComponentOptions={{ noRowsPerPage: "10" }}
+            />
+          </CardLayoutBody>
+
+          <CardLayoutFooter></CardLayoutFooter>
+        </CardLayoutContainer>
+
       </div>
-      <CardLayoutContainer removeBg={true} className={"mt-5"}>
-        <CardLayoutHeader
-          removeBorder={true}
-          heading={"Flight Bookings"}
-          className="flex items-center justify-between"
-        ></CardLayoutHeader>
-        <CardLayoutBody removeBorder={true}>
-          <ExcelExportButton
-            data={filteredData || []}
-            fileName="FlightBookings"
-          />
-          <Searchbar className={"mb-7"} data={flightBookings} onFilteredData={setFilteredData} />
-          <Table
-            pagination={true}
-            columnsData={columns}
-            tableData={filteredData || []}
-            progressPending={isLoadingFlightBookings}
-            paginationTotalRows={filteredData.length}
-            paginationComponentOptions={{ noRowsPerPage: "10" }}
-          />
-        </CardLayoutBody>
-        <CardLayoutFooter></CardLayoutFooter>
-      </CardLayoutContainer>
       <div
         id="footer-container"
-        className="flex items-center justify-center w-full p-3 pb-0 bg-white"
+        className="flex items-center justify-center w-full p-3 pb-0 bg-white fixed bottom-0"
       >
         <h2 className="mt-2 font-semibold text-center text-text text-md">
-          © 2024 All rights reserved by SKYIGHT AIR & BOOKING SYSTEM
+          © 2024 Powered by TECHXUDO
         </h2>
       </div>
-    </div>
+    </>
+
   );
 };
 

@@ -94,9 +94,6 @@ const TravelersDetails = () => {
       setPricingInfo(location.state.pricingInfo);
     }
   }, [location.state]);
-
-  console.log(originCode, destinationCode
-    , "flightdata")
   useEffect(() => {
     setTimeout(() => {
       if (successPopup.active) {
@@ -192,7 +189,6 @@ const TravelersDetails = () => {
     // Get airport data for both codes
     const airport1 = airportCodes.findWhere({ iata: originCode.toUpperCase() });
     const airport2 = airportCodes.findWhere({ iata: destinationCode.toUpperCase() });
-    console.log(airport1.get('country'), airport2.get('country'))
     // Check if both airports exist and are in Iran (country code 'IR')
     const bothInIran = airport1 && airport2 &&
       airport1.get('country') === 'Iran' &&
@@ -202,7 +198,6 @@ const TravelersDetails = () => {
       && (nationality == "IRN" || nationality == "IR"))
       ? 'N' : 'P';
   }
-  console.log(allTravelersData)
   const travelersDetailsInputs = [
     {
       type: "select",
@@ -265,7 +260,6 @@ const TravelersDetails = () => {
       futureDate: true,
     },
   ];
-
   let count = -1;
   return (
     <>
@@ -480,7 +474,15 @@ const TravelersDetails = () => {
                                                   }
                                                   placeholder={input.placeholder}
                                                   value={values[input.name]}
-                                                  onChange={(option) => setFieldValue(input.name, option.value)}
+                                                  onChange={(option) => {
+                                                    if (input.id == "country") {
+                                                      setFieldValue("country", option.value)
+                                                      setFieldValue("city", "")
+                                                    } else {
+                                                      setFieldValue(input.name, option.value)
+                                                    }
+
+                                                  }}
                                                 />
                                               ) : input.type === "date" ? (
                                                 <CustomDate

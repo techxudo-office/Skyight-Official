@@ -70,22 +70,22 @@ const RegistrationForm = () => {
 
   const cityOptions = formik.values.country.value
     ? City.getCitiesOfCountry(formik.values.country.value).map((city) => ({
-        label: city.name,
-        value: city.name,
-      }))
+      label: city.name,
+      value: city.name,
+    }))
     : [];
 
   return (
     <>
-      <CardLayoutContainer className="hide-scrollbar bg-white max-w-[900px] h-[550px] m-auto p-0 shadow-3xl overflow-y-scroll">
+      <CardLayoutContainer className=" bg-white max-w-[900px]  mx-auto p-0 shadow-3xl ">
         <CardLayoutBody removeBorder padding="p-0" className="flex">
-          <div className="flex-1 p-16">
-            <h3 className="mb-10 text-4xl font-extrabold text-center">
+          <div className="flex-1 py-5 px-16">
+            <h3 className="mb-12 text-4xl font-extrabold text-center">
               Register Your Company
             </h3>
             <form
               onSubmit={formik.handleSubmit}
-              className="flex flex-col gap-5"
+              className="flex flex-col gap-10"
             >
               {formFields.map(({ name, label, placeholder, type }) => {
                 if (name === "country") {
@@ -143,9 +143,8 @@ const RegistrationForm = () => {
                 return (
                   <div
                     key={name}
-                    className={`relative ${
-                      formik.touched[name] && formik.errors[name] ? "mb-5" : ""
-                    }`}
+                    className={`relative ${formik.touched[name] && formik.errors[name] ? "mb-5" : ""
+                      }`}
                   >
                     {name === "phone_number" || name === "mobile_number" ? (
                       <PhoneNumberInput
@@ -153,14 +152,13 @@ const RegistrationForm = () => {
                         name={label}
                         label={label}
                         className="self-center"
-                        value={formik.values.mobile_number}
-                        onChange={(number) =>
+                        value={formik.values[name]}
+                        onChange={(number) => {
                           formik.setFieldValue(
-                            name === "phone_number"
-                              ? "phone_number"
-                              : "mobile_number",
+                            name,
                             `+${number.country_code}${number.area_code}${number.number}`
                           )
+                        }
                         }
                         placeholder={label}
                       />

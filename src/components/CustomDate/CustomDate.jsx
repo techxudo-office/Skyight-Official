@@ -22,7 +22,6 @@ const CustomDate = ({
     isTimePicker // Toggle between DatePicker and DateTimePicker
 }) => {
     const [isOpen, setIsOpen] = useState(false)
-    console.log(minDate)
     useEffect(() => {
         setIsOpen(isSelected || false)
         return () => {

@@ -16,8 +16,8 @@ const PassengerDetail = ({ travelersData }) => {
     }
   };
 
-  const getCountryCode = (alpha3) => {
-    return countries.alpha3ToAlpha2(alpha3) || "PK";
+  const getCountryCode = (countryCode) => {
+    return countryCode.length === 3 ? countries.alpha3ToAlpha2(countryCode) : countryCode || "PK";
   };
   return (
     <CardLayoutContainer className={"my-4 p-5"}>
