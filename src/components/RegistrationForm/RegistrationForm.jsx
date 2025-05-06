@@ -77,7 +77,7 @@ const RegistrationForm = () => {
 
   return (
     <>
-      <CardLayoutContainer className=" bg-white max-w-[900px]  mx-auto p-0 shadow-3xl ">
+      <CardLayoutContainer className=" bg-white max-w-[800px]  mx-auto p-0 shadow-3xl ">
         <CardLayoutBody removeBorder padding="p-0" className="flex">
           <div className="flex-1 py-5 px-16">
             <h3 className="mb-12 text-4xl font-extrabold text-center">

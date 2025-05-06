@@ -155,11 +155,15 @@ const LoginForm = () => {
         </CardLayoutBody>
 
       </CardLayoutContainer>}
-      {registerModal && <CardLayoutContainer className="max-w-[900px]  m-auto  pb-20 mt-[800px] overflow-y-scroll">
-        <div onClick={() => setRegisterModal(false)} className="w-full cursor-pointer flex items-center justify-start pt-8 pl-8 text-2xl text-text">
-          <MdArrowBack /></div>
-        <RegistrationForm />
-      </CardLayoutContainer>}
+      {registerModal &&
+        <CardLayoutContainer className="max-w-[900px] mt-[1000px]  bg-white  mx-auto my-auto  pb-20 ">
+
+          <div onClick={() => setRegisterModal(false)} className="w-full cursor-pointer flex items-center justify-start pt-8 pl-8 text-2xl text-text">
+            <MdArrowBack /></div>
+          <RegistrationForm />
+
+
+        </CardLayoutContainer>}
     </>
   );
 };

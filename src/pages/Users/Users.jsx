@@ -113,6 +113,7 @@ const Users = () => {
   return (
     <>
       <ConfirmModal
+        text={"Are you really want to delete this user?"}
         status={modalStatus}
         loading={isDeletingUser}
         onAbort={abortDeleteHandler}

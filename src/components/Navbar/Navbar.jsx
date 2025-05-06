@@ -80,12 +80,12 @@ const Navbar = ({ hideLinks }) => {
 
   return (
     <>
-      
+
       <nav className="py-4 bg-white shadow-md">
         <div className="container flex items-center justify-between mx-auto ps-3 pe-6">
           <Link to="/">
             <div className="flex items-center gap-3 ">
-              <img src={logo} alt="logo" className="h-14" />
+              <img src={logo} alt="logo" className="h-8" />
               <span className="text-2xl font-bold text-primary ms-[-20px]">
                 SKYIGHT
               </span>
@@ -120,9 +120,8 @@ const Navbar = ({ hideLinks }) => {
                   <img
                     src={planeIcon}
                     alt="plane"
-                    className={`h-8 transition-all ${
-                      dropdownStatus && "rotate-180"
-                    }`}
+                    className={`h-8 transition-all ${dropdownStatus && "rotate-180"
+                      }`}
                   />
                   <CgMenuRightAlt />
                 </div>
