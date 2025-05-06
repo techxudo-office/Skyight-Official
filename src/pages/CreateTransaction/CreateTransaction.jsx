@@ -66,7 +66,7 @@ const CreateTransaction = () => {
     formData.append("amount", values.amount);
     formData.append("comment", values.comment);
     formData.append("document", selectedFile);
-
+    console.log(formData)
     dispatch(
       createTransaction({ data: formData, token: userData?.token })
     ).then(() => {

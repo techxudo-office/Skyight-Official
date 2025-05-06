@@ -14,19 +14,14 @@ const initialState = {
   resetPasswordError: null,
 
   isLoadingRegister: false,
-  registerError: null,
 
   isLoadingVerifyOTP: false,
-  verifyOTPError: null,
 
   isLoadingResendCode: false,
-  resendCodeError: null,
 
   isLoadingUserInfo: false,
-  userInfoError: null,
 
   isUpdatingAccount: false,
-  updateAccountError: null,
 };
 
 const authSlice = createSlice({
@@ -49,54 +44,45 @@ const authSlice = createSlice({
       })
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;
-        state.loginError = action.payload;
       })
       .addCase(logout.fulfilled, (state) => {
         state.userData = null;
       })
       .addCase(forgotPassword.pending, (state) => {
         state.isLoadingForgotPassword = true;
-        state.forgotPasswordError = null;
       })
       .addCase(forgotPassword.fulfilled, (state) => {
         state.isLoadingForgotPassword = false;
       })
       .addCase(forgotPassword.rejected, (state, action) => {
         state.isLoadingForgotPassword = false;
-        state.forgotPasswordError = action.payload;
       })
       .addCase(register.pending, (state) => {
         state.isLoadingRegister = true;
-        state.registerError = null;
       })
       .addCase(register.fulfilled, (state) => {
         state.isLoadingRegister = false;
       })
       .addCase(register.rejected, (state, action) => {
         state.isLoadingRegister = false;
-        state.registerError = action.payload;
       })
       .addCase(verifyOTP.pending, (state) => {
         state.isLoadingVerifyOTP = true;
-        state.verifyOTPError = null;
       })
       .addCase(verifyOTP.fulfilled, (state) => {
         state.isLoadingVerifyOTP = false;
       })
       .addCase(verifyOTP.rejected, (state, action) => {
         state.isLoadingVerifyOTP = false;
-        state.verifyOTPError = action.payload;
       })
       .addCase(resendCode.pending, (state) => {
         state.isLoadingResendCode = true;
-        state.resendCodeError = null;
       })
       .addCase(resendCode.fulfilled, (state) => {
         state.isLoadingResendCode = false;
       })
       .addCase(resendCode.rejected, (state, action) => {
         state.isLoadingResendCode = false;
-        state.resendCodeError = action.payload;
       })
       .addCase(getUserInfo.pending, (state) => {
         state.isLoadingUserInfo = true;
@@ -110,7 +96,6 @@ const authSlice = createSlice({
       })
       .addCase(getUserInfo.rejected, (state, action) => {
         state.isLoadingUserInfo = false;
-        state.userInfoError = action.payload;
       })
       .addCase(updateAccount.pending, (state) => {
         state.isUpdatingAccount = true;
@@ -124,7 +109,6 @@ const authSlice = createSlice({
       })
       .addCase(updateAccount.rejected, (state, action) => {
         state.isUpdatingAccount = false;
-        state.updateAccountError = action.payload;
       });
   },
 });

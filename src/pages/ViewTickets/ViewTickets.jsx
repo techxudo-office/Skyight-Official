@@ -47,19 +47,19 @@ const ViewTickets = () => {
       name: "TITLE",
       selector: (row) => row.title,
       sortable: false,
-      
+
     },
     {
       name: "DESCRIPTION",
       selector: (row) => row.description,
       sortable: false,
-      
+
     },
     {
       name: "STATUS",
       selector: (row) => <Tag value={row.status} />,
       sortable: false,
-      
+
     },
     {
       name: "",
@@ -74,7 +74,7 @@ const ViewTickets = () => {
         </div>
       ),
       sortable: false,
-      
+
     },
   ];
 
@@ -105,7 +105,7 @@ const ViewTickets = () => {
             columnsData={columns}
             tableData={tickets || []}
             progressPending={isLoadingTickets}
-            paginationTotalRows={tickets.length}
+            paginationTotalRows={tickets?.length}
             paginationComponentOptions={{ noRowsPerPage: "10" }}
           />
         </CardLayoutBody>

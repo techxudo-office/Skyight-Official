@@ -21,7 +21,7 @@ const Announcement = () => {
     dispatch(getAnnouncements(userData.token));
   }, [dispatch, userData?.token]);
 
-  const announcementData = announcements?.data?.[0] || [];
+  const announcementData = announcements?.[0] || [];
 
   const renderRow = ({ index, style }) => {
     const item = announcementData[index];
@@ -53,7 +53,7 @@ const Announcement = () => {
       </div>
     );
   };
-
+  console.log(announcementData, "announeceents")
   return (
     <div className="flex flex-col items-center justify-center w-full">
       {isLoadingAnnouncements ? (
@@ -69,7 +69,7 @@ const Announcement = () => {
         </List>
       ) : (
         <h2 className="text-center capitalize text-text">
-          No Notifications Found
+          No Announcements yet
         </h2>
       )}
     </div>

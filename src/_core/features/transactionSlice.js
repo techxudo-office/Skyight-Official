@@ -1,15 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
-import { BASE_URL } from "../../utils/ApiBaseUrl";
-import toast from "react-hot-toast";
+import makeRequest from "./ApiHelper";
 
 const initialState = {
   transactions: [],
   isLoadingTransactions: false,
-  transactionsError: null,
 
   isCreatingTransaction: false,
-  createTransactionError: null,
 };
 
 const transactionSlice = createSlice({
@@ -20,7 +16,6 @@ const transactionSlice = createSlice({
     builder
       .addCase(createTransaction.pending, (state) => {
         state.isCreatingTransaction = true;
-        state.createTransactionError = null;
       })
       .addCase(createTransaction.fulfilled, (state, action) => {
         state.isCreatingTransaction = false;
@@ -28,11 +23,9 @@ const transactionSlice = createSlice({
       })
       .addCase(createTransaction.rejected, (state, action) => {
         state.isCreatingTransaction = false;
-        state.createTransactionError = action.payload;
       })
       .addCase(getTransactions.pending, (state) => {
         state.isLoadingTransactions = true;
-        state.transactionsError = null;
       })
       .addCase(getTransactions.fulfilled, (state, action) => {
         state.isLoadingTransactions = false;
@@ -40,60 +33,32 @@ const transactionSlice = createSlice({
       })
       .addCase(getTransactions.rejected, (state, action) => {
         state.isLoadingTransactions = false;
-        state.transactionsError = action.payload;
       });
   },
 });
 
 export const createTransaction = createAsyncThunk(
   "transaction/createTransaction",
-  async ({ data, token }, thunkAPI) => {
-    try {
-      const response = await axios.post(
-        `${BASE_URL}/api/company/create-transaction`,
-        data,
-        {
-          headers: {
-            Accept: "multipart/form-data",
-            "Content-Type": "multipart/form-data",
-            Authorization: token,
-          },
-        }
-      );
-
-      if (response.status === 200) {
-        toast.success("Transaction created successfully!");
-        return response.data;
-      }
-    } catch (error) {
-      const errorMessage =
-        error?.response?.data?.message || "Failed to create transaction";
-      toast.error(errorMessage);
-      return thunkAPI.rejectWithValue(errorMessage);
-    }
-  }
+  ({ data, token }) =>
+    makeRequest('post', '/api/company/create-transaction', {
+      data,
+      token,
+      headers: {
+        'Accept': 'multipart/form-data',
+        'Content-Type': 'multipart/form-data'
+      },
+      successMessage: "Transaction created successfully!",
+      errorMessage: "Failed to create transaction"
+    })
 );
 
 export const getTransactions = createAsyncThunk(
   "transaction/getTransactions",
-  async ({ token, page = 0, limit = 10000000 }, thunkAPI) => {
-    try {
-      const response = await axios.get(
-        `${BASE_URL}/api/company/user-transactions?page=${page}&limit=${limit}`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-      return response.data.data[0];
-    } catch (error) {
-      const errorMessage =
-        error?.response?.data?.message || "Failed to fetch transactions";
-      toast.error(errorMessage);
-      return thunkAPI.rejectWithValue(errorMessage);
-    }
-  }
+  ({ token, page = 0, limit = 10000000 }) =>
+    makeRequest('get', `/api/company/user-transactions?page=${page}&limit=${limit}`, {
+      token,
+      errorMessage: "Failed to fetch transactions"
+    }).then(response => response[0])
 );
 
 export default transactionSlice.reducer;

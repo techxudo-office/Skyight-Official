@@ -13,13 +13,16 @@ const apiClient = axios.create({
 });
 
 // Helper function to handle API requests
-const makeRequest = async (method, endpoint, { data = null, token = null, successMessage = null, errorMessage = null }) => {
+const makeRequest = async (method, endpoint, { data = null, token = null, successMessage = null, errorMessage = null, headers = {} }) => {
     try {
         const config = {
             method,
             url: endpoint,
             ...(data && { data }),
-            ...(token && { headers: { Authorization: token } })
+            headers: {
+                ...(token && { Authorization: token }),
+                ...headers
+            }
         };
 
         const response = await apiClient(config);
@@ -28,7 +31,7 @@ const makeRequest = async (method, endpoint, { data = null, token = null, succes
             toast.success(successMessage);
         }
 
-        return response.data?.data || response.data?.message || response.data;
+        return response.data?.data || response.data?.message || response.data || response;
     } catch (error) {
         const errorMsg = error.response?.data?.message ||
             error.response?.data?.errors ||

@@ -87,7 +87,6 @@ const Roles = () => {
   //   setModalStatus(false);
   //   setDeleteId(null);
   // };
-
   return (
     <>
       {/* <ConfirmModal
@@ -124,7 +123,7 @@ const Roles = () => {
             columnsData={roleColumns}
             tableData={roles || []}
             progressPending={isLoadingRoles}
-            paginationTotalRows={roles.length}
+            paginationTotalRows={roles?.length}
             paginationComponentOptions={{ noRowsPerPage: "10" }}
           />
         </CardLayoutBody>
