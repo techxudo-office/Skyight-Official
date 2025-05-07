@@ -25,7 +25,6 @@ const FlightDetails = () => {
 
   useEffect(() => {
     if (location.state) {
-      console.log(location.state, "Booking");
       setData(location.state);
     }
   }, [location.state]);
@@ -34,7 +33,6 @@ const FlightDetails = () => {
 
   const confirmBookingHandler = async () => {
     const { tripType } = searchForm;
-    console.log(tripType, "tripType");
     const isRoundTrip = tripType === "Round-Trip";
 
     const itineraries = data?.flightData.AirItinerary.OriginDestinationOptions;

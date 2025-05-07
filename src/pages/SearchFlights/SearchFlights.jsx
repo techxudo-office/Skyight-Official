@@ -81,9 +81,6 @@ const SELECT_FIELDS = [
 const SearchFlights = ({ OnlySearch, onSearch }) => {
   const [countryName, setCountryName] = useState(null);
 
-  // Example usage, replace with your city name
-  // console.log(countryName, "countryName");
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { userData } = useSelector((state) => state.auth);
@@ -183,7 +180,6 @@ const SearchFlights = ({ OnlySearch, onSearch }) => {
     setCountryName(airport.get('country')) // Note: Typo in package ("country" is misspelled as "country")
 
   }
-  console.log(countryName)
 
 
   return (

@@ -93,30 +93,28 @@ const Sidebar = ({ status, updateStatus }) => {
     <div
       id="sidebar-container"
       ref={sidebarRef}
-      className={`transition-all z-20  bg-white    shadow-md ${
-        !mobileView
-          ? status
-            ? "w-1/5 pt-20 "
-            : "w-28  items-center pt-20"
-          : status
+      className={`transition-all z-20  bg-white    shadow-md ${!mobileView
+        ? status
+          ? "w-1/5 pt-20 "
+          : "w-28  items-center pt-20"
+        : status
           ? "w-60 shadow-md fixed left-0 h-screen pt-20"
           : "w-0 p-0"
-      } flex flex-col justify-between  transition-all duration-300 overflow-y-auto overflow-x-visible`}
+        } flex flex-col justify-between  transition-all duration-300 overflow-y-auto overflow-x-visible`}
     >
       <div>
         <CardLayoutContainer className="relative w-full shadow-none">
-          <Backbutton
+          {/* <Backbutton
             className={"absolute z-[99] right-0 top-0"}
             status={status}
-          />
+          /> */}
           <CardLayoutHeader
             className="flex flex-col flex-wrap items-center justify-start py-3 gap-x-5"
             removeBorder={true}
           >
             <div
-              className={`relative ${
-                !mobileView ? (status ? "w-24 h-24" : "w-16 h-16") : "w-20 h-20"
-              } overflow-hidden rounded-full cursor-pointer group`}
+              className={`relative ${!mobileView ? (status ? "w-24 h-24" : "w-16 h-16") : "w-20 h-20"
+                } overflow-hidden rounded-full cursor-pointer group`}
             >
               <img
                 src={profileImage}
@@ -154,27 +152,23 @@ const Sidebar = ({ status, updateStatus }) => {
             {sidebarLinks.map((link, linkIndex) => (
               <div
                 key={linkIndex}
-                className={`flex flex-col    ${
-                  status ? "w-full" : "items-center"
-                }`}
+                className={`flex flex-col    ${status ? "w-full" : "items-center"
+                  }`}
               >
                 <li
                   onClick={() => menuItemHandler(linkIndex, link)}
-                  className={`mb-2 flex items-center  gap-4 ${
-                    status ? "px-4" : ""
-                  }  py-4 cursor-pointer transition-all hover:text-primary hover:bg-background text-text rounded-full   text-base `}
+                  className={` flex items-center  gap-4 ${status ? "px-4" : ""
+                    }  py-4 cursor-pointer transition-all hover:text-primary hover:bg-background text-text rounded  text-base `}
                 >
                   {link.sublinks && status && (
                     <IoIosArrowForward
-                      className={`text-xl transition-transform duration-300 ${
-                        activeMenu === linkIndex ? "-rotate-90" : "rotate-90"
-                      }`}
+                      className={`text-xl transition-transform duration-300 ${activeMenu === linkIndex ? "-rotate-90" : "rotate-90"
+                        }`}
                     />
                   )}
                   <span
-                    className={`flex ${
-                      status ? "flex-row" : "flex-col"
-                    } font-semibold  items-center gap-3`}
+                    className={`flex ${status ? "flex-row" : "flex-col"
+                      } font-semibold  items-center gap-3`}
                   >
                     {link.title == "Dashboard" && status ? (
                       <span className="text-2xl">{link.icon}</span>
@@ -195,13 +189,11 @@ const Sidebar = ({ status, updateStatus }) => {
                     <li
                       key={sublinkIndex}
                       onClick={() => navigate(sublink.path)}
-                      className={`  w-full flex items-center gap-4 ${
-                        status ? "px-3" : ""
-                      } cursor-pointer transition-all  ${
-                        activeMenu === linkIndex && link.sublinks
+                      className={`  w-full flex items-center gap-4 ${status ? "px-3" : ""
+                        } cursor-pointer transition-all  ${activeMenu === linkIndex && link.sublinks
                           ? "h-auto py-4 "
                           : "h-0 overflow-hidden "
-                      } text-text rounded-full text-base  transition-all duration-300 hover:text-primary`}
+                        } text-text rounded-full text-base  transition-all duration-300 hover:text-primary`}
                     >
                       <span className="text-3xl">{sublink.icon}</span>
                       {sublink.title}

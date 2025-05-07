@@ -19,9 +19,8 @@ export const useSidebarLinks = () => {
   const userData = useSelector((state) => state.auth.userData);
 
   useEffect(() => {
-    console.log(userData, "userData in routes");
   }, [userData]);
-  
+
   const pagePermissions = userData?.user?.role?.page_permission || {
     dashboard: true,
     flights: true,

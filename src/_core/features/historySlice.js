@@ -1,11 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
-import { BASE_URL } from "../../utils/ApiBaseUrl";
-import toast from "react-hot-toast";
+import makeRequest from "./ApiHelper";
+
 
 const initialState = {
     isSearchHistoryLoading: false,
-    errorSearchHistory: null,
     SearchHistory: []
 };
 
@@ -17,7 +15,6 @@ const historySlice = createSlice({
         builder
             .addCase(getSearchHistory.pending, (state) => {
                 state.isSearchHistoryLoading = true;
-                state.errorSearchHistory = null;
             })
             .addCase(getSearchHistory.fulfilled, (state, action) => {
                 state.isSearchHistoryLoading = false;
@@ -25,7 +22,6 @@ const historySlice = createSlice({
             })
             .addCase(getSearchHistory.rejected, (state, action) => {
                 state.isSearchHistoryLoading = false;
-                state.errorSearchHistory = action.payload;
             });
     }
 });
@@ -33,28 +29,11 @@ const historySlice = createSlice({
 
 export const getSearchHistory = createAsyncThunk(
     "history/SearchHistory",
-    async (token, thunkAPI) => {
-        try {
-            const response = await axios.get(`${BASE_URL}/api/searchhistory`, {
-                headers: {
-                    Authorization: token,
-                    Accept: "application/json"
-                }
-            });
-
-            if (response.status === 200) {
-                return response.data?.data || response.data;
-            } else {
-                throw new Error("Failed to fetch search history");
-            }
-        } catch (error) {
-            const errorMessage =
-                error.response?.data?.message ||
-                "Failed to fetch search history. Please try again.";
-            toast.error(errorMessage);
-            return thunkAPI.rejectWithValue(errorMessage);
-        }
-    }
+    (token) =>
+        makeRequest('get', '/api/searchhistory', {
+            token,
+            errorMessage: "Failed to fetch search history"
+        })
 );
 
 export default historySlice.reducer;

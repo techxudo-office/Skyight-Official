@@ -105,7 +105,6 @@ const Settings = () => {
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      console.log(file)
       const imageUrl = URL.createObjectURL(file);
       dispatch(uploadUserImage({ img: file, token: userData?.token }));
       // setProfileImage(imageUrl);

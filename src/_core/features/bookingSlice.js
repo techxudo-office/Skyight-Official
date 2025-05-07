@@ -1,16 +1,14 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
-import { BASE_URL } from "../../utils/ApiBaseUrl";
 import toast from "react-hot-toast";
+import makeRequest from "./ApiHelper";
+
 
 const initialState = {
   travelers: [],
   isLoadingTravelers: false,
-  travelersError: null,
 
   bookingRoutes: [],
   isLoadingRoutes: false,
-  routesError: null,
 
   allFormData: null,
   prevTraveller: null,
@@ -18,56 +16,43 @@ const initialState = {
 
   pnrData: null,
   isLoadingPNR: false,
-  pnrError: null,
 
   banks: [],
   isLoadingBanks: false,
-  banksError: null,
 
   credits: null,
   isLoadingCredits: false,
-  creditsError: null,
 
   flightBookings: [],
   isLoadingFlightBookings: false,
-  flightBookingsError: null,
 
   bookingDetails: null,
   isLoadingBookingDetails: false,
-  bookingDetailsError: null,
 
   isIssueLoading: false,
-  issueBookingError: null,
 
   searchResults: [],
   isLoadingSearchResults: false,
-  searchResultsError: null,
 
   routes: [],
   loadingRoutes: false,
-  routesError: null,
 
   isBookingLoading: false,
   bookingMessage: null,
-  bookingError: null,
 
   isRefundLoading: false,
   refundMessage: null,
-  refundError: null,
 
   isPenaltyLoading: false,
   penalties: null,
-  penaltyError: null,
 
   searchForm: null,
 
   isCancelling: false,
   cancelSuccess: null,
-  cancelError: null,
 
   orders: [],
   isLoadingOrders: false,
-  orderError: null,
 };
 
 const bookingSlice = createSlice({
@@ -92,7 +77,6 @@ const bookingSlice = createSlice({
     builder
       .addCase(getTravelers.pending, (state) => {
         state.isLoadingTravelers = true;
-        state.travelersError = null;
       })
       .addCase(getTravelers.fulfilled, (state, action) => {
         state.isLoadingTravelers = false;
@@ -100,12 +84,10 @@ const bookingSlice = createSlice({
       })
       .addCase(getTravelers.rejected, (state, action) => {
         state.isLoadingTravelers = false;
-        state.travelersError = action.payload;
       })
 
       .addCase(getBookingRoutes.pending, (state) => {
         state.isLoadingRoutes = true;
-        state.routesError = null;
       })
       .addCase(getBookingRoutes.fulfilled, (state, action) => {
         state.isLoadingRoutes = false;
@@ -113,11 +95,9 @@ const bookingSlice = createSlice({
       })
       .addCase(getBookingRoutes.rejected, (state, action) => {
         state.isLoadingRoutes = false;
-        state.routesError = action.payload;
       })
       .addCase(getPNR.pending, (state) => {
         state.isLoadingPNR = true;
-        state.pnrError = null;
       })
       .addCase(getPNR.fulfilled, (state, action) => {
         state.isLoadingPNR = false;
@@ -125,11 +105,9 @@ const bookingSlice = createSlice({
       })
       .addCase(getPNR.rejected, (state, action) => {
         state.isLoadingPNR = false;
-        state.pnrError = action.payload;
       })
       .addCase(getBanks.pending, (state) => {
         state.isLoadingBanks = true;
-        state.banksError = null;
       })
       .addCase(getBanks.fulfilled, (state, action) => {
         state.isLoadingBanks = false;
@@ -137,11 +115,9 @@ const bookingSlice = createSlice({
       })
       .addCase(getBanks.rejected, (state, action) => {
         state.isLoadingBanks = false;
-        state.banksError = action.payload;
       })
       .addCase(getCredits.pending, (state) => {
         state.isLoadingCredits = true;
-        state.creditsError = null;
       })
       .addCase(getCredits.fulfilled, (state, action) => {
         state.isLoadingCredits = false;
@@ -149,11 +125,9 @@ const bookingSlice = createSlice({
       })
       .addCase(getCredits.rejected, (state, action) => {
         state.isLoadingCredits = false;
-        state.creditsError = action.payload;
       })
       .addCase(getFlightBookings.pending, (state) => {
         state.isLoadingFlightBookings = true;
-        state.flightBookingsError = null;
       })
       .addCase(getFlightBookings.fulfilled, (state, action) => {
         state.isLoadingFlightBookings = false;
@@ -161,11 +135,9 @@ const bookingSlice = createSlice({
       })
       .addCase(getFlightBookings.rejected, (state, action) => {
         state.isLoadingFlightBookings = false;
-        state.flightBookingsError = action.payload;
       })
       .addCase(getBookingDetails.pending, (state) => {
         state.isLoadingBookingDetails = true;
-        state.bookingDetailsError = null;
       })
       .addCase(getBookingDetails.fulfilled, (state, action) => {
         state.isLoadingBookingDetails = false;
@@ -173,22 +145,18 @@ const bookingSlice = createSlice({
       })
       .addCase(getBookingDetails.rejected, (state, action) => {
         state.isLoadingBookingDetails = false;
-        state.bookingDetailsError = action.payload;
       })
       .addCase(issueBooking.pending, (state) => {
         state.isIssueLoading = true;
-        state.issueBookingError = null;
       })
       .addCase(issueBooking.fulfilled, (state, action) => {
         state.isIssueLoading = false;
       })
       .addCase(issueBooking.rejected, (state, action) => {
         state.isIssueLoading = false;
-        state.issueBookingError = action.payload;
       })
       .addCase(searchFlight.pending, (state) => {
         state.isLoadingSearchResults = true;
-        state.searchResultsError = null;
       })
       .addCase(searchFlight.fulfilled, (state, action) => {
         state.isLoadingSearchResults = false;
@@ -196,11 +164,9 @@ const bookingSlice = createSlice({
       })
       .addCase(searchFlight.rejected, (state, action) => {
         state.isLoadingSearchResults = false;
-        state.searchResultsError = action.payload;
       })
       .addCase(getRoutes.pending, (state) => {
         state.loadingRoutes = true;
-        state.routesError = null;
       })
       .addCase(getRoutes.fulfilled, (state, action) => {
         state.loadingRoutes = false;
@@ -208,7 +174,6 @@ const bookingSlice = createSlice({
       })
       .addCase(getRoutes.rejected, (state, action) => {
         state.loadingRoutes = false;
-        state.routesError = action.payload;
       })
       .addCase(confirmBooking.pending, (state) => {
         state.isBookingLoading = true;
@@ -219,7 +184,6 @@ const bookingSlice = createSlice({
       })
       .addCase(confirmBooking.rejected, (state, action) => {
         state.isBookingLoading = false;
-        state.bookingError = action.payload;
       })
       .addCase(requestRefund.pending, (state) => {
         state.isRefundLoading = true;
@@ -230,7 +194,6 @@ const bookingSlice = createSlice({
       })
       .addCase(requestRefund.rejected, (state, action) => {
         state.isRefundLoading = false;
-        state.refundError = action.payload;
       })
       .addCase(getPenalty.pending, (state) => {
         state.isPenaltyLoading = true;
@@ -241,22 +204,18 @@ const bookingSlice = createSlice({
       })
       .addCase(getPenalty.rejected, (state, action) => {
         state.isPenaltyLoading = false;
-        state.penaltyError = action.payload;
       })
       .addCase(cancelFlightBooking.pending, (state) => {
         state.isCancelling = true;
         state.cancelSuccess = null;
-        state.cancelError = null;
       })
       .addCase(cancelFlightBooking.fulfilled, (state, action) => {
         state.isCancelling = false;
         state.cancelSuccess = action.payload.message;
-        state.cancelError = null;
       })
       .addCase(cancelFlightBooking.rejected, (state, action) => {
         state.isCancelling = false;
         state.cancelSuccess = null;
-        state.cancelError = action.payload;
       })
       .addCase(getOrders.pending, (state) => {
         state.isLoadingOrders = true;
@@ -267,480 +226,208 @@ const bookingSlice = createSlice({
       })
       .addCase(getOrders.rejected, (state, action) => {
         state.isLoadingOrders = false;
-        state.orderError = action.payload;
       });
   },
 });
 
+// Get Travelers
 export const getTravelers = createAsyncThunk(
   "booking/getTravelers",
-  async ({ passengerType, token }, thunkAPI) => {
-    try {
-      const response = await axios.get(
-        `${BASE_URL}/api/getTravellers?passenger_type=${passengerType}`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-      if (response.status === 200) {
-        return response.data.data;
-      } else {
-        throw new Error("Failed to fetch travelers");
-      }
-    } catch (error) {
-      const errorMessage =
-        error?.response?.data?.message || "Failed to fetch travelers";
-      toast.error(errorMessage);
-      return thunkAPI.rejectWithValue(errorMessage);
-    }
-  }
+  ({ passengerType, token }) =>
+    makeRequest('get', `/api/getTravellers?passenger_type=${passengerType}`, {
+      token,
+      errorMessage: "Failed to fetch travelers"
+    })
 );
 
+// Get Booking Routes
 export const getBookingRoutes = createAsyncThunk(
   "booking/getBookingRoutes",
-  async (token, thunkAPI) => {
-    try {
-      const response = await axios.post(
-        `${BASE_URL}/api/booking-all-active-routes`,
-        {},
-        {
-          headers: {
-            Authorization: token,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      return response.data.data.Routes || [];
-    } catch (error) {
-      const errorMessage =
-        error?.response?.data?.message || "Failed to fetch booking routes";
-      // toast.error(errorMessage);
-      return thunkAPI.rejectWithValue(errorMessage);
-    }
-  }
+  (token) => makeRequest('post', '/api/booking-all-active-routes', {
+    token,
+    errorMessage: "Failed to fetch booking routes"
+  }).then(response => response.Routes || [])
 );
 
+// Get PNR
 export const getPNR = createAsyncThunk(
   "booking/getPNR",
-  async ({ id, token }, thunkAPI) => {
-    try {
-      const response = await axios.post(
-        `${BASE_URL}/api/booking-pnr`,
-        { pnr: id },
-        {
-          headers: {
-            Authorization: token,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (response.status === 200) {
-        toast.success("PNR fetched successfully!");
-        return response.data.data;
-      } else {
-        const errorMessages = Object.values(response.data.data.errors).join(
-          ", "
-        );
-        throw new Error(errorMessages);
-      }
-    } catch (error) {
-      const errorMessage =
-        Object.values(error?.response?.data?.data?.errors || {}).join(", ") ||
-        "Failed to fetch PNR";
-      toast.error(errorMessage);
-      return thunkAPI.rejectWithValue(errorMessage);
-    }
-  }
+  ({ id, token }) => makeRequest('post', '/api/booking-pnr', {
+    data: { pnr: id },
+    token,
+    successMessage: "PNR fetched successfully!",
+    errorMessage: "Failed to fetch PNR"
+  })
 );
 
+// Get Banks
 export const getBanks = createAsyncThunk(
   "booking/getBanks",
-  async (token, thunkAPI) => {
-    try {
-      const response = await axios.get(`${BASE_URL}/api/bank`, {
-        headers: {
-          Authorization: token,
-        },
-      });
-      if (response.data.data[0]?.length > 0) {
-        const extractedData = response.data.data[0].map(({ id, bank }) => ({
-          value: id,
-          label: bank,
-        }));
-        return extractedData;
-      } else {
-        throw new Error("No Banks Found");
-      }
-    } catch (error) {
-      const errorMessage =
-        error?.response?.data?.message || "Failed to fetch banks";
-      toast.error(errorMessage);
-      return thunkAPI.rejectWithValue(errorMessage);
+  (token) => makeRequest('get', '/api/bank', {
+    token,
+    errorMessage: "Failed to fetch banks"
+  }).then(response => {
+    if (response[0]?.length > 0) {
+      return response[0].map(({ id, bank }) => ({ value: id, label: bank }));
     }
-  }
+    throw new Error("No Banks Found");
+  })
 );
 
+// Get Credits
 export const getCredits = createAsyncThunk(
   "booking/getCredits",
-  async (token, thunkAPI) => {
-    try {
-      const response = await axios.get(`${BASE_URL}/api/booking-credits`, {
-        headers: {
-          Authorization: token,
-        },
-      });
-      return response.data.data;
-    } catch (error) {
-      const errorMessage =
-        error?.response?.data?.message ||
-        "Something went wrong. Please try again.";
-      toast.error(errorMessage);
-      return thunkAPI.rejectWithValue(errorMessage);
-    }
-  }
+  (token) => makeRequest('get', '/api/booking-credits', {
+    token,
+    errorMessage: "Failed to fetch credits"
+  })
 );
 
+// Get Flight Bookings
 export const getFlightBookings = createAsyncThunk(
   "booking/getFlightBookings",
-  async ({ id, token }, thunkAPI) => {
-    try {
-      const response = await axios.get(
-        `${BASE_URL}/api/booking/company/${id}`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-
-      if (response.data.status === "success") {
-        let responseData = response.data.data;
+  ({ id, token }) =>
+    makeRequest('get', `/api/booking/company/${id}`, {
+      token,
+      errorMessage: "Failed to fetch flight bookings"
+    })
+      .then(response => {
+        let responseData = response;
         if (!Array.isArray(responseData)) {
           responseData = [responseData];
         }
-
-        if (responseData.length > 0) {
-          const extractedData = responseData.map(
-            ({
-              origin,
-              destination,
-              booking_reference_id,
-              total_fare,
-              currency,
-              booking_status,
-              created_at,
-              actions,
-              updated_at,
-              transaction_identifier,
-              Timelimit,
-              id,
-              rate,
-              persantage,
-              canceled_at,
-            }) => ({
-              origin,
-              destination,
-              booking_reference_id,
-              total_fare,
-              currency,
-              booking_status,
-              created_at,
-              actions,
-              updated_at,
-              transaction_identifier,
-              Timelimit,
-              id,
-              rate,
-              persantage,
-              canceled_at,
-            })
-          );
-          return extractedData;
-        } else {
-          throw new Error("No bookings found.");
+        if (responseData.length === 0) {
+          throw new Error("No bookings found");
         }
-      }
-    } catch (error) {
-      const errorMessage =
-        error?.response?.data?.message || "Failed to fetch flight bookings.";
-      return thunkAPI.rejectWithValue(errorMessage);
-    }
-  }
+        return responseData
+      })
 );
 
+// Get Booking Details
 export const getBookingDetails = createAsyncThunk(
   "booking/getBookingDetails",
-  async ({ id, token }, thunkAPI) => {
-    try {
-      const response = await axios.get(`${BASE_URL}/api/booking/${id}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-      });
-
-      return response.data.data;
-    } catch (error) {
-      const errorMessage =
-        error?.response?.data?.message || "Failed to fetch booking details";
-      return thunkAPI.rejectWithValue(errorMessage);
-    }
-  }
+  ({ id, token }) =>
+    makeRequest('get', `/api/booking/${id}`, {
+      token,
+      errorMessage: "Failed to fetch booking details"
+    })
 );
 
+// Issue Booking
 export const issueBooking = createAsyncThunk(
   "booking/issueBooking",
-  async ({ pnr, token }, thunkAPI) => {
-    try {
-      const response = await axios.post(
-        `${BASE_URL}/api/booking-issue`,
-        { pnr },
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-
-      if (response.status === 200) {
-        if (!response.data?.data?.Success) {
-          toast.error(
-            // response.data?.data?.Error?.Message ||
-            "Your ticket has expired"
-          );
-        } else {
-        }
-        return response.data.data;
-      } else {
-        throw new Error(response.data.message || "Failed to issue booking");
+  ({ pnr, token }) =>
+    makeRequest('post', '/api/booking-issue', {
+      data: { pnr },
+      token,
+      errorMessage: "Failed to issue booking"
+    }).then(response => {
+      if (!response?.data?.Success) {
+        toast.error("Your ticket has expired");
       }
-    } catch (error) {
-      const errorMessage =
-        error?.response?.data?.message || "Failed to issue booking";
-      toast.error(errorMessage);
-      return thunkAPI.rejectWithValue(errorMessage);
-    }
-  }
+      return response.data;
+    })
 );
 
+// Search Flight
 export const searchFlight = createAsyncThunk(
   "booking/searchFlight",
-  async ({ payload, token }, thunkAPI) => {
-    try {
-      const apiUrl = `${BASE_URL}/api/search`;
+  ({ payload, token }) => {
+    const requestBody = {
+      trip_type: payload.tripType,
+      origin_destinations: [{
+        departure_date_time: payload.departureDate,
+        origin_location_code: payload.originCode,
+        destination_location_code: payload.destinationCode,
+      }],
+      adult_quantity: payload.adult,
+      child_quantity: payload.child,
+      infant_quantity: payload.infant,
+    };
 
-      const requestBody = {
-        trip_type: payload.tripType,
-        origin_destinations: [
-          {
-            departure_date_time: payload.departureDate,
-            origin_location_code: payload.originCode,
-            destination_location_code: payload.destinationCode,
-          },
-        ],
-        adult_quantity: payload.adult,
-        child_quantity: payload.child,
-        infant_quantity: payload.infant,
-      };
-
-      // Handle round trip
-      if (payload.tripType === "Return" && payload.returnDate) {
-        requestBody.origin_destinations.push({
-          departure_date_time: payload.returnDate,
-          origin_location_code: payload.destinationCode,
-          destination_location_code: payload.originCode,
-        });
-      }
-
-      const response = await axios.post(apiUrl, requestBody, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
+    if (payload.tripType === "Return" && payload.returnDate) {
+      requestBody.origin_destinations.push({
+        departure_date_time: payload.returnDate,
+        origin_location_code: payload.destinationCode,
+        destination_location_code: payload.originCode,
       });
-
-      if (response.status === 200) {
-        if (!response.data.data || response.data.data.length === 0 || response.data.data.PricedItineraries.PricedItinerary.length === 0 || response.data.data.PricedItineraries.PricedItinerary === null) {
-          throw new Error(response?.data?.data?.message || "No Flight Found!");
-        }
-        return response.data.data;
-      } else {
-        throw new Error(response.data.message || "No Flight Found!");
-      }
-    } catch (error) {
-      const errorMessage =
-        error?.response?.data?.message || "No Flight Found!";
-      return thunkAPI.rejectWithValue(errorMessage);
     }
+
+    return makeRequest('post', '/api/search', {
+      data: requestBody,
+      token,
+      errorMessage: "No Flight Found!"
+    }).then(response => {
+      if (!response || response.length === 0 ||
+        !response.PricedItineraries?.PricedItinerary?.length) {
+        throw new Error("No Flight Found!");
+      }
+      return response;
+    });
   }
 );
 
+// Get Routes
 export const getRoutes = createAsyncThunk(
   "flight/getRoutes",
-  async (token, thunkAPI) => {
-    try {
-      const response = await axios.post(
-        `${BASE_URL}/api/booking-all-active-routes`,
-        null,
-        {
-          headers: {
-            Authorization: token,
-            accept: "application/json",
-          },
-        }
-      );
-
-      if (response.status === 200) {
-        return response.data.data.Routes || [];
-      }
-    } catch (error) {
-      const errorMessage =
-        error?.response?.data?.message ||
-        "Failed to fetch routes. Please try again.";
-      return thunkAPI.rejectWithValue(errorMessage);
-    }
-  }
+  (token) => makeRequest('post', '/api/booking-all-active-routes', {
+    token,
+    errorMessage: "Failed to fetch routes"
+  }).then(response => response.Routes || [])
 );
 
+// Confirm Booking
 export const confirmBooking = createAsyncThunk(
   "booking/confirmBooking",
-  async ({ data, token }, thunkAPI) => {
-    try {
-      let response = await axios({
-        method: "POST",
-        url: `${BASE_URL}/api/booking`,
-        data: data,
-        headers: {
-          Authorization: token,
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (response.status === 200) {
-        toast.success("Booking created successfully");
-        return { status: true, message: "Booking Created" };
-      } else {
-        return thunkAPI.rejectWithValue(
-          response.data?.message || "Unexpected response"
-        );
-      }
-    } catch (error) {
-      const errorMessage = error.response?.data?.message || "An error occurred";
-      toast.error(errorMessage);
-      return thunkAPI.rejectWithValue(errorMessage);
-    }
-  }
+  ({ data, token }) => makeRequest('post', '/api/booking', {
+    data,
+    token,
+    successMessage: "Booking created successfully",
+    errorMessage: "Failed to confirm booking"
+  }).then(() => ({ status: true, message: "Booking Created" }))
 );
 
+// Request Refund
 export const requestRefund = createAsyncThunk(
   "booking/requestRefund",
-  async ({ data, token }, thunkAPI) => {
-    try {
-      let response = await axios({
-        method: "POST",
-        url: `${BASE_URL}/api/request-booking-refund`,
-        data: data,
-        headers: {
-          Authorization: token,
-        },
-      });
-
-      if (response.status === 200) {
-        toast.success("Requested refund successfully");
-        return { status: true, message: "Refund Requested" };
-      } else {
-        return thunkAPI.rejectWithValue(
-          response.data?.message || "Unexpected response"
-        );
-      }
-    } catch (error) {
-      const errorMessage = error.response?.data?.message || "An error occurred";
-      toast.error(errorMessage);
-      return thunkAPI.rejectWithValue(errorMessage);
-    }
-  }
+  ({ data, token }) => makeRequest('post', '/api/request-booking-refund', {
+    data,
+    token,
+    successMessage: "Requested refund successfully",
+    errorMessage: "Failed to request refund"
+  }).then(() => ({ status: true, message: "Refund Requested" }))
 );
+
+// Get Penalty
 export const getPenalty = createAsyncThunk(
   "booking/getPenalty",
-  async ({ data, token }, thunkAPI) => {
-    try {
-      let response = await axios({
-        method: "POST",
-        url: `${BASE_URL}/api/getPenalty`,
-        data: data,
-        headers: {
-          Authorization: token,
-        },
-      });
-
-      if (response.status === 200) {
-        // toast.success("Requested refund successfully");
-        return response.data.data;
-      } else {
-        return thunkAPI.rejectWithValue(
-          response.data?.message || "Unexpected response"
-        );
-      }
-    } catch (error) {
-      const errorMessage = error.response?.data?.message || "An error occurred";
-      toast.error(errorMessage);
-      return thunkAPI.rejectWithValue(errorMessage);
-    }
-  }
+  ({ data, token }) => makeRequest('post', '/api/getPenalty', {
+    data,
+    token,
+    errorMessage: "Failed to get penalty information"
+  })
 );
 
+// Cancel Flight Booking
 export const cancelFlightBooking = createAsyncThunk(
   "booking/cancelFlightBooking",
-  async ({ data, token }, thunkAPI) => {
-    try {
-      let response = await axios({
-        method: "POST",
-        url: `${BASE_URL}/api/request-cancel-booking`,
-        data: data,
-        headers: {
-          Authorization: token,
-        },
-      });
-
-      if (response.status === 200) {
-        toast.success("Booking cancelled successfully");
-        return { status: true, message: "Cancelled Requested" };
-      } else {
-        return thunkAPI.rejectWithValue("Unexpected response from server");
-      }
-    } catch (error) {
-      const errorMessage = error.response?.data?.message || "An error occurred";
-      toast.error(errorMessage);
-      return thunkAPI.rejectWithValue(errorMessage);
-    }
-  }
+  ({ data, token }) =>
+    makeRequest('post', '/api/request-cancel-booking', {
+      data,
+      token,
+      successMessage: "Booking cancelled successfully",
+      errorMessage: "Failed to cancel booking"
+    })
 );
 
+// Get Orders
 export const getOrders = createAsyncThunk(
   "booking/getOrders",
-  async (token, thunkAPI) => {
-    try {
-      const response = await axios.get(`${BASE_URL}/api/orders/company`, {
-        headers: {
-          Authorization: token,
-        },
-      });
-      if (response.status === 200) {
-        return response.data.data;
-      } else {
-        throw new Error("Failed to fetch orders");
-      }
-    } catch (error) {
-      const errorMessage =
-        error?.response?.data?.message || "Failed to fetch orders";
-      toast.error(errorMessage);
-      return thunkAPI.rejectWithValue(errorMessage);
-    }
-  }
+  (token) =>
+    makeRequest('get', '/api/orders/company', {
+      token,
+      errorMessage: "Failed to fetch orders"
+    })
 );
 
 export const { setSearchForm, setBookingStates, emptyBookingStates } =

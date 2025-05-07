@@ -24,7 +24,6 @@ const Table = ({
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
-
   const modifiedColumns = [
     {
       name: "NO",
@@ -53,7 +52,7 @@ const Table = ({
           tableData?.length > 0 ? (
             <Loader />
           ) : (
-            <div>There are no records to display</div>
+            <div className=" text-yellowColor w-full bg-slate-100 text-center ">There are no records to display !</div>
           )
         }
         progressPending={progressPending}

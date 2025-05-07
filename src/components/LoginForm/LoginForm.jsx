@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   CardLayoutContainer,
   CardLayoutBody,
@@ -8,6 +8,7 @@ import {
   Button,
   Spinner,
   SecondaryButton,
+  RegistrationForm,
 } from "../../components/components";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -16,11 +17,13 @@ import { Toaster } from "react-hot-toast";
 import { FaCheck } from "react-icons/fa6";
 import { login } from "../../_core/features/authSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { MdArrowBack } from "react-icons/md";
 
 const LoginForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { userData, isLoading } = useSelector((state) => state.auth);
+  const [registerModal, setRegisterModal] = useState(false)
+  const { userData, isLoading, loginError } = useSelector((state) => state.auth);
 
   const validationSchema = Yup.object({
     email: Yup.string()
@@ -37,7 +40,9 @@ const LoginForm = () => {
 
   const loginHandler = (payload, resetForm) => {
     dispatch(login(payload)).then((response) => {
-      resetForm();
+      if (loginError == null) {
+        resetForm();
+      }
     });
   };
 
@@ -58,9 +63,9 @@ const LoginForm = () => {
 
   return (
     <>
-      
-      <CardLayoutContainer className="max-w-[900px] m-auto p-0 shadow-3xl bg-white">
-        <CardLayoutBody removeBorder padding="p-0" className="flex">
+
+      {!registerModal && <CardLayoutContainer className="max-w-[900px]  mx-auto mt-20  overflow-y-scroll">
+        <CardLayoutBody removeBorder padding="p-0" className="flex bg-white">
           <div className="flex-1 p-16">
             <h3 className="mb-10 text-4xl font-extrabold text-center">Login</h3>
             <form
@@ -88,8 +93,8 @@ const LoginForm = () => {
 
               <div
                 className={`relative ${formik.touched.password && formik.errors.password
-                    ? "mb-5"
-                    : ""
+                  ? "mb-5"
+                  : ""
                   }`}>
                 <Input
                   placeholder="********"
@@ -121,7 +126,7 @@ const LoginForm = () => {
               />
             </form>
           </div>
-          <div className="flex-1 p-16 register-component-bg rounded-r-3xl">
+          <div className="flex-1 p-16 register-component-bg rounded-r-lg">
             <h3 className="mb-10 text-4xl font-extrabold text-center">
               Registration
             </h3>
@@ -141,16 +146,24 @@ const LoginForm = () => {
                 </h4>
               </div>
               <SecondaryButton
-                onClick={() => {
-                  navigate("/registration");
-                }}
+                onClick={() => setRegisterModal(true)}
                 text="Register Now"
                 className="mt-5"
               />
             </div>
           </div>
         </CardLayoutBody>
-      </CardLayoutContainer>
+
+      </CardLayoutContainer>}
+      {registerModal &&
+        <CardLayoutContainer className="max-w-[900px] mt-[1000px]  bg-white  mx-auto my-auto  pb-20 ">
+
+          <div onClick={() => setRegisterModal(false)} className="w-full cursor-pointer flex items-center justify-start pt-8 pl-8 text-2xl text-text">
+            <MdArrowBack /></div>
+          <RegistrationForm />
+
+
+        </CardLayoutContainer>}
     </>
   );
 };

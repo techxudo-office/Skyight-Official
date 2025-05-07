@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { BASE_URL } from "../../utils/ApiBaseUrl";
 import toast from "react-hot-toast";
+import makeRequest from "./ApiHelper";
 
 const initialState = {
   users: [],
@@ -80,110 +81,58 @@ const userSlice = createSlice({
 
 export const getUsers = createAsyncThunk(
   "user/getUsers",
-  async (token, thunkAPI) => {
-    try {
-      const response = await axios.get(`${BASE_URL}/api/user/company-user`, {
-        headers: {
-          Authorization: token,
-        },
-      });
-      return response?.data?.data;
-    } catch (error) {
-      const errorMessage =
-        error.response?.data?.message || "Failed to fetch users.";
-      toast.error(errorMessage);
-      return thunkAPI.rejectWithValue(errorMessage);
-    }
-  }
+  (token, { rejectWithValue }) =>
+    makeRequest('get', '/api/user/company-user', {
+      token,
+      errorMessage: "Failed to fetch users"
+    }).catch(rejectWithValue)
 );
 
+// Create User
 export const createUser = createAsyncThunk(
   "user/createUser",
-  async ({ data, token }, thunkAPI) => {
-    try {
-      const response = await axios.post(`${BASE_URL}/api/user`, data, {
-        headers: {
-          Authorization: token,
-          "Content-Type": "application/json",
-        },
-      });
-      toast.success("User created successfully");
-      return response.data;
-    } catch (error) {
-      const errorMessage =
-        error.response?.data?.message || "Failed to create user.";
-      toast.error(errorMessage);
-      return thunkAPI.rejectWithValue(errorMessage);
-    }
-  }
+  ({ data, token }, { rejectWithValue }) =>
+    makeRequest('post', '/api/user', {
+      data,
+      token,
+      successMessage: "User created successfully",
+      errorMessage: "Failed to create user"
+    }).catch(rejectWithValue)
 );
 
+// Delete User
 export const deleteUser = createAsyncThunk(
   "user/deleteUser",
-  async ({ id, token }, thunkAPI) => {
-    try {
-      const response = await axios.delete(`${BASE_URL}/api/user/${id}`, {
-        headers: {
-          Authorization: token,
-        },
-      });
-
-      if (response.status === 200) {
-        toast.success("User deleted successfully");
-        return id;
-      }
-    } catch (error) {
-      const errorMessage = "Failed while deleting this user";
-      toast.error(errorMessage);
-      return thunkAPI.rejectWithValue(errorMessage);
-    }
-  }
+  ({ id, token }, { rejectWithValue }) =>
+    makeRequest('delete', `/api/user/${id}`, {
+      token,
+      successMessage: "User deleted successfully",
+      errorMessage: "Failed while deleting this user"
+    }).then(() => id).catch(rejectWithValue)
 );
 
+// Edit User
 export const editUser = createAsyncThunk(
   "user/editUser",
-  async ({ id, token, data }, thunkAPI) => {
-    try {
-       
-      const response = await axios.put(`${BASE_URL}/api/user/${id}`, data, {
-        headers: {
-          Authorization: token,
-        },
-      });
-
-      if (response.status === 200) {
-        toast.success("User updated successfully");
-        return response.data.data;
-      }
-    } catch (error) {
-      const errorMessage =
-        error?.response?.data?.message || "Failed while updating this User";
-      toast.error(errorMessage);
-      return thunkAPI.rejectWithValue(errorMessage);
-    }
-  }
+  ({ id, token, data }, { rejectWithValue }) =>
+    makeRequest('put', `/api/user/${id}`, {
+      data,
+      token,
+      successMessage: "User updated successfully",
+      errorMessage: "Failed while updating this User"
+    }).catch(rejectWithValue)
 );
 
+// Upload User Image
 export const uploadUserImage = createAsyncThunk(
   "user/uploadUserImage",
-  async ({ img, token }, thunkAPI) => {
-    try {
-      const response = await axios.post(`${BASE_URL}/api/user/image`, img, {
-        headers: {
-          Authorization: token,
-          Accept: "application/json",
-        },
-      });
-      if (response.status === 200) {
-        toast.success("User updated successfully");
-        return response.data.data;
-      }
-    } catch (error) {
-      return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "Failed to upload image"
-      );
-    }
-  }
+  ({ img, token }, { rejectWithValue }) =>
+    makeRequest('post', '/api/user/image', {
+      data: img,
+      token,
+      successMessage: "Image uploaded successfully",
+      errorMessage: "Failed to upload image"
+    }).catch(rejectWithValue)
 );
 
 export default userSlice.reducer;

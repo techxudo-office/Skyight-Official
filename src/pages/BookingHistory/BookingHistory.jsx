@@ -33,7 +33,6 @@ const BookingHistory = () => {
   }, [dispatch, userData?.user?.company_id]);
 
   if (isLoadingFlightBookings) return <Loader />;
-  if (flightBookingsError) return <p>Error: {flightBookingsError}</p>;
 
   const columns = [
     {

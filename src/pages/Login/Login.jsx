@@ -7,7 +7,7 @@ const Login = () => {
   return (
     <>
       <Navbar hideLinks={true} />
-      <div className="animated-page h-screen w-full flex items-center justify-center pt-16">
+      <div className="animated-page h-screen w-full py-10   overflow-y-auto ">
         <LoginForm />
       </div>
     </>
