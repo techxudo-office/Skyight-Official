@@ -92,7 +92,8 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
   ];
 
   const logoutHandler = () => {
-    dispatch({ type: "user/logout" });
+    dispatch({ type: "user/logout" })
+
     toast.success("Logged out successfully");
     navigate("/login");
     dropdownHandler();
@@ -116,10 +117,10 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
     if (!userData?.token) return;
     dispatch(getCredits(userData?.token));
   };
-  
+
   return (
     <>
-      
+
       <nav className="w-full fixed z-[999] bg-white shadow-md border-b-[1px] border-grayBg ">
         <div className="px-2 mx-auto">
           <div className="flex items-center justify-between p-2 sm:p-4">
@@ -231,9 +232,8 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
                       </span>
                     )}
                     <MdArrowDropDown
-                      className={`text-xl ${
-                        CreditsDropdownOpen ? "rotate-180" : ""
-                      } transition-all duration-300`}
+                      className={`text-xl ${CreditsDropdownOpen ? "rotate-180" : ""
+                        } transition-all duration-300`}
                       onClick={() => setCreditsDropdownOpen((prev) => !prev)}
                     />
                     <div className="absolute right-0 top-14">

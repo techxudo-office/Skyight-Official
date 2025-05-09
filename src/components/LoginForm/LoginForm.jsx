@@ -39,6 +39,7 @@ const LoginForm = () => {
   }, [userData, navigate]);
 
   const loginHandler = (payload, resetForm) => {
+    dispatch({ type: "user/login" })
     dispatch(login(payload)).then((response) => {
       if (loginError == null) {
         resetForm();

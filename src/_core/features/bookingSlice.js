@@ -390,13 +390,22 @@ export const confirmBooking = createAsyncThunk(
 // Request Refund
 export const requestRefund = createAsyncThunk(
   "booking/requestRefund",
-  ({ data, token }) => makeRequest('post', '/api/request-booking-refund', {
+  ({ data, token }) => makeRequest('post', '/api/request-ticket-refund', {
     data,
     token,
     successMessage: "Requested refund successfully",
     errorMessage: "Failed to request refund"
   }).then(() => ({ status: true, message: "Refund Requested" }))
 );
+// export const requestRefund = createAsyncThunk(
+//   "booking/requestRefund",
+//   ({ data, token }) => makeRequest('post', '/api/request-booking-refund', {
+//     data,
+//     token,
+//     successMessage: "Requested refund successfully",
+//     errorMessage: "Failed to request refund"
+//   }).then(() => ({ status: true, message: "Refund Requested" }))
+// );
 
 // Get Penalty
 export const getPenalty = createAsyncThunk(

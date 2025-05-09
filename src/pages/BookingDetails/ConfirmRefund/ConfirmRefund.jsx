@@ -12,17 +12,24 @@ export default function ConfirmRefund({
 }) {
     const [selectedItems, setSelectedItems] = useState([]);
 
-    const handleCheckboxChange = (itemId) => {
-        setSelectedItems(prev =>
-            prev.includes(itemId)
-                ? prev.filter(id => id !== itemId)
-                : [...prev, itemId]
-        );
+    const handleCheckboxChange = (item) => {
+        setSelectedItems(prev => {
+            // Check if item is already selected
+            const isSelected = prev.some(selected => selected.TicketNumber === item.TicketNumber);
+
+            if (isSelected) {
+                // Remove if already selected
+                return prev.filter(selected => selected.TicketNumber !== item.TicketNumber);
+            } else {
+                // Add if not selected
+                return [...prev, item];
+            }
+        });
     };
 
     const handleRefund = async () => {
-        // if (selectedItems.length === 0) return;
-
+        if (selectedItems.length === 0) return;
+        console.log(selectedItems, "selectedItems")
         try {
             await onRefund(selectedItems);
             onRequestClose();
@@ -54,16 +61,13 @@ export default function ConfirmRefund({
                     {items.map((item, idx) => (
                         <div
                             key={item.id}
-                            className={`flex items-center p-4 rounded-lg border ${selectedItems.includes(idx) ? 'border-primary bg-primary/10' : 'border-gray-200'}`}
+                            className={`flex items-center p-4 rounded-lg border ${selectedItems.some(selected => selected.TicketNumber === item.TicketNumber) ? 'border-primary bg-primary/10' : 'border-gray-200'}`}
                         >
                             <input
                                 type="checkbox"
                                 id={`item-${idx}`}
-                                disabled={true}
-                                checked={true
-                                    // selectedItems.includes(idx)
-                                }
-                                onChange={() => handleCheckboxChange(idx)}
+                                checked={selectedItems.some(selected => selected.TicketNumber === item.TicketNumber)}
+                                onChange={() => handleCheckboxChange(item)}
                                 className="h-5 w-5 text-primary rounded focus:ring-primary border-gray-300"
                             />
                             <label
@@ -82,9 +86,10 @@ export default function ConfirmRefund({
                 <div className="flex justify-end space-x-3">
                     <Button onClick={onRequestClose} text={"Cancel"} className='bg-red-700 hover:bg-red-600' />
                     <Button
-                        onClick={onRefund}
+                        onClick={handleRefund}
                         loading={loading}
                         text={"Refund"}
+                        disabled={loading || selectedItems.length === 0}
                     >
                     </Button>
                 </div>

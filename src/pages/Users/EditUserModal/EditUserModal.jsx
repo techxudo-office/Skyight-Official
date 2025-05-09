@@ -104,6 +104,7 @@ const EditUserModal = ({ isOpen, onClose, usersData }) => {
 
   const handleSubmit = () => {
     if (!updateUserValidation(formData, setErrors)) {
+
       toast.error("Please fix the errors before submitting.");
       return;
     }

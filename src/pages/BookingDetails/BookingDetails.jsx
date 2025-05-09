@@ -109,25 +109,21 @@ const TicketDetails = () => {
       });
   };
 
-  const refundRequestHandler = async (flight) => {
-    const totalPenalty = penalties?.PenaltyRS.reduce((sum, ticket) => sum + ticket.pkrPenalty, 0)
+  const refundRequestHandler = async (flight, selectedItems) => {
+    const totalPenalty = selectedItems.reduce((sum, ticket) => sum + ticket.pkrPenalty, 0)
     const bookingId = {
-      booking_id: flight.id,
-      refunded_amount: totalPenalty
+      bookingId: flight.id,
+      total_fare: parseInt(totalPenalty),
+      ticketIds: selectedItems?.map((ticket) => Number(ticket.ticketId)),
     };
     dispatch(requestRefund({ data: bookingId, token: userData?.token }))
       .unwrap()
-      .then(() => {
+      .finally(() => {
         dispatch(
           getBookingDetails({ id: location.state.id, token: userData?.token })
         );
         setRefundConfirmation(false)
       })
-      .catch((error) => {
-        dispatch(
-          getBookingDetails({ id: location.state.id, token: userData?.token })
-        );
-      });
   };
 
   useEffect(() => {
@@ -240,7 +236,7 @@ const TicketDetails = () => {
         isOpen={refundConfirmation}
         items={penalties?.PenaltyRS}
         loading={isRefundLoading}
-        onRefund={() => refundRequestHandler(bookingDetails)}
+        onRefund={(selectedItems) => refundRequestHandler(bookingDetails, selectedItems)}
         onRequestClose={() => setRefundConfirmation(false)}
       />
       <div className="flex flex-col w-full gap-5">
