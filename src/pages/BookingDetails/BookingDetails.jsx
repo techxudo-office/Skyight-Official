@@ -225,6 +225,11 @@ const TicketDetails = () => {
       selector: (row) => row?.passengertickets[0]?.ticket_number || "-",
       sortable: false,
     },
+    {
+      name: "STATUS",
+      selector: (row) => row?.passengertickets[0]?.ticket_status || "-",
+      sortable: false,
+    },
     // bookingDetails?.booking_status=="confirmed" &&
     // {
     //   name: "COUPON NUMBER",

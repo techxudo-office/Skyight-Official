@@ -16,7 +16,6 @@ import { useDispatch, useSelector } from "react-redux";
 import "./FlightResult.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { MdArrowBack } from "react-icons/md";
 
 const FlightResults = () => {
   const navigate = useNavigate();
@@ -29,7 +28,6 @@ const FlightResults = () => {
   const [selectedDate, setSelectedDate] = useState("");
   const [ChangeFlight, setChangeFlight] = useState(false);
   const [originalDates, setOriginalDates] = useState([]);
-  const [noFlight, setNoFlight] = useState(false);
   const [filteredFlightsData, setFilteredFlightsData] = useState([]);
   const [pricingInfo, setPricingInfo] = useState();
   const [DifferenceInDates, setDifferenceInDates] = useState();
@@ -109,12 +107,9 @@ const FlightResults = () => {
             },
           },
         });
-        setNoFlight(false);
       } else {
-        setNoFlight(true);
       }
     } catch (error) {
-      setNoFlight(true);
       if (Array.isArray(error)) {
         error.forEach((msg) => toast.error(msg.toUpperCase()));
       } else {

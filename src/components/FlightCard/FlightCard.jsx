@@ -7,9 +7,6 @@ import {
 } from "../../components/CardLayout/CardLayout";
 import { Button, SecondaryButton } from "../../components/components";
 import { useNavigate } from "react-router-dom";
-
-import { FaPlane } from "react-icons/fa";
-import { FaUser } from "react-icons/fa";
 import { FaSuitcase } from "react-icons/fa";
 import { FaMoneyBillAlt } from "react-icons/fa";
 import { IoIosAirplane, IoMdEye } from "react-icons/io";
