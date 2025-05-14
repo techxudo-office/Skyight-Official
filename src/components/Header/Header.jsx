@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { HiOutlineSpeakerphone } from "react-icons/hi";
 import { FaUserCircle } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
@@ -14,7 +14,6 @@ import { SlSettings } from "react-icons/sl";
 import Notifications from "../../pages/Notifications/Notifications";
 import { motion } from "framer-motion";
 import Announcement from "../../pages/Anouncement/Anouncement";
-import { logout } from "../../_core/features/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { getCredits } from "../../_core/features/bookingSlice";
 
