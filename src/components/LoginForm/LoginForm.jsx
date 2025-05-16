@@ -10,8 +10,8 @@ import {
   SecondaryButton,
   RegistrationForm,
 } from "../../components/components";
-import { useFormik } from "formik";
 import * as Yup from "yup";
+import { useFormik } from "formik";
 import { useNavigate, Link } from "react-router-dom";
 import { FaCheck } from "react-icons/fa6";
 import { login } from "../../_core/features/authSlice";

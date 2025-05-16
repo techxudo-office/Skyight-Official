@@ -48,8 +48,6 @@ const makeRequest = async (
       errorMessage ||
       "Something went wrong. Please try again.";
 
-    console.log(apiErrors, errorMsg, "CATCH");
-
     if (apiErrors && typeof apiErrors === "object") {
       const firstError = Object.values(apiErrors)[0];
       toast.error(firstError || errorMsg);
