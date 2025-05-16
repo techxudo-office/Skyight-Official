@@ -13,7 +13,6 @@ const ExcelExportButton = ({
 }) => {
     const handleExport = () => {
         if (!data || data.length === 0) {
-            console.warn('No data to export');
             return;
         }
 
