@@ -88,7 +88,10 @@ const FlightCard = ({ data, travelers, pricingInfo }) => {
                 </div>
               </div>
               <div>
-                <SecondaryButton text={data?.ProviderType} />
+                <SecondaryButton text={
+                  // data?.ProviderType
+                  "Skyight"
+                } />
               </div>
             </div>
           ))}
