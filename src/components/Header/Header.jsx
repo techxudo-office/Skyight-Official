@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { HiOutlineSpeakerphone } from "react-icons/hi";
 import { FaUserCircle } from "react-icons/fa";
@@ -16,6 +16,7 @@ import { motion } from "framer-motion";
 import Announcement from "../../pages/Anouncement/Anouncement";
 import { useDispatch, useSelector } from "react-redux";
 import { getCredits } from "../../_core/features/bookingSlice";
+import NotificationDrop from "./NotificationDrop/NotificationDrop";
 
 const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
   const navigate = useNavigate();
@@ -28,6 +29,28 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
   const [CreditsDropdownOpen, setCreditsDropdownOpen] = useState(false);
   const { userData } = useSelector((state) => state.auth);
   const { credits, isLoadingCredits } = useSelector((state) => state.booking);
+
+  const profileDropdownRef = useRef(null);
+  const creditsDropdownRef = useRef(null);
+
+
+  // Click outside handler
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target)) {
+        setDropDownStatus(false);
+      }
+      if (creditsDropdownRef.current && !creditsDropdownRef.current.contains(event.target)) {
+        setCreditsDropdownOpen(false);
+      }
+
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const dropdownHandler = () => {
     setDropDownStatus(!dropdownStatus);
@@ -197,9 +220,9 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
                       transition={{ duration: 0.3 }}
-                      className="absolute top-10 right-0 w-[500px] bg-white shadow-lg rounded-lg p-3 z-50"
+                      className="absolute top-10 right-0 w-[300px] bg-neutral-100 shadow-lg rounded-lg p-3 z-50"
                     >
-                      <Notifications />
+                      <NotificationDrop />
                     </motion.div>
                   )}
                 </div>
@@ -207,6 +230,7 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
               <div className="relative">
                 <CustomTooltip content={CreditsDropdownOpen ? null : "credits"}>
                   <button
+                    ref={creditsDropdownRef}
                     className={`w-full text-sm md:text-base relative flex items-center justify-center gap-1 md:gap-2 cursor-pointer p-1 px-2 md:py-2 md:px-4 border-primary border-[1px]  bg-blue-100 hover:text-secondary  text-primary font-semibold rounded-xl transition duration-300 ease-in-out transform focus:outline-none`}
                   >
                     {isLoadingCredits ? (
@@ -248,7 +272,8 @@ const Header = ({ sidebarStatus, setSidebarStatusHandler }) => {
               </div>
 
               <CustomTooltip content={dropdownStatus ? null : "profile"}>
-                <div className="px-3">
+                <div className="px-3"
+                  ref={profileDropdownRef}>
                   {/* <FaUserCircle
                     onClick={dropdownHandler}
                     className="text-4xl transition-all cursor-pointer text-primary hover:text-secondary"
