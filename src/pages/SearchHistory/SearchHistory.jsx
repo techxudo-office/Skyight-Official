@@ -26,9 +26,7 @@ const SearchHistory = () => {
     if (!userData?.token) return;
     dispatch(getSearchHistory(userData.token));
   }, [dispatch, userData?.token]);
-
   if (isSearchHistoryLoading) return <Loader />;
-  if (errorSearchHistory) return <p>Error: {errorSearchHistory}</p>;
 
   const searchFlightHandler = async (values) => {
     setLoadingRowId(values.id);
