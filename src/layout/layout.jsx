@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
-import { Sidebar, Header, Headline } from "../components/components";
+import { Sidebar, Header } from "../components/components";
 import { useSelector } from "react-redux";
 
 const Layout = () => {
   const location = useLocation();
   const [sidebarStatus, setSidebarStatus] = useState(true);
-  const [headline, setHeadline] = useState(true);
+  // const [headline, setHeadline] = useState(true);
   const { userData } = useSelector((state) => state.auth);
 
   const setSidebarStatusHandler = (status) => {
@@ -19,7 +19,7 @@ const Layout = () => {
 
   return (
     <>
-      <Headline status={headline} setStatus={setHeadline} text={"dsdsadmdowjewndkn"} />
+      {/* <Headline status={headline} setStatus={setHeadline} text={"dsdsadmdowjewndkn"} /> */}
 
       <Header
         sidebarStatus={sidebarStatus}
@@ -33,7 +33,6 @@ const Layout = () => {
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
             <div className="flex flex-col items-center justify-center w-full px-4 pt-28">
-
               <Outlet />
             </div>
           </div>

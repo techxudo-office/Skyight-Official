@@ -33,13 +33,12 @@ import {
   TravelersDetails,
   ConfirmBooking,
   Login,
-  Registration,
   Verification,
   ForgetPassword,
   Anouncement,
   BookingHistory,
   OrderHistory,
-  ResetPassword
+  ResetPassword,
 } from "../pages/pages";
 
 export const routesData = [
@@ -48,7 +47,6 @@ export const routesData = [
   { path: "/contact", element: <Contact /> },
   { path: "/pricing", element: <Pricing /> },
   { path: "/login", element: <Login /> },
-  { path: "/registration", element: <Registration /> },
   { path: "/verification", element: <Verification /> },
   { path: "/forget-password", element: <ForgetPassword /> },
   { path: "/reset-password", element: <ResetPassword /> },
@@ -67,9 +65,17 @@ export const routesData = [
       { path: "add-credits", element: <AddCredits />, protected: true },
       { path: "invoices", element: <Invoices />, protected: true },
       { path: "transactions", element: <Transactions />, protected: true },
-      { path: "create-transaction", element: <CreateTransaction />, protected: true },
+      {
+        path: "create-transaction",
+        element: <CreateTransaction />,
+        protected: true,
+      },
       { path: "search-history", element: <SearchHistory />, protected: true },
-      { path: "transactions-history", element: <TransactionHistory />, protected: true },
+      {
+        path: "transactions-history",
+        element: <TransactionHistory />,
+        protected: true,
+      },
       { path: "booking-history", element: <BookingHistory />, protected: true },
       { path: "order-history", element: <OrderHistory />, protected: true },
       { path: "roles", element: <Roles />, protected: true },
@@ -83,7 +89,11 @@ export const routesData = [
       { path: "notifications", element: <Notifications />, protected: true },
       { path: "flight-results", element: <FlightResults />, protected: true },
       { path: "flight-details", element: <FlightDetails />, protected: true },
-      { path: "travelers-details", element: <TravelersDetails />, protected: true },
+      {
+        path: "travelers-details",
+        element: <TravelersDetails />,
+        protected: true,
+      },
       { path: "confirm-booking", element: <ConfirmBooking />, protected: true },
       { path: "announcement", element: <Anouncement />, protected: true },
       { path: "ticket-info", element: <Finalticket />, protected: true },
@@ -91,4 +101,3 @@ export const routesData = [
   },
   { path: "*", element: <NotFound /> },
 ];
-

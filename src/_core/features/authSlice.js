@@ -1,11 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import makeRequest from "./ApiHelper";
 
-
 const initialState = {
   userData: null,
   isLoading: false,
-  loginError: null,
 
   isLoadingForgotPassword: false,
   forgotPasswordError: null,
@@ -36,13 +34,12 @@ const authSlice = createSlice({
     builder
       .addCase(login.pending, (state) => {
         state.isLoading = true;
-        state.loginError = null;
       })
       .addCase(login.fulfilled, (state, action) => {
         state.isLoading = false;
         state.userData = action.payload;
       })
-      .addCase(login.rejected, (state, action) => {
+      .addCase(login.rejected, (state) => {
         state.isLoading = false;
       })
       .addCase(logout.fulfilled, (state) => {
@@ -54,7 +51,7 @@ const authSlice = createSlice({
       .addCase(forgotPassword.fulfilled, (state) => {
         state.isLoadingForgotPassword = false;
       })
-      .addCase(forgotPassword.rejected, (state, action) => {
+      .addCase(forgotPassword.rejected, (state) => {
         state.isLoadingForgotPassword = false;
       })
       .addCase(register.pending, (state) => {
@@ -63,7 +60,7 @@ const authSlice = createSlice({
       .addCase(register.fulfilled, (state) => {
         state.isLoadingRegister = false;
       })
-      .addCase(register.rejected, (state, action) => {
+      .addCase(register.rejected, (state) => {
         state.isLoadingRegister = false;
       })
       .addCase(verifyOTP.pending, (state) => {
@@ -72,7 +69,7 @@ const authSlice = createSlice({
       .addCase(verifyOTP.fulfilled, (state) => {
         state.isLoadingVerifyOTP = false;
       })
-      .addCase(verifyOTP.rejected, (state, action) => {
+      .addCase(verifyOTP.rejected, (state) => {
         state.isLoadingVerifyOTP = false;
       })
       .addCase(resendCode.pending, (state) => {
@@ -81,7 +78,7 @@ const authSlice = createSlice({
       .addCase(resendCode.fulfilled, (state) => {
         state.isLoadingResendCode = false;
       })
-      .addCase(resendCode.rejected, (state, action) => {
+      .addCase(resendCode.rejected, (state) => {
         state.isLoadingResendCode = false;
       })
       .addCase(getUserInfo.pending, (state) => {
@@ -94,7 +91,7 @@ const authSlice = createSlice({
           user: action.payload,
         };
       })
-      .addCase(getUserInfo.rejected, (state, action) => {
+      .addCase(getUserInfo.rejected, (state) => {
         state.isLoadingUserInfo = false;
       })
       .addCase(updateAccount.pending, (state) => {
@@ -107,53 +104,49 @@ const authSlice = createSlice({
           user: action.payload,
         };
       })
-      .addCase(updateAccount.rejected, (state, action) => {
+      .addCase(updateAccount.rejected, (state) => {
         state.isUpdatingAccount = false;
       });
   },
 });
 
 // Login
-export const login = createAsyncThunk(
-  "auth/login",
-  (payload) =>
-    makeRequest('post', '/api/login', {
-      data: payload,
-      successMessage: "Login Successfully",
-      errorMessage: "Login failed. Please try again."
-    })
+export const login = createAsyncThunk("auth/login", (payload) =>
+  makeRequest("post", "/api/login", {
+    data: payload,
+    successMessage: "Login Successfully",
+    errorMessage: "Login failed. Please try again.",
+  })
 );
 
 // Logout
-export const logout = createAsyncThunk(
-  "auth/logout",
-  (token) =>
-    makeRequest('get', '/api/logout', {
-      token,
-      successMessage: "Logout Successfully",
-      errorMessage: "Logout failed"
-    })
+export const logout = createAsyncThunk("auth/logout", (token) =>
+  makeRequest("get", "/api/logout", {
+    token,
+    successMessage: "Logout Successfully",
+    errorMessage: "Logout failed",
+  })
 );
 
 // Forgot Password
 export const forgotPassword = createAsyncThunk(
   "auth/forgotPassword",
   (payload) =>
-    makeRequest('post', '/api/forgot-password', {
+    makeRequest("post", "/api/forgot-password", {
       data: payload,
       successMessage: "Password reset link sent successfully",
-      errorMessage: "Forgot password request failed"
+      errorMessage: "Forgot password request failed",
     })
 );
 
-// Reset Password 
+// Reset Password
 export const resetPassword = createAsyncThunk(
   "auth/resetPassword",
   ({ token, payload }) =>
-    makeRequest('post', `/api/reset-password/${token}`, {
+    makeRequest("post", `/api/reset-password/${token}`, {
       data: payload,
       successMessage: "Password reset successfully",
-      errorMessage: "Password reset failed"
+      errorMessage: "Password reset failed",
     })
 );
 
@@ -161,10 +154,10 @@ export const resetPassword = createAsyncThunk(
 export const register = createAsyncThunk(
   "auth/registerCompany",
   (payload) =>
-    makeRequest('post', '/api/register-company', {
+    makeRequest("post", "/api/register-company", {
       data: payload,
       successMessage: "Registration successful. Verify OTP...",
-      errorMessage: "Registration failed. Please try again."
+      errorMessage: "Registration failed. Please try again.",
     })
   // .catch(error => {
   //   const errorMsg = error.response?.data?.data?.errors
@@ -175,43 +168,41 @@ export const register = createAsyncThunk(
 );
 
 // Verify OTP
-export const verifyOTP = createAsyncThunk(
-  "auth/verifyOTP",
-  (payload) => makeRequest('post', '/api/verify-verification-code', {
+export const verifyOTP = createAsyncThunk("auth/verifyOTP", (payload) =>
+  makeRequest("post", "/api/verify-verification-code", {
     data: payload,
     successMessage: "OTP Verified Successfully",
-    errorMessage: "OTP verification failed"
+    errorMessage: "OTP verification failed",
   })
 );
 
 // Resend Verification Code
-export const resendCode = createAsyncThunk(
-  "auth/resendCode",
-  (payload) => makeRequest('post', '/api/resend-verification-code', {
+export const resendCode = createAsyncThunk("auth/resendCode", (payload) =>
+  makeRequest("post", "/api/resend-verification-code", {
     data: payload,
     successMessage: "Verification code resent successfully",
-    errorMessage: "Failed to resend verification code"
+    errorMessage: "Failed to resend verification code",
   })
 );
 
 // Get User Info
-export const getUserInfo = createAsyncThunk(
-  "auth/getUserInfo",
-  (token) => makeRequest('get', '/api/me', {
+export const getUserInfo = createAsyncThunk("auth/getUserInfo", (token) =>
+  makeRequest("get", "/api/me", {
     token,
-    errorMessage: "Something went wrong. Please try again."
+    errorMessage: "Something went wrong. Please try again.",
   })
 );
 
 // Update Account
 export const updateAccount = createAsyncThunk(
   "auth/updateAccount",
-  ({ token, data }) => makeRequest('put', '/api/user/update-account', {
-    data,
-    token,
-    successMessage: "Account updated successfully",
-    errorMessage: "Failed while updating your Account"
-  })
+  ({ token, data }) =>
+    makeRequest("put", "/api/user/update-account", {
+      data,
+      token,
+      successMessage: "Account updated successfully",
+      errorMessage: "Failed while updating your Account",
+    })
 );
 export const { updateUserData } = authSlice.actions;
 export default authSlice.reducer;
